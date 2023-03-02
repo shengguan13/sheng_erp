@@ -425,6 +425,9 @@ public class ExceptionConstants {
     //生产单-开工时间要晚于当前时间
     public static final int DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE = 8000026;
     public static final String DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG = "抱歉，生产单开工时间要晚于当前时间";
+    //单据录入-单据编号已经存在
+    public static final int DEPOT_HEAD_BILL_NUMBER_EXIST_CODE = 8000027;
+    public static final String DEPOT_HEAD_BILL_NUMBER_EXIST_MSG = "抱歉，单据编号已经存在";
 
     /**
      *  单据明细信息
@@ -458,6 +461,9 @@ public class ExceptionConstants {
     //单据删除-只有未审核的单据才能删除
     public static final int ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_CODE = 9500004;
     public static final String ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG = "抱歉，只有未审核的单据才能删除";
+    //财务信息录入-单据编号已经存在
+    public static final int ACCOUNT_HEAD_BILL_NO_EXIST_CODE = 9500005;
+    public static final String ACCOUNT_HEAD_BILL_NO_EXIST_MSG = "抱歉，单据编号已经存在";
     /**
      *  财务明细信息
      * type = 100
