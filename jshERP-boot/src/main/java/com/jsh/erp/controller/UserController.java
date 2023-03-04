@@ -74,7 +74,7 @@ public class UserController {
     @PostMapping(value = "/login")
     @ApiOperation(value = "登录")
     public BaseResponseInfo login(@RequestBody User userParam,
-                        HttpServletRequest request)throws Exception {
+                                  HttpServletRequest request)throws Exception {
         logger.info("============用户登录 login 方法调用开始==============");
         String msgTip = "";
         User user=null;

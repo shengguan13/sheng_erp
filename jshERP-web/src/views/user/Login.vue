@@ -1,4 +1,3 @@
-<!-- b y 7 5 2 7  1 8 9 2 0 -->
 <template>
   <div class="main">
     <a-form :form="form" class="user-layout-login" ref="formLogin" id="formLogin">
@@ -8,6 +7,7 @@
           v-decorator="['loginName',{initialValue:'', rules: validatorRules.loginName.rules}]"
           type="text"
           @mouseover="initWeixin"
+          autocomplete="off"
           placeholder="请输入用户名">
           <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
@@ -19,17 +19,12 @@
           size="large"
           type="password"
           @mouseover="initWeixin"
-          autocomplete="false"
+          readonly
+          onfocus="this.removeAttribute('readonly');"
+          autocomplete="new-password"
           placeholder="密码">
           <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
-      </a-form-item>
-
-      <a-form-item>
-        <a-checkbox v-decorator="['rememberMe', {initialValue: true, valuePropName: 'checked'}]" >自动登陆</a-checkbox>
-        <router-link v-if="registerFlag==='1'" :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px;" >
-          注册租户
-        </router-link>
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -61,7 +56,7 @@
     </a-form>
   </div>
 </template>
-<!-- BY cao_yu_li -->
+
 <script>
   import md5 from "md5"
   import api from '@/api'
@@ -69,7 +64,7 @@
   import { mapActions } from "vuex"
   import { timeFix } from "@/utils/util"
   import Vue from 'vue'
-  import {getPlatformConfigByKey } from '@/api/api'
+  import { getPlatformConfigByKey } from '@/api/api'
   import { ACCESS_TOKEN ,ENCRYPTED_STRING} from "@/store/mutation-types"
   import { putAction,postAction,getAction } from '@/api/manage'
   import { encryption , getEncryptedString } from '@/utils/encryption/aesEncrypt'

@@ -36,6 +36,7 @@ const user = {
     },
   },
 
+  // 每 60 * 60 * 1000 为 1 小时
   actions: {
     // CAS验证登录
     ValidateLogin({ commit }, userInfo) {
@@ -45,9 +46,9 @@ const user = {
           if(response.success){
             const result = response.result
             const userInfo = result.userInfo
-            Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-            Vue.ls.set(USER_NAME, userInfo.username, 7 * 24 * 60 * 60 * 1000)
-            Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000)
+            Vue.ls.set(ACCESS_TOKEN, result.token, 4 * 60 * 60 * 1000)
+            Vue.ls.set(USER_NAME, userInfo.username, 4 * 60 * 60 * 1000)
+            Vue.ls.set(USER_INFO, userInfo, 4 * 60 * 60 * 1000)
             commit('SET_TOKEN', result.token)
             commit('SET_INFO', userInfo)
             commit('SET_NAME', { username: userInfo.username,realname: userInfo.realname, welcome: welcome() })
@@ -68,11 +69,10 @@ const user = {
           if(response.code ==200){
             if(response.data.msgTip == 'user can login'){
               const result = response.data
-              Vue.ls.set(USER_ID, result.user.id, 7 * 24 * 60 * 60 * 1000);
-              Vue.ls.set(USER_LOGIN_NAME, result.user.loginName, 7 * 24 * 60 * 60 * 1000);
-              //前端7天有效期，后端默认1天，只要用户在1天内有访问页面就可以一直续期直到7天结束
-              Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-              Vue.ls.set(USER_INFO, result.user, 7 * 24 * 60 * 60 * 1000)
+              Vue.ls.set(USER_ID, result.user.id, 4 * 60 * 60 * 1000);
+              Vue.ls.set(USER_LOGIN_NAME, result.user.loginName, 4 * 60 * 60 * 1000);
+              Vue.ls.set(ACCESS_TOKEN, result.token, 4 * 60 * 60 * 1000)
+              Vue.ls.set(USER_INFO, result.user, 4 * 60 * 60 * 1000)
               commit('SET_TOKEN', result.token)
             }
             commit('SET_INFO', userInfo)
@@ -129,9 +129,9 @@ const user = {
           if(response.code =='200'){
             const result = response.result
             const userInfo = result.userInfo
-            Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-            Vue.ls.set(USER_NAME, userInfo.username, 7 * 24 * 60 * 60 * 1000)
-            Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000)
+            Vue.ls.set(ACCESS_TOKEN, result.token, 4 * 60 * 60 * 1000)
+            Vue.ls.set(USER_NAME, userInfo.username, 4 * 60 * 60 * 1000)
+            Vue.ls.set(USER_INFO, userInfo, 4 * 60 * 60 * 1000)
             commit('SET_TOKEN', result.token)
             commit('SET_INFO', userInfo)
             commit('SET_NAME', { username: userInfo.username,realname: userInfo.realname, welcome: welcome() })
