@@ -151,6 +151,8 @@ public class DepotHeadService {
                     }
                     if(dh.getChangeAmount() != null) {
                         dh.setChangeAmount(dh.getChangeAmount().abs());
+                    } else {
+                        dh.setChangeAmount(BigDecimal.ZERO);
                     }
                     if(dh.getTotalPrice() != null) {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
