@@ -1156,16 +1156,16 @@ public class MaterialService {
     public String getMaterialOtherByParam(String[] mpArr, MaterialVo4Unit m) {
         String materialOther = "";
         for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("制造商")) {
+            if (mpArr[i].equals("表面处理纹理")) {
                 materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
             }
-            if (mpArr[i].equals("自定义1")) {
+            if (mpArr[i].equals("工艺类别")) {
                 materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
             }
-            if (mpArr[i].equals("自定义2")) {
+            if (mpArr[i].equals("配置")) {
                 materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
             }
-            if (mpArr[i].equals("自定义3")) {
+            if (mpArr[i].equals("项目")) {
                 materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
             }
         }

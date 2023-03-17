@@ -1018,19 +1018,19 @@
       loadParseMaterialProperty() {
         let mpList = Vue.ls.get('materialPropertyList')
         for (let i = 0; i < mpList.length; i++) {
-          if (mpList[i].nativeName === "制造商") {
+          if (mpList[i].nativeName === "表面处理纹理") {
             this.mpShort.mfrs.name = mpList[i].anotherName
             this.mpShort.mfrs.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "自定义1") {
+          if (mpList[i].nativeName === "工艺类别") {
             this.mpShort.otherField1.name = mpList[i].anotherName
             this.mpShort.otherField1.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "自定义2") {
+          if (mpList[i].nativeName === "配置") {
             this.mpShort.otherField2.name = mpList[i].anotherName
             this.mpShort.otherField2.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "自定义3") {
+          if (mpList[i].nativeName === "项目") {
             this.mpShort.otherField3.name = mpList[i].anotherName
             this.mpShort.otherField3.enabled = mpList[i].enabled
           }
