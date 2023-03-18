@@ -312,9 +312,9 @@ public class MaterialService {
         return list==null?0:list.size();
     }
 
-    public int checkIsExist(Long id, String name, String model, String color, String standard, String mfrs,
+    public int checkIsExist(Long id, String name, String model, String color, String internalId, String mfrs,
                             String otherField1, String otherField2, String otherField3, String unit, Long unitId)throws Exception {
-        return materialMapperEx.checkIsExist(id, name, model, color, standard, mfrs, otherField1,
+        return materialMapperEx.checkIsExist(id, name, model, color, internalId, mfrs, otherField1,
                 otherField2, otherField3, unit, unitId);
     }
 
@@ -485,7 +485,7 @@ public class MaterialService {
             }
             for (int i = 2; i < rightRows; i++) {
                 String name = ExcelUtils.getContent(src, i, 0); //名称
-                String standard = ExcelUtils.getContent(src, i, 1); //规格
+                String internalId = ExcelUtils.getContent(src, i, 1); //内部零件号
                 String model = ExcelUtils.getContent(src, i, 2); //型号
                 String color = ExcelUtils.getContent(src, i, 3); //颜色
                 String categoryName = ExcelUtils.getContent(src, i, 4); //类别
@@ -502,11 +502,11 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
                 }
-                // 批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位
-                batchCheckExistMaterialListByParam(mList, name, standard, model, color, unit);
+                // 批量校验excel中有无重复商品，是指名称、内部零件号、型号、颜色、单位
+                batchCheckExistMaterialListByParam(mList, name, internalId, model, color, unit);
                 MaterialWithInitStock m = new MaterialWithInitStock();
                 m.setName(name);
-                m.setStandard(standard);
+                m.setInternalId(internalId);
                 m.setModel(model);
                 m.setColor(color);
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
@@ -616,7 +616,7 @@ public class MaterialService {
                 Long mId = 0L;
                 //判断该商品是否存在，如果不存在就新增，如果存在就更新
                 String basicBarCode = getBasicBarCode(m);
-                List<Material> materials = getMaterialListByParam(m.getName(),m.getStandard(),m.getModel(),m.getColor(),m.getUnit(),m.getUnitId(), basicBarCode);
+                List<Material> materials = getMaterialListByParam(m.getName(),m.getInternalId(),m.getModel(),m.getColor(),m.getUnit(),m.getUnitId(), basicBarCode);
                 if(materials.size() == 0) {
                     materialMapperEx.insertSelectiveEx(m);
                     mId = m.getId();
@@ -735,18 +735,18 @@ public class MaterialService {
     }
 
     /**
-     * 批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位
+     * 批量校验excel中有无重复商品，是指名称、内部零件号、型号、颜色、单位
      * @param mList
      */
-    public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String standard,
+    public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String internalId,
                                                    String model, String color, String unit) {
         for(MaterialWithInitStock material: mList){
             if(name.equals(material.getName()) &&
-                    standard.equals(material.getStandard()) &&
+                    internalId.equals(material.getInternalId()) &&
                     model.equals(material.getModel()) &&
                     color.equals(material.getColor()) &&
                     unit.equals(material.getUnit())){
-                String info = name + "-" + standard + "-" + model + "-" + color + "-" + unit;
+                String info = name + "-" + internalId + "-" + model + "-" + color + "-" + unit;
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_CODE,
                         String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_MSG, info));
             }
@@ -827,14 +827,14 @@ public class MaterialService {
     /**
      * 根据条件返回产品列表
      * @param name
-     * @param standard
+     * @param internalId
      * @param model
      * @param color
      * @param unit
      * @param unitId
      * @return
      */
-    private List<Material> getMaterialListByParam(String name, String standard, String model, String color, String unit, Long unitId, String basicBarCode) throws Exception {
+    private List<Material> getMaterialListByParam(String name, String internalId, String model, String color, String unit, Long unitId, String basicBarCode) throws Exception {
         List<Material> list = new ArrayList<>();
         MaterialExample example = new MaterialExample();
         MaterialExample.Criteria criteria = example.createCriteria();
@@ -845,8 +845,8 @@ public class MaterialService {
         if (StringUtil.isNotEmpty(color)) {
             criteria.andColorEqualTo(color);
         }
-        if (StringUtil.isNotEmpty(standard)) {
-            criteria.andStandardEqualTo(standard);
+        if (StringUtil.isNotEmpty(internalId)) {
+            criteria.andInternalIdEqualTo(internalId);
         }
         if (StringUtil.isNotEmpty(unit)) {
             criteria.andUnitEqualTo(unit);

@@ -30,7 +30,7 @@
               </a-col>
               <a-col :md="4" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号/颜色" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/内部零件号/型号/颜色" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="3" :sm="24">
@@ -156,7 +156,7 @@
           },
           {title: '条码', dataIndex: 'mBarCode', width: 150, fixed: 'left'},
           {title: '名称', dataIndex: 'name', width: 150, fixed: 'left'},
-          {title: '规格', dataIndex: 'standard'},
+          {title: '内部零件号', dataIndex: 'internalId'},
           {title: '型号', dataIndex: 'model'},
           {title: '颜色', dataIndex: 'color'},
           {title: '类别', dataIndex: 'categoryName'},
@@ -249,10 +249,10 @@
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '颜色', '类别', '单位', '单价', '初始库存', '库存', '库存金额']]
+        let aoa = [['条码', '名称', '内部零件号', '型号', '颜色', '类别', '单位', '单价', '初始库存', '库存', '库存金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,
+          let item = [ds.mBarCode, ds.name, ds.internalId, ds.model, ds.color, ds.categoryName, ds.unitName,
             ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice]
           aoa.push(item)
         }

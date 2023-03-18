@@ -13,7 +13,7 @@ public class DepotHeadVo4InOutMCount {
 
     private String Model;
 
-    private String standard;
+    private String internalId;
 
     private String categoryName;
 
@@ -57,12 +57,12 @@ public class DepotHeadVo4InOutMCount {
         Model = model;
     }
 
-    public String getStandard() {
-        return standard;
+    public String getInternalId() {
+        return internalId;
     }
 
-    public void setStandard(String standard) {
-        this.standard = standard;
+    public void setInternalId(String internalId) {
+        this.internalId = internalId;
     }
 
     public String getCategoryName() {

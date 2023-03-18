@@ -13,7 +13,7 @@ public class Material {
 
     private String model;
 
-    private String standard;
+    private String internalId;
 
     private String color;
 
@@ -85,12 +85,12 @@ public class Material {
         this.model = model == null ? null : model.trim();
     }
 
-    public String getStandard() {
-        return standard;
+    public String getInternalId() {
+        return internalId;
     }
 
-    public void setStandard(String standard) {
-        this.standard = standard == null ? null : standard.trim();
+    public void setInternalId(String internalId) {
+        this.internalId = internalId == null ? null : internalId.trim();
     }
 
     public String getColor() {

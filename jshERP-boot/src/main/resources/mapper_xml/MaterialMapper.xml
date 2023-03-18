@@ -7,7 +7,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
     <result column="model" jdbcType="VARCHAR" property="model" />
-    <result column="standard" jdbcType="VARCHAR" property="standard" />
+    <result column="internal_id" jdbcType="VARCHAR" property="internalId" />
     <result column="color" jdbcType="VARCHAR" property="color" />
     <result column="unit" jdbcType="VARCHAR" property="unit" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -83,7 +83,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, category_id, name, mfrs, model, standard, color, unit, remark, img_name, unit_id, 
+    id, category_id, name, mfrs, model, internal_id, color, unit, remark, img_name, unit_id,
     expiry_num, weight, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
     enable_batch_number, tenant_id, delete_flag
   </sql>
@@ -119,7 +119,7 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Material">
     insert into jsh_material (id, category_id, name, 
-      mfrs, model, standard, 
+      mfrs, model, internal_id,
       color, unit, remark, 
       img_name, unit_id, expiry_num, 
       weight, enabled, other_field1, 
@@ -127,7 +127,7 @@
       enable_batch_number, tenant_id, delete_flag
       )
     values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{mfrs,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, 
+      #{mfrs,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{internalId,jdbcType=VARCHAR},
       #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{imgName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{expiryNum,jdbcType=INTEGER}, 
       #{weight,jdbcType=DECIMAL}, #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, 
@@ -153,8 +153,8 @@
       <if test="model != null">
         model,
       </if>
-      <if test="standard != null">
-        standard,
+      <if test="internalId != null">
+        internal_id,
       </if>
       <if test="color != null">
         color,
@@ -218,8 +218,8 @@
       <if test="model != null">
         #{model,jdbcType=VARCHAR},
       </if>
-      <if test="standard != null">
-        #{standard,jdbcType=VARCHAR},
+      <if test="internalId != null">
+        #{internalId,jdbcType=VARCHAR},
       </if>
       <if test="color != null">
         #{color,jdbcType=VARCHAR},
@@ -292,8 +292,8 @@
       <if test="record.model != null">
         model = #{record.model,jdbcType=VARCHAR},
       </if>
-      <if test="record.standard != null">
-        standard = #{record.standard,jdbcType=VARCHAR},
+      <if test="record.internalId != null">
+        internal_id = #{record.internalId,jdbcType=VARCHAR},
       </if>
       <if test="record.color != null">
         color = #{record.color,jdbcType=VARCHAR},
@@ -352,7 +352,7 @@
       name = #{record.name,jdbcType=VARCHAR},
       mfrs = #{record.mfrs,jdbcType=VARCHAR},
       model = #{record.model,jdbcType=VARCHAR},
-      standard = #{record.standard,jdbcType=VARCHAR},
+      internal_id = #{record.internalId,jdbcType=VARCHAR},
       color = #{record.color,jdbcType=VARCHAR},
       unit = #{record.unit,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
@@ -387,8 +387,8 @@
       <if test="model != null">
         model = #{model,jdbcType=VARCHAR},
       </if>
-      <if test="standard != null">
-        standard = #{standard,jdbcType=VARCHAR},
+      <if test="internalId != null">
+        internal_id = #{internalId,jdbcType=VARCHAR},
       </if>
       <if test="color != null">
         color = #{color,jdbcType=VARCHAR},
@@ -444,7 +444,7 @@
       name = #{name,jdbcType=VARCHAR},
       mfrs = #{mfrs,jdbcType=VARCHAR},
       model = #{model,jdbcType=VARCHAR},
-      standard = #{standard,jdbcType=VARCHAR},
+      internal_id = #{internalId,jdbcType=VARCHAR},
       color = #{color,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},

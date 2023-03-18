@@ -22,7 +22,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/内部零件号/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -116,7 +116,7 @@
           {title: '仓库', dataIndex: 'depotName', width: 150, fixed: 'left'},
           {title: '条码', dataIndex: 'barCode', width: 150, fixed: 'left'},
           {title: '名称', dataIndex: 'mname', width: 150, fixed: 'left'},
-          {title: '规格', dataIndex: 'mstandard'},
+          {title: '内部零件号', dataIndex: 'mInternalId'},
           {title: '型号', dataIndex: 'mmodel'},
           {title: '扩展信息', dataIndex: 'materialOther'},
           {title: '单位', dataIndex: 'materialUnit'},
@@ -152,10 +152,10 @@
         })
       },
       exportExcel() {
-        let aoa = [['仓库', '条码', '名称', '规格', '型号', '扩展信息', '单位', '库存', '最低安全库存', '最高安全库存', '建议入库量', '建议出库量']]
+        let aoa = [['仓库', '条码', '名称', '内部零件号', '型号', '扩展信息', '单位', '库存', '最低安全库存', '最高安全库存', '建议入库量', '建议出库量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.mname, ds.mstandard, ds.mmodel, ds.materialOther, ds.materialUnit,
+          let item = [ds.depotName, ds.barCode, ds.mname, ds.mInternalId, ds.mmodel, ds.materialOther, ds.materialUnit,
             ds.currentNumber, ds.lowSafeStock, ds.highSafeStock, ds.lowCritical, ds.highCritical]
           aoa.push(item)
         }

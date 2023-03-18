@@ -60,7 +60,7 @@ public class MaterialController {
      * @param name
      * @param model
      * @param color
-     * @param standard
+     * @param internalId
      * @param mfrs
      * @param otherField1
      * @param otherField2
@@ -75,13 +75,13 @@ public class MaterialController {
     @ApiOperation(value = "检查商品是否存在")
     public String checkIsExist(@RequestParam("id") Long id, @RequestParam("name") String name,
                                @RequestParam("model") String model, @RequestParam("color") String color,
-                               @RequestParam("standard") String standard, @RequestParam("mfrs") String mfrs,
+                               @RequestParam("internalId") String internalId, @RequestParam("mfrs") String mfrs,
                                @RequestParam("otherField1") String otherField1, @RequestParam("otherField2") String otherField2,
                                @RequestParam("otherField3") String otherField3, @RequestParam("unit") String unit,@RequestParam("unitId") Long unitId,
                                HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int exist = materialService.checkIsExist(id, name, StringUtil.toNull(model), StringUtil.toNull(color),
-                StringUtil.toNull(standard), StringUtil.toNull(mfrs), StringUtil.toNull(otherField1),
+                StringUtil.toNull(internalId), StringUtil.toNull(mfrs), StringUtil.toNull(otherField1),
                 StringUtil.toNull(otherField2), StringUtil.toNull(otherField3), StringUtil.toNull(unit), unitId);
         if(exist > 0) {
             objectMap.put("status", true);
@@ -223,7 +223,7 @@ public class MaterialController {
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
                     item.put("categoryName", material.getCategoryName());
-                    item.put("standard", material.getStandard());
+                    item.put("internalId", material.getInternalId());
                     item.put("model", material.getModel());
                     item.put("color", material.getColor());
                     item.put("unit", material.getCommodityUnit() + ratioStr);
@@ -284,14 +284,14 @@ public class MaterialController {
                 //名称/型号/扩展信息/包装
                 String MaterialName = "";
                 MaterialName = MaterialName + material.getmBarCode() + "_" + material.getName()
-                        + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")");
+                        + ((material.getInternalId() == null || material.getInternalId().equals("")) ? "" : "(" + material.getInternalId() + ")");
                 String expand = materialService.getMaterialOtherByParam(mpArr, material); //扩展信息
                 MaterialName = MaterialName + expand + ((material.getUnit() == null || material.getUnit().equals("")) ? "" : "(" + material.getUnit() + ")") + ratio;
                 item.put("MaterialName", MaterialName);
                 item.put("name", material.getName());
                 item.put("expand", expand);
                 item.put("model", material.getModel());
-                item.put("standard", material.getStandard());
+                item.put("internalId", material.getInternalId());
                 item.put("unit", material.getUnit() + ratio);
             }
         } catch (Exception e) {
@@ -336,7 +336,7 @@ public class MaterialController {
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
                     StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
                     StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"条码", "名称", "规格", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
+            String[] names = {"条码", "名称", "内部零件号", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<>();
             if (null != dataList) {
@@ -344,7 +344,7 @@ public class MaterialController {
                     String[] objs = new String[100];
                     objs[0] = m.getmBarCode();
                     objs[1] = m.getName();
-                    objs[2] = m.getStandard();
+                    objs[2] = m.getInternalId();
                     objs[3] = m.getModel();
                     objs[4] = m.getColor();
                     objs[5] = m.getCategoryName();

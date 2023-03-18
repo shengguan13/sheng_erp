@@ -28,8 +28,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="2" data-title="规格" data-intro="规格不必填，比如：10克">
-                  <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard', validatorRules.standard ]"/>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="内部零件号" data-step="2" data-title="内部零件号" data-intro="内部零件号">
+                  <a-input placeholder="请输入内部零件号" v-decorator.trim="[ 'internalId', validatorRules.internalId ]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -377,7 +377,7 @@
               { max: 100, message: '长度请小于100个字符', trigger: 'blur' }
             ]
           },
-          standard:{
+          internalId:{
             rules: [
               { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
             ]
@@ -450,7 +450,7 @@
         }
         this.$nextTick(() => {
         // TODO: enableSerialNumber是否可以去掉,目前默认enableSerialNumber===0
-          this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
+          this.form.setFieldsValue(pick(this.model, 'name', 'internalId', 'unit', 'unitId', 'model', 'color',
             'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','weight','remark','mfrs','otherField1','otherField2','otherField3'))
           autoJumpNextInput('materialHeadModal')
           autoJumpNextInput('materialDetailModal')
@@ -567,13 +567,13 @@
           this.$message.warning('抱歉，序列号和批号只能选择一项！');
           return;
         }
-        //校验商品是否存在，通过校验商品的名称、型号、规格、颜色、单位、制造商等
+        //校验商品是否存在，通过校验商品的名称、型号、内部零件号、颜色、单位、制造商等
         let param = {
           id: this.model.id?this.model.id:0,
           name: this.model.name,
           model: this.parseParam(this.model.model),
           color: this.parseParam(this.model.color),
-          standard: this.parseParam(this.model.standard),
+          internalId: this.parseParam(this.model.internalId),
           mfrs: this.parseParam(this.model.mfrs),
           otherField1: this.parseParam(this.model.otherField1),
           otherField2: this.parseParam(this.model.otherField2),

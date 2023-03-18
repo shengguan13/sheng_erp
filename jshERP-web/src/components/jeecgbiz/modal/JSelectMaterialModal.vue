@@ -18,7 +18,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
                 <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input ref="material" placeholder="条码、名称、规格、型号、颜色" v-model="queryParam.q"></a-input>
+                  <a-input ref="material" placeholder="条码、名称、内部零件号、型号、颜色" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
@@ -143,7 +143,7 @@
           {dataIndex: 'mBarCode', title: '条码', scopedSlots: { customRender: 'customBarCode' }},
           {dataIndex: 'name', title: '名称', scopedSlots: { customRender: 'customName' }},
           {dataIndex: 'categoryName', title: '类别'},
-          {dataIndex: 'standard', title: '规格'},
+          {dataIndex: 'internalId', title: '内部零件号'},
           {dataIndex: 'model', title: '型号'},
           {dataIndex: 'color', title: '颜色'},
           {dataIndex: 'unit', title: '单位'},
@@ -221,7 +221,7 @@
             if(res.total ===1) {
               if(this.queryParam.q === this.dataSource[0].mBarCode||
                 this.queryParam.q === this.dataSource[0].name||
-                this.queryParam.q === this.dataSource[0].standard||
+                this.queryParam.q === this.dataSource[0].internalId||
                 this.queryParam.q === this.dataSource[0].model||
                 this.queryParam.q === this.dataSource[0].color) {
                 this.title = '选择商品【再次回车可以直接选中】'
@@ -365,7 +365,7 @@
         if(this.dataSource && this.dataSource.length===1) {
           if(this.queryParam.q === this.dataSource[0].mBarCode||
             this.queryParam.q === this.dataSource[0].name||
-            this.queryParam.q === this.dataSource[0].standard||
+            this.queryParam.q === this.dataSource[0].internalId||
             this.queryParam.q === this.dataSource[0].model||
             this.queryParam.q === this.dataSource[0].color) {
             let arr = []

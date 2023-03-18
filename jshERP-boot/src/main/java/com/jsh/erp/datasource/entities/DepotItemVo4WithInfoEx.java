@@ -14,7 +14,7 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String MColor;
 
-    private String MStandard;
+    private String MInternalId;
 
     private String MMfrs;
 
@@ -90,12 +90,12 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
         this.MColor = MColor;
     }
 
-    public String getMStandard() {
-        return MStandard;
+    public String getMInternalId() {
+        return MInternalId;
     }
 
-    public void setMStandard(String MStandard) {
-        this.MStandard = MStandard;
+    public void setMInternalId(String MInternalId) {
+        this.MInternalId = MInternalId;
     }
 
     public String getMMfrs() {

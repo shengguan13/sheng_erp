@@ -14,7 +14,7 @@ public class DepotHeadVo4InDetail {
 
     private String Model;
 
-    private String standard;
+    private String internalId;
 
     private BigDecimal UnitPrice;
 
@@ -74,12 +74,12 @@ public class DepotHeadVo4InDetail {
         Model = model;
     }
 
-    public String getStandard() {
-        return standard;
+    public String getInternalId() {
+        return internalId;
     }
 
-    public void setStandard(String standard) {
-        this.standard = standard;
+    public void setInternalId(String internalId) {
+        this.internalId = internalId;
     }
 
     public BigDecimal getUnitPrice() {

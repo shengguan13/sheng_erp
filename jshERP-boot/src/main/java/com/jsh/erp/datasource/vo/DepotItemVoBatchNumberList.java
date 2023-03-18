@@ -9,7 +9,7 @@ public class DepotItemVoBatchNumberList {
     private String id;
     private String barCode;
     private String name;
-    private String standard;
+    private String internalId;
     private String model;
     private String batchNumber;
     private Date expirationDate;
@@ -40,12 +40,12 @@ public class DepotItemVoBatchNumberList {
         this.name = name;
     }
 
-    public String getStandard() {
-        return standard;
+    public String getInternalId() {
+        return internalId;
     }
 
-    public void setStandard(String standard) {
-        this.standard = standard;
+    public void setInternalId(String internalId) {
+        this.internalId = internalId;
     }
 
     public String getModel() {

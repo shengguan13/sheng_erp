@@ -435,73 +435,73 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andStandardIsNull() {
-            addCriterion("standard is null");
+        public Criteria andInternalIdIsNull() {
+            addCriterion("internal_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andStandardIsNotNull() {
-            addCriterion("standard is not null");
+        public Criteria andInternalIdIsNotNull() {
+            addCriterion("internal_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStandardEqualTo(String value) {
-            addCriterion("standard =", value, "standard");
+        public Criteria andInternalIdEqualTo(String value) {
+            addCriterion("internal_id =", value, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardNotEqualTo(String value) {
-            addCriterion("standard <>", value, "standard");
+        public Criteria andInternalIdNotEqualTo(String value) {
+            addCriterion("internal_id <>", value, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardGreaterThan(String value) {
-            addCriterion("standard >", value, "standard");
+        public Criteria andInternalIdGreaterThan(String value) {
+            addCriterion("internal_id >", value, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardGreaterThanOrEqualTo(String value) {
-            addCriterion("standard >=", value, "standard");
+        public Criteria andInternalIdGreaterThanOrEqualTo(String value) {
+            addCriterion("internal_id >=", value, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardLessThan(String value) {
-            addCriterion("standard <", value, "standard");
+        public Criteria andInternalIdLessThan(String value) {
+            addCriterion("internal_id <", value, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardLessThanOrEqualTo(String value) {
-            addCriterion("standard <=", value, "standard");
+        public Criteria andInternalIdLessThanOrEqualTo(String value) {
+            addCriterion("internal_id <=", value, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardLike(String value) {
-            addCriterion("standard like", value, "standard");
+        public Criteria andInternalIdLike(String value) {
+            addCriterion("internal_id like", value, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardNotLike(String value) {
-            addCriterion("standard not like", value, "standard");
+        public Criteria andInternalIdNotLike(String value) {
+            addCriterion("internal_id not like", value, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardIn(List<String> values) {
-            addCriterion("standard in", values, "standard");
+        public Criteria andInternalIdIn(List<String> values) {
+            addCriterion("internal_id in", values, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardNotIn(List<String> values) {
-            addCriterion("standard not in", values, "standard");
+        public Criteria andInternalIdNotIn(List<String> values) {
+            addCriterion("internal_id not in", values, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardBetween(String value1, String value2) {
-            addCriterion("standard between", value1, value2, "standard");
+        public Criteria andInternalIdBetween(String value1, String value2) {
+            addCriterion("internal_id between", value1, value2, "internalId");
             return (Criteria) this;
         }
 
-        public Criteria andStandardNotBetween(String value1, String value2) {
-            addCriterion("standard not between", value1, value2, "standard");
+        public Criteria andInternalIdNotBetween(String value1, String value2) {
+            addCriterion("internal_id not between", value1, value2, "internalId");
             return (Criteria) this;
         }
 

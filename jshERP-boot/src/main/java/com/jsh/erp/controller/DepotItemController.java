@@ -202,7 +202,7 @@ public class DepotItemController {
                     item.put("materialExtendId", diEx.getMaterialExtendId() == null ? "" : diEx.getMaterialExtendId());
                     item.put("barCode", diEx.getBarCode());
                     item.put("name", diEx.getMName());
-                    item.put("standard", diEx.getMStandard());
+                    item.put("internalId", diEx.getMInternalId());
                     item.put("model", diEx.getMModel());
                     item.put("color", diEx.getMColor());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
@@ -343,7 +343,7 @@ public class DepotItemController {
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
-                    item.put("materialStandard", diEx.getMStandard());
+                    item.put("materialInternalId", diEx.getMInternalId());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
@@ -493,7 +493,7 @@ public class DepotItemController {
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
-                    item.put("materialStandard", diEx.getMStandard());
+                    item.put("materialInternalId", diEx.getMInternalId());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
@@ -569,7 +569,7 @@ public class DepotItemController {
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
-                    item.put("materialStandard", diEx.getMStandard());
+                    item.put("materialInternalId", diEx.getMInternalId());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);

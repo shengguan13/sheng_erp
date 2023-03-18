@@ -139,7 +139,7 @@ public interface MaterialMapperEx {
             @Param("name") String name,
             @Param("model") String model,
             @Param("color") String color,
-            @Param("standard") String standard,
+            @Param("internalId") String internalId,
             @Param("mfrs") String mfrs,
             @Param("otherField1") String otherField1,
             @Param("otherField2") String otherField2,

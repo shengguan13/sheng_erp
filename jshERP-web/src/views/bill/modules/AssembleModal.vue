@@ -143,7 +143,7 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
-            { title: '规格', key: 'standard', width: '7%', type: FormTypes.normal },
+            { title: '内部零件号', key: 'internalId', width: '7%', type: FormTypes.normal },
             { title: '型号', key: 'model', width: '7%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
