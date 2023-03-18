@@ -1008,7 +1008,7 @@
       loadParseMaterialProperty() {
         let mpList = Vue.ls.get('materialPropertyList')
         for (let i = 0; i < mpList.length; i++) {
-          if (mpList[i].nativeName === "表面处理纹理") {
+          if (mpList[i].nativeName === "制造商") {
             this.mpShort.mfrs.name = mpList[i].anotherName
             this.mpShort.mfrs.enabled = mpList[i].enabled
           }

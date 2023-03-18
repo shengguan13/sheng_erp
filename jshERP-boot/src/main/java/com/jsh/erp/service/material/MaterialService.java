@@ -1156,7 +1156,7 @@ public class MaterialService {
     public String getMaterialOtherByParam(String[] mpArr, MaterialVo4Unit m) {
         String materialOther = "";
         for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("表面处理纹理")) {
+            if (mpArr[i].equals("制造商")) {
                 materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
             }
             if (mpArr[i].equals("工艺类别")) {

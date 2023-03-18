@@ -497,9 +497,9 @@ CREATE TABLE `jsh_material`  (
   `expiry_num` int(10) NULL DEFAULT NULL COMMENT '保质期天数',
   `weight` decimal(24, 6) NULL DEFAULT NULL COMMENT '基础重量(kg)',
   `enabled` bit(1) NULL DEFAULT NULL COMMENT '启用 0-禁用  1-启用',
-  `other_field1` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '你好',
-  `other_field2` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '123',
-  `other_field3` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '456',
+  `other_field1` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '工艺类别',
+  `other_field2` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '配置',
+  `other_field3` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '项目',
   `enable_serial_number` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '是否开启序列号，0否，1是',
   `enable_batch_number` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '是否开启批号，0否，1是',
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
@@ -645,7 +645,7 @@ CREATE TABLE `jsh_material_property`  (
 -- ----------------------------
 -- Records of jsh_material_property
 -- ----------------------------
-INSERT INTO `jsh_material_property` VALUES (1, '表面处理纹理', b'1', '01', '表面处理纹理', '0');
+INSERT INTO `jsh_material_property` VALUES (1, '制造商', b'1', '01', '制造商', '0');
 INSERT INTO `jsh_material_property` VALUES (2, '工艺类别', b'1', '02', '工艺类别', '0');
 INSERT INTO `jsh_material_property` VALUES (3, '配置', b'1', '03', '配置', '0');
 INSERT INTO `jsh_material_property` VALUES (4, '项目', b'1', '04', '项目', '0');

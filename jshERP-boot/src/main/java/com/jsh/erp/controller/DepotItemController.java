@@ -286,7 +286,7 @@ public class DepotItemController {
     public String getOtherInfo(String[] mpArr, DepotItemVo4WithInfoEx diEx)throws Exception {
         String materialOther = "";
         for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("表面处理纹理")) {
+            if (mpArr[i].equals("制造商")) {
                 materialOther = materialOther + ((diEx.getMMfrs() == null || diEx.getMMfrs().equals("")) ? "" : "(" + diEx.getMMfrs() + ")");
             }
             if (mpArr[i].equals("工艺类别")) {
