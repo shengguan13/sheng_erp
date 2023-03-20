@@ -147,6 +147,7 @@ public interface DepotHeadMapperEx {
             @Param("subType") String subType,
             @Param("typeBack") String typeBack,
             @Param("subTypeBack") String subTypeBack,
+            @Param("billType") String billType,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -159,7 +160,8 @@ public interface DepotHeadMapperEx {
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("typeBack") String typeBack,
-            @Param("subTypeBack") String subTypeBack);
+            @Param("subTypeBack") String subTypeBack,
+            @Param("billType") String billType);
 
     List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(
             @Param("beginTime") String beginTime,
@@ -170,7 +172,8 @@ public interface DepotHeadMapperEx {
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("typeBack") String typeBack,
-            @Param("subTypeBack") String subTypeBack);
+            @Param("subTypeBack") String subTypeBack,
+            @Param("billType") String billType);
 
     BigDecimal findAllMoney(
             @Param("supplierId") Integer supplierId,
