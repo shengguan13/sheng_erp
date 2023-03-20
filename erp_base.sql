@@ -11,7 +11,7 @@
  Target Server Version : 50704 (5.7.4-m14)
  File Encoding         : 65001
 
- Date: 20/03/2023 14:42:36
+ Date: 20/03/2023 16:30:53
 */
 
 SET NAMES utf8mb4;
@@ -490,6 +490,7 @@ CREATE TABLE `jsh_material`  (
   `model` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '型号',
   `internal_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '内部零件号',
   `color` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '颜色',
+  `project` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '项目（多个项目用|隔开）',
   `unit` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '单位-单个',
   `remark` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   `img_name` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片名称',
@@ -523,8 +524,8 @@ CREATE TABLE `jsh_material`  (
 -- ----------------------------
 -- Records of jsh_material
 -- ----------------------------
-INSERT INTO `jsh_material` VALUES (620, NULL, '金属件', NULL, '111111', NULL, NULL, '个', NULL, '', NULL, NULL, 0.002000, b'1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '0', 63, '0');
-INSERT INTO `jsh_material` VALUES (621, NULL, 'PA66', NULL, '111112', NULL, NULL, 'kg', NULL, '', NULL, 100, 10.000000, b'1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '1', 63, '0');
+INSERT INTO `jsh_material` VALUES (620, NULL, '金属件', NULL, '111111', NULL, NULL, NULL, '个', NULL, '', NULL, NULL, 0.002000, b'1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '0', 63, '0');
+INSERT INTO `jsh_material` VALUES (621, NULL, 'PA66', NULL, '111112', NULL, NULL, NULL, 'kg', NULL, '', NULL, 100, 10.000000, b'1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '1', 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_attribute
