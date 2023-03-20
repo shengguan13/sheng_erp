@@ -19,6 +19,17 @@
     <result column="other_field1" jdbcType="VARCHAR" property="otherField1" />
     <result column="other_field2" jdbcType="VARCHAR" property="otherField2" />
     <result column="other_field3" jdbcType="VARCHAR" property="otherField3" />
+    <result column="other_field4" jdbcType="VARCHAR" property="otherField4" />
+    <result column="other_field5" jdbcType="VARCHAR" property="otherField5" />
+    <result column="other_field6" jdbcType="VARCHAR" property="otherField6" />
+    <result column="other_field7" jdbcType="VARCHAR" property="otherField7" />
+    <result column="other_field8" jdbcType="VARCHAR" property="otherField8" />
+    <result column="other_field9" jdbcType="VARCHAR" property="otherField9" />
+    <result column="other_field10" jdbcType="VARCHAR" property="otherField10" />
+    <result column="other_field11" jdbcType="VARCHAR" property="otherField11" />
+    <result column="other_field12" jdbcType="VARCHAR" property="otherField12" />
+    <result column="other_field13" jdbcType="VARCHAR" property="otherField13" />
+    <result column="other_field14" jdbcType="VARCHAR" property="otherField14" />
     <result column="enable_serial_number" jdbcType="VARCHAR" property="enableSerialNumber" />
     <result column="enable_batch_number" jdbcType="VARCHAR" property="enableBatchNumber" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
@@ -84,8 +95,9 @@
   </sql>
   <sql id="Base_Column_List">
     id, category_id, name, mfrs, model, internal_id, color, unit, remark, img_name, unit_id,
-    expiry_num, weight, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
-    enable_batch_number, tenant_id, delete_flag
+    expiry_num, weight, enabled, other_field1, other_field2, other_field3, other_field4, other_field5,
+    other_field6, other_field7, other_field8, other_field9, other_field10, other_field11, other_field12,
+    other_field13, other_field14, enable_serial_number, enable_batch_number, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
     select
@@ -123,7 +135,11 @@
       color, unit, remark, 
       img_name, unit_id, expiry_num, 
       weight, enabled, other_field1, 
-      other_field2, other_field3, enable_serial_number, 
+      other_field2, other_field3, other_field4,
+      other_field5, other_field6, other_field7,
+      other_field8, other_field9, other_field10,
+      other_field11, other_field12, other_field13,
+      other_field14,  enable_serial_number,
       enable_batch_number, tenant_id, delete_flag
       )
     values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
@@ -131,7 +147,11 @@
       #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{imgName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{expiryNum,jdbcType=INTEGER}, 
       #{weight,jdbcType=DECIMAL}, #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, 
-      #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, #{enableSerialNumber,jdbcType=VARCHAR}, 
+      #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, #{otherField4,jdbcType=VARCHAR},
+      #{otherField5,jdbcType=VARCHAR}, #{otherField6,jdbcType=VARCHAR}, #{otherField7,jdbcType=VARCHAR},
+      #{otherField8,jdbcType=VARCHAR}, #{otherField9,jdbcType=VARCHAR}, #{otherField10,jdbcType=VARCHAR},
+      #{otherField11,jdbcType=VARCHAR}, #{otherField12,jdbcType=VARCHAR}, #{otherField13,jdbcType=VARCHAR},
+      #{otherField14,jdbcType=VARCHAR}, #{enableSerialNumber,jdbcType=VARCHAR},
       #{enableBatchNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
       )
   </insert>
@@ -188,6 +208,39 @@
       </if>
       <if test="otherField3 != null">
         other_field3,
+      </if>
+      <if test="otherField4 != null">
+        other_field4,
+      </if>
+      <if test="otherField5 != null">
+        other_field5,
+      </if>
+      <if test="otherField6 != null">
+        other_field6,
+      </if>
+      <if test="otherField7 != null">
+        other_field7,
+      </if>
+      <if test="otherField8 != null">
+        other_field8,
+      </if>
+      <if test="otherField9 != null">
+        other_field9,
+      </if>
+      <if test="otherField10 != null">
+        other_field10,
+      </if>
+      <if test="otherField11 != null">
+        other_field11,
+      </if>
+      <if test="otherField12 != null">
+        other_field12,
+      </if>
+      <if test="otherField13 != null">
+        other_field13,
+      </if>
+      <if test="otherField14 != null">
+        other_field14,
       </if>
       <if test="enableSerialNumber != null">
         enable_serial_number,
@@ -253,6 +306,39 @@
       </if>
       <if test="otherField3 != null">
         #{otherField3,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField4 != null">
+        #{otherField4,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField5 != null">
+        #{otherField5,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField6 != null">
+        #{otherField6,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField7 != null">
+        #{otherField7,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField8 != null">
+        #{otherField8,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField9 != null">
+        #{otherField9,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField10 != null">
+        #{otherField10,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField11 != null">
+        #{otherField11,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField12 != null">
+        #{otherField12,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField13 != null">
+        #{otherField13,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField14 != null">
+        #{otherField14,jdbcType=VARCHAR},
       </if>
       <if test="enableSerialNumber != null">
         #{enableSerialNumber,jdbcType=VARCHAR},
@@ -328,6 +414,39 @@
       <if test="record.otherField3 != null">
         other_field3 = #{record.otherField3,jdbcType=VARCHAR},
       </if>
+      <if test="record.otherField4 != null">
+        other_field4 = #{record.otherField4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField5 != null">
+        other_field5 = #{record.otherField5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField6 != null">
+        other_field6 = #{record.otherField6,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField7 != null">
+        other_field7 = #{record.otherField7,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField8 != null">
+        other_field8 = #{record.otherField8,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField9 != null">
+        other_field9 = #{record.otherField9,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField10 != null">
+        other_field10 = #{record.otherField10,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField11 != null">
+        other_field11 = #{record.otherField11,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField12 != null">
+        other_field12 = #{record.otherField12,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField13 != null">
+        other_field13 = #{record.otherField13,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otherField14 != null">
+        other_field14 = #{record.otherField14,jdbcType=VARCHAR},
+      </if>
       <if test="record.enableSerialNumber != null">
         enable_serial_number = #{record.enableSerialNumber,jdbcType=VARCHAR},
       </if>
@@ -364,6 +483,17 @@
       other_field1 = #{record.otherField1,jdbcType=VARCHAR},
       other_field2 = #{record.otherField2,jdbcType=VARCHAR},
       other_field3 = #{record.otherField3,jdbcType=VARCHAR},
+      other_field4 = #{record.otherField4,jdbcType=VARCHAR},
+      other_field5 = #{record.otherField5,jdbcType=VARCHAR},
+      other_field6 = #{record.otherField6,jdbcType=VARCHAR},
+      other_field7 = #{record.otherField7,jdbcType=VARCHAR},
+      other_field8 = #{record.otherField8,jdbcType=VARCHAR},
+      other_field9 = #{record.otherField9,jdbcType=VARCHAR},
+      other_field10 = #{record.otherField10,jdbcType=VARCHAR},
+      other_field11 = #{record.otherField11,jdbcType=VARCHAR},
+      other_field12 = #{record.otherField12,jdbcType=VARCHAR},
+      other_field13 = #{record.otherField13,jdbcType=VARCHAR},
+      other_field14 = #{record.otherField14,jdbcType=VARCHAR},
       enable_serial_number = #{record.enableSerialNumber,jdbcType=VARCHAR},
       enable_batch_number = #{record.enableBatchNumber,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -423,6 +553,39 @@
       <if test="otherField3 != null">
         other_field3 = #{otherField3,jdbcType=VARCHAR},
       </if>
+      <if test="otherField4 != null">
+        other_field4 = #{otherField4,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField5 != null">
+        other_field5 = #{otherField5,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField6 != null">
+        other_field6 = #{otherField6,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField7 != null">
+        other_field7 = #{otherField7,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField8 != null">
+        other_field8 = #{otherField8,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField9 != null">
+        other_field9 = #{otherField9,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField10 != null">
+        other_field10 = #{otherField10,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField11 != null">
+        other_field11 = #{otherField11,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField12 != null">
+        other_field12 = #{otherField12,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField13 != null">
+        other_field13 = #{otherField13,jdbcType=VARCHAR},
+      </if>
+      <if test="otherField14 != null">
+        other_field14 = #{otherField14,jdbcType=VARCHAR},
+      </if>
       <if test="enableSerialNumber != null">
         enable_serial_number = #{enableSerialNumber,jdbcType=VARCHAR},
       </if>
@@ -456,6 +619,17 @@
       other_field1 = #{otherField1,jdbcType=VARCHAR},
       other_field2 = #{otherField2,jdbcType=VARCHAR},
       other_field3 = #{otherField3,jdbcType=VARCHAR},
+      other_field4 = #{otherField4,jdbcType=VARCHAR},
+      other_field5 = #{otherField5,jdbcType=VARCHAR},
+      other_field6 = #{otherField6,jdbcType=VARCHAR},
+      other_field7 = #{otherField7,jdbcType=VARCHAR},
+      other_field8 = #{otherField8,jdbcType=VARCHAR},
+      other_field9 = #{otherField9,jdbcType=VARCHAR},
+      other_field10 = #{otherField10,jdbcType=VARCHAR},
+      other_field11 = #{otherField11,jdbcType=VARCHAR},
+      other_field12 = #{otherField12,jdbcType=VARCHAR},
+      other_field13 = #{otherField13,jdbcType=VARCHAR},
+      other_field14 = #{otherField14,jdbcType=VARCHAR},
       enable_serial_number = #{enableSerialNumber,jdbcType=VARCHAR},
       enable_batch_number = #{enableBatchNumber,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},

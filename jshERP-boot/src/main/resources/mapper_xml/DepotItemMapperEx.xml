@@ -29,6 +29,17 @@
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
         <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
+        <result column="MOtherField4" jdbcType="VARCHAR" property="MOtherField4" />
+        <result column="MOtherField5" jdbcType="VARCHAR" property="MOtherField5" />
+        <result column="MOtherField6" jdbcType="VARCHAR" property="MOtherField6" />
+        <result column="MOtherField7" jdbcType="VARCHAR" property="MOtherField7" />
+        <result column="MOtherField8" jdbcType="VARCHAR" property="MOtherField8" />
+        <result column="MOtherField9" jdbcType="VARCHAR" property="MOtherField9" />
+        <result column="MOtherField10" jdbcType="VARCHAR" property="MOtherField10" />
+        <result column="MOtherField11" jdbcType="VARCHAR" property="MOtherField11" />
+        <result column="MOtherField12" jdbcType="VARCHAR" property="MOtherField12" />
+        <result column="MOtherField13" jdbcType="VARCHAR" property="MOtherField13" />
+        <result column="MOtherField14" jdbcType="VARCHAR" property="MOtherField14" />
         <result column="enable_serial_number" jdbcType="VARCHAR" property="enableSerialNumber" />
         <result column="enable_batch_number" jdbcType="VARCHAR" property="enableBatchNumber" />
         <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
@@ -48,6 +59,17 @@
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
         <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
+        <result column="MOtherField4" jdbcType="VARCHAR" property="MOtherField4" />
+        <result column="MOtherField5" jdbcType="VARCHAR" property="MOtherField5" />
+        <result column="MOtherField6" jdbcType="VARCHAR" property="MOtherField6" />
+        <result column="MOtherField7" jdbcType="VARCHAR" property="MOtherField7" />
+        <result column="MOtherField8" jdbcType="VARCHAR" property="MOtherField8" />
+        <result column="MOtherField9" jdbcType="VARCHAR" property="MOtherField9" />
+        <result column="MOtherField10" jdbcType="VARCHAR" property="MOtherField10" />
+        <result column="MOtherField11" jdbcType="VARCHAR" property="MOtherField11" />
+        <result column="MOtherField12" jdbcType="VARCHAR" property="MOtherField12" />
+        <result column="MOtherField13" jdbcType="VARCHAR" property="MOtherField13" />
+        <result column="MOtherField14" jdbcType="VARCHAR" property="MOtherField14" />
         <result column="unit_id" jdbcType="BIGINT" property="unitId" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
@@ -65,6 +87,17 @@
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
         <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
+        <result column="MOtherField4" jdbcType="VARCHAR" property="MOtherField4" />
+        <result column="MOtherField5" jdbcType="VARCHAR" property="MOtherField5" />
+        <result column="MOtherField6" jdbcType="VARCHAR" property="MOtherField6" />
+        <result column="MOtherField7" jdbcType="VARCHAR" property="MOtherField7" />
+        <result column="MOtherField8" jdbcType="VARCHAR" property="MOtherField8" />
+        <result column="MOtherField9" jdbcType="VARCHAR" property="MOtherField9" />
+        <result column="MOtherField10" jdbcType="VARCHAR" property="MOtherField10" />
+        <result column="MOtherField11" jdbcType="VARCHAR" property="MOtherField11" />
+        <result column="MOtherField12" jdbcType="VARCHAR" property="MOtherField12" />
+        <result column="MOtherField13" jdbcType="VARCHAR" property="MOtherField13" />
+        <result column="MOtherField14" jdbcType="VARCHAR" property="MOtherField14" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="current_number" jdbcType="DECIMAL" property="currentNumber" />
         <result column="low_safe_stock" jdbcType="DECIMAL" property="lowSafeStock" />
@@ -288,7 +321,11 @@
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.internal_id MInternalId,m.mfrs MMfrs,m.weight,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,m.enable_serial_number, m.enable_batch_number,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
+        m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
+        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field13 MOtherField13,m.other_field14 MOtherField14,m.enable_serial_number, m.enable_batch_number,
         dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
         from jsh_depot_item di
         left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
@@ -303,7 +340,11 @@
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
+        m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
+        m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
+        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field13 MOtherField13,m.other_field14 MOtherField14, concat_ws('', m.unit, u.basic_unit) MaterialUnit,
+        m.color MColor, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
@@ -346,7 +387,10 @@
     <select id="getListWithBugOrSale" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, u.name unit_name
+        m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
+        m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
+        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field13 MOtherField13,m.other_field14 MOtherField14,concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, u.name unit_name
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -647,7 +691,11 @@
 
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
         select m.id MId, m.name MName, me.bar_code, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,m.color MColor,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,d.name depotName,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
+        m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
+        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field13 MOtherField13,m.other_field14 MOtherField14,d.name depotName,
         m.unit MaterialUnit, u.basic_unit unit_name,mcs.current_number,
         mis.low_safe_stock, mis.high_safe_stock
         from jsh_material m

@@ -37,6 +37,28 @@ public class Material {
 
     private String otherField3;
 
+    private String otherField4;
+
+    private String otherField5;
+
+    private String otherField6;
+
+    private String otherField7;
+
+    private String otherField8;
+
+    private String otherField9;
+
+    private String otherField10;
+
+    private String otherField11;
+
+    private String otherField12;
+
+    private String otherField13;
+
+    private String otherField14;
+
     private String enableSerialNumber;
 
     private String enableBatchNumber;
@@ -179,6 +201,94 @@ public class Material {
 
     public void setOtherField3(String otherField3) {
         this.otherField3 = otherField3 == null ? null : otherField3.trim();
+    }
+
+    public String getOtherField4() {
+        return otherField4;
+    }
+
+    public void setOtherField4(String otherField4) {
+        this.otherField4 = otherField4 == null ? null : otherField4.trim();
+    }
+
+    public String getOtherField5() {
+        return otherField5;
+    }
+
+    public void setOtherField5(String otherField5) {
+        this.otherField5 = otherField5 == null ? null : otherField5.trim();
+    }
+
+    public String getOtherField6() {
+        return otherField6;
+    }
+
+    public void setOtherField6(String otherField6) {
+        this.otherField6 = otherField6 == null ? null : otherField6.trim();
+    }
+
+    public String getOtherField7() {
+        return otherField7;
+    }
+
+    public void setOtherField7(String otherField7) {
+        this.otherField7 = otherField7 == null ? null : otherField7.trim();
+    }
+
+    public String getOtherField8() {
+        return otherField8;
+    }
+
+    public void setOtherField8(String otherField8) {
+        this.otherField8 = otherField8 == null ? null : otherField8.trim();
+    }
+
+    public String getOtherField9() {
+        return otherField9;
+    }
+
+    public void setOtherField9(String otherField9) {
+        this.otherField9 = otherField9 == null ? null : otherField9.trim();
+    }
+
+    public String getOtherField10() {
+        return otherField10;
+    }
+
+    public void setOtherField10(String otherField10) {
+        this.otherField10 = otherField10 == null ? null : otherField10.trim();
+    }
+
+    public String getOtherField11() {
+        return otherField11;
+    }
+
+    public void setOtherField11(String otherField11) {
+        this.otherField11 = otherField11 == null ? null : otherField11.trim();
+    }
+
+    public String getOtherField12() {
+        return otherField12;
+    }
+
+    public void setOtherField12(String otherField12) {
+        this.otherField12 = otherField12 == null ? null : otherField12.trim();
+    }
+
+    public String getOtherField13() {
+        return otherField13;
+    }
+
+    public void setOtherField13(String otherField13) {
+        this.otherField13 = otherField13 == null ? null : otherField13.trim();
+    }
+
+    public String getOtherField14() {
+        return otherField14;
+    }
+
+    public void setOtherField14(String otherField14) {
+        this.otherField14 = otherField14 == null ? null : otherField14.trim();
     }
 
     public String getEnableSerialNumber() {

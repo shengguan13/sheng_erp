@@ -21,8 +21,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="颜色" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入颜色查询" v-model="queryParam.color"></a-input>
+                <a-form-item label="颜色编码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入颜色编码查询" v-model="queryParam.color"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -224,7 +224,7 @@
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '内部零件号', dataIndex: 'internalId', width: 120},
           {title: '客户零件号', dataIndex: 'model', width: 120},
-          {title: '颜色', dataIndex: 'color', width: 70, ellipsis:true},
+          {title: '颜色编码', dataIndex: 'color', width: 70, ellipsis:true},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
           {title: '单位', dataIndex: 'unit', width: 100, ellipsis:true,

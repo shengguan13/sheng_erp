@@ -54,7 +54,13 @@
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
             and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
-                or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+                or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther}
+                or m.other_field4 like #{bindOther} or m.other_field5 like #{bindOther}
+                or m.other_field6 like #{bindOther} or m.other_field7 like #{bindOther}
+                or m.other_field8 like #{bindOther} or m.other_field9 like #{bindOther}
+                or m.other_field10 like #{bindOther} or m.other_field11 like #{bindOther}
+                or m.other_field12 like #{bindOther} or m.other_field13 like #{bindOther}
+                or m.other_field14 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -109,7 +115,13 @@
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
             and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
-            or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+                or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther}
+                or m.other_field4 like #{bindOther} or m.other_field5 like #{bindOther}
+                or m.other_field6 like #{bindOther} or m.other_field7 like #{bindOther}
+                or m.other_field8 like #{bindOther} or m.other_field9 like #{bindOther}
+                or m.other_field10 like #{bindOther} or m.other_field11 like #{bindOther}
+                or m.other_field12 like #{bindOther} or m.other_field13 like #{bindOther}
+                or m.other_field14 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -193,6 +205,39 @@
             <if test="otherField3 != null">
                 other_field3,
             </if>
+            <if test="otherField4 != null">
+                other_field4,
+            </if>
+            <if test="otherField5 != null">
+                other_field5,
+            </if>
+            <if test="otherField6 != null">
+                other_field6,
+            </if>
+            <if test="otherField7 != null">
+                other_field7,
+            </if>
+            <if test="otherField8 != null">
+                other_field8,
+            </if>
+            <if test="otherField9 != null">
+                other_field9,
+            </if>
+            <if test="otherField10 != null">
+                other_field10,
+            </if>
+            <if test="otherField11 != null">
+                other_field11,
+            </if>
+            <if test="otherField12 != null">
+                other_field12,
+            </if>
+            <if test="otherField13 != null">
+                other_field13,
+            </if>
+            <if test="otherField14 != null">
+                other_field14,
+            </if>
             <if test="enableSerialNumber != null">
                 enable_serial_number,
             </if>
@@ -257,6 +302,39 @@
             </if>
             <if test="otherField3 != null">
                 #{otherField3,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField4 != null">
+                #{otherField4,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField5 != null">
+                #{otherField5,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField6 != null">
+                #{otherField6,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField7 != null">
+                #{otherField7,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField8 != null">
+                #{otherField8,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField9 != null">
+                #{otherField9,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField10 != null">
+                #{otherField10,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField11 != null">
+                #{otherField11,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField12 != null">
+                #{otherField12,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField13 != null">
+                #{otherField13,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField14 != null">
+                #{otherField14,jdbcType=VARCHAR},
             </if>
             <if test="enableSerialNumber != null">
                 #{enableSerialNumber,jdbcType=VARCHAR},
@@ -692,6 +770,39 @@
         </if>
         <if test="otherField3 != null">
             and m.other_field3 = #{otherField3}
+        </if>
+        <if test="otherField4 != null">
+            and m.other_field4 = #{otherField4}
+        </if>
+        <if test="otherField5 != null">
+            and m.other_field5 = #{otherField5}
+        </if>
+        <if test="otherField6 != null">
+            and m.other_field6 = #{otherField6}
+        </if>
+        <if test="otherField7 != null">
+            and m.other_field7 = #{otherField7}
+        </if>
+        <if test="otherField8 != null">
+            and m.other_field8 = #{otherField8}
+        </if>
+        <if test="otherField9 != null">
+            and m.other_field9 = #{otherField9}
+        </if>
+        <if test="otherField10 != null">
+            and m.other_field10 = #{otherField10}
+        </if>
+        <if test="otherField11 != null">
+            and m.other_field11 = #{otherField11}
+        </if>
+        <if test="otherField12 != null">
+            and m.other_field12 = #{otherField12}
+        </if>
+        <if test="otherField13 != null">
+            and m.other_field13 = #{otherField13}
+        </if>
+        <if test="otherField14 != null">
+            and m.other_field14 = #{otherField14}
         </if>
         <if test="unit != null">
             and m.unit = #{unit}

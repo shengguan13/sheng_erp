@@ -1073,7 +1073,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1092,7 +1092,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1110,7 +1110,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1130,7 +1130,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1153,7 +1153,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1175,7 +1175,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1195,7 +1195,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1218,7 +1218,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1241,7 +1241,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1260,7 +1260,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1279,7 +1279,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '调入仓库', dataIndex: 'anotherDepotName'},
@@ -1297,7 +1297,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1314,7 +1314,7 @@
           { title: '名称', dataIndex: 'name'},
           { title: '内部零件号', dataIndex: 'internalId'},
           { title: '客户零件号', dataIndex: 'model'},
-          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色编码', dataIndex: 'color'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1605,7 +1605,7 @@
       retailExportExcel() {
         let aoa = []
         aoa = [['会员卡号：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多供应商', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多供应商', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1628,7 +1628,7 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['条码', '名称', '内部零件号', '客户零件号', '颜色', '扩展信息', '库存', '单位', '多供应商', '数量', finishType, '单价', '金额', '税率(%)', '税额', '价税合计', '备注']
+        let title = ['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '扩展信息', '库存', '单位', '多供应商', '数量', finishType, '单价', '金额', '税率(%)', '税额', '价税合计', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1648,7 +1648,7 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单号：', this.model.linkNumber],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多供应商', '数量', '单价', '金额', '税率(%)', '税额', '价税合计', '重量', '备注']
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多供应商', '数量', '单价', '金额', '税率(%)', '税额', '价税合计', '重量', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1668,7 +1668,7 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多供应商', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多供应商', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1682,7 +1682,7 @@
       allocationOutExportExcel() {
         let aoa = []
         aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色', '扩展信息', '库存', '调入仓库', '单位', '多供应商', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '扩展信息', '库存', '调入仓库', '单位', '多供应商', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1696,7 +1696,7 @@
       assembleExportExcel() {
         let aoa = []
         aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['商品类型', '仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色', '扩展信息', '库存', '单位', '多供应商', '数量', '单价', '金额', '备注']
+        let title = ['商品类型', '仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '扩展信息', '库存', '单位', '多供应商', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]

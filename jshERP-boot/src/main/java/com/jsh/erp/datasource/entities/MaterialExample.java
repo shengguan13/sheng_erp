@@ -1235,6 +1235,8 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
+        // TODO: 添加其他otherField的判定条件（如果有需要）
+
         public Criteria andEnableSerialNumberIsNull() {
             addCriterion("enable_serial_number is null");
             return (Criteria) this;

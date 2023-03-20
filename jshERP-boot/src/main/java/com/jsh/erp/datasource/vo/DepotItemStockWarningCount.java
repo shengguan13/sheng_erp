@@ -31,6 +31,28 @@ public class DepotItemStockWarningCount {
 
     private String MOtherField3;
 
+    private String MOtherField4;
+
+    private String MOtherField5;
+
+    private String MOtherField6;
+
+    private String MOtherField7;
+
+    private String MOtherField8;
+
+    private String MOtherField9;
+
+    private String MOtherField10;
+
+    private String MOtherField11;
+
+    private String MOtherField12;
+
+    private String MOtherField13;
+
+    private String MOtherField14;
+
     private String depotName;
 
     private BigDecimal currentNumber;
@@ -145,6 +167,94 @@ public class DepotItemStockWarningCount {
 
     public void setMOtherField3(String MOtherField3) {
         this.MOtherField3 = MOtherField3;
+    }
+
+    public String getMOtherField4() {
+        return MOtherField4;
+    }
+
+    public void setMOtherField4(String MOtherField4) {
+        this.MOtherField4 = MOtherField4;
+    }
+
+    public String getMOtherField5() {
+        return MOtherField5;
+    }
+
+    public void setMOtherField5(String MOtherField5) {
+        this.MOtherField5 = MOtherField5;
+    }
+
+    public String getMOtherField6() {
+        return MOtherField6;
+    }
+
+    public void setMOtherField6(String MOtherField6) {
+        this.MOtherField6 = MOtherField6;
+    }
+
+    public String getMOtherField7() {
+        return MOtherField7;
+    }
+
+    public void setMOtherField7(String MOtherField7) {
+        this.MOtherField7 = MOtherField7;
+    }
+
+    public String getMOtherField8() {
+        return MOtherField8;
+    }
+
+    public void setMOtherField8(String MOtherField8) {
+        this.MOtherField8 = MOtherField8;
+    }
+
+    public String getMOtherField9() {
+        return MOtherField9;
+    }
+
+    public void setMOtherField9(String MOtherField9) {
+        this.MOtherField9 = MOtherField9;
+    }
+
+    public String getMOtherField10() {
+        return MOtherField10;
+    }
+
+    public void setMOtherField10(String MOtherField10) {
+        this.MOtherField10 = MOtherField10;
+    }
+
+    public String getMOtherField11() {
+        return MOtherField11;
+    }
+
+    public void setMOtherField11(String MOtherField11) {
+        this.MOtherField11 = MOtherField11;
+    }
+
+    public String getMOtherField12() {
+        return MOtherField12;
+    }
+
+    public void setMOtherField12(String MOtherField12) {
+        this.MOtherField12 = MOtherField12;
+    }
+
+    public String getMOtherField13() {
+        return MOtherField13;
+    }
+
+    public void setMOtherField13(String MOtherField13) {
+        this.MOtherField13 = MOtherField13;
+    }
+
+    public String getMOtherField14() {
+        return MOtherField14;
+    }
+
+    public void setMOtherField14(String MOtherField14) {
+        this.MOtherField14 = MOtherField14;
     }
 
     public String getDepotName() {

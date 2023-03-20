@@ -237,7 +237,7 @@
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
             { title: '内部零件号', key: 'internalId', width: '7%', type: FormTypes.normal },
             { title: '客户零件号', key: 'model', width: '7%', type: FormTypes.normal },
-            { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
+            { title: '颜色编码', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },

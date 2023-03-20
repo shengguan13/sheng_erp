@@ -298,6 +298,39 @@ public class DepotItemController {
             if (mpArr[i].equals("项目")) {
                 materialOther = materialOther + ((diEx.getMOtherField3() == null || diEx.getMOtherField3().equals("")) ? "" : "(" + diEx.getMOtherField3() + ")");
             }
+            if (mpArr[i].equals("材料牌号")) {
+                materialOther = materialOther + ((diEx.getMOtherField4() == null || diEx.getMOtherField4().equals("")) ? "" : "(" + diEx.getMOtherField4() + ")");
+            }
+            if (mpArr[i].equals("材料类型/标准")) {
+                materialOther = materialOther + ((diEx.getMOtherField5() == null || diEx.getMOtherField5().equals("")) ? "" : "(" + diEx.getMOtherField5() + ")");
+            }
+            if (mpArr[i].equals("原材料厂家")) {
+                materialOther = materialOther + ((diEx.getMOtherField6() == null || diEx.getMOtherField6().equals("")) ? "" : "(" + diEx.getMOtherField6() + ")");
+            }
+            if (mpArr[i].equals("外协件厂家")) {
+                materialOther = materialOther + ((diEx.getMOtherField7() == null || diEx.getMOtherField7().equals("")) ? "" : "(" + diEx.getMOtherField7() + ")");
+            }
+            if (mpArr[i].equals("尺寸")) {
+                materialOther = materialOther + ((diEx.getMOtherField8() == null || diEx.getMOtherField8().equals("")) ? "" : "(" + diEx.getMOtherField8() + ")");
+            }
+            if (mpArr[i].equals("检具")) {
+                materialOther = materialOther + ((diEx.getMOtherField9() == null || diEx.getMOtherField9().equals("")) ? "" : "(" + diEx.getMOtherField9() + ")");
+            }
+            if (mpArr[i].equals("用量/车（件）")) {
+                materialOther = materialOther + ((diEx.getMOtherField10() == null || diEx.getMOtherField10().equals("")) ? "" : "(" + diEx.getMOtherField10() + ")");
+            }
+            if (mpArr[i].equals("料道（kg）")) {
+                materialOther = materialOther + ((diEx.getMOtherField11() == null || diEx.getMOtherField11().equals("")) ? "" : "(" + diEx.getMOtherField11() + ")");
+            }
+            if (mpArr[i].equals("表面处理纹理")) {
+                materialOther = materialOther + ((diEx.getMOtherField12() == null || diEx.getMOtherField12().equals("")) ? "" : "(" + diEx.getMOtherField12() + ")");
+            }
+            if (mpArr[i].equals("表面积（m²）")) {
+                materialOther = materialOther + ((diEx.getMOtherField13() == null || diEx.getMOtherField13().equals("")) ? "" : "(" + diEx.getMOtherField13() + ")");
+            }
+            if (mpArr[i].equals("组装等级关系")) {
+                materialOther = materialOther + ((diEx.getMOtherField14() == null || diEx.getMOtherField14().equals("")) ? "" : "(" + diEx.getMOtherField14() + ")");
+            }
         }
         return materialOther;
     }
@@ -648,6 +681,17 @@ public class DepotItemController {
                     diEx.setMOtherField1(disw.getMOtherField1());
                     diEx.setMOtherField2(disw.getMOtherField2());
                     diEx.setMOtherField3(disw.getMOtherField3());
+                    diEx.setMOtherField4(disw.getMOtherField4());
+                    diEx.setMOtherField5(disw.getMOtherField5());
+                    diEx.setMOtherField6(disw.getMOtherField6());
+                    diEx.setMOtherField7(disw.getMOtherField7());
+                    diEx.setMOtherField8(disw.getMOtherField8());
+                    diEx.setMOtherField9(disw.getMOtherField9());
+                    diEx.setMOtherField10(disw.getMOtherField10());
+                    diEx.setMOtherField11(disw.getMOtherField11());
+                    diEx.setMOtherField12(disw.getMOtherField12());
+                    diEx.setMOtherField13(disw.getMOtherField13());
+                    diEx.setMOtherField14(disw.getMOtherField14());
                     disw.setMaterialOther(getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
                     if(null!=disw.getLowSafeStock() && disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {

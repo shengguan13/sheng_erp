@@ -65,6 +65,17 @@ public class MaterialController {
      * @param otherField1
      * @param otherField2
      * @param otherField3
+     * @param otherField4
+     * @param otherField5
+     * @param otherField6
+     * @param otherField7
+     * @param otherField8
+     * @param otherField9
+     * @param otherField10
+     * @param otherField11
+     * @param otherField12
+     * @param otherField13
+     * @param otherField14
      * @param unit
      * @param unitId
      * @param request
@@ -77,12 +88,22 @@ public class MaterialController {
                                @RequestParam("model") String model, @RequestParam("color") String color,
                                @RequestParam("internalId") String internalId, @RequestParam("mfrs") String mfrs,
                                @RequestParam("otherField1") String otherField1, @RequestParam("otherField2") String otherField2,
-                               @RequestParam("otherField3") String otherField3, @RequestParam("unit") String unit,@RequestParam("unitId") Long unitId,
+                               @RequestParam("otherField3") String otherField3, @RequestParam("otherField4") String otherField4,
+                               @RequestParam("otherField5") String otherField5, @RequestParam("otherField6") String otherField6,
+                               @RequestParam("otherField7") String otherField7, @RequestParam("otherField8") String otherField8,
+                               @RequestParam("otherField9") String otherField9, @RequestParam("otherField10") String otherField10,
+                               @RequestParam("otherField11") String otherField11, @RequestParam("otherField12") String otherField12,
+                               @RequestParam("otherField13") String otherField13, @RequestParam("otherField14") String otherField14,
+                               @RequestParam("unit") String unit,@RequestParam("unitId") Long unitId,
                                HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int exist = materialService.checkIsExist(id, name, StringUtil.toNull(model), StringUtil.toNull(color),
                 StringUtil.toNull(internalId), StringUtil.toNull(mfrs), StringUtil.toNull(otherField1),
-                StringUtil.toNull(otherField2), StringUtil.toNull(otherField3), StringUtil.toNull(unit), unitId);
+                StringUtil.toNull(otherField2), StringUtil.toNull(otherField3), StringUtil.toNull(otherField4),
+                StringUtil.toNull(otherField5), StringUtil.toNull(otherField6), StringUtil.toNull(otherField7),
+                StringUtil.toNull(otherField8), StringUtil.toNull(otherField9), StringUtil.toNull(otherField10),
+                StringUtil.toNull(otherField11), StringUtil.toNull(otherField12), StringUtil.toNull(otherField13),
+                StringUtil.toNull(otherField14), StringUtil.toNull(unit), unitId);
         if(exist > 0) {
             objectMap.put("status", true);
         } else {
@@ -336,7 +357,7 @@ public class MaterialController {
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
                     StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
                     StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"条码", "名称", "内部零件号", "客户零件号", "颜色", "类别", "扩展信息", "单位", "净重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
+            String[] names = {"条码", "名称", "内部零件号", "客户零件号", "颜色编码", "类别", "扩展信息", "单位", "净重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<>();
             if (null != dataList) {

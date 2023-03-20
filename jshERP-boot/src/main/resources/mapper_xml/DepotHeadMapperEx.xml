@@ -100,7 +100,11 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey}
                 or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
-                or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+                or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey} or m.other_field4 like #{bindKey}
+                or m.other_field5 like #{bindKey} or m.other_field6 like #{bindKey} or m.other_field7 like #{bindKey}
+                or m.other_field8 like #{bindKey} or m.other_field9 like #{bindKey} or m.other_field10 like #{bindKey}
+                or m.other_field11 like #{bindKey} or m.other_field12 like #{bindKey} or m.other_field13 like #{bindKey}
+                or m.other_field14 like #{bindKey})
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}
@@ -198,7 +202,11 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey}
             or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
-            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey} or m.other_field4 like #{bindKey}
+            or m.other_field5 like #{bindKey} or m.other_field6 like #{bindKey} or m.other_field7 like #{bindKey}
+            or m.other_field8 like #{bindKey} or m.other_field9 like #{bindKey} or m.other_field10 like #{bindKey}
+            or m.other_field11 like #{bindKey} or m.other_field12 like #{bindKey} or m.other_field13 like #{bindKey}
+            or m.other_field14 like #{bindKey})
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}

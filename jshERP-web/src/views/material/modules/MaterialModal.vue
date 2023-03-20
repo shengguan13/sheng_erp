@@ -67,9 +67,9 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色" data-step="5" data-title="颜色"
-                             data-intro="请填写商品的颜色，如果是多供应商商品可以不填（下面有多供应商开关）">
-                  <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色编码" data-step="5" data-title="颜色编码"
+                             data-intro="请填写零件的颜色编码">
+                  <a-input placeholder="请输入颜色编码" v-decorator.trim="[ 'color' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -204,6 +204,83 @@
                 </a-form-item>
               </a-col>
             </a-row>
+            <a-row v-if="mpShort.otherField4.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField4.name">
+                  <a-input v-decorator.trim="[ 'otherField4' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField5.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField5.name">
+                  <a-input v-decorator.trim="[ 'otherField5' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField6.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField6.name">
+                  <a-input v-decorator.trim="[ 'otherField6' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField7.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField7.name">
+                  <a-input v-decorator.trim="[ 'otherField7' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField8.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField8.name">
+                  <a-input v-decorator.trim="[ 'otherField8' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField9.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField9.name">
+                  <a-input v-decorator.trim="[ 'otherField9' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField10.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField10.name">
+                  <a-input v-decorator.trim="[ 'otherField10' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField11.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField11.name">
+                  <a-input v-decorator.trim="[ 'otherField11' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField12.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField12.name">
+                  <a-input v-decorator.trim="[ 'otherField12' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField13.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField13.name">
+                  <a-input v-decorator.trim="[ 'otherField13' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row v-if="mpShort.otherField14.enabled" class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField14.name">
+                  <a-input v-decorator.trim="[ 'otherField14' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
           </a-tab-pane>
           <a-tab-pane key="3" tab="库存数量" forceRender>
             <j-editable-table
@@ -317,7 +394,18 @@
           mfrs: {},
           otherField1: {},
           otherField2: {},
-          otherField3: {}
+          otherField3: {},
+          otherField4: {},
+          otherField5: {},
+          otherField6: {},
+          otherField7: {},
+          otherField8: {},
+          otherField9: {},
+          otherField10: {},
+          otherField11: {},
+          otherField12: {},
+          otherField13: {},
+          otherField14: {}
         },
         meTable: {
           loading: false,
@@ -451,7 +539,9 @@
         this.$nextTick(() => {
         // TODO: enableSerialNumber是否可以去掉,目前默认enableSerialNumber===0
           this.form.setFieldsValue(pick(this.model, 'name', 'internalId', 'unit', 'unitId', 'model', 'color',
-            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','weight','remark','mfrs','otherField1','otherField2','otherField3'))
+            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','weight','remark','mfrs',
+            'otherField1','otherField2','otherField3','otherField4','otherField5','otherField6','otherField7',
+            'otherField8','otherField9','otherField10','otherField11','otherField12','otherField13','otherField14'))
           autoJumpNextInput('materialHeadModal')
           autoJumpNextInput('materialDetailModal')
         });
@@ -567,7 +657,7 @@
           this.$message.warning('抱歉，序列号和批号只能选择一项！');
           return;
         }
-        //校验商品是否存在，通过校验商品的名称、客户零件号、内部零件号、颜色、单位、制造商等
+        //校验商品是否存在，通过校验商品的名称、客户零件号、内部零件号、颜色编码、单位、制造商等
         let param = {
           id: this.model.id?this.model.id:0,
           name: this.model.name,
@@ -578,6 +668,17 @@
           otherField1: this.parseParam(this.model.otherField1),
           otherField2: this.parseParam(this.model.otherField2),
           otherField3: this.parseParam(this.model.otherField3),
+          otherField4: this.parseParam(this.model.otherField4),
+          otherField5: this.parseParam(this.model.otherField5),
+          otherField6: this.parseParam(this.model.otherField6),
+          otherField7: this.parseParam(this.model.otherField7),
+          otherField8: this.parseParam(this.model.otherField8),
+          otherField9: this.parseParam(this.model.otherField9),
+          otherField10: this.parseParam(this.model.otherField10),
+          otherField11: this.parseParam(this.model.otherField11),
+          otherField12: this.parseParam(this.model.otherField12),
+          otherField13: this.parseParam(this.model.otherField13),
+          otherField14: this.parseParam(this.model.otherField14),
           unit: this.parseParam(this.model.unit),
           unitId: this.parseParam(this.model.unitId)
         }
@@ -1023,6 +1124,50 @@
           if (mpList[i].nativeName === "项目") {
             this.mpShort.otherField3.name = mpList[i].anotherName
             this.mpShort.otherField3.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "材料牌号") {
+            this.mpShort.otherField4.name = mpList[i].anotherName
+            this.mpShort.otherField4.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "材料类型/标准") {
+            this.mpShort.otherField5.name = mpList[i].anotherName
+            this.mpShort.otherField5.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "原材料厂家") {
+            this.mpShort.otherField6.name = mpList[i].anotherName
+            this.mpShort.otherField6.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "外协件厂家") {
+            this.mpShort.otherField7.name = mpList[i].anotherName
+            this.mpShort.otherField7.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "尺寸") {
+            this.mpShort.otherField8.name = mpList[i].anotherName
+            this.mpShort.otherField8.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "检具") {
+            this.mpShort.otherField9.name = mpList[i].anotherName
+            this.mpShort.otherField9.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "用量/车（件）") {
+            this.mpShort.otherField10.name = mpList[i].anotherName
+            this.mpShort.otherField10.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "料道（kg）") {
+            this.mpShort.otherField11.name = mpList[i].anotherName
+            this.mpShort.otherField11.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "表面处理纹理") {
+            this.mpShort.otherField12.name = mpList[i].anotherName
+            this.mpShort.otherField12.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "表面积（m²）") {
+            this.mpShort.otherField13.name = mpList[i].anotherName
+            this.mpShort.otherField13.enabled = mpList[i].enabled
+          }
+          if (mpList[i].nativeName === "组装等级关系") {
+            this.mpShort.otherField14.name = mpList[i].anotherName
+            this.mpShort.otherField14.enabled = mpList[i].enabled
           }
         }
       },

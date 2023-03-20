@@ -313,9 +313,14 @@ public class MaterialService {
     }
 
     public int checkIsExist(Long id, String name, String model, String color, String internalId, String mfrs,
-                            String otherField1, String otherField2, String otherField3, String unit, Long unitId)throws Exception {
+                            String otherField1, String otherField2, String otherField3,
+                            String otherField4, String otherField5, String otherField6,
+                            String otherField7, String otherField8, String otherField9,
+                            String otherField10, String otherField11, String otherField12,
+                            String otherField13, String otherField14, String unit, Long unitId)throws Exception {
         return materialMapperEx.checkIsExist(id, name, model, color, internalId, mfrs, otherField1,
-                otherField2, otherField3, unit, unitId);
+                otherField2, otherField3, otherField4, otherField5, otherField6, otherField7, otherField8,
+                otherField9, otherField10, otherField11, otherField12, otherField13, otherField14, unit, unitId);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -487,7 +492,7 @@ public class MaterialService {
                 String name = ExcelUtils.getContent(src, i, 0); //名称
                 String internalId = ExcelUtils.getContent(src, i, 1); //内部零件号
                 String model = ExcelUtils.getContent(src, i, 2); //客户零件号
-                String color = ExcelUtils.getContent(src, i, 3); //颜色
+                String color = ExcelUtils.getContent(src, i, 3); //颜色编码
                 String categoryName = ExcelUtils.getContent(src, i, 4); //类别
                 String weight = ExcelUtils.getContent(src, i, 5); //净重量(kg)
                 String expiryNum = ExcelUtils.getContent(src, i, 6); //保质期(天)
@@ -502,7 +507,7 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
                 }
-                // 批量校验excel中有无重复商品，是指名称、内部零件号、客户零件号、颜色、单位
+                // 批量校验excel中有无重复商品，是指名称、内部零件号、客户零件号、颜色编码、单位
                 batchCheckExistMaterialListByParam(mList, name, internalId, model, color, unit);
                 MaterialWithInitStock m = new MaterialWithInitStock();
                 m.setName(name);
@@ -735,7 +740,7 @@ public class MaterialService {
     }
 
     /**
-     * 批量校验excel中有无重复商品，是指名称、内部零件号、客户零件号、颜色、单位
+     * 批量校验excel中有无重复商品，是指名称、内部零件号、客户零件号、颜色编码、单位
      * @param mList
      */
     public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String internalId,
@@ -1167,6 +1172,39 @@ public class MaterialService {
             }
             if (mpArr[i].equals("项目")) {
                 materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
+            }
+            if (mpArr[i].equals("材料牌号")) {
+                materialOther = materialOther + ((m.getOtherField4() == null || m.getOtherField4().equals("")) ? "" : "(" + m.getOtherField4() + ")");
+            }
+            if (mpArr[i].equals("材料类型/标准")) {
+                materialOther = materialOther + ((m.getOtherField5() == null || m.getOtherField5().equals("")) ? "" : "(" + m.getOtherField5() + ")");
+            }
+            if (mpArr[i].equals("原材料厂家")) {
+                materialOther = materialOther + ((m.getOtherField6() == null || m.getOtherField6().equals("")) ? "" : "(" + m.getOtherField6() + ")");
+            }
+            if (mpArr[i].equals("外协件厂家")) {
+                materialOther = materialOther + ((m.getOtherField7() == null || m.getOtherField7().equals("")) ? "" : "(" + m.getOtherField7() + ")");
+            }
+            if (mpArr[i].equals("尺寸")) {
+                materialOther = materialOther + ((m.getOtherField8() == null || m.getOtherField8().equals("")) ? "" : "(" + m.getOtherField8() + ")");
+            }
+            if (mpArr[i].equals("检具")) {
+                materialOther = materialOther + ((m.getOtherField9() == null || m.getOtherField9().equals("")) ? "" : "(" + m.getOtherField9() + ")");
+            }
+            if (mpArr[i].equals("用量/车（件）")) {
+                materialOther = materialOther + ((m.getOtherField10() == null || m.getOtherField10().equals("")) ? "" : "(" + m.getOtherField10() + ")");
+            }
+            if (mpArr[i].equals("料道（kg）")) {
+                materialOther = materialOther + ((m.getOtherField11() == null || m.getOtherField11().equals("")) ? "" : "(" + m.getOtherField11() + ")");
+            }
+            if (mpArr[i].equals("表面处理纹理")) {
+                materialOther = materialOther + ((m.getOtherField12() == null || m.getOtherField12().equals("")) ? "" : "(" + m.getOtherField12() + ")");
+            }
+            if (mpArr[i].equals("表面积（m²）")) {
+                materialOther = materialOther + ((m.getOtherField13() == null || m.getOtherField13().equals("")) ? "" : "(" + m.getOtherField13() + ")");
+            }
+            if (mpArr[i].equals("组装等级关系")) {
+                materialOther = materialOther + ((m.getOtherField14() == null || m.getOtherField14().equals("")) ? "" : "(" + m.getOtherField14() + ")");
             }
         }
         return materialOther;

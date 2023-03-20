@@ -73,7 +73,7 @@ public class MaterialAttributeService {
     public Long countMaterialAttribute(String attributeField)throws Exception {
         Long result =null;
         try{
-            //有BUG
+            //TODO: 应该是个BUG
             result= 5L;
         }catch(Exception e){
             JshException.readFail(logger, e);

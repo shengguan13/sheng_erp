@@ -144,6 +144,17 @@ public interface MaterialMapperEx {
             @Param("otherField1") String otherField1,
             @Param("otherField2") String otherField2,
             @Param("otherField3") String otherField3,
+            @Param("otherField4") String otherField4,
+            @Param("otherField5") String otherField5,
+            @Param("otherField6") String otherField6,
+            @Param("otherField7") String otherField7,
+            @Param("otherField8") String otherField8,
+            @Param("otherField9") String otherField9,
+            @Param("otherField10") String otherField10,
+            @Param("otherField11") String otherField11,
+            @Param("otherField12") String otherField12,
+            @Param("otherField13") String otherField13,
+            @Param("otherField14") String otherField14,
             @Param("unit") String unit,
             @Param("unitId") Long unitId);
 }
