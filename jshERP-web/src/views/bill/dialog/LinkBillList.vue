@@ -25,7 +25,7 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                <a-input placeholder="条码|名称|内部零件号|型号" v-model="queryParam.materialParam"></a-input>
+                <a-input placeholder="条码|名称|内部零件号|客户零件号" v-model="queryParam.materialParam"></a-input>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -179,7 +179,7 @@
           { title: '条码', dataIndex: 'barCode',width:120},
           { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
           { title: '内部零件号', dataIndex: 'internalId',width:100, ellipsis:true},
-          { title: '型号', dataIndex: 'model',width:150, ellipsis:true},
+          { title: '客户零件号', dataIndex: 'model',width:150, ellipsis:true},
           { title: '单位', dataIndex: 'unit',width:50},
           { title: '数量', dataIndex: 'operNumber',width:80},
           { title: '单价', dataIndex: 'unitPrice',width:80},

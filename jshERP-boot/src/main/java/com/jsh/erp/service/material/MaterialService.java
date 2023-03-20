@@ -486,7 +486,7 @@ public class MaterialService {
             for (int i = 2; i < rightRows; i++) {
                 String name = ExcelUtils.getContent(src, i, 0); //名称
                 String internalId = ExcelUtils.getContent(src, i, 1); //内部零件号
-                String model = ExcelUtils.getContent(src, i, 2); //型号
+                String model = ExcelUtils.getContent(src, i, 2); //客户零件号
                 String color = ExcelUtils.getContent(src, i, 3); //颜色
                 String categoryName = ExcelUtils.getContent(src, i, 4); //类别
                 String weight = ExcelUtils.getContent(src, i, 5); //净重量(kg)
@@ -502,7 +502,7 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
                 }
-                // 批量校验excel中有无重复商品，是指名称、内部零件号、型号、颜色、单位
+                // 批量校验excel中有无重复商品，是指名称、内部零件号、客户零件号、颜色、单位
                 batchCheckExistMaterialListByParam(mList, name, internalId, model, color, unit);
                 MaterialWithInitStock m = new MaterialWithInitStock();
                 m.setName(name);
@@ -735,7 +735,7 @@ public class MaterialService {
     }
 
     /**
-     * 批量校验excel中有无重复商品，是指名称、内部零件号、型号、颜色、单位
+     * 批量校验excel中有无重复商品，是指名称、内部零件号、客户零件号、颜色、单位
      * @param mList
      */
     public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String internalId,

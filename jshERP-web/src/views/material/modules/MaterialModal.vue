@@ -33,8 +33,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号" data-step="3" data-title="型号" data-intro="型号是比规格更小的属性，比如：RX-01">
-                  <a-input placeholder="请输入型号" v-decorator.trim="[ 'model', validatorRules.model ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户零件号" data-step="3" data-title="客户零件号" data-intro="客户零件号">
+                  <a-input placeholder="请输入客户零件号" v-decorator.trim="[ 'model', validatorRules.model ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -567,7 +567,7 @@
           this.$message.warning('抱歉，序列号和批号只能选择一项！');
           return;
         }
-        //校验商品是否存在，通过校验商品的名称、型号、内部零件号、颜色、单位、制造商等
+        //校验商品是否存在，通过校验商品的名称、客户零件号、内部零件号、颜色、单位、制造商等
         let param = {
           id: this.model.id?this.model.id:0,
           name: this.model.name,

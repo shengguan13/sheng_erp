@@ -17,7 +17,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="关键词" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、内部零件号、型号查询" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="请输入条码、名称、内部零件号、客户零件号查询" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -223,7 +223,7 @@
           {title: '条码', dataIndex: 'mBarCode', width: 160, scopedSlots: { customRender: 'customBarCode' }},
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '内部零件号', dataIndex: 'internalId', width: 120},
-          {title: '型号', dataIndex: 'model', width: 120},
+          {title: '客户零件号', dataIndex: 'model', width: 120},
           {title: '颜色', dataIndex: 'color', width: 70, ellipsis:true},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},

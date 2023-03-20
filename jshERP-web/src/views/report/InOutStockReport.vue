@@ -29,7 +29,7 @@
               </a-col>
               <a-col :md="4" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/内部零件号/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/内部零件号/客户零件号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="5" :sm="24">
@@ -138,7 +138,7 @@
           {title: '条码', dataIndex: 'barCode', width: 150, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
           {title: '内部零件号', dataIndex: 'materialInternalId'},
-          {title: '型号', dataIndex: 'materialModel'},
+          {title: '客户零件号', dataIndex: 'materialModel'},
           {title: '扩展信息', dataIndex: 'materialOther'},
           {title: '单位', dataIndex: 'unitName'},
           {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice},
@@ -215,7 +215,7 @@
         }
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '内部零件号', '型号', '扩展信息', '单位', '单价', '上月结存数量', '入库数量', '出库数量', '本月结存数量', '结存金额']]
+        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '单价', '上月结存数量', '入库数量', '出库数量', '本月结存数量', '结存金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.unitName, ds.unitPrice,

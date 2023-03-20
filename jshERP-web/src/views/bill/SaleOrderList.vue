@@ -15,7 +15,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、内部零件号、型号、颜色、扩展信息" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="请输入条码、名称、内部零件号、客户零件号、颜色、扩展信息" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
