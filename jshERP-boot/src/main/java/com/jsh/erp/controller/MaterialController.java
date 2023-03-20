@@ -336,7 +336,7 @@ public class MaterialController {
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
                     StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
                     StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"条码", "名称", "内部零件号", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
+            String[] names = {"条码", "名称", "内部零件号", "型号", "颜色", "类别", "扩展信息", "单位", "净重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<>();
             if (null != dataList) {

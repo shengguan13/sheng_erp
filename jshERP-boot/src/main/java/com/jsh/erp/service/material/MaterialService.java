@@ -489,7 +489,7 @@ public class MaterialService {
                 String model = ExcelUtils.getContent(src, i, 2); //型号
                 String color = ExcelUtils.getContent(src, i, 3); //颜色
                 String categoryName = ExcelUtils.getContent(src, i, 4); //类别
-                String weight = ExcelUtils.getContent(src, i, 5); //基础重量(kg)
+                String weight = ExcelUtils.getContent(src, i, 5); //净重量(kg)
                 String expiryNum = ExcelUtils.getContent(src, i, 6); //保质期(天)
                 String unit = ExcelUtils.getContent(src, i, 7); //基本单位
                 //名称为空
@@ -514,7 +514,7 @@ public class MaterialService {
                     m.setCategoryId(categoryId);
                 }
                 if(StringUtil.isNotEmpty(weight)) {
-                    //校验基础重量是否是数字（含小数）
+                    //校验净重量是否是数字（含小数）
                     if(!StringUtil.isPositiveBigDecimal(weight)) {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_WEIGHT_NOT_DECIMAL_CODE,
                                 String.format(ExceptionConstants.MATERIAL_WEIGHT_NOT_DECIMAL_MSG, i+1));

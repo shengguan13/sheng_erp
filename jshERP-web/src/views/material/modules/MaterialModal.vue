@@ -73,9 +73,9 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="6" data-title="基础重量"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="净重量" data-step="6" data-title="净重量"
                   data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">
-                  <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
+                  <a-input-number style="width: 100%" placeholder="请输入净重量(kg)" v-decorator.trim="[ 'weight' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">

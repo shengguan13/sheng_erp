@@ -22,8 +22,8 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量">
-                <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="净重量">
+                <a-input-number style="width: 100%" placeholder="请输入净重量(kg)" v-decorator.trim="[ 'weight' ]" />
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">

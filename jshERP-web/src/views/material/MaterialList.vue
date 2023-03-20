@@ -58,16 +58,6 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="基础重量" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input-number style="width: 100%" placeholder="请输入基础重量查询" v-model="queryParam.weight"></a-input-number>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="保质期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input-number style="width: 100%" placeholder="请输入保质期查询" v-model="queryParam.expiryNum"></a-input-number>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入备注查询" v-model="queryParam.remark"></a-input>
                   </a-form-item>
@@ -249,7 +239,7 @@
               }
             }
           },
-          {title: '基础重量', dataIndex: 'weight', width: 80},
+          {title: '净重量', dataIndex: 'weight', width: 80},
           {title: '保质期', dataIndex: 'expiryNum', width: 60},
           {title: '库存', dataIndex: 'stock', width: 80,
             scopedSlots: { customRender: 'customRenderStock' }

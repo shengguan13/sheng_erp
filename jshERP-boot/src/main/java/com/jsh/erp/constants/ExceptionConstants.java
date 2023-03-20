@@ -308,9 +308,9 @@ public class ExceptionConstants {
     //单次导入超出1000条
     public static final int MATERIAL_IMPORT_OVER_LIMIT_CODE = 8000013;
     public static final String MATERIAL_IMPORT_OVER_LIMIT_MSG = "抱歉，单次导入不能超出1000条";
-    //基础重量格式错误
+    //净重量格式错误
     public static final int MATERIAL_WEIGHT_NOT_DECIMAL_CODE = 8000014;
-    public static final String MATERIAL_WEIGHT_NOT_DECIMAL_MSG = "第%s行基础重量格式错误";
+    public static final String MATERIAL_WEIGHT_NOT_DECIMAL_MSG = "第%s行净重量格式错误";
     //保质期格式错误
     public static final int MATERIAL_EXPIRY_NUM_NOT_INTEGER_CODE = 8000015;
     public static final String MATERIAL_EXPIRY_NUM_NOT_INTEGER_MSG = "第%s行保质期格式错误";
