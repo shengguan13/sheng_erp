@@ -1,19 +1,7 @@
 # 项目总述
-* 很多人说华夏ERP（英文名：jshERP）是目前人气领先的国产ERP系统
-* 虽然目前只有进销存+财务+生产的功能，但后面将会推出ERP的全部功能，有兴趣请帮点一下 **Star** 哦
-* **官网地址：http://www.huaxiaerp.com  商务或技术交流，请联系QQ：752718920 微信：shenhua861584**
-* 推荐使用网络版（100元1年）淘宝链接：https://item.taobao.com/item.htm?id=674169489573
-* 平台地址：http://cloud.huaxiaerp.vip 欢迎大家注册租户进行使用
-* 欢迎加入华夏ERP交流QQ群(入群帮安装)，群3：805736336(满)、群4：146571538
-
-# 定制和插件
-* 如有ERP私人定制需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
-* 如需更多功能，欢迎购买作者小店的插件 https://shop104070207.taobao.com/ 谢谢支持
-
-# 开发初衷
-* 华夏ERP立志为中小企业提供开源好用的ERP软件，降低企业的信息化成本
-* 个人开发者也可以使用华夏ERP进行二次开发，加快完成开发任务
-* 初学JAVA的小伙伴可以下载源代码来进行学习交流
+* 基于华夏erp：http://www.huaxiaerp.com
+* 公司：吉林宏泽汽车部件有限公司
+* 开发者：管盛
 
 # 技术框架
 * 核心框架：SpringBoot 2.0.0
@@ -51,32 +39,3 @@
 
 # 开源说明
 * 本系统100%开源，遵守GPL-3.0协议
-
-# 系统美图
-* 首页
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235430_ff5f9618_852955.png "首页.png")
-* 零售管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235442_214b9fc0_852955.png "零售管理.png")
-* 采购管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235643_c87b3d02_852955.png "采购管理.png")
-* 销售管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235631_01a92e1f_852955.png "销售管理.png")
-* 仓库管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235657_99057159_852955.png "仓库管理.png")
-* 财务管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235708_086379f8_852955.png "财务管理.png")
-* 报表查询
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235722_a26af3e8_852955.png "报表查询.png")
-* 商品管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235905_5ec11112_852955.png "商品管理.png")
-* 基本资料
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235919_92d78bc3_852955.png "基本资料.png")
-* 系统管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235815_b139e426_852955.png "系统管理.png")
-
-# 捐赠
-开源不易，坚持更难！如果您觉得华夏ERP不错，可以捐赠请作者喝杯咖啡~，在此表示感谢^_^。
-
-点击以下链接，将页面拉到最下方点击“捐赠”即可。
-
-[前往捐赠](https://gitee.com/jishenghua/JSH_ERP)
