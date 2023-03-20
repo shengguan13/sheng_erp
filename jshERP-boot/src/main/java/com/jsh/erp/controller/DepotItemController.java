@@ -297,7 +297,7 @@ public class DepotItemController {
             if (mpArr[i].equals("配置")) {
                 materialOther = materialOther + ((diEx.getMOtherField2() == null || diEx.getMOtherField2().equals("")) ? "" : "(" + diEx.getMOtherField2() + ")");
             }
-            if (mpArr[i].equals("项目")) {
+            if (mpArr[i].equals("自定义1")) {
                 materialOther = materialOther + ((diEx.getMOtherField3() == null || diEx.getMOtherField3().equals("")) ? "" : "(" + diEx.getMOtherField3() + ")");
             }
             if (mpArr[i].equals("材料牌号")) {

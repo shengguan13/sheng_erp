@@ -1180,7 +1180,7 @@ public class MaterialService {
             if (mpArr[i].equals("配置")) {
                 materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
             }
-            if (mpArr[i].equals("项目")) {
+            if (mpArr[i].equals("自定义1")) {
                 materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
             }
             if (mpArr[i].equals("材料牌号")) {

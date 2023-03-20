@@ -11,7 +11,7 @@
  Target Server Version : 50704 (5.7.4-m14)
  File Encoding         : 65001
 
- Date: 20/03/2023 16:30:53
+ Date: 20/03/2023 17:27:08
 */
 
 SET NAMES utf8mb4;
@@ -660,7 +660,7 @@ CREATE TABLE `jsh_material_property`  (
 INSERT INTO `jsh_material_property` VALUES (1, '制造商', b'1', '01', '制造商', '0');
 INSERT INTO `jsh_material_property` VALUES (2, '工艺类别', b'1', '02', '工艺类别', '0');
 INSERT INTO `jsh_material_property` VALUES (3, '配置', b'1', '03', '配置', '0');
-INSERT INTO `jsh_material_property` VALUES (4, '项目', b'1', '04', '项目', '0');
+INSERT INTO `jsh_material_property` VALUES (4, '自定义1', b'1', '04', '自定义1', '0');
 INSERT INTO `jsh_material_property` VALUES (5, '材料牌号', b'1', '05', '材料牌号', '0');
 INSERT INTO `jsh_material_property` VALUES (6, '材料类型/标准', b'1', '06', '材料类型/标准', '0');
 INSERT INTO `jsh_material_property` VALUES (7, '原材料厂家', b'1', '07', '原材料厂家', '0');

@@ -1128,7 +1128,7 @@
             this.mpShort.otherField2.name = mpList[i].anotherName
             this.mpShort.otherField2.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "项目") {
+          if (mpList[i].nativeName === "自定义1") {
             this.mpShort.otherField3.name = mpList[i].anotherName
             this.mpShort.otherField3.enabled = mpList[i].enabled
           }
