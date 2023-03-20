@@ -51,6 +51,10 @@
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
         </if>
+        <if test="project != null and project !=''">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and m.project like #{bindProject}
+        </if>
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
             and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
@@ -111,6 +115,10 @@
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
+        </if>
+        <if test="project != null and project !=''">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and m.project like #{bindProject}
         </if>
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
@@ -174,6 +182,9 @@
             </if>
             <if test="color != null">
                 color,
+            </if>
+            <if test="project != null">
+                project,
             </if>
             <if test="unit != null">
                 unit,
@@ -272,6 +283,9 @@
             </if>
             <if test="color != null">
                 #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="project != null">
+                #{project,jdbcType=VARCHAR},
             </if>
             <if test="unit != null">
                 #{unit,jdbcType=VARCHAR},
@@ -383,7 +397,8 @@
         where m.enabled=1 and me.id is not null
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey} or m.color like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey}
+                or m.model like #{bindKey} or m.color like #{bindKey} or m.project like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -444,6 +459,10 @@
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
+        </if>
+        <if test="project != null and project !=''">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and m.project like #{bindProject}
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -663,7 +682,8 @@
         </if>
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.internal_id like #{bindParam} or m.model like #{bindParam} or m.color like #{bindParam})
+            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.internal_id like #{bindParam}
+                or m.model like #{bindParam} or m.color like #{bindParam} or m.project like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
@@ -704,7 +724,8 @@
         </if>
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.internal_id like #{bindParam} or m.model like #{bindParam} or m.color like #{bindParam})
+            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.internal_id like #{bindParam}
+                or m.model like #{bindParam} or m.color like #{bindParam} or m.project like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
@@ -755,6 +776,9 @@
         </if>
         <if test="color != null">
             and m.color = #{color}
+        </if>
+        <if test="project != null">
+            and m.project = #{project}
         </if>
         <if test="internalId != null">
             and m.internal_id = #{internalId}

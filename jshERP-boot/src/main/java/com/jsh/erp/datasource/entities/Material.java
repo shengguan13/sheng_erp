@@ -17,6 +17,8 @@ public class Material {
 
     private String color;
 
+    private String project;
+
     private String unit;
 
     private String remark;
@@ -121,6 +123,14 @@ public class Material {
 
     public void setColor(String color) {
         this.color = color == null ? null : color.trim();
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project == null ? null : project.trim();
     }
 
     public String getUnit() {

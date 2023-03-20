@@ -36,6 +36,7 @@ public class MaterialComponent implements ICommonQuery {
         String categoryId = StringUtil.getInfo(search, "categoryId");
         String materialParam = StringUtil.getInfo(search, "materialParam");
         String color = StringUtil.getInfo(search, "color");
+        String project = StringUtil.getInfo(search, "project");
         String materialOther = StringUtil.getInfo(search, "materialOther");
         String weight = StringUtil.getInfo(search, "weight");
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
@@ -44,7 +45,7 @@ public class MaterialComponent implements ICommonQuery {
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.select(materialParam, color, materialOther, weight, expiryNum,
+        return materialService.select(materialParam, color, project, materialOther, weight, expiryNum,
                 enableSerialNumber, enableBatchNumber, enabled, remark, categoryId, mpList, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -54,6 +55,7 @@ public class MaterialComponent implements ICommonQuery {
         String categoryId = StringUtil.getInfo(search, "categoryId");
         String materialParam = StringUtil.getInfo(search, "materialParam");
         String color = StringUtil.getInfo(search, "color");
+        String project = StringUtil.getInfo(search, "project");
         String materialOther = StringUtil.getInfo(search, "materialOther");
         String weight = StringUtil.getInfo(search, "weight");
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
@@ -62,7 +64,7 @@ public class MaterialComponent implements ICommonQuery {
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.countMaterial(materialParam, color, materialOther, weight, expiryNum,
+        return materialService.countMaterial(materialParam, color, project, materialOther, weight, expiryNum,
                 enableSerialNumber, enableBatchNumber, enabled, remark, categoryId, mpList);
     }
 

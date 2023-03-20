@@ -23,6 +23,7 @@
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
+        <result column="MProject" jdbcType="VARCHAR" property="MProject" />
         <result column="MInternalId" jdbcType="VARCHAR" property="MInternalId" />
         <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
         <result column="weight" jdbcType="VARCHAR" property="weight" />
@@ -73,6 +74,7 @@
         <result column="unit_id" jdbcType="BIGINT" property="unitId" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
+        <result column="MProject" jdbcType="VARCHAR" property="MProject" />
         <result column="purchase_decimal" jdbcType="DECIMAL" property="purchaseDecimal" />
     </resultMap>
 
@@ -320,8 +322,8 @@
     </select>
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.internal_id MInternalId,m.mfrs MMfrs,m.weight,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.project MProject, m.internal_id MInternalId,
+        m.mfrs MMfrs,m.weight,m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
         m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
@@ -344,7 +346,7 @@
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
         m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
         m.other_field13 MOtherField13,m.other_field14 MOtherField14, concat_ws('', m.unit, u.basic_unit) MaterialUnit,
-        m.color MColor, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
+        m.color MColor, m.project MProject, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
@@ -390,7 +392,8 @@
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
         m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
-        m.other_field13 MOtherField13,m.other_field14 MOtherField14,concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, u.name unit_name
+        m.other_field13 MOtherField13,m.other_field14 MOtherField14,concat_ws('', m.unit, u.basic_unit) MaterialUnit,
+        m.color MColor, m.project MProject, u.name unit_name
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -690,14 +693,13 @@
     </select>
 
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
-        select m.id MId, m.name MName, me.bar_code, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,m.color MColor,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
-        m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
-        m.other_field13 MOtherField13,m.other_field14 MOtherField14,d.name depotName,
-        m.unit MaterialUnit, u.basic_unit unit_name,mcs.current_number,
-        mis.low_safe_stock, mis.high_safe_stock
+        select m.id MId, m.name MName, me.bar_code, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
+        m.color MColor,m.project MProject, m.other_field1 MOtherField1,m.other_field2 MOtherField2,
+        m.other_field3 MOtherField3, m.other_field4 MOtherField4,m.other_field5 MOtherField5,
+        m.other_field6 MOtherField6, m.other_field7 MOtherField7,m.other_field8 MOtherField8,
+        m.other_field9 MOtherField9, m.other_field10 MOtherField10,m.other_field11 MOtherField11,
+        m.other_field12 MOtherField12, m.other_field13 MOtherField13,m.other_field14 MOtherField14,
+        d.name depotName, m.unit MaterialUnit, u.basic_unit unit_name,mcs.current_number, mis.low_safe_stock, mis.high_safe_stock
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material_initial_stock mis on mis.material_id=m.id and ifnull(mis.delete_Flag,'0') !='1'

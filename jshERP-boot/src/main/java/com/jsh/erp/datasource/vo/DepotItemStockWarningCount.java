@@ -17,6 +17,8 @@ public class DepotItemStockWarningCount {
 
     private String MColor;
 
+    private String MProject;
+
     private String MInternalId;
 
     private String MMfrs;
@@ -111,6 +113,14 @@ public class DepotItemStockWarningCount {
 
     public void setMColor(String MColor) {
         this.MColor = MColor;
+    }
+
+    public String getMProject() {
+        return MProject;
+    }
+
+    public void setMProject(String MProject) {
+        this.MProject = MProject;
     }
 
     public String getMInternalId() {

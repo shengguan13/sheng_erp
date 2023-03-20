@@ -19,6 +19,7 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> selectByConditionMaterial(
             @Param("materialParam") String materialParam,
             @Param("color") String color,
+            @Param("project") String project,
             @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
@@ -34,6 +35,7 @@ public interface MaterialMapperEx {
     Long countsByMaterial(
             @Param("materialParam") String materialParam,
             @Param("color") String color,
+            @Param("project") String project,
             @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
@@ -67,6 +69,7 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> exportExcel(
             @Param("materialParam") String materialParam,
             @Param("color") String color,
+            @Param("project") String project,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
             @Param("enabled") String enabled,
@@ -139,6 +142,7 @@ public interface MaterialMapperEx {
             @Param("name") String name,
             @Param("model") String model,
             @Param("color") String color,
+            @Param("project") String project,
             @Param("internalId") String internalId,
             @Param("mfrs") String mfrs,
             @Param("otherField1") String otherField1,

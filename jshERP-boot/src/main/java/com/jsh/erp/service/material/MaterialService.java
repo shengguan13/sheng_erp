@@ -111,9 +111,9 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String materialParam, String color, String materialOther, String weight, String expiryNum,
-                                        String enableSerialNumber, String enableBatchNumber, String enabled,
-                                        String remark, String categoryId, String mpList, int offset, int rows)
+    public List<MaterialVo4Unit> select(String materialParam, String color, String project, String materialOther,
+                                        String weight, String expiryNum, String enableSerialNumber, String enableBatchNumber,
+                                        String enabled, String remark, String categoryId, String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = new String[]{};
         if(StringUtil.isNotEmpty(mpList)){
@@ -126,7 +126,7 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list= materialMapperEx.selectByConditionMaterial(materialParam, color, materialOther, weight, expiryNum,
+            list= materialMapperEx.selectByConditionMaterial(materialParam, color, project, materialOther, weight, expiryNum,
                     enableSerialNumber, enableBatchNumber, enabled, remark, idList, mpList, offset, rows);
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
@@ -143,16 +143,16 @@ public class MaterialService {
         return resList;
     }
 
-    public Long countMaterial(String materialParam, String color, String materialOther, String weight, String expiryNum,
-                              String enableSerialNumber, String enableBatchNumber, String enabled,
-                              String remark, String categoryId,String mpList)throws Exception {
+    public Long countMaterial(String materialParam, String color, String project, String materialOther,
+                              String weight, String expiryNum, String enableSerialNumber, String enableBatchNumber,
+                              String enabled, String remark, String categoryId,String mpList)throws Exception {
         Long result =null;
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            result= materialMapperEx.countsByMaterial(materialParam, color, materialOther, weight, expiryNum,
+            result= materialMapperEx.countsByMaterial(materialParam, color, project, materialOther, weight, expiryNum,
                     enableSerialNumber, enableBatchNumber, enabled, remark, idList, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -312,13 +312,14 @@ public class MaterialService {
         return list==null?0:list.size();
     }
 
-    public int checkIsExist(Long id, String name, String model, String color, String internalId, String mfrs,
+    public int checkIsExist(Long id, String name, String model, String color, String project,
+                            String internalId, String mfrs,
                             String otherField1, String otherField2, String otherField3,
                             String otherField4, String otherField5, String otherField6,
                             String otherField7, String otherField8, String otherField9,
                             String otherField10, String otherField11, String otherField12,
                             String otherField13, String otherField14, String unit, Long unitId)throws Exception {
-        return materialMapperEx.checkIsExist(id, name, model, color, internalId, mfrs, otherField1,
+        return materialMapperEx.checkIsExist(id, name, model, color, project, internalId, mfrs, otherField1,
                 otherField2, otherField3, otherField4, otherField5, otherField6, otherField7, otherField8,
                 otherField9, otherField10, otherField11, otherField12, otherField13, otherField14, unit, unitId);
     }
@@ -438,7 +439,7 @@ public class MaterialService {
         return result;
     }
 
-    public List<MaterialVo4Unit> exportExcel(String materialParam, String color, String weight, String expiryNum, String enabled,
+    public List<MaterialVo4Unit> exportExcel(String materialParam, String color, String project, String weight, String expiryNum, String enabled,
                                              String enableSerialNumber, String enableBatchNumber, String remark, String categoryId)throws Exception {
         List<MaterialVo4Unit> resList = new ArrayList<>();
         List<MaterialVo4Unit> list =null;
@@ -447,8 +448,8 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list=  materialMapperEx.exportExcel(materialParam, color, weight, expiryNum, enabled, enableSerialNumber,
-                    enableBatchNumber, remark, idList);
+            list=  materialMapperEx.exportExcel(materialParam, color, project, weight, expiryNum, enabled,
+                    enableSerialNumber, enableBatchNumber, remark, idList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -493,10 +494,11 @@ public class MaterialService {
                 String internalId = ExcelUtils.getContent(src, i, 1); //内部零件号
                 String model = ExcelUtils.getContent(src, i, 2); //客户零件号
                 String color = ExcelUtils.getContent(src, i, 3); //颜色编码
-                String categoryName = ExcelUtils.getContent(src, i, 4); //类别
-                String weight = ExcelUtils.getContent(src, i, 5); //净重量(kg)
-                String expiryNum = ExcelUtils.getContent(src, i, 6); //保质期(天)
-                String unit = ExcelUtils.getContent(src, i, 7); //基本单位
+                String project = ExcelUtils.getContent(src, i, 4); //项目
+                String categoryName = ExcelUtils.getContent(src, i, 5); //类别
+                String weight = ExcelUtils.getContent(src, i, 6); //净重量(kg)
+                String expiryNum = ExcelUtils.getContent(src, i, 7); //保质期(天)
+                String unit = ExcelUtils.getContent(src, i, 8); //基本单位
                 //名称为空
                 if(StringUtil.isEmpty(name)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
@@ -508,12 +510,13 @@ public class MaterialService {
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
                 }
                 // 批量校验excel中有无重复商品，是指名称、内部零件号、客户零件号、颜色编码、单位
-                batchCheckExistMaterialListByParam(mList, name, internalId, model, color, unit);
+                batchCheckExistMaterialListByParam(mList, name, internalId, model, color, project, unit);
                 MaterialWithInitStock m = new MaterialWithInitStock();
                 m.setName(name);
                 m.setInternalId(internalId);
                 m.setModel(model);
                 m.setColor(color);
+                m.setProject(project);
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
                 if(null!=categoryId){
                     m.setCategoryId(categoryId);
@@ -621,7 +624,8 @@ public class MaterialService {
                 Long mId = 0L;
                 //判断该商品是否存在，如果不存在就新增，如果存在就更新
                 String basicBarCode = getBasicBarCode(m);
-                List<Material> materials = getMaterialListByParam(m.getName(),m.getInternalId(),m.getModel(),m.getColor(),m.getUnit(),m.getUnitId(), basicBarCode);
+                List<Material> materials = getMaterialListByParam(m.getName(),m.getInternalId(),
+                        m.getModel(), m.getColor(),m.getProject(),m.getUnit(),m.getUnitId(), basicBarCode);
                 if(materials.size() == 0) {
                     materialMapperEx.insertSelectiveEx(m);
                     mId = m.getId();
@@ -744,14 +748,15 @@ public class MaterialService {
      * @param mList
      */
     public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String internalId,
-                                                   String model, String color, String unit) {
+                                                   String model, String color, String project, String unit) {
         for(MaterialWithInitStock material: mList){
             if(name.equals(material.getName()) &&
                     internalId.equals(material.getInternalId()) &&
                     model.equals(material.getModel()) &&
                     color.equals(material.getColor()) &&
+                    project.equals(material.getProject()) &&
                     unit.equals(material.getUnit())){
-                String info = name + "-" + internalId + "-" + model + "-" + color + "-" + unit;
+                String info = name + "-" + internalId + "-" + model + "-" + color + "-" + project + "-" + unit;
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_CODE,
                         String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_MSG, info));
             }
@@ -835,11 +840,13 @@ public class MaterialService {
      * @param internalId
      * @param model
      * @param color
+     * @param project
      * @param unit
      * @param unitId
      * @return
      */
-    private List<Material> getMaterialListByParam(String name, String internalId, String model, String color, String unit, Long unitId, String basicBarCode) throws Exception {
+    private List<Material> getMaterialListByParam(String name, String internalId, String model, String color,
+                                                  String project, String unit, Long unitId, String basicBarCode) throws Exception {
         List<Material> list = new ArrayList<>();
         MaterialExample example = new MaterialExample();
         MaterialExample.Criteria criteria = example.createCriteria();
@@ -849,6 +856,9 @@ public class MaterialService {
         }
         if (StringUtil.isNotEmpty(color)) {
             criteria.andColorEqualTo(color);
+        }
+        if (StringUtil.isNotEmpty(project)) {
+            criteria.andProjectEqualTo(project);
         }
         if (StringUtil.isNotEmpty(internalId)) {
             criteria.andInternalIdEqualTo(internalId);

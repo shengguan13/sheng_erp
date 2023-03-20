@@ -19,6 +19,7 @@ import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -205,6 +206,7 @@ public class DepotItemController {
                     item.put("internalId", diEx.getMInternalId());
                     item.put("model", diEx.getMModel());
                     item.put("color", diEx.getMColor());
+                    item.put("project", diEx.getMProject());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     BigDecimal stock;
                     Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
@@ -381,6 +383,7 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
+                    item.put("materialProject", diEx.getMProject());
                     item.put("unitId", diEx.getUnitId());
                     item.put("unitName", null!=diEx.getUnitId() ? diEx.getMaterialUnit()+"[多单位]" : diEx.getMaterialUnit());
                     BigDecimal prevSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,timeA);
@@ -531,6 +534,7 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
+                    item.put("materialProject", diEx.getMProject());
                     item.put("materialUnit", diEx.getMaterialUnit());
                     item.put("unitName", diEx.getUnitName());
                     item.put("inSum", InSum);
@@ -607,6 +611,7 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
+                    item.put("materialProject", diEx.getMProject());
                     item.put("materialUnit", diEx.getMaterialUnit());
                     item.put("unitName", diEx.getUnitName());
                     item.put("outSum", OutSumRetail.add(OutSum));

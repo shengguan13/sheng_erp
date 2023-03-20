@@ -95,6 +95,12 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="项目" data-step="5" data-title="项目"
+                             data-intro="该零件所属的项目">
+                  <a-input placeholder="若有多个项目，用|隔开" v-decorator.trim="[ 'project' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="9" data-title="批号"
                   data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和有效期，在销售出库单据需要选择该商品的批号进行出库">
                   <a-tooltip title="如果选择为有，则在采购入库单需要录入该商品的批号和有效期">
@@ -538,7 +544,7 @@
         }
         this.$nextTick(() => {
         // TODO: enableSerialNumber是否可以去掉,目前默认enableSerialNumber===0
-          this.form.setFieldsValue(pick(this.model, 'name', 'internalId', 'unit', 'unitId', 'model', 'color',
+          this.form.setFieldsValue(pick(this.model, 'name', 'internalId', 'unit', 'unitId', 'model', 'color', 'project',
             'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','weight','remark','mfrs',
             'otherField1','otherField2','otherField3','otherField4','otherField5','otherField6','otherField7',
             'otherField8','otherField9','otherField10','otherField11','otherField12','otherField13','otherField14'))
@@ -663,6 +669,7 @@
           name: this.model.name,
           model: this.parseParam(this.model.model),
           color: this.parseParam(this.model.color),
+          project: this.parseParam(this.model.project),
           internalId: this.parseParam(this.model.internalId),
           mfrs: this.parseParam(this.model.mfrs),
           otherField1: this.parseParam(this.model.otherField1),

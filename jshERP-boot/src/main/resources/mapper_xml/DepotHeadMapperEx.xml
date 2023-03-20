@@ -99,7 +99,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey}
-                or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+                or m.color like #{bindKey} or m.project like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
                 or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey} or m.other_field4 like #{bindKey}
                 or m.other_field5 like #{bindKey} or m.other_field6 like #{bindKey} or m.other_field7 like #{bindKey}
                 or m.other_field8 like #{bindKey} or m.other_field9 like #{bindKey} or m.other_field10 like #{bindKey}
@@ -201,7 +201,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey}
-            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.color like #{bindKey} or m.project like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey} or m.other_field4 like #{bindKey}
             or m.other_field5 like #{bindKey} or m.other_field6 like #{bindKey} or m.other_field7 like #{bindKey}
             or m.other_field8 like #{bindKey} or m.other_field9 like #{bindKey} or m.other_field10 like #{bindKey}

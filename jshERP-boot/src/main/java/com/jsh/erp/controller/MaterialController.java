@@ -60,6 +60,7 @@ public class MaterialController {
      * @param name
      * @param model
      * @param color
+     * @param project
      * @param internalId
      * @param mfrs
      * @param otherField1
@@ -86,6 +87,7 @@ public class MaterialController {
     @ApiOperation(value = "检查商品是否存在")
     public String checkIsExist(@RequestParam("id") Long id, @RequestParam("name") String name,
                                @RequestParam("model") String model, @RequestParam("color") String color,
+                               @RequestParam("project") String project,
                                @RequestParam("internalId") String internalId, @RequestParam("mfrs") String mfrs,
                                @RequestParam("otherField1") String otherField1, @RequestParam("otherField2") String otherField2,
                                @RequestParam("otherField3") String otherField3, @RequestParam("otherField4") String otherField4,
@@ -98,6 +100,7 @@ public class MaterialController {
                                HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int exist = materialService.checkIsExist(id, name, StringUtil.toNull(model), StringUtil.toNull(color),
+                StringUtil.toNull(project),
                 StringUtil.toNull(internalId), StringUtil.toNull(mfrs), StringUtil.toNull(otherField1),
                 StringUtil.toNull(otherField2), StringUtil.toNull(otherField3), StringUtil.toNull(otherField4),
                 StringUtil.toNull(otherField5), StringUtil.toNull(otherField6), StringUtil.toNull(otherField7),
@@ -247,6 +250,7 @@ public class MaterialController {
                     item.put("internalId", material.getInternalId());
                     item.put("model", material.getModel());
                     item.put("color", material.getColor());
+                    item.put("project", material.getProject());
                     item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
                     item.put("enableSerialNumber", material.getEnableSerialNumber());
@@ -326,6 +330,7 @@ public class MaterialController {
      * @param categoryId
      * @param materialParam
      * @param color
+     * @param project
      * @param weight
      * @param expiryNum
      * @param enabled
@@ -341,6 +346,7 @@ public class MaterialController {
     public void exportExcel(@RequestParam(value = "categoryId", required = false) String categoryId,
                             @RequestParam(value = "materialParam", required = false) String materialParam,
                             @RequestParam(value = "color", required = false) String color,
+                            @RequestParam(value = "project", required = false) String project,
                             @RequestParam(value = "weight", required = false) String weight,
                             @RequestParam(value = "expiryNum", required = false) String expiryNum,
                             @RequestParam(value = "enabled", required = false) String enabled,
@@ -355,9 +361,9 @@ public class MaterialController {
                 mpArr= mpList.split(",");
             }
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
-                    StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
-                    StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"条码", "名称", "内部零件号", "客户零件号", "颜色编码", "类别", "扩展信息", "单位", "净重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
+                    StringUtil.toNull(project), StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled),
+                    StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
+            String[] names = {"条码", "名称", "内部零件号", "客户零件号", "颜色编码", "项目", "类别", "扩展信息", "单位", "净重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<>();
             if (null != dataList) {
@@ -368,19 +374,20 @@ public class MaterialController {
                     objs[2] = m.getInternalId();
                     objs[3] = m.getModel();
                     objs[4] = m.getColor();
-                    objs[5] = m.getCategoryName();
-                    objs[6] = materialService.getMaterialOtherByParam(mpArr, m);
-                    objs[7] = m.getCommodityUnit();
-                    objs[8] = m.getWeight() == null? "" : m.getWeight().toString();
-                    objs[9] = m.getExpiryNum() == null? "" : m.getExpiryNum().toString();
-                    objs[10] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[11] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[12] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[13] = m.getLowDecimal() == null? "" : m.getLowDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[14] = m.getRemark();
-                    objs[15] = m.getEnabled() ? "启用" : "禁用";
-                    objs[16] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无";
-                    objs[17] = "1".equals(m.getEnableBatchNumber()) ? "有" : "无";
+                    objs[5] = m.getProject();
+                    objs[6] = m.getCategoryName();
+                    objs[7] = materialService.getMaterialOtherByParam(mpArr, m);
+                    objs[8] = m.getCommodityUnit();
+                    objs[9] = m.getWeight() == null? "" : m.getWeight().toString();
+                    objs[10] = m.getExpiryNum() == null? "" : m.getExpiryNum().toString();
+                    objs[11] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[12] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[13] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[14] = m.getLowDecimal() == null? "" : m.getLowDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[15] = m.getRemark();
+                    objs[16] = m.getEnabled() ? "启用" : "禁用";
+                    objs[17] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无";
+                    objs[18] = "1".equals(m.getEnableBatchNumber()) ? "有" : "无";
                     objects.add(objs);
                 }
             }

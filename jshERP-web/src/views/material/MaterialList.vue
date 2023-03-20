@@ -21,8 +21,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="颜色编码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入颜色编码查询" v-model="queryParam.color"></a-input>
+                <a-form-item label="项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input style="width: 100%" placeholder="请输入项目信息查询" v-model="queryParam.project"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -37,24 +37,16 @@
               </span>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="扩展信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input style="width: 100%" placeholder="请输入扩展信息查询" v-model="queryParam.materialOther"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择状态" v-model="queryParam.enabled">
                       <a-select-option value="1">启用</a-select-option>
                       <a-select-option value="0">禁用</a-select-option>
                     </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="批号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="有无批号" v-model="queryParam.enableBatchNumber">
-                      <a-select-option value="1">有</a-select-option>
-                      <a-select-option value="0">无</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="扩展信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input style="width: 100%" placeholder="请输入扩展信息查询" v-model="queryParam.materialOther"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
@@ -195,6 +187,7 @@
           categoryId:'',
           materialParam:'',
           color:'',
+          project:'',
           materialOther:'',
           weight:'',
           expiryNum:'',
@@ -209,8 +202,8 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['mBarCode','name','internalId','model','color','categoryName','materialOther','unit', 'stock',
-          'enabled','enableBatchNumber','action','weight','remard'],
+        settingColumns:['mBarCode','name','internalId','model','project','color','categoryName','materialOther',
+          'unit', 'stock','enabled','enableBatchNumber','action','weight','remard'],
         // 默认的列
         defColumns: [
           {
@@ -224,7 +217,8 @@
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '内部零件号', dataIndex: 'internalId', width: 120},
           {title: '客户零件号', dataIndex: 'model', width: 120},
-          {title: '颜色编码', dataIndex: 'color', width: 70, ellipsis:true},
+          {title: '项目', dataIndex: 'project', width: 100},
+          {title: '颜色编码', dataIndex: 'color', width: 100},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
           {title: '单位', dataIndex: 'unit', width: 100, ellipsis:true,
