@@ -21,13 +21,13 @@
       </template>
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="属性名">
-            <a-input placeholder="请输入属性名" v-decorator.trim="[ 'attributeName', validatorRules.attributeName]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零件类型">
+            <a-input placeholder="请输入零件类型" v-decorator.trim="[ 'attributeName', validatorRules.attributeName]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="属性值">
-            <a-textarea :rows="2" placeholder="请输入属性值（用竖线隔开）" v-decorator.trim="[ 'attributeValue', validatorRules.attributeValue]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
+            <a-textarea :rows="2" placeholder="请输入供应商（用竖线隔开）" v-decorator.trim="[ 'attributeValue', validatorRules.attributeValue]" />
           </a-form-item>
         </a-form>
       </a-spin>
@@ -60,14 +60,14 @@
         validatorRules:{
           attributeName:{
             rules: [
-              { required: true, message: '请输入属性名!' },
+              { required: true, message: '请输入零件类型!' },
               { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' },
               { validator: this.validateAttributeName}
             ]
           },
           attributeValue:{
             rules: [
-              { required: true, message: '请输入属性值（用竖线隔开）!' }
+              { required: true, message: '请输入供应商（用竖线隔开）!' }
             ]
           }
         }

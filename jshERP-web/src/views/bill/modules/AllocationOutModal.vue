@@ -149,7 +149,7 @@
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '调入仓库', key: 'anotherDepotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [], allowSearch:true},
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '多属性', key: 'sku', width: '9%', type: FormTypes.normal },
+            { title: '多供应商', key: 'sku', width: '9%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },

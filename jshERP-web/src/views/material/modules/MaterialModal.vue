@@ -68,7 +68,7 @@
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色" data-step="5" data-title="颜色"
-                             data-intro="请填写商品的颜色，如果是多属性商品可以不填（下面有多属性开关）">
+                             data-intro="请填写商品的颜色，如果是多供应商商品可以不填（下面有多供应商开关）">
                   <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
                 </a-form-item>
               </a-col>
@@ -106,12 +106,12 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24" v-if="!model.id">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="10" data-title="多属性"
-                  data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
-                  <a-tooltip title="多属性针对服装、鞋帽等行业，需要先录入单位才能激活此处输入框">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多供应商" data-step="10" data-title="多供应商"
+                  data-intro="同一零件可能存在多个供应商">
+                  <a-tooltip title="同一零件可能存在多个供应商，需要先录入单位才能激活此处输入框">
                     <a-tag class="tag-info" v-if="!manySkuStatus">需要先录入单位才能激活</a-tag>
                     <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children"
-                      placeholder="请选择多属性（可多选）" @change="onManySkuChange" v-show="manySkuStatus">
+                      placeholder="请选择零件类型" @change="onManySkuChange" v-show="manySkuStatus">
                       <a-select-option v-for="(item,index) in materialAttributeList" :key="index" :value="item.value" :disabled="item.disabled">
                         {{ item.name }}
                       </a-select-option>
@@ -124,7 +124,7 @@
               <a-col :md="12" :sm="24" v-if="manySkuSelected>=1">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" :label="skuOneTitle">
                   <a-select mode="multiple" v-decorator="[ 'skuOne' ]" showSearch optionFilterProp="children"
-                            placeholder="请选择（可多选）" @select="onSkuChange" @deselect="onSkuOneDeSelect">
+                            placeholder="请选择" @select="onSkuChange" @deselect="onSkuOneDeSelect">
                     <a-select-option v-for="(item,index) in skuOneList" :key="index" :value="item.value">
                       {{ item.name }}
                     </a-select-option>
@@ -134,7 +134,7 @@
               <a-col :md="12" :sm="24" v-if="manySkuSelected>=2">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" :label="skuTwoTitle">
                   <a-select mode="multiple" v-decorator="[ 'skuTwo' ]" showSearch optionFilterProp="children"
-                            placeholder="请选择（可多选）" @select="onSkuChange" @deselect="onSkuTwoDeSelect">
+                            placeholder="请选择" @select="onSkuChange" @deselect="onSkuTwoDeSelect">
                     <a-select-option v-for="(item,index) in skuTwoList" :key="index" :value="item.value">
                       {{ item.name }}
                     </a-select-option>
@@ -334,7 +334,7 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             {
-              title: '多属性', key: 'sku', width: '20%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '请输入${title}'
+              title: '多供应商', key: 'sku', width: '20%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '请输入${title}'
             },
             {
               title: '采购价', key: 'purchaseDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
@@ -420,7 +420,7 @@
         ])
       },
       add () {
-        //隐藏多属性
+        //隐藏多供应商
         this.meTable.columns[2].type = FormTypes.hidden
         // 默认新增一条数据
         this.getAllTable().then(editableTables => {
@@ -460,7 +460,7 @@
         this.loadUnitListData()
         // 加载子表数据
         if (this.model.id) {
-          //禁用多属性开关
+          //禁用多供应商开关
           this.switchDisabled = true
           // 判断是否是多单位
           if(this.model.unit){
@@ -473,7 +473,7 @@
             this.manyUnitStatus = false
           }
           let params = { materialId: this.model.id }
-          //编辑商品的时候多属性字段可以修改
+          //编辑商品的时候多供应商字段可以修改
           this.meTable.columns[2].readonly = false
           this.requestMeTableData(this.url.materialsExtendList, params, this.meTable)
           this.requestDepotTableData(this.url.depotWithStock, { mId: this.model.id }, this.depotTable)
@@ -736,8 +736,8 @@
       },
       onManySkuChange(value) {
         this.manySkuSelected = value.length
-        //控制多属性下拉框中选择项的状态
-        if(value.length < 2){
+        //控制多供应商下拉框中选择项的状态，目前只能选择一种零件类型
+        if(value.length < 1){
           this.materialAttributeList.forEach((item,index,array)=>{
             (array.indexOf(item.value) === -1)?Vue.set(array[index], 'disabled', false):''
           })
@@ -752,10 +752,10 @@
           let skuTwoId = value[1]
           this.materialAttributeList.forEach(item => {
             if(item.value === skuOneId) {
-              this.skuOneTitle = item.name
+              this.skuOneTitle = item.name + "供应商"
             }
             if(item.value === skuTwoId) {
-              this.skuTwoTitle = item.name
+              this.skuTwoTitle = item.name + "供应商"
             }
           })
           getMaterialAttributeValueListById({'id': skuOneId}).then((res)=>{
@@ -769,7 +769,7 @@
             }
           })
         }
-        //控制条码列表中的多属性列
+        //控制条码列表中的多供应商列
         if(value.length>0) {
           this.meTable.columns[2].type = FormTypes.input
         } else {
@@ -798,7 +798,7 @@
       autoSkuList(skuOneData, skuTwoData) {
         let unit = this.form.getFieldValue('unit')
         if(unit) {
-          //计算多属性已经选择了几个
+          //计算多供应商已经选择了几个
           let count = this.getNumByField('skuOne') + this.getNumByField('skuTwo')
           let barCodeSku = []
           if(count === 1) {
@@ -944,7 +944,7 @@
           this.$refs.priceModalForm.add(type);
           this.$refs.priceModalForm.disableSubmit = false;
         } else {
-          this.$message.warning('抱歉，只有开启多属性才能进行批量操作！');
+          this.$message.warning('抱歉，只有开启多供应商才能进行批量操作！');
         }
       },
       batchSetStock(type) {
@@ -1028,7 +1028,7 @@
       },
       onlyUnitOnChange(e) {
         if(e.target.value) {
-          //单位有填写了之后则显示多属性的文本框
+          //单位有填写了之后则显示多供应商的文本框
           this.manySkuStatus = true
         } else {
           this.manySkuStatus = false
