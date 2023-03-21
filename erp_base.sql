@@ -11,7 +11,7 @@
  Target Server Version : 50704 (5.7.4-m14)
  File Encoding         : 65001
 
- Date: 21/03/2023 13:00:48
+ Date: 21/03/2023 19:12:14
 */
 
 SET NAMES utf8mb4;
@@ -34,11 +34,12 @@ CREATE TABLE `jsh_account`  (
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '账户信息' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '账户信息' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_account
 -- ----------------------------
+INSERT INTO `jsh_account` VALUES (24, '宏泽', '12', 0.000000, NULL, NULL, b'1', NULL, b'1', 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_account_head
@@ -160,11 +161,13 @@ CREATE TABLE `jsh_depot_head`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK2A80F214B610FC06`(`organ_id`) USING BTREE,
   INDEX `FK2A80F214AAE50527`(`account_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 278 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据主表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 283 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据主表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_depot_head
 -- ----------------------------
+INSERT INTO `jsh_depot_head` VALUES (278, '其它', '采购订单', 'CGDD00000000665', 'CGDD00000000665', '2023-03-21 13:43:13', '2023-03-21 13:43:05', 91, 63, NULL, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', 0.000000, 0.000000, 0.000000, NULL, NULL, '0', '0', NULL, 63, '0');
+INSERT INTO `jsh_depot_head` VALUES (279, '其它', '销售订单', 'XSDD00000000678', 'XSDD00000000678', '2023-03-21 14:59:38', '2023-03-21 14:59:11', 92, 63, NULL, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', 0.000000, 0.000000, 0.000000, NULL, NULL, '0', '0', NULL, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot_item
@@ -201,11 +204,13 @@ CREATE TABLE `jsh_depot_item`  (
   INDEX `FK2A819F474BB6190E`(`header_id`) USING BTREE,
   INDEX `FK2A819F479485B3F5`(`depot_id`) USING BTREE,
   INDEX `FK2A819F47729F5392`(`another_depot_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 335 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据子表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 340 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据子表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_depot_item
 -- ----------------------------
+INSERT INTO `jsh_depot_item` VALUES (335, 278, 620, 40, '个', NULL, 1.000000, 1.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.000000, 0.000000, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (336, 279, 620, 40, '个', NULL, 1.000000, 1.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.000000, 0.000000, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_function
@@ -295,10 +300,10 @@ INSERT INTO `jsh_function` VALUES (247, '010105', '多属性', '0101', '/materia
 INSERT INTO `jsh_function` VALUES (248, '030150', '调拨明细', '0301', '/report/allocation_detail', '/report/AllocationDetail', b'0', '0646', b'1', '电脑版', '', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (258, '000112', '平台配置', '0001', '/system/platform_config', '/system/PlatformConfigList', b'0', '0175', b'1', '电脑版', '', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (259, '0901', '生产管理', '0', '/production', '/layouts/TabLayout', b'0', '0400', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (260, '090101', '生产计划', '0901', '/production/plan', '/layouts/TabLayout', b'0', '0401', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (261, '090102', '生产单', '0901', '/production/order', '/layouts/TabLayout', b'0', '0402', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (262, '090103', '领料单', '0901', '/production/material_pick', '/layouts/TabLayout', b'0', '0403', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (263, '090104', '退料单', '0901', '/production/material_return', '/layouts/TabLayout', b'0', '0404', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (260, '090101', '生产计划', '0901', '/bill/production_plan', '/bill/ProductionPlanList', b'0', '0401', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (261, '090102', '生产单', '0901', '/bill/production_order', '/layouts/TabLayout', b'0', '0402', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (262, '090103', '领料单', '0901', '/bill/material_pick', '/layouts/TabLayout', b'0', '0403', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (263, '090104', '退料单', '0901', '/bill/material_return', '/layouts/TabLayout', b'0', '0404', b'1', '电脑版', '1,2,7', 'profile', '0');
 
 -- ----------------------------
 -- Table structure for jsh_in_out_item
@@ -335,7 +340,7 @@ CREATE TABLE `jsh_log`  (
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FKF2696AA13E226853`(`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7708 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 7733 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_log
@@ -488,6 +493,31 @@ INSERT INTO `jsh_log` VALUES (7704, 120, '关联关系', '127.0.0.1', '2023-03-2
 INSERT INTO `jsh_log` VALUES (7705, 120, '关联关系', '0:0:0:0:0:0:0:1', '2023-03-21 12:58:13', 0, '修改角色的按钮权限', NULL);
 INSERT INTO `jsh_log` VALUES (7706, 120, '关联关系', '0:0:0:0:0:0:0:1', '2023-03-21 12:58:17', 0, '修改', NULL);
 INSERT INTO `jsh_log` VALUES (7707, 120, '关联关系', '127.0.0.1', '2023-03-21 12:58:23', 0, '修改角色的按钮权限', NULL);
+INSERT INTO `jsh_log` VALUES (7708, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-21 13:25:15', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7709, 63, '单据', '127.0.0.1', '2023-03-21 13:43:13', 0, '新增CGDD00000000665', 63);
+INSERT INTO `jsh_log` VALUES (7710, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-21 14:27:19', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7711, 63, '关联关系', '127.0.0.1', '2023-03-21 14:59:18', 0, '修改', 63);
+INSERT INTO `jsh_log` VALUES (7712, 63, '商家', '127.0.0.1', '2023-03-21 14:59:18', 0, '新增客户', 63);
+INSERT INTO `jsh_log` VALUES (7713, 63, '账户', '127.0.0.1', '2023-03-21 14:59:33', 0, '新增宏泽', 63);
+INSERT INTO `jsh_log` VALUES (7714, 63, '单据', '127.0.0.1', '2023-03-21 14:59:38', 0, '新增XSDD00000000678', 63);
+INSERT INTO `jsh_log` VALUES (7715, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-21 16:27:00', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7716, 120, '用户', '127.0.0.1', '2023-03-21 17:00:43', 0, '登录admin', 0);
+INSERT INTO `jsh_log` VALUES (7717, 120, '功能', '127.0.0.1', '2023-03-21 17:02:08', 0, '修改生产计划', NULL);
+INSERT INTO `jsh_log` VALUES (7718, 63, '用户', '127.0.0.1', '2023-03-21 17:34:36', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7719, 120, '用户', '127.0.0.1', '2023-03-21 17:35:52', 0, '登录admin', 0);
+INSERT INTO `jsh_log` VALUES (7720, 120, '功能', '0:0:0:0:0:0:0:1', '2023-03-21 17:48:16', 0, '修改生产计划', NULL);
+INSERT INTO `jsh_log` VALUES (7721, 120, '功能', '0:0:0:0:0:0:0:1', '2023-03-21 17:48:29', 0, '修改生产单', NULL);
+INSERT INTO `jsh_log` VALUES (7722, 120, '功能', '127.0.0.1', '2023-03-21 17:48:53', 0, '修改领料单', NULL);
+INSERT INTO `jsh_log` VALUES (7723, 120, '功能', '127.0.0.1', '2023-03-21 17:48:59', 0, '修改退料单', NULL);
+INSERT INTO `jsh_log` VALUES (7724, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-21 18:07:22', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7725, 120, '用户', '127.0.0.1', '2023-03-21 18:28:41', 0, '登录admin', 0);
+INSERT INTO `jsh_log` VALUES (7726, 63, '用户', '127.0.0.1', '2023-03-21 18:37:39', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7727, 63, '用户', '127.0.0.1', '2023-03-21 18:44:40', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7728, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-21 18:45:39', 0, '新增XSDD00000000695', 63);
+INSERT INTO `jsh_log` VALUES (7729, 63, '用户', '127.0.0.1', '2023-03-21 18:54:28', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7730, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-21 18:54:56', 0, '新增XSDD00000000697', 63);
+INSERT INTO `jsh_log` VALUES (7731, 63, '经手人', '0:0:0:0:0:0:0:1', '2023-03-21 19:04:08', 0, '新增管盛', 63);
+INSERT INTO `jsh_log` VALUES (7732, 63, '单据', '127.0.0.1', '2023-03-21 19:04:58', 0, '新增XSDD00000000701', 63);
 
 -- ----------------------------
 -- Table structure for jsh_material
@@ -767,11 +797,12 @@ CREATE TABLE `jsh_person`  (
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '经手人表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '经手人表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_person
 -- ----------------------------
+INSERT INTO `jsh_person` VALUES (18, '业务员', '管盛', b'1', NULL, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_platform_config
@@ -841,7 +872,7 @@ CREATE TABLE `jsh_sequence`  (
 -- ----------------------------
 -- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', 1, 999999999999999999, 660, 1, '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', 1, 999999999999999999, 701, 1, '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_serial_number
@@ -899,13 +930,14 @@ CREATE TABLE `jsh_supplier`  (
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 92 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '供应商/客户信息表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 93 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '供应商/客户信息表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_supplier
 -- ----------------------------
 INSERT INTO `jsh_supplier` VALUES (90, '金发', NULL, NULL, NULL, NULL, NULL, '供应商', b'1', 0.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
 INSERT INTO `jsh_supplier` VALUES (91, '浙江宏泽', NULL, NULL, NULL, NULL, NULL, '供应商', b'1', 0.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
+INSERT INTO `jsh_supplier` VALUES (92, '客户', NULL, NULL, NULL, NULL, NULL, '客户', b'1', 0.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_system_config
@@ -1051,7 +1083,7 @@ INSERT INTO `jsh_user_business` VALUES (23, 'UserRole', '65', '[5]', NULL, NULL,
 INSERT INTO `jsh_user_business` VALUES (24, 'UserDepot', '65', '[1]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (25, 'UserCustomer', '64', '[5][2]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (26, 'UserCustomer', '65', '[6]', NULL, NULL, '0');
-INSERT INTO `jsh_user_business` VALUES (27, 'UserCustomer', '63', '[58]', NULL, 63, '0');
+INSERT INTO `jsh_user_business` VALUES (27, 'UserCustomer', '63', '[58][92]', NULL, 63, '0');
 INSERT INTO `jsh_user_business` VALUES (28, 'UserDepot', '96', '[7]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (29, 'UserRole', '96', '[6]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (30, 'UserRole', '113', '[10]', NULL, NULL, '0');
