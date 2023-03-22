@@ -325,7 +325,7 @@ INSERT INTO `jsh_function` VALUES (260, '090101', '生产计划', '0901', '/bill
 INSERT INTO `jsh_function` VALUES (261, '090102', '生产单', '0901', '/bill/production_order', '/bill/ProductionOrderList', b'0', '0402', b'1', '电脑版', '1,2,7', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (262, '090103', '领料单', '0901', '/bill/material_pick', '/bill/MaterialPickList', b'0', '0403', b'1', '电脑版', '1,2,7', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (263, '090104', '退料单', '0901', '/bill/material_return', '/bill/MaterialReturnList', b'0', '0404', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (264, '090105', '生产入库', '0901', '/bill/production_in', '/layouts/TabLayout', b'0', '0405', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (264, '090105', '生产入库', '0901', '/bill/production_in', '/bill/ProductionInList', b'0', '0405', b'1', '电脑版', '1,2,7', 'profile', '0');
 
 -- ----------------------------
 -- Table structure for jsh_in_out_item
