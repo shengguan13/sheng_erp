@@ -20,6 +20,10 @@ public class DepotItem {
 
     private BigDecimal basicNumber;
 
+    private BigDecimal planNumber;
+
+    private BigDecimal actualNumber;
+
     private BigDecimal unitPrice;
 
     private BigDecimal purchaseUnitPrice;
@@ -116,6 +120,22 @@ public class DepotItem {
 
     public void setBasicNumber(BigDecimal basicNumber) {
         this.basicNumber = basicNumber;
+    }
+
+    public BigDecimal getPlanNumber() {
+        return planNumber;
+    }
+
+    public void setPlanNumber(BigDecimal planNumber) {
+        this.planNumber = planNumber;
+    }
+
+    public BigDecimal getActualNumber() {
+        return actualNumber;
+    }
+
+    public void setActualNumber(BigDecimal actualNumber) {
+        this.actualNumber = actualNumber;
     }
 
     public BigDecimal getUnitPrice() {

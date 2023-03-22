@@ -23,6 +23,10 @@ public class DepotHeadVo4List extends DepotHead{
 
     private String operTimeStr;
 
+    private String planStartTimeStr;
+
+    private String planFinishTimeStr;
+
     private BigDecimal finishDebt;
 
     private String depotHeadType;
@@ -119,6 +123,22 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setOperTimeStr(String operTimeStr) {
         this.operTimeStr = operTimeStr;
+    }
+
+    public String getPlanStartTimeStr() {
+        return planStartTimeStr;
+    }
+
+    public void setPlanStartTimeStr(String planStartTimeStr) {
+        this.planStartTimeStr = planStartTimeStr;
+    }
+
+    public String getPlanFinishTimeStr() {
+        return planFinishTimeStr;
+    }
+
+    public void setPlanFinishTimeStr(String planFinishTimeStr) {
+        this.planFinishTimeStr = planFinishTimeStr;
     }
 
     public BigDecimal getFinishDebt() {

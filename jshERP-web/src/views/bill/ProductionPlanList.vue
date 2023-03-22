@@ -64,7 +64,7 @@
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
-                      <a-select-option value="3">正在生产</a-select-option>
+                      <a-select-option value="3">部分生产</a-select-option>
                       <a-select-option value="2">完成生产</a-select-option>
                     </a-select>
                   </a-form-item>
@@ -127,7 +127,7 @@
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
               <a-tag v-if="status == '2'" color="cyan">完成生产</a-tag>
-              <a-tag v-if="status == '3'" color="blue">正在生产</a-tag>
+              <a-tag v-if="status == '3'" color="blue">部分生产</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
             </template>
           </a-table>
@@ -189,7 +189,7 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:120},
+          { title: '计划编号', dataIndex: 'number',width:120},
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -197,7 +197,9 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
+          { title: '计划创建日期', dataIndex: 'operTimeStr',width:145},
+          { title: '计划开始日期', dataIndex: 'planStartTimeStr',width:145},
+          { title: '计划完成日期', dataIndex: 'planFinishTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",

@@ -9,6 +9,8 @@
     <result column="number" jdbcType="VARCHAR" property="number" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="oper_time" jdbcType="TIMESTAMP" property="operTime" />
+    <result column="plan_start_time" jdbcType="TIMESTAMP" property="planStartTime" />
+    <result column="plan_finish_time" jdbcType="TIMESTAMP" property="planFinishTime" />
     <result column="organ_id" jdbcType="BIGINT" property="organId" />
     <result column="creator" jdbcType="BIGINT" property="creator" />
     <result column="account_id" jdbcType="BIGINT" property="accountId" />
@@ -92,7 +94,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, type, sub_type, default_number, number, create_time, oper_time, organ_id, creator, 
+    id, type, sub_type, default_number, number, create_time, oper_time,
+    plan_start_time, plan_finish_time, organ_id, creator,
     account_id, change_amount, back_amount, total_price, pay_type, bill_type, remark, 
     file_name, sales_man, account_id_list, account_money_list, discount, discount_money, 
     discount_last_money, other_money, deposit, status, purchase_status, link_number, 
@@ -131,7 +134,7 @@
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depot_head (id, type, sub_type, 
       default_number, number, create_time, 
-      oper_time, organ_id, creator, 
+      oper_time, plan_start_time, plan_finish_time, organ_id, creator,
       account_id, change_amount, back_amount, 
       total_price, pay_type, bill_type, 
       remark, file_name, sales_man, 
@@ -142,7 +145,8 @@
       )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, 
       #{defaultNumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{operTime,jdbcType=TIMESTAMP}, #{organId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT}, 
+      #{operTime,jdbcType=TIMESTAMP}, #{planStartTime,jdbcType=TIMESTAMP}, #{planFinishTime,jdbcType=TIMESTAMP},
+      #{organId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT},
       #{accountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, #{backAmount,jdbcType=DECIMAL}, 
       #{totalPrice,jdbcType=DECIMAL}, #{payType,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{salesMan,jdbcType=VARCHAR}, 
@@ -175,6 +179,12 @@
       </if>
       <if test="operTime != null">
         oper_time,
+      </if>
+      <if test="planStartTime != null">
+        plan_start_time,
+      </if>
+      <if test="planFinishTime != null">
+        plan_finish_time,
       </if>
       <if test="organId != null">
         organ_id,
@@ -267,6 +277,12 @@
       </if>
       <if test="operTime != null">
         #{operTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planStartTime != null">
+        #{planStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planFinishTime != null">
+        #{planFinishTime,jdbcType=TIMESTAMP},
       </if>
       <if test="organId != null">
         #{organId,jdbcType=BIGINT},
@@ -369,6 +385,12 @@
       <if test="record.operTime != null">
         oper_time = #{record.operTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.planStartTime != null">
+        plan_start_time = #{record.planStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.planFinishTime != null">
+        plan_finish_time = #{record.planFinishTime,jdbcType=BIGINT},
+      </if>
       <if test="record.organId != null">
         organ_id = #{record.organId,jdbcType=BIGINT},
       </if>
@@ -452,6 +474,8 @@
       number = #{record.number,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       oper_time = #{record.operTime,jdbcType=TIMESTAMP},
+      plan_start_time = #{record.planStartTime,jdbcType=TIMESTAMP},
+      plan_finish_time = #{record.planFinishTime,jdbcType=TIMESTAMP},
       organ_id = #{record.organId,jdbcType=BIGINT},
       creator = #{record.creator,jdbcType=BIGINT},
       account_id = #{record.accountId,jdbcType=BIGINT},
@@ -499,6 +523,12 @@
       </if>
       <if test="operTime != null">
         oper_time = #{operTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planStartTime != null">
+        plan_start_time = #{planStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planFinishTime != null">
+        plan_finish_time = #{planFinishTime,jdbcType=TIMESTAMP},
       </if>
       <if test="organId != null">
         organ_id = #{organId,jdbcType=BIGINT},
@@ -580,6 +610,8 @@
       number = #{number,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       oper_time = #{operTime,jdbcType=TIMESTAMP},
+      plan_start_time = #{planStartTime,jdbcType=TIMESTAMP},
+      plan_finish_time = #{planFinishTime,jdbcType=TIMESTAMP},
       organ_id = #{organId,jdbcType=BIGINT},
       creator = #{creator,jdbcType=BIGINT},
       account_id = #{accountId,jdbcType=BIGINT},

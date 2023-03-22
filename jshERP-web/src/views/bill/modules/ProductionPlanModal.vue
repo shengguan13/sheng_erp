@@ -56,6 +56,18 @@
             </a-form-item>
           </a-col>
         </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始日期">
+              <j-date v-decorator="['planStartTime', validatorRules.planStartTime]" :show-time="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成日期">
+              <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="true"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
         <j-editable-table id="billModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
@@ -98,7 +110,7 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="10" data-title="附件" data-intro="可以上传与单据相关的图片、文档，支持多个文件">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="5" data-title="附件" data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
           </a-col>
@@ -150,6 +162,8 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
+        planStartTimeStr: '',
+        planFinishTimeStr: '',
         prefixNo: 'XSDD',
         fileList:[],
         model: {},
@@ -191,6 +205,17 @@
               { required: true, message: '请输入单据日期!' }
             ]
           },
+          // TODO: 需要确保完成日期晚于开始日期
+          planStartTime:{
+            rules: [
+              { required: true, message: '请输入计划开始日期!' }
+            ]
+          },
+          planFinishTime:{
+            rules: [
+              { required: true, message: '请输入计划完成日期!' }
+            ]
+          },
           organId:{
             rules: [
               { required: true, message: '请选择客户!' }
@@ -220,10 +245,13 @@
           })
         } else {
           this.model.operTime = this.model.operTimeStr
+          this.model.planStartTime = this.model.planStartTimeStr
+          this.model.planFinishTime = this.model.planFinishTimeStr
           this.personList.value = this.model.salesMan
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark', 'salesMan'))
+            this.form.setFieldsValue(pick(this.model,'organId',
+              'operTime', 'planStartTime', 'planFinishTime', 'number', 'remark', 'salesMan'))
           });
           // 加载子表数据
           let params = {

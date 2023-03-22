@@ -18,6 +18,10 @@ public class DepotHead {
 
     private Date operTime;
 
+    private Date planStartTime;
+
+    private Date planFinishTime;
+
     private Long organId;
 
     private Long creator;
@@ -118,6 +122,22 @@ public class DepotHead {
 
     public void setOperTime(Date operTime) {
         this.operTime = operTime;
+    }
+
+    public Date getPlanStartTime() {
+        return planStartTime;
+    }
+
+    public void setPlanStartTime(Date planStartTime) {
+        this.planStartTime = planStartTime;
+    }
+
+    public Date getPlanFinishTime() {
+        return planFinishTime;
+    }
+
+    public void setPlanFinishTime(Date planFinishTime) {
+        this.planFinishTime = planFinishTime;
     }
 
     public Long getOrganId() {

@@ -180,6 +180,12 @@ public class DepotHeadService {
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
+                    if(dh.getPlanStartTime() != null) {
+                        dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                    }
+                    if(dh.getPlanFinishTime() != null) {
+                        dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
+                    }
                     //商品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));
@@ -814,6 +820,12 @@ public class DepotHeadService {
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
+                    if(dh.getPlanStartTime() != null) {
+                        dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                    }
+                    if(dh.getPlanFinishTime() != null) {
+                        dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
+                    }
                     //商品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));
@@ -1229,6 +1241,12 @@ public class DepotHeadService {
                     }
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                    }
+                    if(dh.getPlanStartTime() != null) {
+                        dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                    }
+                    if(dh.getPlanFinishTime() != null) {
+                        dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
                     }
                     BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
