@@ -11,7 +11,7 @@
  Target Server Version : 50704 (5.7.4-m14)
  File Encoding         : 65001
 
- Date: 22/03/2023 10:32:36
+ Date: 22/03/2023 15:44:38
 */
 
 SET NAMES utf8mb4;
@@ -164,7 +164,7 @@ CREATE TABLE `jsh_depot_head`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK2A80F214B610FC06`(`organ_id`) USING BTREE,
   INDEX `FK2A80F214AAE50527`(`account_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 286 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据主表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 292 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据主表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_depot_head
@@ -173,9 +173,13 @@ INSERT INTO `jsh_depot_head` VALUES (278, '其它', '采购订单', 'CGDD0000000
 INSERT INTO `jsh_depot_head` VALUES (279, '其它', '销售订单', 'XSDD00000000678', 'XSDD00000000678', '2023-03-21 14:59:38', '2023-03-21 14:59:11', 92, 63, NULL, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', 0.000000, 0.000000, 0.000000, NULL, NULL, '0', '0', NULL, 63, '0', NULL, NULL);
 INSERT INTO `jsh_depot_head` VALUES (280, '其它', '销售订单', 'XSDD00000000695', 'XSDD00000000695', '2023-03-21 18:45:39', '2023-03-21 18:45:27', 92, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', NULL, NULL, NULL, NULL, NULL, '1', '0', NULL, 63, '0', NULL, NULL);
 INSERT INTO `jsh_depot_head` VALUES (281, '其它', '销售订单', 'XSDD00000000697', 'XSDD00000000697', '2023-03-21 18:54:56', '2023-03-21 18:54:49', 92, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', NULL, NULL, NULL, NULL, NULL, '1', '0', NULL, 63, '0', NULL, NULL);
-INSERT INTO `jsh_depot_head` VALUES (282, '其它', '销售订单', 'XSDD00000000701', 'XSDD00000000701', '2023-03-21 19:04:58', '2023-03-21 19:04:45', 92, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '18', '', '', NULL, NULL, NULL, NULL, NULL, '1', '0', NULL, 63, '0', NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (282, '其它', '销售订单', 'XSDD00000000701', 'XSDD00000000701', '2023-03-21 19:04:58', '2023-03-21 19:04:45', 92, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '18', '', '', NULL, NULL, NULL, NULL, NULL, '3', '0', NULL, 63, '0', NULL, NULL);
 INSERT INTO `jsh_depot_head` VALUES (283, '其它', '采购订单', 'CGDD00000000709', 'CGDD00000000709', '2023-03-21 19:59:29', '2023-03-21 19:59:18', 91, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', 0.000000, 0.000000, 0.000000, NULL, NULL, '3', '0', NULL, 63, '0', NULL, NULL);
 INSERT INTO `jsh_depot_head` VALUES (285, '入库', '采购', 'CGRK00000000710', 'CGRK00000000710', '2023-03-21 20:00:27', '2023-03-21 19:59:30', 91, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', 0.000000, 0.000000, 0.000000, 0.000000, NULL, '1', '0', 'CGDD00000000709', 63, '0', NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (286, '其它', '销售订单', 'XSDD00000000711', 'XSDD00000000711', '2023-03-22 10:39:39', '2023-03-22 10:39:18', 92, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '18', '', '', NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, 63, '1', '2023-03-23 10:39:18', '2023-03-31 10:39:18');
+INSERT INTO `jsh_depot_head` VALUES (287, '其它', '销售订单', 'XSDD00000000712', 'XSDD00000000712', '2023-03-22 10:47:21', '2023-03-22 10:47:05', 92, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '18', '', '', NULL, NULL, NULL, NULL, NULL, '0', '0', NULL, 63, '0', '2023-03-23 10:47:05', '2023-03-31 10:47:05');
+INSERT INTO `jsh_depot_head` VALUES (289, '入库', '采购', 'CGRK00000000714', 'CGRK00000000714', '2023-03-22 12:04:18', '2023-03-22 12:03:59', 91, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, '1', '0', 'CGDD00000000709', 63, '0', NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (291, '出库', '销售', 'XSCK00000000738', 'XSCK00000000738', '2023-03-22 15:01:39', '2023-03-22 15:01:12', 92, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', 0.000000, 0.000000, 0.000000, 0.000000, NULL, '0', '0', 'XSDD00000000701', 63, '0', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for jsh_depot_item
@@ -212,7 +216,7 @@ CREATE TABLE `jsh_depot_item`  (
   INDEX `FK2A819F474BB6190E`(`header_id`) USING BTREE,
   INDEX `FK2A819F479485B3F5`(`depot_id`) USING BTREE,
   INDEX `FK2A819F47729F5392`(`another_depot_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 342 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据子表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 347 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据子表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_depot_item
@@ -224,6 +228,10 @@ INSERT INTO `jsh_depot_item` VALUES (338, 281, 620, 40, '个', NULL, 1.000000, 1
 INSERT INTO `jsh_depot_item` VALUES (339, 282, 621, 41, 'kg', NULL, 2.000000, 2.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
 INSERT INTO `jsh_depot_item` VALUES (340, 283, 621, 41, 'kg', NULL, 1000.000000, 1000.000000, NULL, NULL, NULL, 0.000000, NULL, NULL, NULL, 0.000000, 0.000000, 0.000000, NULL, NULL, NULL, NULL, NULL, 63, '0');
 INSERT INTO `jsh_depot_item` VALUES (341, 285, 621, 41, 'kg', NULL, 500.000000, 500.000000, NULL, NULL, NULL, 0.000000, NULL, 19, NULL, 0.000000, 0.000000, 0.000000, NULL, NULL, '010101', '2023-03-25 00:00:00', 340, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (342, 286, 621, 41, 'kg', NULL, 50.000000, 50.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '1');
+INSERT INTO `jsh_depot_item` VALUES (343, 287, 620, 40, '个', NULL, 1.000000, 1.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (345, 289, 621, 41, 'kg', NULL, 200.000000, 200.000000, NULL, NULL, NULL, 0.000000, NULL, 19, NULL, 0.000000, 0.000000, 0.000000, NULL, NULL, '111445', NULL, 340, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (346, 291, 621, 41, 'kg', NULL, 1.000000, 1.000000, NULL, NULL, NULL, 0.000000, NULL, 19, NULL, NULL, 0.000000, 0.000000, NULL, NULL, '010101', '2023-03-25 00:00:00', 339, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_function
@@ -245,7 +253,7 @@ CREATE TABLE `jsh_function`  (
   `delete_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `url`(`url`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 264 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '功能模块表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 265 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '功能模块表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_function
@@ -314,9 +322,10 @@ INSERT INTO `jsh_function` VALUES (248, '030150', '调拨明细', '0301', '/repo
 INSERT INTO `jsh_function` VALUES (258, '000112', '平台配置', '0001', '/system/platform_config', '/system/PlatformConfigList', b'0', '0175', b'1', '电脑版', '', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (259, '0901', '生产管理', '0', '/production', '/layouts/TabLayout', b'0', '0400', b'1', '电脑版', '1,2,7', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (260, '090101', '生产计划', '0901', '/bill/production_plan', '/bill/ProductionPlanList', b'0', '0401', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (261, '090102', '生产单', '0901', '/bill/production_order', '/layouts/TabLayout', b'0', '0402', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (262, '090103', '领料单', '0901', '/bill/material_pick', '/layouts/TabLayout', b'0', '0403', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (261, '090102', '生产单', '0901', '/bill/production_order', '/bill/ProductionOrderList', b'0', '0402', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (262, '090103', '领料单', '0901', '/bill/material_pick', '/bill/MaterialPickList', b'0', '0403', b'1', '电脑版', '1,2,7', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (263, '090104', '退料单', '0901', '/bill/material_return', '/layouts/TabLayout', b'0', '0404', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (264, '090105', '生产入库', '0901', '/bill/production_in', '/layouts/TabLayout', b'0', '0405', b'1', '电脑版', '1,2,7', 'profile', '0');
 
 -- ----------------------------
 -- Table structure for jsh_in_out_item
@@ -353,7 +362,7 @@ CREATE TABLE `jsh_log`  (
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FKF2696AA13E226853`(`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7738 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 7762 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_log
@@ -536,6 +545,30 @@ INSERT INTO `jsh_log` VALUES (7734, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-21
 INSERT INTO `jsh_log` VALUES (7735, 63, '关联关系', '127.0.0.1', '2023-03-21 20:00:11', 0, '修改', 63);
 INSERT INTO `jsh_log` VALUES (7736, 63, '仓库', '127.0.0.1', '2023-03-21 20:00:11', 0, '新增仓库1', 63);
 INSERT INTO `jsh_log` VALUES (7737, 63, '单据', '127.0.0.1', '2023-03-21 20:00:27', 0, '新增CGRK00000000710', 63);
+INSERT INTO `jsh_log` VALUES (7738, 63, '用户', '127.0.0.1', '2023-03-22 10:39:10', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7739, 63, '单据', '127.0.0.1', '2023-03-22 10:39:39', 0, '新增XSDD00000000711', 63);
+INSERT INTO `jsh_log` VALUES (7740, 63, '单据', '127.0.0.1', '2023-03-22 10:45:49', 0, '删除[XSDD00000000711]', 63);
+INSERT INTO `jsh_log` VALUES (7741, 63, '用户', '127.0.0.1', '2023-03-22 10:47:00', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7742, 63, '单据', '127.0.0.1', '2023-03-22 10:47:21', 0, '新增XSDD00000000712', 63);
+INSERT INTO `jsh_log` VALUES (7743, 63, '用户', '127.0.0.1', '2023-03-22 11:12:50', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7744, 63, '用户', '127.0.0.1', '2023-03-22 12:03:55', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7745, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-22 12:04:18', 0, '新增CGRK00000000714', 63);
+INSERT INTO `jsh_log` VALUES (7746, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-22 12:05:08', 0, '修改CGRK00000000714', 63);
+INSERT INTO `jsh_log` VALUES (7747, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-22 12:36:28', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7748, 63, '用户', '127.0.0.1', '2023-03-22 13:37:43', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7749, 120, '用户', '127.0.0.1', '2023-03-22 13:38:05', 0, '登录admin', 0);
+INSERT INTO `jsh_log` VALUES (7750, 120, '功能', '0:0:0:0:0:0:0:1', '2023-03-22 13:38:40', 0, '修改生产单', NULL);
+INSERT INTO `jsh_log` VALUES (7751, 120, '功能', '0:0:0:0:0:0:0:1', '2023-03-22 13:55:26', 0, '新增生产入库', NULL);
+INSERT INTO `jsh_log` VALUES (7752, 120, '关联关系', '0:0:0:0:0:0:0:1', '2023-03-22 13:55:46', 0, '修改', NULL);
+INSERT INTO `jsh_log` VALUES (7753, 120, '关联关系', '127.0.0.1', '2023-03-22 13:55:49', 0, '修改角色的按钮权限', NULL);
+INSERT INTO `jsh_log` VALUES (7754, 120, '关联关系', '127.0.0.1', '2023-03-22 13:55:52', 0, '修改', NULL);
+INSERT INTO `jsh_log` VALUES (7755, 120, '关联关系', '0:0:0:0:0:0:0:1', '2023-03-22 13:55:58', 0, '修改角色的按钮权限', NULL);
+INSERT INTO `jsh_log` VALUES (7756, 120, '用户', '127.0.0.1', '2023-03-22 14:27:18', 0, '登录admin', 0);
+INSERT INTO `jsh_log` VALUES (7757, 120, '功能', '127.0.0.1', '2023-03-22 14:27:54', 0, '修改领料单', NULL);
+INSERT INTO `jsh_log` VALUES (7758, 63, '用户', '127.0.0.1', '2023-03-22 14:40:47', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7759, 63, '经手人', '0:0:0:0:0:0:0:1', '2023-03-22 14:53:21', 0, '新增仓管', 63);
+INSERT INTO `jsh_log` VALUES (7760, 63, '经手人', '0:0:0:0:0:0:0:1', '2023-03-22 14:56:33', 0, '新增管盛2', 63);
+INSERT INTO `jsh_log` VALUES (7761, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-22 15:01:39', 0, '新增XSCK00000000738', 63);
 
 -- ----------------------------
 -- Table structure for jsh_material
@@ -648,7 +681,7 @@ CREATE TABLE `jsh_material_current_stock`  (
 -- ----------------------------
 -- Records of jsh_material_current_stock
 -- ----------------------------
-INSERT INTO `jsh_material_current_stock` VALUES (26, 621, 19, 500.000000, 63, '0');
+INSERT INTO `jsh_material_current_stock` VALUES (26, 621, 19, 699.000000, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_extend
@@ -816,12 +849,14 @@ CREATE TABLE `jsh_person`  (
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '经手人表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '经手人表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_person
 -- ----------------------------
 INSERT INTO `jsh_person` VALUES (18, '业务员', '管盛', b'1', NULL, 63, '0');
+INSERT INTO `jsh_person` VALUES (19, '仓管员', '仓管', b'1', NULL, 63, '0');
+INSERT INTO `jsh_person` VALUES (20, '业务员', '管盛2', b'1', NULL, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_platform_config
@@ -891,7 +926,7 @@ CREATE TABLE `jsh_sequence`  (
 -- ----------------------------
 -- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', 1, 999999999999999999, 710, 1, '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', 1, 999999999999999999, 742, 1, '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_serial_number
@@ -1082,7 +1117,7 @@ CREATE TABLE `jsh_user_business`  (
 -- ----------------------------
 -- Records of jsh_user_business
 -- ----------------------------
-INSERT INTO `jsh_user_business` VALUES (5, 'RoleFunctions', '4', '[241][32][33][199][242][38][41][200][201][239][202][40][232][233][197][44][203][204][205][206][212][246][198][207][208][209][226][227][248][228][229][59][235][237][244][22][21][23][220][247][25][24][217][218][26][194][195][31][13][1][14][243][15][234][16][18][236][245][258][259][260][261][262][263]', '[{\"funId\":13,\"btnStr\":\"1\"},{\"funId\":14,\"btnStr\":\"1\"},{\"funId\":243,\"btnStr\":\"1\"},{\"funId\":234,\"btnStr\":\"1\"},{\"funId\":16,\"btnStr\":\"1\"},{\"funId\":18,\"btnStr\":\"1\"},{\"funId\":236,\"btnStr\":\"1\"},{\"funId\":245,\"btnStr\":\"1\"},{\"funId\":22,\"btnStr\":\"1\"},{\"funId\":23,\"btnStr\":\"1\"},{\"funId\":220,\"btnStr\":\"1\"},{\"funId\":247,\"btnStr\":\"1\"},{\"funId\":25,\"btnStr\":\"1\"},{\"funId\":217,\"btnStr\":\"1\"},{\"funId\":218,\"btnStr\":\"1\"},{\"funId\":26,\"btnStr\":\"1\"},{\"funId\":194,\"btnStr\":\"1\"},{\"funId\":195,\"btnStr\":\"1\"},{\"funId\":31,\"btnStr\":\"1\"},{\"funId\":241,\"btnStr\":\"1,2,7\"},{\"funId\":33,\"btnStr\":\"1,2,7\"},{\"funId\":199,\"btnStr\":\"1,2,7\"},{\"funId\":242,\"btnStr\":\"1,2,7\"},{\"funId\":41,\"btnStr\":\"1,2,7\"},{\"funId\":200,\"btnStr\":\"1,2,7\"},{\"funId\":259,\"btnStr\":\"1,2,7\"},{\"funId\":260,\"btnStr\":\"1,2,7\"},{\"funId\":261,\"btnStr\":\"1,2,7\"},{\"funId\":262,\"btnStr\":\"1,2,7\"},{\"funId\":263,\"btnStr\":\"1,2,7\"},{\"funId\":197,\"btnStr\":\"1,2,7\"},{\"funId\":203,\"btnStr\":\"1,2,7\"},{\"funId\":204,\"btnStr\":\"1,2,7\"},{\"funId\":205,\"btnStr\":\"1,2,7\"},{\"funId\":206,\"btnStr\":\"1,2,7\"},{\"funId\":212,\"btnStr\":\"1,2,7\"},{\"funId\":201,\"btnStr\":\"1,2,7\"},{\"funId\":202,\"btnStr\":\"1,2,7\"},{\"funId\":40,\"btnStr\":\"1,2,7\"},{\"funId\":232,\"btnStr\":\"1,2,7\"},{\"funId\":233,\"btnStr\":\"1,2,7\"}]', NULL, '0');
+INSERT INTO `jsh_user_business` VALUES (5, 'RoleFunctions', '4', '[241][32][33][199][242][38][41][200][260][261][262][263][201][239][202][40][232][233][197][44][203][204][205][206][212][246][198][207][208][209][226][227][248][228][229][59][235][237][244][22][21][23][220][247][25][24][217][218][26][194][195][31][13][1][14][243][15][234][16][18][236][245][258][259][264]', '[{\"funId\":13,\"btnStr\":\"1\"},{\"funId\":14,\"btnStr\":\"1\"},{\"funId\":243,\"btnStr\":\"1\"},{\"funId\":234,\"btnStr\":\"1\"},{\"funId\":16,\"btnStr\":\"1\"},{\"funId\":18,\"btnStr\":\"1\"},{\"funId\":236,\"btnStr\":\"1\"},{\"funId\":245,\"btnStr\":\"1\"},{\"funId\":22,\"btnStr\":\"1\"},{\"funId\":23,\"btnStr\":\"1\"},{\"funId\":220,\"btnStr\":\"1\"},{\"funId\":247,\"btnStr\":\"1\"},{\"funId\":25,\"btnStr\":\"1\"},{\"funId\":217,\"btnStr\":\"1\"},{\"funId\":218,\"btnStr\":\"1\"},{\"funId\":26,\"btnStr\":\"1\"},{\"funId\":194,\"btnStr\":\"1\"},{\"funId\":195,\"btnStr\":\"1\"},{\"funId\":31,\"btnStr\":\"1\"},{\"funId\":241,\"btnStr\":\"1,2,7\"},{\"funId\":33,\"btnStr\":\"1,2,7\"},{\"funId\":199,\"btnStr\":\"1,2,7\"},{\"funId\":242,\"btnStr\":\"1,2,7\"},{\"funId\":41,\"btnStr\":\"1,2,7\"},{\"funId\":200,\"btnStr\":\"1,2,7\"},{\"funId\":259,\"btnStr\":\"1,2,7\"},{\"funId\":260,\"btnStr\":\"1,2,7\"},{\"funId\":261,\"btnStr\":\"1,2,7\"},{\"funId\":262,\"btnStr\":\"1,2,7\"},{\"funId\":263,\"btnStr\":\"1,2,7\"},{\"funId\":264,\"btnStr\":\"1,2,7\"},{\"funId\":197,\"btnStr\":\"1,2,7\"},{\"funId\":203,\"btnStr\":\"1,2,7\"},{\"funId\":204,\"btnStr\":\"1,2,7\"},{\"funId\":205,\"btnStr\":\"1,2,7\"},{\"funId\":206,\"btnStr\":\"1,2,7\"},{\"funId\":212,\"btnStr\":\"1,2,7\"},{\"funId\":201,\"btnStr\":\"1,2,7\"},{\"funId\":202,\"btnStr\":\"1,2,7\"},{\"funId\":40,\"btnStr\":\"1,2,7\"},{\"funId\":232,\"btnStr\":\"1,2,7\"},{\"funId\":233,\"btnStr\":\"1,2,7\"}]', NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (6, 'RoleFunctions', '5', '[22][23][25][26][194][195][31][33][200][201][41][199][202]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (7, 'RoleFunctions', '6', '[22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]', '[{\"funId\":\"33\",\"btnStr\":\"4\"}]', NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (9, 'RoleFunctions', '7', '[168][13][12][16][14][15][189][18][19][132]', NULL, NULL, '0');
@@ -1106,7 +1141,7 @@ INSERT INTO `jsh_user_business` VALUES (27, 'UserCustomer', '63', '[58][92]', NU
 INSERT INTO `jsh_user_business` VALUES (28, 'UserDepot', '96', '[7]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (29, 'UserRole', '96', '[6]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (30, 'UserRole', '113', '[10]', NULL, NULL, '0');
-INSERT INTO `jsh_user_business` VALUES (32, 'RoleFunctions', '10', '[241][32][33][199][242][38][41][200][201][239][202][40][232][233][197][44][203][204][205][206][212][246][198][207][208][209][226][227][248][228][229][59][235][237][244][22][21][23][220][247][25][24][217][218][26][194][195][31][13][1][14][243][15][234][16][18][236][245][258][259][260][261][262][263]', '[{\"funId\":13,\"btnStr\":\"1\"},{\"funId\":14,\"btnStr\":\"1\"},{\"funId\":243,\"btnStr\":\"1\"},{\"funId\":234,\"btnStr\":\"1\"},{\"funId\":16,\"btnStr\":\"1\"},{\"funId\":18,\"btnStr\":\"1\"},{\"funId\":236,\"btnStr\":\"1\"},{\"funId\":245,\"btnStr\":\"1\"},{\"funId\":22,\"btnStr\":\"1\"},{\"funId\":23,\"btnStr\":\"1\"},{\"funId\":220,\"btnStr\":\"1\"},{\"funId\":247,\"btnStr\":\"1\"},{\"funId\":25,\"btnStr\":\"1\"},{\"funId\":217,\"btnStr\":\"1\"},{\"funId\":218,\"btnStr\":\"1\"},{\"funId\":26,\"btnStr\":\"1\"},{\"funId\":194,\"btnStr\":\"1\"},{\"funId\":195,\"btnStr\":\"1\"},{\"funId\":31,\"btnStr\":\"1\"},{\"funId\":241,\"btnStr\":\"1,2,7\"},{\"funId\":33,\"btnStr\":\"1,2,7\"},{\"funId\":199,\"btnStr\":\"1,2,7\"},{\"funId\":242,\"btnStr\":\"1,2,7\"},{\"funId\":41,\"btnStr\":\"1,2,7\"},{\"funId\":200,\"btnStr\":\"1,2,7\"},{\"funId\":259,\"btnStr\":\"1,2,7\"},{\"funId\":260,\"btnStr\":\"1,2,7\"},{\"funId\":261,\"btnStr\":\"1,2,7\"},{\"funId\":262,\"btnStr\":\"1,2,7\"},{\"funId\":263,\"btnStr\":\"1,2,7\"},{\"funId\":197,\"btnStr\":\"1,2,7\"},{\"funId\":203,\"btnStr\":\"1,2,7\"},{\"funId\":204,\"btnStr\":\"1,2,7\"},{\"funId\":205,\"btnStr\":\"1,2,7\"},{\"funId\":206,\"btnStr\":\"1,2,7\"},{\"funId\":212,\"btnStr\":\"1,2,7\"},{\"funId\":201,\"btnStr\":\"1,2,7\"},{\"funId\":202,\"btnStr\":\"1,2,7\"},{\"funId\":40,\"btnStr\":\"1,2,7\"},{\"funId\":232,\"btnStr\":\"1,2,7\"},{\"funId\":233,\"btnStr\":\"1,2,7\"}]', NULL, '0');
+INSERT INTO `jsh_user_business` VALUES (32, 'RoleFunctions', '10', '[32][241][33][199][38][242][41][200][259][260][261][262][263][264][239][201][202][40][232][233][44][197][203][204][205][206][212][198][246][207][208][209][226][227][248][228][229][59][235][237][244][21][22][23][220][247][24][25][217][218][26][194][195][31][1][13][14][243][15][234][16][18][236][245][258]', '[{\"funId\":13,\"btnStr\":\"1\"},{\"funId\":14,\"btnStr\":\"1\"},{\"funId\":243,\"btnStr\":\"1\"},{\"funId\":234,\"btnStr\":\"1\"},{\"funId\":16,\"btnStr\":\"1\"},{\"funId\":18,\"btnStr\":\"1\"},{\"funId\":236,\"btnStr\":\"1\"},{\"funId\":245,\"btnStr\":\"1\"},{\"funId\":22,\"btnStr\":\"1\"},{\"funId\":23,\"btnStr\":\"1\"},{\"funId\":220,\"btnStr\":\"1\"},{\"funId\":247,\"btnStr\":\"1\"},{\"funId\":25,\"btnStr\":\"1\"},{\"funId\":217,\"btnStr\":\"1\"},{\"funId\":218,\"btnStr\":\"1\"},{\"funId\":26,\"btnStr\":\"1\"},{\"funId\":194,\"btnStr\":\"1\"},{\"funId\":195,\"btnStr\":\"1\"},{\"funId\":31,\"btnStr\":\"1\"},{\"funId\":241,\"btnStr\":\"1,2,7\"},{\"funId\":33,\"btnStr\":\"1,2,7\"},{\"funId\":199,\"btnStr\":\"1,2,7\"},{\"funId\":242,\"btnStr\":\"1,2,7\"},{\"funId\":41,\"btnStr\":\"1,2,7\"},{\"funId\":200,\"btnStr\":\"1,2,7\"},{\"funId\":259,\"btnStr\":\"1,2,7\"},{\"funId\":260,\"btnStr\":\"1,2,7\"},{\"funId\":261,\"btnStr\":\"1,2,7\"},{\"funId\":262,\"btnStr\":\"1,2,7\"},{\"funId\":263,\"btnStr\":\"1,2,7\"},{\"funId\":264,\"btnStr\":\"1,2,7\"},{\"funId\":197,\"btnStr\":\"1,2,7\"},{\"funId\":203,\"btnStr\":\"1,2,7\"},{\"funId\":204,\"btnStr\":\"1,2,7\"},{\"funId\":205,\"btnStr\":\"1,2,7\"},{\"funId\":206,\"btnStr\":\"1,2,7\"},{\"funId\":212,\"btnStr\":\"1,2,7\"},{\"funId\":201,\"btnStr\":\"1,2,7\"},{\"funId\":202,\"btnStr\":\"1,2,7\"},{\"funId\":40,\"btnStr\":\"1,2,7\"},{\"funId\":232,\"btnStr\":\"1,2,7\"},{\"funId\":233,\"btnStr\":\"1,2,7\"}]', NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (34, 'UserRole', '115', '[10]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (35, 'UserRole', '117', '[10]', NULL, NULL, '0');
 INSERT INTO `jsh_user_business` VALUES (36, 'UserDepot', '117', '[8][9]', NULL, NULL, '0');

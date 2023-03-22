@@ -188,6 +188,14 @@ export const BillModalMixin = {
         }
       });
     },
+    initDepotMan() {
+      let that = this;
+      getPersonByNumType({type:2}).then((res)=>{
+        if(res) {
+          that.personList.options = res;
+        }
+      });
+    },
     initDepot() {
       let that = this;
       getAction('/depot/findDepotByCurrentUser').then((res) => {
