@@ -184,10 +184,18 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
+                        if ("生产计划".equals(subType)) {
+                            dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
+                        } else {
+                            dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                        }
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
+                        if ("生产计划".equals(subType)) {
+                            dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
+                        } else {
+                            dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
+                        }
                     }
                     //商品信息简述
                     if(materialsListMap!=null) {
@@ -828,10 +836,18 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
+                        if ("生产计划".equals(dh.getSubType())) {
+                            dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
+                        } else {
+                            dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                        }
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
+                        if ("生产计划".equals(dh.getSubType())) {
+                            dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
+                        } else {
+                            dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
+                        }
                     }
                     //商品信息简述
                     if(materialsListMap!=null) {
@@ -920,16 +936,35 @@ public class DepotHeadService {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         String subType = depotHead.getSubType();
         if("生产计划".equals(subType)) {
+            // 计划开始时间要<=计划完成时间
             if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
+                    .compareTo(depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG));
             }
-            // 不知道为什么 00:00:00 truncate之后变成了前一天 需要手动加回来一天做比较
+            // 计划开始时间要>=现在时间，不知道为什么 00:00:00 truncate之后变成了前一天，需要手动加回来一天做比较
             if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
                     .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) <= 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
+            }
+        }
+        if("生产单".equals(subType)) {
+            // 生产单开工时间要<完工时间
+            if (depotHead.getPlanStartTime().toInstant().compareTo(depotHead.getPlanFinishTime().toInstant()) >= 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_MSG));
+            }
+            // 生产单开工时间要>现在时间
+            if (depotHead.getPlanStartTime().toInstant().compareTo(Instant.now()) <= 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG));
+            }
+            // 生产单开工时间和完工时间要在同一天
+            if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
+                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) != 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_MSG));
             }
         }
         //结算账户校验
@@ -1030,16 +1065,35 @@ public class DepotHeadService {
         BigDecimal preTotalPrice = getDepotHead(depotHead.getId()).getTotalPrice().abs();
         String subType = depotHead.getSubType();
         if("生产计划".equals(subType)) {
+            // 计划开始时间要<=计划完成时间
             if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
                     .compareTo(depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG));
             }
-            // 不知道为什么 00:00:00 truncate之后变成了前一天 需要手动加回来一天做比较
+            // 计划开始时间要>=现在时间，不知道为什么 00:00:00 truncate之后变成了前一天，需要手动加回来一天做比较
             if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
                     .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) <= 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
+            }
+        }
+        if("生产单".equals(subType)) {
+            // 生产单开工时间要<完工时间
+            if (depotHead.getPlanStartTime().toInstant().compareTo(depotHead.getPlanFinishTime().toInstant()) >= 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_MSG));
+            }
+            // 生产单开工时间要>现在时间
+            if (depotHead.getPlanStartTime().toInstant().compareTo(Instant.now()) <= 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG));
+            }
+            // 生产单开工时间和完工时间要在同一天
+            if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
+                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) != 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_MSG));
             }
         }
         //结算账户校验
@@ -1286,10 +1340,18 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
+                        if ("生产计划".equals(subType)) {
+                            dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
+                        } else {
+                            dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                        }
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
+                        if ("生产计划".equals(subType)) {
+                            dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
+                        } else {
+                            dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
+                        }
                     }
                     BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;

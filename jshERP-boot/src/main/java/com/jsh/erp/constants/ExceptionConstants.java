@@ -406,6 +406,15 @@ public class ExceptionConstants {
     //生产计划-开始日期要晚于当前日期
     public static final int DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE = 8000023;
     public static final String DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG = "抱歉，生产计划开始日期要晚于当前日期";
+    //生产单-开工时间要早于完工时间
+    public static final int DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_CODE = 8000024;
+    public static final String DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_MSG = "抱歉，生产单开工时间要早于完工时间";
+    //生产单-开工时间要和完工时间在同一天
+    public static final int DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_CODE = 8000025;
+    public static final String DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_MSG = "抱歉，生产单开工时间要和完工时间在同一天";
+    //生产单-开工时间要晚于当前时间
+    public static final int DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE = 8000026;
+    public static final String DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG = "抱歉，生产单开工时间要晚于当前时间";
 
     /**
      *  单据明细信息

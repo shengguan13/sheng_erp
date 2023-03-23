@@ -60,12 +60,12 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="10" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="开工时间">
-              <j-date v-decorator="['planStartTime', validatorRules.planStartTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
+              <j-date v-decorator="['planStartTime', validatorRules.planStartTime]" :show-time="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="10" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="完工时间">
-              <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
+              <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -221,12 +221,12 @@
           },
           planStartTime:{
             rules: [
-              { required: true, message: '请输入计划开始日期!' }
+              { required: true, message: '请输入开工时间!' }
             ]
           },
           planFinishTime:{
             rules: [
-              { required: true, message: '请输入计划完成日期!' }
+              { required: true, message: '请输入完工时间!' }
             ]
           },
         },
