@@ -112,8 +112,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-            <!-- TODO: 添加生产计划类型，prefix，并且修改这里 -->
-              <a @click="myHandleDetail(record, '销售订单', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '生产计划', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
