@@ -94,7 +94,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="领料单必须关联生产单，不可单独创建。
+          <a-tooltip placement="left" title="退料单必须关联领料单，不可单独创建。
           勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
@@ -162,8 +162,8 @@
         queryParam: {
           number: "",
           materialParam: "",
-          type: "出库",
-          subType: "销售",
+          type: "入库",
+          subType: "退料",
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
@@ -174,7 +174,7 @@
           status: "",
           remark: ""
         },
-        prefixNo: 'XSCK',
+        prefixNo: 'TLD',
         labelCol: {
           span: 5
         },

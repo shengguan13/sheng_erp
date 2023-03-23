@@ -163,6 +163,12 @@ public interface DepotItemMapperEx {
             @Param("linkNumber") String linkNumber,
             @Param("goToType") String goToType);
 
+    BigDecimal getSecondLevelFinishNumber(
+            @Param("meId") Long meId,
+            @Param("linkId") Long linkId,
+            @Param("linkNumber") String linkNumber,
+            @Param("goToType") String goToType);
+
     BigDecimal getRealFinishNumber(
             @Param("meId") Long meId,
             @Param("linkId") Long linkId,

@@ -229,14 +229,15 @@ public class DepotHeadService {
     }
 
     /**
-     * 根据单据类型获取仓库数组
+     * 根据单据类型获取仓库数组：只有[采购订单、销售订单、生产计划、生产单]不涉及仓库
      * @param subType
      * @return
      * @throws Exception
      */
     public String[] getDepotArray(String subType) throws Exception {
         String [] depotArray = null;
-        if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType) && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)) {
+        if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType) && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)
+                && !BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(subType) && !BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
             String depotIds = depotService.findDepotStrByCurrentUser();
             depotArray = StringUtil.isNotEmpty(depotIds) ? depotIds.split(",") : null;
         }
@@ -439,14 +440,16 @@ public class DepotHeadService {
                 batchDeleteDepotHeadByIds(depotHead.getId().toString());
                 //将关联的单据置为审核状态-针对采购入库、销售出库和盘点复盘
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
+                    // TODO: 检查对于生产计划、生产单和领料单，若他们的子单据被删除，其他子单据是否需要重新审核？目前不用
                     if((BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))) {
+                        // 如果采购入库绑定了采购订单
                         String status = BusinessConstants.BILLS_STATUS_AUDIT;
-                        //查询除当前单据之外的关联单据列表
+                        // 查询除当前单据之外的关联单据列表（找到采购订单的其他采购入库）
                         List<DepotHead> exceptCurrentList = getListByLinkNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber(), depotHead.getType());
                         if(exceptCurrentList!=null && exceptCurrentList.size()>0) {
                             status = BusinessConstants.BILLS_STATUS_SKIPING;
@@ -455,6 +458,7 @@ public class DepotHeadService {
                         dh.setStatus(status);
                         DepotHeadExample example = new DepotHeadExample();
                         example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber());
+                        // 把其他绑定的单据设置成待审核状态
                         depotHeadMapper.updateByExampleSelective(dh, example);
                     }
                 }
@@ -895,9 +899,14 @@ public class DepotHeadService {
     }
 
     /**
+     * depotHeadController.addDepotHeadAndDetail -> depotHeadService.addDepotHeadAndDetail/updateDepotHeadAndDetail -> depotItemService.saveDetials
      * 新增单据主表及单据子表信息
      * @param beanJson
-     * @param rows
+     * @param rows 在这里已经有 preNumber 和 finishNumber 等数值了
+     *             每个modal里面
+     * let url = this.readOnly ? this.url.detailList : this.url.detailList;
+     * this.requestSubTableData(url, params, this.materialTable);
+     * invoke了depotIteamController.getDetailList()，然后提交表单的时候，rows里都已经有具体信息了
      * @param request
      * @throws Exception
      */
@@ -986,9 +995,14 @@ public class DepotHeadService {
     }
 
     /**
+     * depotHeadController.addDepotHeadAndDetail -> depotHeadService.addDepotHeadAndDetail/updateDepotHeadAndDetail -> depotItemService.saveDetials
      * 更新单据主表及单据子表信息
      * @param beanJson
-     * @param rows
+     * @param rows 在这里已经有 preNumber 和 finishNumber 等数值了
+     *             每个modal里面
+     * let url = this.readOnly ? this.url.detailList : this.url.detailList;
+     * this.requestSubTableData(url, params, this.materialTable);
+     * invoke了depotIteamController.getDetailList()，然后提交表单的时候，rows里都已经有具体信息了
      * @param request
      * @throws Exception
      */

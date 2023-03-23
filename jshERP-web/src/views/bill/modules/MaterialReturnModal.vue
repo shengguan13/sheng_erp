@@ -158,7 +158,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
-        prefixNo: 'XSCK',
+        prefixNo: 'TLD',
         depositStatus: false,
         fileList:[],
         rowCanEdit: true,
@@ -176,7 +176,7 @@
         materialTable: {
           loading: false,
           dataSource: [],
-          // TODO: 考虑批号是否必须？
+          // 批号直接由领料单的批号转换来
           columns: [
             { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -191,7 +191,6 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.popupJsh, kind: 'sn', multi: true },
             { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false,
              validateRules: [{ required: true, message: '${title}不能为空' }]},
             { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input, readonly: true },
@@ -312,12 +311,13 @@
       },
       handleHistoryBillList() {
         let organId = this.form.getFieldValue('organId')
-        this.$refs.historyBillListModalForm.show('出库', '销售', '客户', organId);
+        // TODO: 客户是否可以替换成领料人？
+        this.$refs.historyBillListModalForm.show('入库', '退料', '客户', organId);
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('其它', '销售订单', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择销售订单"
+        this.$refs.linkBillList.show('出库', '领料', '客户', "1,3")
+        this.$refs.linkBillList.title = "选择领料单"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false

@@ -116,15 +116,6 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <template slot="customRenderDebt" slot-scope="value, record">
-              <a-tooltip title="有付款单">
-                <span style="color:green" v-if="value>0 && record.hasFinancialFlag">{{value}}</span>
-              </a-tooltip>
-              <a-tooltip title="暂未付款">
-                <span style="color:red" v-if="value>0 && !record.hasFinancialFlag">{{value}}</span>
-              </a-tooltip>
-              <span v-if="value===0">{{value}}</span>
-            </template>
             <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
@@ -162,8 +153,8 @@
         queryParam: {
           number: "",
           materialParam: "",
-          type: "入库",
-          subType: "采购",
+          type: "其他",
+          subType: "生产单",
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
@@ -174,7 +165,7 @@
           status: "",
           remark: ""
         },
-        prefixNo: 'CGRK',
+        prefixNo: 'SCD',
         labelCol: {
           span: 5
         },

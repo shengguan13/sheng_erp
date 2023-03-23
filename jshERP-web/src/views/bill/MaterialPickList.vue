@@ -163,7 +163,7 @@
           number: "",
           materialParam: "",
           type: "出库",
-          subType: "销售",
+          subType: "领料",
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
@@ -196,6 +196,7 @@
               return text
             }
           },
+          // TODO: 领料单需要增加批号等信息，可以参照出库单
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {

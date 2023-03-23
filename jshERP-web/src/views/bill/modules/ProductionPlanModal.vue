@@ -164,7 +164,7 @@
         operTimeStr: '',
         planStartTimeStr: '',
         planFinishTimeStr: '',
-        prefixNo: 'XSDD',
+        prefixNo: 'SCJH',
         fileList:[],
         model: {},
         labelCol: {
@@ -278,7 +278,7 @@
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
         billMain.type = '其它'
-        billMain.subType = '销售订单'
+        billMain.subType = '生产计划'
         billMain.defaultNumber = billMain.number
         billMain.totalPrice = 0
         billMain.accountId = ''
@@ -301,7 +301,7 @@
       },
       handleHistoryBillList() {
         let organId = this.form.getFieldValue('organId')
-        this.$refs.historyBillListModalForm.show('其它', '销售订单', '客户', organId);
+        this.$refs.historyBillListModalForm.show('其它', '生产计划', '客户', organId);
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
     }

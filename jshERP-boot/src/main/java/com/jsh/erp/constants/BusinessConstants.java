@@ -91,6 +91,11 @@ public class BusinessConstants {
     public static final String SUB_TYPE_SALES_ORDER = "销售订单";
     public static final String SUB_TYPE_SALES = "销售";
     public static final String SUB_TYPE_SALES_RETURN = "销售退货";
+    public static final String SUB_TYPE_PRODUCTION_PLAN = "生产计划";
+    public static final String SUB_TYPE_PRODUCTION_ORDER = "生产单";
+    public static final String SUB_TYPE_MATERIAL_PICK = "领料";
+    public static final String SUB_TYPE_MATERIAL_RETURN = "退料";
+    public static final String SUB_TYPE_PRODUCTION = "生产";
     public static final String SUB_TYPE_TRANSFER = "调拨";
     public static final String SUB_TYPE_CHECK_ENTER = "盘点录入";
     public static final String SUB_TYPE_REPLAY = "盘点复盘";

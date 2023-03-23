@@ -68,13 +68,19 @@
         </span>
         <template slot="customRenderStatus" slot-scope="text, record">
           <template v-if="!queryParam.purchaseStatus">
+          <!-- TODO: 添加领料单的状态，领料单只需要两个状态：有退料、无退料 -->
             <a-tag v-if="record.status === '0'" color="red">未审核</a-tag>
             <a-tag v-if="record.status === '1'" color="green">已审核</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">完成采购</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">完成生产</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">完成生产</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分生产</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分生产</a-tag>
           </template>
+          <!-- 销售转采购 -->
           <template v-if="queryParam.purchaseStatus">
             <a-tag v-if="record.purchaseStatus === '0'" color="red">未采购</a-tag>
             <a-tag v-if="record.purchaseStatus === '2' && queryParam.subType === '销售订单'" color="cyan">完成采购</a-tag>

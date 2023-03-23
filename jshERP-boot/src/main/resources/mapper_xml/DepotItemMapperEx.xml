@@ -774,6 +774,82 @@
         )
     </select>
 
+    <!-- First Level的情况
+        id	type	sub_type	default_number	    link_number	        delete_flag
+        283	其它	    采购订单	    CGDD00000000709				            0
+        285	入库	    采购	        CGRK00000000710		CGDD00000000709	    0
+        289	入库	    采购	        CGRK00000000714		CGDD00000000709     0
+
+    id	header_id	material_id	material_extend_id	oper_number	basic_number	depot_id	link_id	    delete_flag
+    340	283	        621	        41	                1000.000000	1000.000000		                	    0
+    341	285	        621	        41	                500.000000	500.000000		19		    340	        0
+    345	289	        621	        41	                200.000000	200.000000		19		    340	        0
+
+    Second Level的情况
+        id	type	sub_type	number	            link_number	        delete_flag
+        1	其它	    生产计划	    000001				                    0
+        2	其它	    生产单	    000002		        000001	            0
+        3	其它	    生产单	    000003		        000001              0
+        4	入库	    生产入库	    000004		        000002	            0
+        5	入库	    生产入库	    000005		        000002              0
+        6	入库	    生产入库	    000006		        000003	            0
+        7	入库	    生产入库	    000007		        000003              0
+
+    id	header_id	material_id	material_extend_id	oper_number	basic_number	depot_id	link_id	    delete_flag
+    101	1	        621	        41	                1000.000000	1000.000000		                	    0
+    102	2	        621	        41	                400.000000	400.000000				    101	        0
+    103	3	        621	        41	                600.000000	600.000000				    101	        0
+    104	4	        621	        41	                190.000000	190.000000		19          102      	0
+    105	5	        621	        41	                220.000000	220.000000		19		    102	        0
+    106	6	        621	        41	                450.000000	450.000000		19		    103	        0
+    107	7	        621	        41	                155.000000	155.000000		19          103      	0
+
+    goToType = 生产入库
+    subType = 生产计划
+    link_id = 101
+    link_number = 000001
+
+    根据生产计划搜索所有生产单，然后根据所有相关生产单搜索生产入库单 -->
+    <select id="getSecondLevelFinishNumber" resultType="java.math.BigDecimal">
+        select ifnull(sum(di.basic_number),0) from jsh_depot_item di
+        where di.material_extend_id=#{meId}
+        and ifnull(di.delete_flag,'0') !='1'
+        and di.link_id
+        in
+        (
+            <!-- 所有满足link_id={linkId}的生产单的id，并且他们的header也都是生产单的header（link_number={linkNumber}） -->
+            select di.id from jsh_depot_item di
+            where di.material_extend_id=#{meId}
+            and di.link_id=#{linkId}
+            and ifnull(di.delete_flag,'0') !='1'
+            and di.header_id
+            in
+            (
+                <!-- 所有绑定生产计划的生产单的header_id -->
+                select dh.id from jsh_depot_head dh
+                where dh.link_number=#{linkNumber}
+                and ifnull(dh.delete_flag,'0') !='1'
+            )
+        )
+        and di.header_id
+        in
+        (
+            select dh.id from jsh_depot_head dh
+            where ifnull(dh.delete_flag,'0') !='1'
+            and dh.link_number
+            in
+            (
+                <!-- 所有绑定生产计划的生产单的number -->
+                select dh.number from jsh_depot_head dh
+                where dh.link_number=#{linkNumber}
+                and ifnull(dh.delete_flag,'0') !='1'
+            )
+            <if test="goToType != null and goToType !=''">
+                and dh.sub_type=#{goToType}
+            </if>
+        )
+    </select>
+
     <select id="getRealFinishNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) from jsh_depot_item di
         where di.material_extend_id=#{meId}

@@ -41,15 +41,6 @@
               </span>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
-                      <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                        {{ item.supplier }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
                   <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择仓库" showSearch optionFilterProp="children" v-model="queryParam.depotId">
                       <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
@@ -171,7 +162,7 @@
           number: "",
           materialParam: "",
           type: "入库",
-          subType: "采购",
+          subType: "生产",
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
@@ -182,7 +173,7 @@
           status: "",
           remark: ""
         },
-        prefixNo: 'CGRK',
+        prefixNo: 'SCRK',
         labelCol: {
           span: 5
         },

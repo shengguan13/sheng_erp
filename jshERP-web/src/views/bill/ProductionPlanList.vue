@@ -163,8 +163,7 @@
           number: "",
           materialParam: "",
           type: "其它",
-          // TODO: change subType here
-          subType: "销售订单",
+          subType: "生产计划",
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
@@ -172,7 +171,7 @@
           status: "",
           remark: ""
         },
-        prefixNo: 'XSDD',
+        prefixNo: 'SCJH',
         labelCol: {
           span: 5
         },

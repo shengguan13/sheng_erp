@@ -264,8 +264,8 @@
       classifyIntoFormData(allValues) {
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '入库'
-        billMain.subType = '采购'
+        billMain.type = '其他'
+        billMain.subType = '生产单'
         billMain.defaultNumber = billMain.number
         billMain.totalPrice = 0
         billMain.changeAmount = 0
@@ -290,11 +290,11 @@
       },
       handleHistoryBillList() {
         let organId = this.form.getFieldValue('organId')
-        this.$refs.historyBillListModalForm.show('入库', '采购', '供应商', organId);
+        this.$refs.historyBillListModalForm.show('其他', '生产单', '客户', organId);
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('其它', '采购订单', '供应商', "1,3")
+        this.$refs.linkBillList.show('其它', '生产计划', '客户', "1,3")
         this.$refs.linkBillList.title = "选择生产计划"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {

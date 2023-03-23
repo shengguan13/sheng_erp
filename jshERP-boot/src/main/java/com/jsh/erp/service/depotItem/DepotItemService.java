@@ -391,6 +391,18 @@ public class DepotItemService {
         return result;
     }
 
+    /**
+     * depotHeadController.addDepotHeadAndDetail -> depotHeadService.addDepotHeadAndDetail/updateDepotHeadAndDetail -> depotItemService.saveDetials
+     * @param rows 在这里已经有 preNumber 和 finishNumber 等数值了
+     *             每个modal里面
+     * let url = this.readOnly ? this.url.detailList : this.url.detailList;
+     * this.requestSubTableData(url, params, this.materialTable);
+     * invoke了depotIteamController.getDetailList()，然后提交表单的时候，rows里都已经有具体信息了
+     * @param headerId
+     * @param actionType
+     * @param request
+     * @throws Exception
+     */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetials(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
         //查询单据主表信息
@@ -433,6 +445,7 @@ public class DepotItemService {
                                 String.format(ExceptionConstants.MATERIAL_STOCK_CHECK_ERROR_MSG, barCode));
                     }
                 }
+                // 序列号存在的情况下
                 if (StringUtil.isExist(rowObj.get("snList"))) {
                     depotItem.setSnList(rowObj.getString("snList"));
                     if(StringUtil.isExist(rowObj.get("depotId"))) {
@@ -502,6 +515,7 @@ public class DepotItemService {
                     }
                 }
                 //如果数量+已完成数量>原订单数量，给出预警(判断前提是存在关联订单)
+                //TODO: 生产单可以多生产点，问题不大；但是退料单不要超过领料单（可以考虑设置百分比）
                 if (StringUtil.isNotEmpty(depotHead.getLinkNumber())
                         && StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
                     if("add".equals(actionType)) {
@@ -518,7 +532,7 @@ public class DepotItemService {
                         //在更新模式进行状态赋值
                         String unit = rowObj.get("unit").toString();
                         Long preHeaderId = depotHeadService.getDepotHead(depotHead.getLinkNumber()).getId();
-                        //前一个单据的数量
+                        //原订单的数量
                         BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
                         //除去此单据之外的已入库|已出库
                         BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
@@ -557,11 +571,15 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("allPrice"))) {
                     depotItem.setAllPrice(rowObj.getBigDecimal("allPrice"));
                 }
+                // 有仓库号的就设置仓库号
                 if (StringUtil.isExist(rowObj.get("depotId"))) {
                     depotItem.setDepotId(rowObj.getLong("depotId"));
                 } else {
+                    // 只有[采购订单、销售订单、生产计划、生产单]可以没有仓库号
                     if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
-                            && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
+                            && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())
+                            && !BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())
+                            && !BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_MSG));
                     }
@@ -595,6 +613,7 @@ public class DepotItemService {
                     depotItem.setRemark(rowObj.getString("remark"));
                 }
                 //出库时判断库存是否充足
+                // TODO: 领料的时候也要判断库存是否充足
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
                     BigDecimal stock = getStockByParam(depotItem.getDepotId(),depotItem.getMaterialId(),null,null);
                     if(StringUtil.isNotEmpty(depotItem.getSku())) {
@@ -622,10 +641,13 @@ public class DepotItemService {
                 //更新商品的价格
                 updateMaterialExtendPrice(materialExtend.getId(), depotHead.getSubType(), rowObj);
             }
-            //如果关联单据号非空则更新订单的状态,单据类型：采购入库单或销售出库单或盘点复盘单
+            //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产计划（状态由生产单决定）、生产（状态由生产入库决定）、领料（状态由退料单决定）
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
-                    || BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType())) {
+                    || BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType())
+                    || BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())
+                    || BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())
+                    || BusinessConstants.SUB_TYPE_MATERIAL_PICK.equals(depotHead.getSubType())) {
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
                     //单据状态:是否全部完成 2-全部完成 3-部分完成（针对订单的分批出入库）
                     String billStatus = getBillStatusByParam(depotHead);
@@ -647,6 +669,9 @@ public class DepotItemService {
     /**
      * 判断单据的状态
      * 通过数组对比：原单据的商品和商品数量（汇总） 与 分批操作后单据的商品和商品数量（汇总）
+     * TODO: 还需要判断一下生产计划、生产单、（领料单）的状态
+     * TODO: 对于生产计划和生产单，超过都算完成，没超过就是部分完成
+     * TODO: 对于领料单，不需要三个状态，只需要两个 - 完成或者未完成，到时候可以不用一个数字
      * @param depotHead
      * @return
      */
@@ -1030,8 +1055,25 @@ public class DepotItemService {
             if(BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_SALES_RETURN;
             }
+            // 生产计划转生产入库（生产计划先转生产单，生产单转生产入库）
+            if(BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
+                goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
+            }
+            // 生产单转生产入库
+            if(BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
+                goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
+            }
+            // TODO: 考虑生产单要不要转领料单，考虑领料单要不要转退料单？目前不需要
         }
-        BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
+        BigDecimal count;
+
+        // 生产计划转生产入库（生产计划先转生产单，生产单转生产入库）的时候，需要计算二级的finishNumber，
+        // 因为实际生产计划完成的量等于各个子生产单下面所有生产入库的数量之和
+        if (!"purchase".equals(linkType) && BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
+            count = depotItemMapperEx.getSecondLevelFinishNumber(meId, linkId, linkNumber, goToType);
+        } else {
+            count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
+        }
         //根据多单位情况进行数量的转换
         if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
             count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
