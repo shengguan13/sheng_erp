@@ -11,7 +11,7 @@
  Target Server Version : 50704 (5.7.4-m14)
  File Encoding         : 65001
 
- Date: 23/03/2023 11:02:22
+ Date: 23/03/2023 13:52:52
 */
 
 SET NAMES utf8mb4;
@@ -164,7 +164,7 @@ CREATE TABLE `jsh_depot_head`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK2A80F214B610FC06`(`organ_id`) USING BTREE,
   INDEX `FK2A80F214AAE50527`(`account_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 298 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据主表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 301 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据主表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_depot_head
@@ -210,7 +210,7 @@ CREATE TABLE `jsh_depot_item`  (
   INDEX `FK2A819F474BB6190E`(`header_id`) USING BTREE,
   INDEX `FK2A819F479485B3F5`(`depot_id`) USING BTREE,
   INDEX `FK2A819F47729F5392`(`another_depot_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 354 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据子表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 360 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据子表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_depot_item
@@ -350,7 +350,7 @@ CREATE TABLE `jsh_log`  (
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FKF2696AA13E226853`(`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7770 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 7782 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_log
@@ -565,6 +565,18 @@ INSERT INTO `jsh_log` VALUES (7766, 63, '单据', '127.0.0.1', '2023-03-23 10:59
 INSERT INTO `jsh_log` VALUES (7767, 63, '单据', '127.0.0.1', '2023-03-23 11:00:02', 0, '新增QTRK00000000748', 63);
 INSERT INTO `jsh_log` VALUES (7768, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-23 11:00:24', 0, '新增XSDD00000000749', 63);
 INSERT INTO `jsh_log` VALUES (7769, 63, '单据', '127.0.0.1', '2023-03-23 11:00:43', 0, '新增XSCK00000000750', 63);
+INSERT INTO `jsh_log` VALUES (7770, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-23 11:59:26', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7771, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-23 12:52:04', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7772, 63, '用户', '127.0.0.1', '2023-03-23 12:58:15', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7773, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-23 12:58:59', 0, '新增SCJH00000000768', 63);
+INSERT INTO `jsh_log` VALUES (7774, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-23 13:02:55', 0, '删除[SCJH00000000768]', 63);
+INSERT INTO `jsh_log` VALUES (7775, 63, '用户', '127.0.0.1', '2023-03-23 13:07:27', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7776, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-23 13:16:29', 0, '新增SCJH00000000770', 63);
+INSERT INTO `jsh_log` VALUES (7777, 63, '单据', '127.0.0.1', '2023-03-23 13:17:29', 0, '修改SCJH00000000770', 63);
+INSERT INTO `jsh_log` VALUES (7778, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-23 13:25:00', 0, '修改SCJH00000000770', 63);
+INSERT INTO `jsh_log` VALUES (7779, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-23 13:31:35', 0, '修改SCJH00000000770', 63);
+INSERT INTO `jsh_log` VALUES (7780, 63, '单据', '127.0.0.1', '2023-03-23 13:41:39', 0, '删除[SCJH00000000770]', 63);
+INSERT INTO `jsh_log` VALUES (7781, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-23 13:46:09', 0, '新增SCJH00000000775', 63);
 
 -- ----------------------------
 -- Table structure for jsh_material
@@ -923,7 +935,7 @@ CREATE TABLE `jsh_sequence`  (
 -- ----------------------------
 -- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', 1, 999999999999999999, 751, 1, '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', 1, 999999999999999999, 775, 1, '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_serial_number

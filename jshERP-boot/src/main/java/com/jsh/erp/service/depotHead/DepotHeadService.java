@@ -39,6 +39,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static com.jsh.erp.utils.Tools.getCenternTime;
@@ -181,10 +184,10 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
+                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
                     //商品信息简述
                     if(materialsListMap!=null) {
@@ -825,10 +828,10 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
+                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
                     //商品信息简述
                     if(materialsListMap!=null) {
@@ -916,6 +919,19 @@ public class DepotHeadService {
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         String subType = depotHead.getSubType();
+        if("生产计划".equals(subType)) {
+            if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
+                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG));
+            }
+            // 不知道为什么 00:00:00 truncate之后变成了前一天 需要手动加回来一天做比较
+            if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
+                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) <= 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
+            }
+        }
         //结算账户校验
         if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
             if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
@@ -1013,6 +1029,19 @@ public class DepotHeadService {
         //获取之前的金额数据
         BigDecimal preTotalPrice = getDepotHead(depotHead.getId()).getTotalPrice().abs();
         String subType = depotHead.getSubType();
+        if("生产计划".equals(subType)) {
+            if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
+                    .compareTo(depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG));
+            }
+            // 不知道为什么 00:00:00 truncate之后变成了前一天 需要手动加回来一天做比较
+            if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
+                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) <= 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
+            }
+        }
         //结算账户校验
         if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
             if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
@@ -1257,10 +1286,10 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
+                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
+                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
                     BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;

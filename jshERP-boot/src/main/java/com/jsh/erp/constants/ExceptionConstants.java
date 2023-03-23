@@ -400,6 +400,12 @@ public class ExceptionConstants {
     //单据录入-商品条码XXX的数量与序列号不一致
     public static final int DEPOT_HEAD_SN_NUMBERE_FAILED_CODE = 8000021;
     public static final String DEPOT_HEAD_SN_NUMBERE_FAILED_MSG = "抱歉，商品条码:%s的数量与序列号不一致";
+    //生产计划-开始日期要早于或等于完成日期
+    public static final int DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE = 8000022;
+    public static final String DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG = "抱歉，生产计划开始日期要早于或等于完成日期";
+    //生产计划-开始日期要晚于当前日期
+    public static final int DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE = 8000023;
+    public static final String DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG = "抱歉，生产计划开始日期要晚于当前日期";
 
     /**
      *  单据明细信息

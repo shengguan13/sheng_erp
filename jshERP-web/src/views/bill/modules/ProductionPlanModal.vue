@@ -49,22 +49,16 @@
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人" data-step="3" data-title="经手人"
-              data-intro="经手人的数据来自【经手人管理】菜单中的业务员">
-              <j-select-multiple placeholder="请选择经手人" v-model="personList.value" :options="personList.options"/>
-            </a-form-item>
-          </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始日期">
-              <j-date v-decorator="['planStartTime', validatorRules.planStartTime]" :show-time="true"/>
+          <a-col :lg="10" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始日期（包含）">
+              <j-date v-decorator="['planStartTime', validatorRules.planStartTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成日期">
-              <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="true"/>
+          <a-col :lg="10" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成日期（包含）">
+              <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -246,7 +240,7 @@
           this.model.operTime = this.model.operTimeStr
           this.model.planStartTime = this.model.planStartTimeStr
           this.model.planFinishTime = this.model.planFinishTimeStr
-          this.personList.value = this.model.salesMan
+          this.personList.value = ''
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId',
