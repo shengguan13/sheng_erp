@@ -40,33 +40,46 @@
                 </a-col>
               </span>
               <template v-if="toggleSearchStatus">
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
-                      <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
-                        {{ item.userName }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="关联生产计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入计划编号" v-model="queryParam.linkNumber"></a-input>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择单据状态" v-model="queryParam.status">
-                      <a-select-option value="0">未审核</a-select-option>
-                      <a-select-option value="1">已审核</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="单据备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入单据备注" v-model="queryParam.remark"></a-input>
-                  </a-form-item>
-                </a-col>
+                <a-row :gutter="24">
+                  <a-col :md="6" :sm="24">
+                    <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                      <a-select placeholder="选择客户" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                        <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
+                          {{ item.supplier }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </a-col>
+                  <a-col :md="6" :sm="24">
+                    <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                      <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                        <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+                          {{ item.userName }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </a-col>
+                  <a-col :md="6" :sm="24">
+                    <a-form-item label="关联生产计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                      <a-input placeholder="请输入计划编号" v-model="queryParam.linkNumber"></a-input>
+                    </a-form-item>
+                  </a-col>
+                </a-row>
+                <a-row :gutter="24">
+                  <a-col :md="6" :sm="24">
+                    <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                      <a-select placeholder="选择单据状态" v-model="queryParam.status">
+                        <a-select-option value="0">未审核</a-select-option>
+                        <a-select-option value="1">已审核</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </a-col>
+                  <a-col :md="6" :sm="24">
+                    <a-form-item label="单据备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                      <a-input placeholder="请输入单据备注" v-model="queryParam.remark"></a-input>
+                    </a-form-item>
+                  </a-col>
+                </a-row>
               </template>
             </a-row>
           </a-form>
@@ -105,8 +118,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <!-- TODO: 修改“采购入库”类型 -->
-              <a @click="myHandleDetail(record, '采购入库', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '生产单', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -153,7 +165,7 @@
         queryParam: {
           number: "",
           materialParam: "",
-          type: "其他",
+          type: "其它",
           subType: "生产单",
           roleType: Vue.ls.get('roleType'),
           organId: "",
@@ -181,7 +193,7 @@
             align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '客户', dataIndex: 'customer',width:120, ellipsis:true},
+          { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '生产单号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[计划]":text
@@ -216,10 +228,8 @@
     },
     created () {
       this.initSystemConfig()
-      this.initSupplier()
-      this.getDepotData()
+      this.initCustomer()
       this.initUser()
-      this.initAccount()
     },
     methods: {
     }

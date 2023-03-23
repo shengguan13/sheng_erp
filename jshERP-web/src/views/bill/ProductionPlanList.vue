@@ -216,17 +216,10 @@
       this.initSystemConfig()
       this.initCustomer()
       this.initUser()
-      this.getSystemConfig()
     },
     computed: {
     },
     methods: {
-      getSystemConfig() {
-      },
-      searchQuery() {
-        this.loadData(1)
-        this.getSystemConfig()
-      },
     }
   }
 </script>

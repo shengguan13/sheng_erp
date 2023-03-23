@@ -198,7 +198,6 @@
               { required: true, message: '请输入单据日期!' }
             ]
           },
-          // TODO: 需要确保完成日期晚于开始日期
           planStartTime:{
             rules: [
               { required: true, message: '请输入计划开始日期!' }
@@ -268,7 +267,6 @@
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
-      // TODO: 可以手动设置一些field为0，在设置新的type之后，如果可以和销售、采购分开，则不需要
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
         billMain.type = '其它'

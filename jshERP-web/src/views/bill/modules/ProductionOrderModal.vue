@@ -57,6 +57,18 @@
             </a-form-item>
           </a-col>
         </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="10" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="开工时间">
+              <j-date v-decorator="['planStartTime', validatorRules.planStartTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="10" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="完工时间">
+              <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
+            </a-form-item>
+          </a-col>
+        </a-row>
         <j-editable-table id="billModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
@@ -155,7 +167,9 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
-        prefixNo: 'CGRK',
+        planStartTimeStr: '',
+        planFinishTimeStr: '',
+        prefixNo: 'SCD',
         depositStatus: false,
         fileList:[],
         rowCanEdit: true,
@@ -205,6 +219,16 @@
               { required: true, message: '请选择客户！' }
             ]
           },
+          planStartTime:{
+            rules: [
+              { required: true, message: '请输入计划开始日期!' }
+            ]
+          },
+          planFinishTime:{
+            rules: [
+              { required: true, message: '请输入计划完成日期!' }
+            ]
+          },
         },
         url: {
           add: '/depotHead/addDepotHeadAndDetail',
@@ -239,7 +263,8 @@
           this.model.operTime = this.model.operTimeStr
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark'))
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime',
+            'planStartTime', 'planFinishTime', 'number', 'linkNumber', 'remark'))
           });
           // 加载子表数据
           let params = {
@@ -264,7 +289,7 @@
       classifyIntoFormData(allValues) {
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '其他'
+        billMain.type = '其它'
         billMain.subType = '生产单'
         billMain.defaultNumber = billMain.number
         billMain.totalPrice = 0
@@ -290,7 +315,7 @@
       },
       handleHistoryBillList() {
         let organId = this.form.getFieldValue('organId')
-        this.$refs.historyBillListModalForm.show('其他', '生产单', '客户', organId);
+        this.$refs.historyBillListModalForm.show('其它', '生产单', '客户', organId);
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
