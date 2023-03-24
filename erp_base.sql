@@ -11,7 +11,7 @@
  Target Server Version : 50704 (5.7.4-m14)
  File Encoding         : 65001
 
- Date: 23/03/2023 18:47:04
+ Date: 24/03/2023 18:54:11
 */
 
 SET NAMES utf8mb4;
@@ -161,19 +161,26 @@ CREATE TABLE `jsh_depot_head`  (
   `delete_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   `plan_start_time` datetime NULL DEFAULT NULL COMMENT '计划开始日期',
   `plan_finish_time` datetime NULL DEFAULT NULL COMMENT '计划完成日期',
+  `work_hour` bigint(20) NULL DEFAULT NULL COMMENT '日工时',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK2A80F214B610FC06`(`organ_id`) USING BTREE,
   INDEX `FK2A80F214AAE50527`(`account_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 307 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据主表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 313 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据主表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_depot_head
 -- ----------------------------
-INSERT INTO `jsh_depot_head` VALUES (292, '其它', '采购订单', 'CGDD00000000745', 'CGDD00000000745', '2023-03-23 10:58:40', '2023-03-23 10:58:29', 91, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', 0.000000, 0.000000, 0.000000, NULL, NULL, '3', '0', NULL, 63, '0', NULL, NULL);
-INSERT INTO `jsh_depot_head` VALUES (294, '入库', '采购', 'CGRK00000000746', 'CGRK00000000746', '2023-03-23 10:59:26', '2023-03-23 10:58:54', 91, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', 0.000000, 0.000000, 0.000000, 0.000000, NULL, '1', '0', 'CGDD00000000745', 63, '0', NULL, NULL);
-INSERT INTO `jsh_depot_head` VALUES (295, '入库', '其它', 'QTRK00000000748', 'QTRK00000000748', '2023-03-23 11:00:02', '2023-03-23 10:59:48', 91, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '0', NULL, 63, '0', NULL, NULL);
-INSERT INTO `jsh_depot_head` VALUES (296, '其它', '销售订单', 'XSDD00000000749', 'XSDD00000000749', '2023-03-23 11:00:24', '2023-03-23 11:00:07', 92, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', '20', '', '', 0.000000, 0.000000, 0.000000, NULL, NULL, '3', '0', NULL, 63, '0', NULL, NULL);
-INSERT INTO `jsh_depot_head` VALUES (297, '出库', '销售', 'XSCK00000000750', 'XSCK00000000750', '2023-03-23 11:00:43', '2023-03-23 11:00:28', 92, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', 0.000000, 0.000000, 0.000000, 0.000000, NULL, '1', '0', 'XSDD00000000749', 63, '0', NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (292, '其它', '采购订单', 'CGDD00000000745', 'CGDD00000000745', '2023-03-23 10:58:40', '2023-03-23 10:58:29', 91, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', 0.000000, 0.000000, 0.000000, NULL, NULL, '3', '0', NULL, 63, '0', NULL, NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (294, '入库', '采购', 'CGRK00000000746', 'CGRK00000000746', '2023-03-23 10:59:26', '2023-03-23 10:58:54', 91, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', 0.000000, 0.000000, 0.000000, 0.000000, NULL, '1', '0', 'CGDD00000000745', 63, '0', NULL, NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (295, '入库', '其它', 'QTRK00000000748', 'QTRK00000000748', '2023-03-23 11:00:02', '2023-03-23 10:59:48', 91, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '0', NULL, 63, '0', NULL, NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (296, '其它', '销售订单', 'XSDD00000000749', 'XSDD00000000749', '2023-03-23 11:00:24', '2023-03-23 11:00:07', 92, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', '20', '', '', 0.000000, 0.000000, 0.000000, NULL, NULL, '3', '0', NULL, 63, '0', NULL, NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (297, '出库', '销售', 'XSCK00000000750', 'XSCK00000000750', '2023-03-23 11:00:43', '2023-03-23 11:00:28', 92, 63, 24, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', 0.000000, 0.000000, 0.000000, 0.000000, NULL, '1', '0', 'XSDD00000000749', 63, '0', NULL, NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (307, '其它', '生产计划', 'SCJH00000000824', 'SCJH00000000824', '2023-03-24 16:13:25', '2023-03-24 16:02:00', 92, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', NULL, NULL, NULL, NULL, NULL, '3', '0', NULL, 63, '0', '2023-03-25 00:00:00', '2023-03-29 00:00:00', NULL);
+INSERT INTO `jsh_depot_head` VALUES (308, '其它', '生产单', 'SCD00000000825', 'SCD00000000825', '2023-03-24 16:14:01', '2023-03-24 16:13:37', 92, 63, NULL, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', NULL, NULL, NULL, NULL, NULL, '1', '0', 'SCJH00000000824', 63, '0', '2023-03-25 20:13:37', '2023-03-25 23:13:37', 12);
+INSERT INTO `jsh_depot_head` VALUES (309, '其它', '生产单', 'SCD00000000826', 'SCD00000000826', '2023-03-24 16:15:27', '2023-03-24 16:14:01', 92, 63, NULL, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', NULL, NULL, NULL, NULL, NULL, '3', '0', NULL, 63, '0', '2023-03-26 16:14:01', '2023-03-26 22:14:01', 12);
+INSERT INTO `jsh_depot_head` VALUES (310, '出库', '领料', 'LLCK00000000827', 'LLCK00000000827', '2023-03-24 16:15:57', '2023-03-24 16:15:29', NULL, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', NULL, NULL, NULL, NULL, NULL, '1', '0', 'SCD00000000826', 63, '0', NULL, NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (311, '入库', '退料', 'TLRK00000000830', 'TLRK00000000830', '2023-03-24 16:43:53', '2023-03-24 16:43:37', NULL, 63, NULL, NULL, NULL, 0.000000, '现付', NULL, NULL, '', '', '', '', NULL, NULL, NULL, NULL, NULL, '1', '0', 'LLCK00000000827', 63, '0', NULL, NULL, NULL);
+INSERT INTO `jsh_depot_head` VALUES (312, '入库', '生产', 'SCRK00000000840', 'SCRK00000000840', '2023-03-24 17:36:45', '2023-03-24 17:36:21', NULL, 63, NULL, 0.000000, NULL, 0.000000, '现付', NULL, NULL, '', NULL, '', '', NULL, NULL, NULL, NULL, NULL, '1', '0', 'SCD00000000825', 63, '0', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for jsh_depot_item
@@ -210,7 +217,7 @@ CREATE TABLE `jsh_depot_item`  (
   INDEX `FK2A819F474BB6190E`(`header_id`) USING BTREE,
   INDEX `FK2A819F479485B3F5`(`depot_id`) USING BTREE,
   INDEX `FK2A819F47729F5392`(`another_depot_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 368 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据子表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 375 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '单据子表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_depot_item
@@ -220,6 +227,13 @@ INSERT INTO `jsh_depot_item` VALUES (350, 294, 621, 41, 'kg', NULL, 300.000000, 
 INSERT INTO `jsh_depot_item` VALUES (351, 295, 620, 40, '个', NULL, 2000.000000, 2000.000000, NULL, NULL, NULL, 0.000000, NULL, 19, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
 INSERT INTO `jsh_depot_item` VALUES (352, 296, 620, 40, '个', NULL, 1100.000000, 1100.000000, NULL, NULL, NULL, 0.000000, NULL, NULL, NULL, 0.000000, 0.000000, 0.000000, NULL, NULL, NULL, NULL, NULL, 63, '0');
 INSERT INTO `jsh_depot_item` VALUES (353, 297, 620, 40, '个', NULL, 200.000000, 200.000000, NULL, NULL, NULL, 0.000000, NULL, 19, NULL, 0.000000, 0.000000, 0.000000, NULL, NULL, NULL, NULL, 352, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (368, 307, 620, 40, '个', NULL, 4500.000000, 4500.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (369, 308, 620, 40, '个', NULL, 1900.000000, 1900.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 368, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (370, 309, 621, 41, 'kg', NULL, 480.000000, 480.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (371, 309, 620, 40, '个', NULL, 520.000000, 520.000000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (372, 310, 620, 40, '个', NULL, 100.000000, 100.000000, NULL, NULL, NULL, NULL, NULL, 19, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (373, 311, 620, 40, '个', NULL, 50.000000, 50.000000, NULL, NULL, NULL, NULL, NULL, 19, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 372, 63, '0');
+INSERT INTO `jsh_depot_item` VALUES (374, 312, 620, 40, '个', NULL, 300.000000, 300.000000, NULL, NULL, NULL, NULL, NULL, 19, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 369, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_function
@@ -350,7 +364,7 @@ CREATE TABLE `jsh_log`  (
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FKF2696AA13E226853`(`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7799 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 7808 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of jsh_log
@@ -594,6 +608,15 @@ INSERT INTO `jsh_log` VALUES (7795, 63, '单据', '127.0.0.1', '2023-03-23 18:25
 INSERT INTO `jsh_log` VALUES (7796, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-23 18:25:24', 0, '新增SCD00000000820', 63);
 INSERT INTO `jsh_log` VALUES (7797, 63, '单据', '127.0.0.1', '2023-03-23 18:25:53', 0, '修改SCD00000000820', 63);
 INSERT INTO `jsh_log` VALUES (7798, 63, '单据', '127.0.0.1', '2023-03-23 18:25:55', 0, '修改SCD00000000820', 63);
+INSERT INTO `jsh_log` VALUES (7799, 63, '用户', '127.0.0.1', '2023-03-24 16:01:31', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7800, 63, '单据', '127.0.0.1', '2023-03-24 16:13:25', 0, '新增SCJH00000000824', 63);
+INSERT INTO `jsh_log` VALUES (7801, 63, '单据', '127.0.0.1', '2023-03-24 16:14:01', 0, '新增SCD00000000825', 63);
+INSERT INTO `jsh_log` VALUES (7802, 63, '单据', '127.0.0.1', '2023-03-24 16:15:27', 0, '新增SCD00000000826', 63);
+INSERT INTO `jsh_log` VALUES (7803, 63, '单据', '127.0.0.1', '2023-03-24 16:15:57', 0, '新增LLCK00000000827', 63);
+INSERT INTO `jsh_log` VALUES (7804, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-24 16:43:53', 0, '新增TLRK00000000830', 63);
+INSERT INTO `jsh_log` VALUES (7805, 63, '用户', '127.0.0.1', '2023-03-24 17:29:35', 0, '登录jsh', 63);
+INSERT INTO `jsh_log` VALUES (7806, 63, '单据', '0:0:0:0:0:0:0:1', '2023-03-24 17:36:45', 0, '新增SCRK00000000840', 63);
+INSERT INTO `jsh_log` VALUES (7807, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-24 18:30:30', 0, '登录jsh', 63);
 
 -- ----------------------------
 -- Table structure for jsh_material
@@ -707,7 +730,7 @@ CREATE TABLE `jsh_material_current_stock`  (
 -- Records of jsh_material_current_stock
 -- ----------------------------
 INSERT INTO `jsh_material_current_stock` VALUES (26, 621, 19, 300.000000, 63, '0');
-INSERT INTO `jsh_material_current_stock` VALUES (27, 620, 19, 1800.000000, 63, '0');
+INSERT INTO `jsh_material_current_stock` VALUES (27, 620, 19, 2050.000000, 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_extend
@@ -952,7 +975,7 @@ CREATE TABLE `jsh_sequence`  (
 -- ----------------------------
 -- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', 1, 999999999999999999, 823, 1, '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', 1, 999999999999999999, 848, 1, '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_serial_number

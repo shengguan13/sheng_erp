@@ -184,18 +184,10 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        if ("生产计划".equals(subType)) {
-                            dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
-                        } else {
-                            dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
-                        }
+                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        if ("生产计划".equals(subType)) {
-                            dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
-                        } else {
-                            dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
-                        }
+                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
                     //商品信息简述
                     if(materialsListMap!=null) {
@@ -836,18 +828,10 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        if ("生产计划".equals(dh.getSubType())) {
-                            dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
-                        } else {
-                            dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
-                        }
+                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        if ("生产计划".equals(dh.getSubType())) {
-                            dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
-                        } else {
-                            dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
-                        }
+                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
                     //商品信息简述
                     if(materialsListMap!=null) {
@@ -1340,18 +1324,10 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     if(dh.getPlanStartTime() != null) {
-                        if ("生产计划".equals(subType)) {
-                            dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
-                        } else {
-                            dh.setPlanStartTimeStr(getCenternTime(dh.getPlanStartTime()));
-                        }
+                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
                     }
                     if(dh.getPlanFinishTime() != null) {
-                        if ("生产计划".equals(subType)) {
-                            dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
-                        } else {
-                            dh.setPlanFinishTimeStr(getCenternTime(dh.getPlanFinishTime()));
-                        }
+                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
                     BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;

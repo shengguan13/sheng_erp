@@ -27,6 +27,8 @@ public class DepotHeadVo4List extends DepotHead{
 
     private String planFinishTimeStr;
 
+    private Long workHour;
+
     private BigDecimal finishDebt;
 
     private String depotHeadType;
@@ -139,6 +141,14 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setPlanFinishTimeStr(String planFinishTimeStr) {
         this.planFinishTimeStr = planFinishTimeStr;
+    }
+
+    public Long getWorkHour() {
+        return workHour;
+    }
+
+    public void setWorkHour(Long workHour) {
+        this.workHour = workHour;
     }
 
     public BigDecimal getFinishDebt() {

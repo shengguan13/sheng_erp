@@ -22,6 +22,8 @@ public class DepotHead {
 
     private Date planFinishTime;
 
+    private Long workHour;
+
     private Long organId;
 
     private Long creator;
@@ -130,6 +132,14 @@ public class DepotHead {
 
     public void setPlanStartTime(Date planStartTime) {
         this.planStartTime = planStartTime;
+    }
+
+    public Long getWorkHour() {
+        return workHour;
+    }
+
+    public void setWorkHour(Long workHour) {
+        this.workHour = workHour;
     }
 
     public Date getPlanFinishTime() {

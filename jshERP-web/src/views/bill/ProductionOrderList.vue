@@ -191,13 +191,14 @@
             align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '生产单号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[计划]":text
               return text
             }
           },
+          { title: '客户', dataIndex: 'organName',width:60, ellipsis:true},
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -205,11 +206,10 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '开工时间', dataIndex: 'planStartTimeStr',width:145},
-          { title: '完工时间', dataIndex: 'planFinishTimeStr',width:145},
+          { title: '生产日期', dataIndex: 'planStartTimeStr',width:120},
+          { title: '生产工时', dataIndex: 'workHour',width:60},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
-          { title: '数量', dataIndex: 'materialCount',width:60},
+          { title: '生产数量', dataIndex: 'materialCount',width:80},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

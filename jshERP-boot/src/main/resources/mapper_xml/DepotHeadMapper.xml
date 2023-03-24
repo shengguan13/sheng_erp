@@ -11,6 +11,7 @@
     <result column="oper_time" jdbcType="TIMESTAMP" property="operTime" />
     <result column="plan_start_time" jdbcType="TIMESTAMP" property="planStartTime" />
     <result column="plan_finish_time" jdbcType="TIMESTAMP" property="planFinishTime" />
+    <result column="work_hour" jdbcType="BIGINT" property="workHour" />
     <result column="organ_id" jdbcType="BIGINT" property="organId" />
     <result column="creator" jdbcType="BIGINT" property="creator" />
     <result column="account_id" jdbcType="BIGINT" property="accountId" />
@@ -95,7 +96,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, type, sub_type, default_number, number, create_time, oper_time,
-    plan_start_time, plan_finish_time, organ_id, creator,
+    plan_start_time, plan_finish_time, work_hour, organ_id, creator,
     account_id, change_amount, back_amount, total_price, pay_type, bill_type, remark, 
     file_name, sales_man, account_id_list, account_money_list, discount, discount_money, 
     discount_last_money, other_money, deposit, status, purchase_status, link_number, 
@@ -134,8 +135,8 @@
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depot_head (id, type, sub_type, 
       default_number, number, create_time, 
-      oper_time, plan_start_time, plan_finish_time, organ_id, creator,
-      account_id, change_amount, back_amount, 
+      oper_time, plan_start_time, plan_finish_time, work_hour,
+      organ_id, creator, account_id, change_amount, back_amount,
       total_price, pay_type, bill_type, 
       remark, file_name, sales_man, 
       account_id_list, account_money_list, discount, 
@@ -185,6 +186,9 @@
       </if>
       <if test="planFinishTime != null">
         plan_finish_time,
+      </if>
+      <if test="workHour != null">
+        work_hour,
       </if>
       <if test="organId != null">
         organ_id,
@@ -389,7 +393,10 @@
         plan_start_time = #{record.planStartTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.planFinishTime != null">
-        plan_finish_time = #{record.planFinishTime,jdbcType=BIGINT},
+        plan_finish_time = #{record.planFinishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.workHour != null">
+        work_hour = #{record.workHour,jdbcType=BIGINT},
       </if>
       <if test="record.organId != null">
         organ_id = #{record.organId,jdbcType=BIGINT},
@@ -476,6 +483,7 @@
       oper_time = #{record.operTime,jdbcType=TIMESTAMP},
       plan_start_time = #{record.planStartTime,jdbcType=TIMESTAMP},
       plan_finish_time = #{record.planFinishTime,jdbcType=TIMESTAMP},
+      work_hour = #{record.workHour,jdbcType=TIMESTAMP},
       organ_id = #{record.organId,jdbcType=BIGINT},
       creator = #{record.creator,jdbcType=BIGINT},
       account_id = #{record.accountId,jdbcType=BIGINT},
@@ -529,6 +537,9 @@
       </if>
       <if test="planFinishTime != null">
         plan_finish_time = #{planFinishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workHour != null">
+        work_hour = #{workHour,jdbcType=BIGINT},
       </if>
       <if test="organId != null">
         organ_id = #{organId,jdbcType=BIGINT},
@@ -612,6 +623,7 @@
       oper_time = #{operTime,jdbcType=TIMESTAMP},
       plan_start_time = #{planStartTime,jdbcType=TIMESTAMP},
       plan_finish_time = #{planFinishTime,jdbcType=TIMESTAMP},
+      work_hour = #{workHour,jdbcType=TIMESTAMP},
       organ_id = #{organId,jdbcType=BIGINT},
       creator = #{creator,jdbcType=BIGINT},
       account_id = #{accountId,jdbcType=BIGINT},

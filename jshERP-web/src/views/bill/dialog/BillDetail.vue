@@ -36,7 +36,8 @@
       <a-button v-if="billType === '采购订单'||billType === '销售订单'" @click="orderExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购入库'||billType === '采购退货出库'||billType === '销售出库'||billType === '销售退货入库'"
                 @click="purchaseSaleExportExcel()">导出</a-button>
-      <a-button v-if="billType === '生产计划'||billType === '生产单'" @click="productionPlanExportExcel()">导出</a-button>
+      <a-button v-if="billType === '生产计划'" @click="productionPlanExportExcel()">导出</a-button>
+      <a-button v-if="billType === '生产单'" @click="productionOrderExportExcel()">导出</a-button>
       <a-button v-if="billType === '领料出库'" @click="materialPickExportExcel()">导出</a-button>
       <a-button v-if="billType === '退料入库'" @click="materialReturnExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产入库'" @click="productionInExportExcel()">导出</a-button>
@@ -74,13 +75,13 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :md="10" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始时间">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始时间（包含）">
                 <a-input v-decorator="['id']" hidden/>
                 {{model.planStartTimeStr}}
               </a-form-item>
             </a-col>
             <a-col :md="10" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成时间">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成时间（包含）">
                 {{model.planFinishTimeStr}}
               </a-form-item>
             </a-col>
@@ -132,15 +133,15 @@
             </a-col>
           </a-row>
           <a-row class="form-row" :gutter="24">
-            <a-col :span="10">
+            <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="开工时间">
                 <a-input v-decorator="['id']" hidden/>
                 {{model.planStartTimeStr}}
               </a-form-item>
             </a-col>
-            <a-col :span="10">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="完工时间">
-                {{model.planFinishTimeStr}}
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生产工时">
+                {{model.workHour}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -1358,8 +1359,8 @@
           { title: '项目', dataIndex: 'project'},
           { title: '库存', dataIndex: 'stock'},
           { title: '已入库', dataIndex: 'finishNumber'},
+          { title: '计划生产数量', dataIndex: 'operNumber'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
         productionOrderColumns: [
@@ -1969,17 +1970,32 @@
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
       },
-      //生产计划|生产单
+      //生产计划
       productionPlanExportExcel() {
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
         '', '开始生产时间（包含）：', this.model.planStartTimeStr, '', '完成生产时间（包含）：', this.model.planFinishTimeStr],[]]
-        let title = ['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '项目', '库存', '已入库', '单位', '数量', '备注']
+        let title = ['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '项目', '当前库存', '已入库', '计划生产数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.project,
-          ds.stock, ds.finishNumber, ds.unit, ds.operNumber, ds.remark]
+          ds.stock, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+      },
+      //生产单
+      productionOrderExportExcel() {
+        let aoa = []
+        aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
+        '', '开始日期：', this.model.planStartTimeStr, '', '生产工时：', this.model.workHour],[]]
+        let title = ['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '项目', '当前库存', '已入库', '计划生产数量', '单位', '备注']
+        aoa.push(title)
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.project,
+          ds.stock, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)

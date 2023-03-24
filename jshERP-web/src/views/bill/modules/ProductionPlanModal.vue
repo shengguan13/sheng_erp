@@ -51,13 +51,13 @@
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
-          <a-col :lg="8" :md="16" :sm="32">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始日期（包含）">
+          <a-col :lg="10" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始日期（含）">
               <j-date v-decorator="['planStartTime', validatorRules.planStartTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
             </a-form-item>
           </a-col>
-          <a-col :lg="8" :md="16" :sm="32">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成日期（包含）">
+          <a-col :lg="10" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成日期（含）">
               <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
             </a-form-item>
           </a-col>
@@ -183,11 +183,11 @@
             { title: '客户零件号', key: 'model', width: '7%', type: FormTypes.normal },
             { title: '颜色编码', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
-            { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
+            { title: '当前库存', key: 'stock', width: '5%', type: FormTypes.normal },
+            { title: '计划生产数量', key: 'operNumber', width: '8%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input }
           ]
         },
