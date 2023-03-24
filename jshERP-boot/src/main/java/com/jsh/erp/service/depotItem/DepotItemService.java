@@ -1059,11 +1059,11 @@ public class DepotItemService {
             if(BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
             }
-            // 生产单转生产入库
+            // 生产单转生产入库（注意，生产单不要转到领料单去了）
             if(BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
             }
-            // TODO: 考虑生产单要不要转领料单，考虑领料单要不要转退料单？目前不需要
+            // TODO: 考虑领料单要不要转退料单？目前不需要
         }
         BigDecimal count;
 

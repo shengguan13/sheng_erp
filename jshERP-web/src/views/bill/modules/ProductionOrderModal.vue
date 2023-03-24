@@ -58,12 +58,12 @@
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
-          <a-col :lg="10" :md="12" :sm="24">
+          <a-col :lg="8" :md="16" :sm="32">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="开工时间">
               <j-date v-decorator="['planStartTime', validatorRules.planStartTime]" :show-time="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="10" :md="12" :sm="24">
+          <a-col :lg="8" :md="16" :sm="32">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="完工时间">
               <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="true"/>
             </a-form-item>
@@ -200,7 +200,7 @@
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '原计划', key: 'preNumber', width: '4%', type: FormTypes.normal },
             { title: '已生产', key: 'finishNumber', width: '4%', type: FormTypes.normal },
-            { title: '数量', key: 'operNumber', width: '4%', type: FormTypes.inputNumber, statistics: true,
+            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
@@ -320,7 +320,7 @@
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('其它', '生产计划', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择生产计划"
+        this.$refs.linkBillList.title = "选择生产计划（已审核的生产计划才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false

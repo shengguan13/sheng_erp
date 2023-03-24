@@ -187,7 +187,7 @@
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '原计划', key: 'preNumber', width: '4%', type: FormTypes.normal },
             { title: '已生产', key: 'finishNumber', width: '4%', type: FormTypes.normal },
-            { title: '数量', key: 'operNumber', width: '4%', type: FormTypes.inputNumber, statistics: true,
+            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
@@ -295,7 +295,7 @@
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('其它', '生产单', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择生产单"
+        this.$refs.linkBillList.title = "选择生产单（已审核的生产单才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false

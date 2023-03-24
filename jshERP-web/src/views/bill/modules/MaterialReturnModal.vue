@@ -195,7 +195,7 @@
              validateRules: [{ required: true, message: '${title}不能为空' }]},
             { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input, readonly: true },
             { title: '多供应商', key: 'sku', width: '9%', type: FormTypes.normal },
-            { title: '数量', key: 'operNumber', width: '4%', type: FormTypes.inputNumber, statistics: true,
+            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
@@ -317,7 +317,7 @@
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('出库', '领料', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择领料单"
+        this.$refs.linkBillList.title = "选择领料单（已审核的领料单才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false

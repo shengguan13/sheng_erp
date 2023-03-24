@@ -115,8 +115,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <!-- TODO: 修改“销售出库” -->
-              <a @click="myHandleDetail(record, '销售出库', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '领料单', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -174,7 +173,7 @@
           status: "",
           remark: ""
         },
-        prefixNo: 'XSCK',
+        prefixNo: 'LLD',
         labelCol: {
           span: 5
         },
@@ -190,14 +189,15 @@
             align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '单据编号', dataIndex: 'number',width:160,
+          { title: '领料单号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[生产]":text
               return text
             }
           },
           // TODO: 领料单需要增加批号等信息，可以参照出库单
-          { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
+          // TODO: 显示绑定的生产订单号码
+          { title: '物料信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");

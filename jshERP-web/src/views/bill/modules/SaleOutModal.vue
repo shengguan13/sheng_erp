@@ -441,7 +441,7 @@
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('其它', '销售订单', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择销售订单"
+        this.$refs.linkBillList.title = "选择销售订单（已审核的销售订单才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false

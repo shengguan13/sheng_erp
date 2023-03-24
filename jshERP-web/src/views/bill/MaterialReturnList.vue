@@ -115,8 +115,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <!-- TODO: 修改“销售出库” -->
-              <a @click="myHandleDetail(record, '销售出库', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '退料单', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -190,7 +189,9 @@
             align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '单据编号', dataIndex: 'number',width:160,
+          // TODO: 领料单需要增加批号等信息，可以参照出库单
+          // TODO: 显示绑定的领料单号
+          { title: '退料单号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[领料]":text
               return text
