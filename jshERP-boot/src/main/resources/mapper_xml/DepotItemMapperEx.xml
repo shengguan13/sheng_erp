@@ -809,7 +809,7 @@
     link_id = 101
     link_number = 000001
 
-    根据生产计划搜索所有生产单，然后根据所有相关生产单搜索生产入库单 -->
+    根据生产计划搜索所有生产单，然后根据所有相关生产单搜索生产入库单（领料单不会被算进去，一个是因为goToType不对，另外一个是因为物料也对不上） -->
     <select id="getSecondLevelFinishNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) from jsh_depot_item di
         where di.material_extend_id=#{meId}

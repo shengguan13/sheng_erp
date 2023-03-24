@@ -45,6 +45,22 @@
             </a-form-item>
           </a-col>
         </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="18" :md="24" :sm="48">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生产单状态" data-step="4" data-title="生产单状态"
+                         data-intro="生产单的状态：生产产品名称，计划生产数量，已生产数量">
+              <a-input placeholder="生产单状态" v-decorator.trim="[ 'orderStatus' ]" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="18" :md="24" :sm="48">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料推荐" data-step="4" data-title="领料推荐"
+                         data-intro="领料推荐根据关联生产单生成，会根据材料型号、生产数量推荐需要领取的物料的数量。">
+              <a-input placeholder="领料推荐" v-decorator.trim="[ 'recommendation' ]" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
         <j-editable-table id="billModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
@@ -53,14 +69,14 @@
           :minWidth="minWidth"
           :maxHeight="300"
           :rowNumber="false"
-          :rowSelection="rowCanEdit"
-          :actionButton="rowCanEdit"
-          :dragSort="rowCanEdit"
+          :rowSelection="true"
+          :actionButton="true"
+          :dragSort="true"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter" style="margin-right: 8px">扫码录入</a-button>
               </a-col>
@@ -161,7 +177,6 @@
         prefixNo: 'LLD',
         depositStatus: false,
         fileList:[],
-        rowCanEdit: true,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -233,7 +248,6 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         this.billStatus = '0'
-        this.rowCanEdit = true
         this.materialTable.columns[1].type = FormTypes.popupJsh
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
@@ -251,10 +265,6 @@
             handleIntroJs(this.prefixNo, 1)
           })
         } else {
-          if(this.model.linkNumber) {
-            this.rowCanEdit = false
-            this.materialTable.columns[1].type = FormTypes.normal
-          }
           this.model.operTime = this.model.operTimeStr
           this.personList.value = this.model.salesMan
           this.fileList = this.model.fileName
@@ -320,27 +330,44 @@
         this.$refs.linkBillList.title = "选择生产单（已审核的单据才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
-        this.rowCanEdit = false
-        this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
+        let orderStatus = ""
+        let recommendation = ""
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
-          let listEx = []
+          // 这几行注释掉之后可以防止物料自动填充，但是depotItem表里面的link_id会消失，这个问题也不大
+          // 因为本身生产计划和领料单的关联就不是为了清楚计数，只要depotHead关联上了就可以
+          // let listEx = []
+          // for(let j=0; j<selectBillDetailRows.length; j++) {
+          //   let info = selectBillDetailRows[j];
+          //   if(info.finishNumber>0) {
+          //     info.operNumber = info.preNumber - info.finishNumber
+          //   }
+          //   info.linkId = info.id
+          //   listEx.push(info)
+          //   this.changeColumnShow(info)
+          // }
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
+            let toDoNumber = info.preNumber
+            orderStatus = orderStatus + "[" + info.name + "]" + info.preNumber + "件"
             if(info.finishNumber>0) {
               info.operNumber = info.preNumber - info.finishNumber
+              toDoNumber = info.preNumber - info.finishNumber
+              orderStatus = orderStatus + "（已生产" + info.finishNumber + "件，"
+              orderStatus = orderStatus + "还需生产" + toDoNumber + "件）"
             }
-            info.linkId = info.id
-            listEx.push(info)
-            this.changeColumnShow(info)
+            // TODO: “件”改成单位
+            orderStatus = orderStatus + "，"
+            recommendation = recommendation + "[" + info.name + "]" + info.preNumber + "件，"
           }
-          this.materialTable.dataSource = listEx
           this.$nextTick(() => {
             this.form.setFieldsValue({
               'organId': organId,
               'linkNumber': linkNumber,
-              'remark': remark
+              'remark': remark,
+              'orderStatus': orderStatus,
+              'recommendation': recommendation,
             })
           })
         }
