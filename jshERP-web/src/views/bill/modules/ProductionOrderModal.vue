@@ -199,7 +199,7 @@
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '原计划', key: 'preNumber', width: '4%', type: FormTypes.normal },
-            { title: '已生产', key: 'finishNumber', width: '4%', type: FormTypes.normal },
+            { title: '已生产入库', key: 'finishNumber', width: '6%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },

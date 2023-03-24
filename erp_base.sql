@@ -311,8 +311,8 @@ INSERT INTO `jsh_function` VALUES (258, '000112', '平台配置', '0001', '/syst
 INSERT INTO `jsh_function` VALUES (259, '0901', '生产管理', '0', '/production', '/layouts/TabLayout', b'0', '0400', b'1', '电脑版', '1,2,7', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (260, '090101', '生产计划', '0901', '/bill/production_plan', '/bill/ProductionPlanList', b'0', '0401', b'1', '电脑版', '1,2,7', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (261, '090102', '生产单', '0901', '/bill/production_order', '/bill/ProductionOrderList', b'0', '0402', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (262, '090103', '领料单', '0901', '/bill/material_pick', '/bill/MaterialPickList', b'0', '0403', b'1', '电脑版', '1,2,7', 'profile', '0');
-INSERT INTO `jsh_function` VALUES (263, '090104', '退料单', '0901', '/bill/material_return', '/bill/MaterialReturnList', b'0', '0404', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (262, '090103', '领料出库', '0901', '/bill/material_pick', '/bill/MaterialPickList', b'0', '0403', b'1', '电脑版', '1,2,7', 'profile', '0');
+INSERT INTO `jsh_function` VALUES (263, '090104', '退料入库', '0901', '/bill/material_return', '/bill/MaterialReturnList', b'0', '0404', b'1', '电脑版', '1,2,7', 'profile', '0');
 INSERT INTO `jsh_function` VALUES (264, '090105', '生产入库', '0901', '/bill/production_in', '/bill/ProductionInList', b'0', '0405', b'1', '电脑版', '1,2,7', 'profile', '0');
 
 -- ----------------------------
@@ -517,8 +517,8 @@ INSERT INTO `jsh_log` VALUES (7718, 63, '用户', '127.0.0.1', '2023-03-21 17:34
 INSERT INTO `jsh_log` VALUES (7719, 120, '用户', '127.0.0.1', '2023-03-21 17:35:52', 0, '登录admin', 0);
 INSERT INTO `jsh_log` VALUES (7720, 120, '功能', '0:0:0:0:0:0:0:1', '2023-03-21 17:48:16', 0, '修改生产计划', NULL);
 INSERT INTO `jsh_log` VALUES (7721, 120, '功能', '0:0:0:0:0:0:0:1', '2023-03-21 17:48:29', 0, '修改生产单', NULL);
-INSERT INTO `jsh_log` VALUES (7722, 120, '功能', '127.0.0.1', '2023-03-21 17:48:53', 0, '修改领料单', NULL);
-INSERT INTO `jsh_log` VALUES (7723, 120, '功能', '127.0.0.1', '2023-03-21 17:48:59', 0, '修改退料单', NULL);
+INSERT INTO `jsh_log` VALUES (7722, 120, '功能', '127.0.0.1', '2023-03-21 17:48:53', 0, '修改领料出库', NULL);
+INSERT INTO `jsh_log` VALUES (7723, 120, '功能', '127.0.0.1', '2023-03-21 17:48:59', 0, '修改退料入库', NULL);
 INSERT INTO `jsh_log` VALUES (7724, 63, '用户', '0:0:0:0:0:0:0:1', '2023-03-21 18:07:22', 0, '登录jsh', 63);
 INSERT INTO `jsh_log` VALUES (7725, 120, '用户', '127.0.0.1', '2023-03-21 18:28:41', 0, '登录admin', 0);
 INSERT INTO `jsh_log` VALUES (7726, 63, '用户', '127.0.0.1', '2023-03-21 18:37:39', 0, '登录jsh', 63);
@@ -552,7 +552,7 @@ INSERT INTO `jsh_log` VALUES (7753, 120, '关联关系', '127.0.0.1', '2023-03-2
 INSERT INTO `jsh_log` VALUES (7754, 120, '关联关系', '127.0.0.1', '2023-03-22 13:55:52', 0, '修改', NULL);
 INSERT INTO `jsh_log` VALUES (7755, 120, '关联关系', '0:0:0:0:0:0:0:1', '2023-03-22 13:55:58', 0, '修改角色的按钮权限', NULL);
 INSERT INTO `jsh_log` VALUES (7756, 120, '用户', '127.0.0.1', '2023-03-22 14:27:18', 0, '登录admin', 0);
-INSERT INTO `jsh_log` VALUES (7757, 120, '功能', '127.0.0.1', '2023-03-22 14:27:54', 0, '修改领料单', NULL);
+INSERT INTO `jsh_log` VALUES (7757, 120, '功能', '127.0.0.1', '2023-03-22 14:27:54', 0, '修改领料出库', NULL);
 INSERT INTO `jsh_log` VALUES (7758, 63, '用户', '127.0.0.1', '2023-03-22 14:40:47', 0, '登录jsh', 63);
 INSERT INTO `jsh_log` VALUES (7759, 63, '经手人', '0:0:0:0:0:0:0:1', '2023-03-22 14:53:21', 0, '新增仓管', 63);
 INSERT INTO `jsh_log` VALUES (7760, 63, '经手人', '0:0:0:0:0:0:0:1', '2023-03-22 14:56:33', 0, '新增管盛2', 63);

@@ -176,6 +176,13 @@ public interface DepotItemMapperEx {
             @Param("currentHeaderId") Long currentHeaderId,
             @Param("goToType") String goToType);
 
+    BigDecimal getSecondLevelRealFinishNumber(
+            @Param("meId") Long meId,
+            @Param("linkId") Long linkId,
+            @Param("linkNumber") String linkNumber,
+            @Param("currentHeaderId") Long currentHeaderId,
+            @Param("goToType") String goToType);
+
     List<DepotItemVoBatchNumberList> getBatchNumberList(
             @Param("number") String number,
             @Param("name") String name,

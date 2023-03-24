@@ -22,8 +22,8 @@
       <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产计划'" v-print="'#productionPlanPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产单'" v-print="'#productionOrderPrint'">普通打印</a-button>
-      <a-button v-if="billType === '领料单'" v-print="'#materialPickPrint'">普通打印</a-button>
-      <a-button v-if="billType === '退料单'" v-print="'#materialReturnPrint'">普通打印</a-button>
+      <a-button v-if="billType === '领料出库'" v-print="'#materialPickPrint'">普通打印</a-button>
+      <a-button v-if="billType === '退料入库'" v-print="'#materialReturnPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产入库'" v-print="'#productionInPrint'">普通打印</a-button>
       <a-button v-if="billType === '其它入库'" v-print="'#otherInPrint'">普通打印</a-button>
       <a-button v-if="billType === '其它出库'" v-print="'#otherOutPrint'">普通打印</a-button>
@@ -37,7 +37,8 @@
       <a-button v-if="billType === '采购入库'||billType === '采购退货出库'||billType === '销售出库'||billType === '销售退货入库'"
                 @click="purchaseSaleExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产计划'||billType === '生产单'" @click="productionPlanExportExcel()">导出</a-button>
-      <a-button v-if="billType === '领料单'||billType === '退料单'" @click="materialExportExcel()">导出</a-button>
+      <a-button v-if="billType === '领料出库'" @click="materialPickExportExcel()">导出</a-button>
+      <a-button v-if="billType === '退料入库'" @click="materialReturnExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产入库'" @click="productionInExportExcel()">导出</a-button>
       <a-button v-if="billType === '其它入库'||billType === '其它出库'" @click="otherExportExcel()">导出</a-button>
       <a-button v-if="billType === '调拨出库'" @click="allocationOutExportExcel()">导出</a-button>
@@ -163,8 +164,8 @@
           </a-row>
         </section>
       </template>
-      <!--领料单-->
-      <template v-else-if="billType === '领料单'">
+      <!--领料出库-->
+      <template v-else-if="billType === '领料出库'">
         <section ref="print" id="materialPickPrint">
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
@@ -210,8 +211,8 @@
           </a-row>
         </section>
       </template>
-      <!--退料单-->
-      <template v-else-if="billType === '退料单'">
+      <!--退料入库-->
+      <template v-else-if="billType === '退料入库'">
         <section ref="print" id="materialReturnPrint">
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
@@ -1383,8 +1384,6 @@
           { title: '颜色编码', dataIndex: 'color'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多供应商', dataIndex: 'sku'},
           { title: '领料数量', dataIndex: 'operNumber'},
           { title: '退料数量', dataIndex: 'finishNumber'},
@@ -1399,8 +1398,6 @@
           { title: '颜色编码', dataIndex: 'color'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多供应商', dataIndex: 'sku'},
           { title: '退料数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1708,9 +1705,9 @@
           this.defColumns = this.productionPlanColumns
         } else if (type === '生产单') {
           this.defColumns = this.productionOrderColumns
-        } else if (type === '领料单') {
+        } else if (type === '领料出库') {
           this.defColumns = this.materialPickColumns
-        } else if (type === '退料单') {
+        } else if (type === '退料入库') {
           this.defColumns = this.materialReturnColumns
         } else if (type === '生产入库') {
           this.defColumns = this.productionInColumns
@@ -1802,8 +1799,8 @@
           if (res && res.code === 200) {
             if(this.billType === '零售出库'||this.billType === '零售退货入库'||
               this.billType === '采购订单'||this.billType === '采购入库'||this.billType === '采购退货出库'||
-              this.billType === '生产计划'||this.billType === '生产单'||this.billType === '领料单'||
-              this.billType === '退料单'||this.billType === '生产入库'||
+              this.billType === '生产计划'||this.billType === '生产单'||this.billType === '领料出库'||
+              this.billType === '退料入库'||this.billType === '生产入库'||
               this.billType === '销售订单'||this.billType === '销售出库'||this.billType === '销售退货入库') {
               this.billPrintFlag = res.data.platformValue==='1'?true:false
             }
@@ -1987,16 +1984,30 @@
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
       },
-      //领料|退料
-      materialExportExcel() {
+      //领料
+      materialPickExportExcel() {
         let aoa = []
         aoa = [['领料人：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '库存', '单位', '批号', '有效期', '多供应商', '领料数量', '退料数量', '备注']
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '库存', '单位', '多供应商', '领料数量', '退料数量', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.stock, ds.unit,
-            ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.finishNumber, ds.remark]
+            ds.sku, ds.preNumber, ds.finishNumber, ds.remark]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+      },
+      //退料
+      materialReturnExportExcel() {
+        let aoa = []
+        aoa = [['领料人：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '库存', '单位', '多供应商', '退料数量', '备注']
+        aoa.push(title)
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.stock, ds.unit,
+            ds.sku, ds.operNumber, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)

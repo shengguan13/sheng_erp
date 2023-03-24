@@ -60,8 +60,8 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="关联领料单" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入关联领料单" v-model="queryParam.linkNumber"></a-input>
+                  <a-form-item label="关联领料出库" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联领料出库" v-model="queryParam.linkNumber"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
@@ -94,7 +94,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="退料单必须关联领料单，不可单独创建。
+          <a-tooltip placement="left" title="退料入库必须关联领料出库，不可单独创建。
           勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
@@ -115,7 +115,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '退料单', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '退料入库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -173,7 +173,7 @@
           status: "",
           remark: ""
         },
-        prefixNo: 'TLD',
+        prefixNo: 'TLRK',
         labelCol: {
           span: 5
         },
@@ -189,9 +189,9 @@
             align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
-          // TODO: 领料单需要增加批号等信息，可以参照出库单
-          // TODO: 显示绑定的领料单号
-          { title: '退料单号', dataIndex: 'number',width:160,
+          // TODO: 领料出库需要增加批号等信息，可以参照出库单
+          // TODO: 显示绑定的领料出库单号
+          { title: '退料入库单号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[领料]":text
               return text

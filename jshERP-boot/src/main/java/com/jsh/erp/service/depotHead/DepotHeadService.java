@@ -451,7 +451,7 @@ public class DepotHeadService {
                 batchDeleteDepotHeadByIds(depotHead.getId().toString());
                 //将关联的单据置为审核状态-针对采购入库、销售出库和盘点复盘
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
-                    // TODO: 检查对于生产计划、生产单和领料单，若他们的子单据被删除，其他子单据是否需要重新审核？目前不用
+                    // TODO: 检查对于生产计划、生产单和领料出库，若他们的子单据被删除，其他子单据是否需要重新审核？目前不用
                     if((BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&

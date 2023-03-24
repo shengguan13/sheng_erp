@@ -21,7 +21,7 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <!-- TODO:直接从领料单绑定，不需要输入-->
+            <!-- TODO:直接从领料出库绑定，不需要输入-->
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="1" data-title="领料人员"
                          data-intro="领料人员的数据来自【经手人管理】菜单中的仓管员">
               <j-select-multiple style="width:185px;" placeholder="请选择领料人员" v-model="personList.value" :options="personList.options"/>
@@ -39,8 +39,8 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联领料单" data-step="3" data-title="关联领料单"
-              data-intro="退料单必须关联领料单">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联领料出库" data-step="3" data-title="关联领料出库"
+              data-intro="退料入库必须关联领料出库">
               <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
@@ -158,7 +158,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
-        prefixNo: 'TLD',
+        prefixNo: 'TLRK',
         depositStatus: false,
         fileList:[],
         rowCanEdit: true,
@@ -176,7 +176,7 @@
         materialTable: {
           loading: false,
           dataSource: [],
-          // 批号直接由领料单的批号转换来
+          // TODO: 批号不要手动输入，但是下完领料出库之后自动选择批号并且显示出来
           columns: [
             { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -191,9 +191,6 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false,
-             validateRules: [{ required: true, message: '${title}不能为空' }]},
-            { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input, readonly: true },
             { title: '多供应商', key: 'sku', width: '9%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -317,7 +314,7 @@
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('出库', '领料', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择领料单（已审核的领料单才能关联）"
+        this.$refs.linkBillList.title = "选择领料出库（已审核的领料出库才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false

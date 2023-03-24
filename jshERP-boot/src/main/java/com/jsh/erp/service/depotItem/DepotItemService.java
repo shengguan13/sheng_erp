@@ -405,6 +405,9 @@ public class DepotItemService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetials(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
+        logger.info("rows: " + rows);
+        logger.info("headerId: " + headerId);
+        logger.info("actionType: " + actionType);
         //查询单据主表信息
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         //删除序列号和回收序列号
@@ -515,7 +518,7 @@ public class DepotItemService {
                     }
                 }
                 //如果数量+已完成数量>原订单数量，给出预警(判断前提是存在关联订单)
-                //TODO: 生产单可以多生产点，问题不大；但是退料单不要超过领料单（可以考虑设置百分比）
+                //TODO: 生产单可以多生产点，问题不大；但是退料入库不要超过领料出库（可以考虑设置百分比）
                 if (StringUtil.isNotEmpty(depotHead.getLinkNumber())
                         && StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
                     if("add".equals(actionType)) {
@@ -523,6 +526,7 @@ public class DepotItemService {
                         BigDecimal preNumber = rowObj.getBigDecimal("preNumber");
                         BigDecimal finishNumber = rowObj.getBigDecimal("finishNumber");
                         if(depotItem.getOperNumber().add(finishNumber).compareTo(preNumber)>0) {
+                            logger.info("preNumber:" + preNumber + ",finishNumber:" + finishNumber + ",operNumber:" + depotItem.getOperNumber() );
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
                         }
@@ -537,6 +541,7 @@ public class DepotItemService {
                         //除去此单据之外的已入库|已出库
                         BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
                         if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)>0) {
+                            logger.info("preNumber:" + preNumber + ",finishNumber:" + realFinishNumber + ",operNumber:" + depotItem.getOperNumber() );
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
                         }
@@ -641,7 +646,7 @@ public class DepotItemService {
                 //更新商品的价格
                 updateMaterialExtendPrice(materialExtend.getId(), depotHead.getSubType(), rowObj);
             }
-            //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产计划（状态由生产单决定）、生产（状态由生产入库决定）、领料（状态由退料单决定）
+            //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产计划（状态由生产单决定）、生产（状态由生产入库决定）、领料（状态由退料入库决定）
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType())
@@ -669,9 +674,9 @@ public class DepotItemService {
     /**
      * 判断单据的状态
      * 通过数组对比：原单据的商品和商品数量（汇总） 与 分批操作后单据的商品和商品数量（汇总）
-     * TODO: 还需要判断一下生产计划、生产单、（领料单）的状态
+     * TODO: 还需要判断一下生产计划、生产单、（领料出库）的状态
      * TODO: 对于生产计划和生产单，超过都算完成，没超过就是部分完成
-     * TODO: 对于领料单，不需要三个状态，只需要两个 - 完成或者未完成，到时候可以不用一个数字
+     * TODO: 对于领料出库，不需要三个状态，只需要两个 - 完成或者未完成，到时候可以不用一个数字
      * @param depotHead
      * @return
      */
@@ -1059,11 +1064,11 @@ public class DepotItemService {
             if(BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
             }
-            // 生产单转生产入库（注意，生产单不要转到领料单去了）
+            // 生产单转生产入库（注意，生产单不要转到领料出库去了）
             if(BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
             }
-            // TODO: 考虑领料单要不要转退料单？目前不需要
+            // TODO: 考虑领料出库要不要转退料入库？目前不需要
         }
         BigDecimal count;
 

@@ -804,12 +804,12 @@
     106	6	        621	        41	                450.000000	450.000000		19		    103	        0
     107	7	        621	        41	                155.000000	155.000000		19          103      	0
 
-    goToType = 生产入库         // 这个很重要，不要把领料单也算进去了
+    goToType = 生产入库         // 这个很重要，不要把领料出库也算进去了
     subType = 生产计划
     link_id = 101
     link_number = 000001
 
-    根据生产计划搜索所有生产单，然后根据所有相关生产单搜索生产入库单（领料单不会被算进去，一个是因为goToType不对，另外一个是因为物料也对不上） -->
+    根据生产计划搜索所有生产单，然后根据所有相关生产单搜索生产入库单（领料出库不会被算进去，一个是因为goToType不对，另外一个是因为物料也对不上） -->
     <select id="getSecondLevelFinishNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) from jsh_depot_item di
         where di.material_extend_id=#{meId}
@@ -866,6 +866,47 @@
         <if test="goToType != null and goToType !=''">
             and dh.sub_type=#{goToType}
         </if>
+        )
+    </select>
+
+    <select id="getSecondLevelRealFinishNumber" resultType="java.math.BigDecimal">
+        select ifnull(sum(di.basic_number),0) from jsh_depot_item di
+        where di.material_extend_id=#{meId}
+        and ifnull(di.delete_flag,'0') !='1'
+        and di.link_id
+        in
+        (
+            <!-- 所有满足link_id={linkId}的生产单的id，并且他们的header也都是生产单的header（link_number={linkNumber}） -->
+            select di.id from jsh_depot_item di
+            where di.material_extend_id=#{meId}
+            and di.link_id=#{linkId}
+            and ifnull(di.delete_flag,'0') !='1'
+            and di.header_id
+            in
+            (
+                <!-- 所有绑定生产计划的生产单的header_id -->
+                select dh.id from jsh_depot_head dh
+                where dh.link_number=#{linkNumber}
+                and ifnull(dh.delete_flag,'0') !='1'
+            )
+        )
+        and di.header_id
+        in
+        (
+            select dh.id from jsh_depot_head dh
+            where ifnull(dh.delete_flag,'0') !='1'
+            and dh.id!=#{currentHeaderId}
+            and dh.link_number
+            in
+            (
+                <!-- 所有绑定生产计划的生产单的number -->
+                select dh.number from jsh_depot_head dh
+                where dh.link_number=#{linkNumber}
+                and ifnull(dh.delete_flag,'0') !='1'
+            )
+            <if test="goToType != null and goToType !=''">
+                and dh.sub_type=#{goToType}
+            </if>
         )
     </select>
 

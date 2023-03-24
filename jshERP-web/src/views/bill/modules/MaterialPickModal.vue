@@ -40,7 +40,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联生产单" data-step="3" data-title="关联生产单"
-              data-intro="领料单必须关联生产单">
+              data-intro="领料出库必须关联生产单">
               <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
@@ -174,7 +174,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
-        prefixNo: 'LLD',
+        prefixNo: 'LLCK',
         depositStatus: false,
         fileList:[],
         model: {},
@@ -191,7 +191,7 @@
         materialTable: {
           loading: false,
           dataSource: [],
-          // TODO: 考虑批号是否必须？
+          // TODO: 批号不要手动输入，但是下完领料出库之后自动选择批号并且显示出来
           columns: [
             { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -206,9 +206,6 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false,
-             validateRules: [{ required: true, message: '${title}不能为空' }]},
-            { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input, readonly: true },
             { title: '多供应商', key: 'sku', width: '9%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -336,7 +333,7 @@
         let recommendation = ""
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           // 这几行注释掉之后可以防止物料自动填充，但是depotItem表里面的link_id会消失，这个问题也不大
-          // 因为本身生产计划和领料单的关联就不是为了清楚计数，只要depotHead关联上了就可以
+          // 因为本身生产计划和领料出库的关联就不是为了清楚计数，只要depotHead关联上了就可以
           // let listEx = []
           // for(let j=0; j<selectBillDetailRows.length; j++) {
           //   let info = selectBillDetailRows[j];

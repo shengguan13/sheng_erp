@@ -94,7 +94,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="领料单必须关联生产单，不可单独创建。
+          <a-tooltip placement="left" title="领料出库必须关联生产单，不可单独创建。
           勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
@@ -115,7 +115,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '领料单', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '领料出库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -173,7 +173,7 @@
           status: "",
           remark: ""
         },
-        prefixNo: 'LLD',
+        prefixNo: 'LLCK',
         labelCol: {
           span: 5
         },
@@ -189,13 +189,13 @@
             align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '领料单号', dataIndex: 'number',width:160,
+          { title: '领料出库单号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[生产]":text
               return text
             }
           },
-          // TODO: 领料单需要增加批号等信息，可以参照出库单
+          // TODO: 领料出库需要增加批号等信息，可以参照出库单
           // TODO: 显示绑定的生产订单号码
           { title: '物料信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
