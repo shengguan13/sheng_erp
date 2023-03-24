@@ -282,8 +282,8 @@
       classifyIntoFormData(allValues) {
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '出库'
-        billMain.subType = '销售'
+        billMain.type = '入库'
+        billMain.subType = '退料'
         billMain.defaultNumber = billMain.number
         billMain.totalPrice = 0
         if(billMain.accountId === 0) {
