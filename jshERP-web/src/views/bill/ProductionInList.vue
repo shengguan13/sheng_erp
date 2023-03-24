@@ -114,7 +114,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '采购入库', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '生产入库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -133,7 +133,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <purchase-in-modal ref="modalForm" @ok="modalFormOk"></purchase-in-modal>
+        <production-in-modal ref="modalForm" @ok="modalFormOk"></production-in-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
@@ -141,17 +141,17 @@
 </template>
 <!-- by ji sheng hua-->
 <script>
-  import PurchaseInModal from './modules/PurchaseInModal'
+  import ProductionInModal from './modules/ProductionInModal'
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "PurchaseInList",
+    name: "ProductionInList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
-      PurchaseInModal,
+      ProductionInModal,
       BillDetail,
       JDate
     },
