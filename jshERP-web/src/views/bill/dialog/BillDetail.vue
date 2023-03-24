@@ -75,13 +75,13 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :md="10" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始时间（包含）">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始日期（含）">
                 <a-input v-decorator="['id']" hidden/>
                 {{model.planStartTimeStr}}
               </a-form-item>
             </a-col>
             <a-col :md="10" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成时间（包含）">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成日期（含）">
                 {{model.planFinishTimeStr}}
               </a-form-item>
             </a-col>
