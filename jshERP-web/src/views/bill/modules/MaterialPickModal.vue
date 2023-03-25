@@ -30,7 +30,6 @@
                 </a-select-option>
               </a-select>
             </a-form-item>
-
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
@@ -324,7 +323,6 @@
       },
       handleHistoryBillList() {
         let salesMan = this.form.getFieldValue('salesMan')
-        // TODO: 这里的客户是否要改成领料人？
         this.$refs.salesManBasedHistoryBillListModalForm.show('出库', '领料', '领料人员', salesMan);
         this.$refs.salesManBasedHistoryBillListModalForm.disableSubmit = false;
       },

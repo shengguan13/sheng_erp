@@ -20,11 +20,26 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
+          <a-col v-if="rowCanEdit" :lg="6" :md="12" :sm="24">
             <!-- TODO:直接从领料出库绑定，不需要输入-->
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="1" data-title="领料人员"
                          data-intro="领料人员的数据来自【经手人管理】菜单中的仓管员">
-              <j-select-multiple style="width:185px;" placeholder="请选择领料人员" v-model="personList.value" :options="personList.options"/>
+              <a-select v-model="personList.value" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
+                  {{ item.text }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col v-if="!rowCanEdit" :lg="6" :md="12" :sm="24">
+            <!-- TODO:直接从领料出库绑定，不需要输入-->
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="99" data-title="领料人员"
+                         data-intro="领料人员的数据来自【经手人管理】菜单中的仓管员">
+              <a-select v-model="salesManReadOnly" :disabled="true" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
+                  {{ item.text }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -98,7 +113,7 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="12" data-title="附件"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="5" data-title="附件"
                          data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
@@ -107,21 +122,21 @@
       </a-form>
     </a-spin>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
-    <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
+    <sales-man-based-link-bill-list ref="salesManBasedLinkBillList" @ok="linkBillListOk"></sales-man-based-link-bill-list>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
-    <history-bill-list ref="historyBillListModalForm"></history-bill-list>
+    <sales-man-based-history-bill-list ref="salesManBasedHistoryBillListModalForm"></sales-man-based-history-bill-list>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
-  import LinkBillList from '../dialog/LinkBillList'
+  import SalesManBasedLinkBillList from '../dialog/SalesManBasedLinkBillList'
   import DepotModal from '../../system/modules/DepotModal'
   import AccountModal from '../../system/modules/AccountModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
-  import HistoryBillList from '../dialog/HistoryBillList'
+  import SalesManBasedHistoryBillList from '../dialog/SalesManBasedHistoryBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -136,11 +151,11 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       ManyAccountModal,
-      LinkBillList,
+      SalesManBasedLinkBillList,
       DepotModal,
       AccountModal,
       BatchSetDepot,
-      HistoryBillList,
+      SalesManBasedHistoryBillList,
       JUpload,
       JDate,
       JSelectMultiple,
@@ -192,7 +207,9 @@
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '多供应商', key: 'sku', width: '9%', type: FormTypes.normal },
-            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
+            { title: '领料数量', key: 'preNumber', width: '6%', type: FormTypes.normal },
+            { title: '已退料', key: 'finishNumber', width: '6%', type: FormTypes.normal },
+            { title: '退料数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
@@ -206,9 +223,9 @@
               { required: true, message: '请输入单据日期！' }
             ]
           },
-          organId:{
+          salesMan:{
             rules: [
-              { required: true, message: '请选择客户！' }
+              { required: true, message: '请选择领料人员！' }
             ]
           },
           linkNumber:{
@@ -256,7 +273,7 @@
           this.personList.value = this.model.salesMan
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark','salesMan'))
+            this.form.setFieldsValue(pick(this.model, 'operTime', 'number', 'linkNumber', 'remark','salesMan'))
           });
           // 加载子表数据
           let params = {
@@ -307,27 +324,35 @@
         }
       },
       handleHistoryBillList() {
-        let organId = this.form.getFieldValue('organId')
-        // TODO: 客户是否可以替换成领料人？
-        this.$refs.historyBillListModalForm.show('入库', '退料', '客户', organId);
-        this.$refs.historyBillListModalForm.disableSubmit = false;
+        let salesMan = this.form.getFieldValue('salesMan')
+        this.$refs.salesManBasedHistoryBillListModalForm.show('入库', '退料', '领料人员', salesMan);
+        this.$refs.salesManBasedHistoryBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('出库', '领料', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择领料出库（已审核的领料出库才能关联）"
+        this.$refs.salesManBasedLinkBillList.show('出库', '领料', '客户', "1,3")
+        this.$refs.salesManBasedLinkBillList.title = "选择领料出库（已审核的领料出库才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, salesMan, discountMoney, deposit, remark) {
+        console.log("linkBillListOk")
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
+        this.salesManReadOnly = salesMan
+        console.log("salesMan: " + salesMan)
+        // TODO:
+
+        //for(let j=0; j<personList.options.length; j++) {
+        //  let person = personList.options[j];
+        //  console.log("person: " + JSON.stringify(person))
+        //  if (person.value === salesMan) {
+        //    this.salesManReadOnly = person.text
+        //  }
+        //}
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           let listEx = []
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
-            if(info.finishNumber>0) {
-              info.operNumber = info.preNumber - info.finishNumber
-            }
             info.linkId = info.id
             listEx.push(info)
             this.changeColumnShow(info)
@@ -335,7 +360,7 @@
           this.materialTable.dataSource = listEx
           this.$nextTick(() => {
             this.form.setFieldsValue({
-              'organId': organId,
+              'salesMan': salesMan,
               'linkNumber': linkNumber,
               'remark': remark
             })
