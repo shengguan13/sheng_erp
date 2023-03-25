@@ -934,21 +934,10 @@ public class DepotHeadService {
             }
         }
         if("生产单".equals(subType)) {
-            // 生产单开工时间要<完工时间
-            if (depotHead.getPlanStartTime().toInstant().compareTo(depotHead.getPlanFinishTime().toInstant()) >= 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_MSG));
-            }
             // 生产单开工时间要>现在时间
             if (depotHead.getPlanStartTime().toInstant().compareTo(Instant.now()) <= 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG));
-            }
-            // 生产单开工时间和完工时间要在同一天
-            if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) != 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_MSG));
             }
         }
         //结算账户校验
