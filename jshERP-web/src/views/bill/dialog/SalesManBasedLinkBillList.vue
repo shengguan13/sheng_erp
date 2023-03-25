@@ -168,16 +168,6 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:70},
           { title: '数量', dataIndex: 'materialCount',width:60},
-          { title: '金额合计', dataIndex: 'totalPrice',width:70},
-          { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:70,
-            customRender:function (text,record,index) {
-              if(record.discountLastMoney) {
-                return (record.discountMoney + record.discountLastMoney).toFixed(2);
-              } else {
-                return record.totalPrice;
-              }
-            }
-          },
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
@@ -187,13 +177,8 @@
           { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
           { title: '内部零件号', dataIndex: 'internalId',width:100, ellipsis:true},
           { title: '客户零件号', dataIndex: 'model',width:150, ellipsis:true},
-          { title: '单位', dataIndex: 'unit',width:50},
           { title: '数量', dataIndex: 'operNumber',width:80},
-          { title: '单价', dataIndex: 'unitPrice',width:80},
-          { title: '金额', dataIndex: 'allPrice',width:80},
-          { title: '税率(%)', dataIndex: 'taxRate', width:80},
-          { title: '税额', dataIndex: 'taxMoney', width:80},
-          { title: '价税合计', dataIndex: 'taxLastMoney', width:80},
+          { title: '单位', dataIndex: 'unit',width:50},
           { title: '备注', dataIndex: 'remark',width:100, ellipsis:true},
         ],
         dataSource:[],

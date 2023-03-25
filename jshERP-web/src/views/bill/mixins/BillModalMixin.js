@@ -133,7 +133,7 @@ export const BillModalMixin = {
                 }
               }
             } else if(key === 'expirationDate') {
-              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
                 columns[i].type = FormTypes.date //显示
               } else {
                 columns[i].type = FormTypes.input //显示
