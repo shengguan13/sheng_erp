@@ -189,12 +189,14 @@
             align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '单据编号', dataIndex: 'number',width:160,
+          { title: '单据日期', dataIndex: 'operTimeStr',width:120},
+          { title: '单据编号', dataIndex: 'number',width:120,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[生产]":text
               return text
             }
           },
+          { title: '对应生产单', dataIndex: 'linkNumber',width:120},
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -202,9 +204,8 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
+          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

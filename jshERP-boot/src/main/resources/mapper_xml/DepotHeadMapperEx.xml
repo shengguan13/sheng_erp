@@ -96,6 +96,9 @@
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
         </if>
+        <if test="salesMan != null">
+            and dh.sales_man like #{salesMan}
+        </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey}
@@ -197,6 +200,9 @@
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="salesMan != null">
+            and dh.sales_man like #{salesMan}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>

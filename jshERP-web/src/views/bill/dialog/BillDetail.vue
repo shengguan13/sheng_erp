@@ -170,7 +170,7 @@
         <section ref="print" id="materialPickPrint">
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员">
                 <a-input v-decorator="['id']" hidden/>
                 {{model.salesManStr}}
                 <!-- TODO: 不知道这样能不能显示领料人 -->
@@ -217,7 +217,7 @@
         <section ref="print" id="materialReturnPrint">
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员">
                 <a-input v-decorator="['id']" hidden/>
                 {{model.salesManStr}}
                 <!-- TODO: 不知道这样能不能显示领料人 -->
@@ -1384,10 +1384,10 @@
           { title: '客户零件号', dataIndex: 'model'},
           { title: '颜色编码', dataIndex: 'color'},
           { title: '库存', dataIndex: 'stock'},
-          { title: '单位', dataIndex: 'unit'},
           { title: '多供应商', dataIndex: 'sku'},
           { title: '领料数量', dataIndex: 'operNumber'},
           { title: '退料数量', dataIndex: 'finishNumber'},
+          { title: '单位', dataIndex: 'unit'},
           { title: '备注', dataIndex: 'remark'}
         ],
         materialReturnColumns: [
@@ -1398,9 +1398,9 @@
           { title: '客户零件号', dataIndex: 'model'},
           { title: '颜色编码', dataIndex: 'color'},
           { title: '库存', dataIndex: 'stock'},
-          { title: '单位', dataIndex: 'unit'},
           { title: '多供应商', dataIndex: 'sku'},
           { title: '退料数量', dataIndex: 'operNumber'},
+          { title: '单位', dataIndex: 'unit'},
           { title: '备注', dataIndex: 'remark'}
         ],
         productionInColumns: [
@@ -1412,11 +1412,11 @@
           { title: '颜色编码', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '库存', dataIndex: 'stock'},
-          { title: '单位', dataIndex: 'unit'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多供应商', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '单位', dataIndex: 'unit'},
           { title: '备注', dataIndex: 'remark'}
         ],
         retailBackColumns: [
@@ -2003,13 +2003,13 @@
       //领料
       materialPickExportExcel() {
         let aoa = []
-        aoa = [['领料人：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '库存', '单位', '多供应商', '领料数量', '退料数量', '备注']
+        aoa = [['领料人员：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '库存', '多供应商', '领料数量', '退料数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.stock, ds.unit,
-            ds.sku, ds.preNumber, ds.finishNumber, ds.remark]
+          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.stock,
+            ds.sku, ds.preNumber, ds.finishNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2017,13 +2017,13 @@
       //退料
       materialReturnExportExcel() {
         let aoa = []
-        aoa = [['领料人：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '库存', '单位', '多供应商', '退料数量', '备注']
+        aoa = [['领料人员：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '库存', '多供应商', '退料数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.stock, ds.unit,
-            ds.sku, ds.operNumber, ds.remark]
+          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.stock,
+            ds.sku, ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2032,12 +2032,12 @@
       productionInExportExcel() {
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '项目', '扩展信息', '库存', '单位', '批号', '有效期', '多供应商', '数量', '备注']
+        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '颜色编码', '项目', '扩展信息', '库存', '批号', '有效期', '多供应商', '数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.project, ds.stock, ds.unit,
-            ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.remark]
+          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.project, ds.stock,
+            ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)

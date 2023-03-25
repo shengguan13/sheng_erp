@@ -109,7 +109,7 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4List> select(String type, String subType, String roleType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
-           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
+           String beginTime, String endTime, String salesMan, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
             String [] depotArray = getDepotArray(subType);
@@ -121,8 +121,8 @@ public class DepotHeadService {
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
-                 materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
+            List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray,
+                    number, linkNumber, beginTime, endTime, salesMan, materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
             if (null != list) {
                 List<Long> idList = new ArrayList<>();
                 List<String> numberList = new ArrayList<>();
@@ -213,7 +213,7 @@ public class DepotHeadService {
     }
 
     public Long countDepotHead(String type, String subType, String roleType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
-           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
+           String beginTime, String endTime, String salesMan, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
         Long result=null;
         try{
             String [] depotArray = getDepotArray(subType);
@@ -223,8 +223,8 @@ public class DepotHeadService {
             String [] organArray = getOrganArray(subType, purchaseStatus);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
-                   materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray,
+                    number, linkNumber, beginTime, endTime, salesMan, materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

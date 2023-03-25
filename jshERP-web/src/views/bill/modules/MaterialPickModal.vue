@@ -21,11 +21,16 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <!-- TODO:设置为单选并且必填 -->
+            <!-- TODO:设置为必填 -->
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="1" data-title="领料人员"
                          data-intro="领料人员的数据来自【经手人管理】菜单中的仓管员">
-              <j-select-multiple style="width:185px;" placeholder="请选择领料人员" v-model="personList.value" :options="personList.options"/>
+              <a-select v-model="personList.value" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
+                  {{ item.text }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
+
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
@@ -47,9 +52,9 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="18" :md="24" :sm="48">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生产单状态" data-step="4" data-title="生产单状态"
-                         data-intro="生产单的状态：生产产品名称，计划生产数量，已生产数量">
-              <a-input placeholder="生产单状态" v-decorator.trim="[ 'orderStatus' ]" :readOnly="true"/>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生产单详细" data-step="4" data-title="生产单详细"
+                         data-intro="生产单详细：产品名称，计划生产数量，已生产数量">
+              <a-input placeholder="生产单详细" v-decorator.trim="[ 'orderStatus' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -127,7 +132,7 @@
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
-    <history-bill-list ref="historyBillListModalForm"></history-bill-list>
+    <sales-man-based-history-bill-list ref="salesManBasedHistoryBillListModalForm"></sales-man-based-history-bill-list>
   </j-modal>
 </template>
 <script>
@@ -137,7 +142,7 @@
   import DepotModal from '../../system/modules/DepotModal'
   import AccountModal from '../../system/modules/AccountModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
-  import HistoryBillList from '../dialog/HistoryBillList'
+  import SalesManBasedHistoryBillList from '../dialog/SalesManBasedHistoryBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -156,7 +161,7 @@
       DepotModal,
       AccountModal,
       BatchSetDepot,
-      HistoryBillList,
+      SalesManBasedHistoryBillList,
       JUpload,
       JDate,
       JSelectMultiple,
@@ -221,9 +226,9 @@
               { required: true, message: '请输入单据日期！' }
             ]
           },
-          organId:{
+          salesMan:{
             rules: [
-              { required: true, message: '请选择客户！' }
+              { required: true, message: '请选择领料人员！' }
             ]
           },
           linkNumber:{
@@ -253,6 +258,7 @@
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         // TODO: 目前 DepotHeadService 要求销售单必须有accountId，等有了新的单据类型就可以通过check了
+        console.log("this.model: " + JSON.stringify(this.model))
         if (this.action === 'add') {
           this.depositStatus = false
           this.addInit(this.prefixNo)
@@ -266,7 +272,7 @@
           this.personList.value = this.model.salesMan
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark','salesMan'))
+            this.form.setFieldsValue(pick(this.model, 'operTime', 'number', 'linkNumber', 'remark','salesMan'))
           });
           // 加载子表数据
           let params = {
@@ -317,10 +323,10 @@
         }
       },
       handleHistoryBillList() {
-        let organId = this.form.getFieldValue('organId')
+        let salesMan = this.form.getFieldValue('salesMan')
         // TODO: 这里的客户是否要改成领料人？
-        this.$refs.historyBillListModalForm.show('出库', '领料', '客户', organId);
-        this.$refs.historyBillListModalForm.disableSubmit = false;
+        this.$refs.salesManBasedHistoryBillListModalForm.show('出库', '领料', '领料人员', salesMan);
+        this.$refs.salesManBasedHistoryBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('其它', '生产单', '客户', "1,3")
@@ -360,7 +366,6 @@
           }
           this.$nextTick(() => {
             this.form.setFieldsValue({
-              'organId': organId,
               'linkNumber': linkNumber,
               'remark': remark,
               'orderStatus': orderStatus,
