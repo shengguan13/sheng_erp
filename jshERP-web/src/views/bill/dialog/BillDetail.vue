@@ -1358,6 +1358,7 @@
           { title: '颜色编码', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '库存', dataIndex: 'stock'},
+          { title: '已下生产单', dataIndex: 'planOrderedNumber'},
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '计划生产数量', dataIndex: 'operNumber'},
           { title: '单位', dataIndex: 'unit'},
@@ -1975,12 +1976,12 @@
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
         '', '开始生产时间（含）：', this.model.planStartTimeStr, '', '完成生产时间（含）：', this.model.planFinishTimeStr],[]]
-        let title = ['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '项目', '当前库存', '已入库', '计划生产数量', '单位', '备注']
+        let title = ['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '项目', '当前库存', '已下生产单', '已入库', '计划生产数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.color, ds.project,
-          ds.stock, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
+          ds.stock, ds.planOrderedNumber, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
