@@ -69,6 +69,8 @@
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
+                      <a-select-option value="3">有退料</a-select-option>
+                      <a-select-option value="2">有退料</a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
@@ -128,6 +130,8 @@
             <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
+              <a-tag v-if="status == '2'" color="blue">有退料</a-tag>
+              <a-tag v-if="status == '3'" color="blue">有退料</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
             </template>
           </a-table>

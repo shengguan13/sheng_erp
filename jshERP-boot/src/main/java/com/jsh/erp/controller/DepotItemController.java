@@ -230,7 +230,10 @@ public class DepotItemController {
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
-                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
+                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(),
+                            diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
+                    item.put("planOrderedNumber", depotItemService.getPlanOrderedNumber(diEx.getMaterialExtendId(),
+                            diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //生产计划中已下的生产单
                     item.put("purchaseDecimal", diEx.getPurchaseDecimal());  //采购价
                     if("basic".equals(linkType)) {
                         //正常情况显示金额，而以销定购的情况不能显示金额

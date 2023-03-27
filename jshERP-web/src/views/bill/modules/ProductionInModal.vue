@@ -313,9 +313,10 @@
           let listEx = []
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
-            if(info.finishNumber>0) {
-              info.operNumber = info.preNumber - info.finishNumber
-            }
+            // 生产入库没有必要要求入库数量一定小于计划数量 - 可以多生产，多入库一些
+            // if(info.finishNumber>0) {
+            //   info.operNumber = info.preNumber - info.finishNumber
+            // }
             info.linkId = info.id
             listEx.push(info)
             this.changeColumnShow(info)

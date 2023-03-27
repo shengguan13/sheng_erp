@@ -198,6 +198,7 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '当前库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '总计划数量', key: 'preNumber', width: '6%', type: FormTypes.normal },
+            { title: '已下生产单', key: 'planOrderedNumber', width: '6%', type: FormTypes.normal },
             { title: '已生产入库', key: 'finishNumber', width: '6%', type: FormTypes.normal },
             { title: '生产数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -247,6 +248,7 @@
         this.materialTable.columns[1].type = FormTypes.popupJsh
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
+        this.changeFormTypes(this.materialTable.columns, 'planOrderedNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         if (this.action === 'add') {
           this.depositStatus = false
@@ -326,13 +328,14 @@
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
+        this.changeFormTypes(this.materialTable.columns, 'planOrderedNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           let listEx = []
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
             if(info.finishNumber>0) {
-              info.operNumber = info.preNumber - info.finishNumber
+              info.operNumber = info.preNumber - info.planOrderedNumber
             }
             info.linkId = info.id
             listEx.push(info)

@@ -1974,7 +1974,7 @@
       productionPlanExportExcel() {
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
-        '', '开始生产时间（包含）：', this.model.planStartTimeStr, '', '完成生产时间（包含）：', this.model.planFinishTimeStr],[]]
+        '', '开始生产时间（含）：', this.model.planStartTimeStr, '', '完成生产时间（含）：', this.model.planFinishTimeStr],[]]
         let title = ['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '项目', '当前库存', '已入库', '计划生产数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
