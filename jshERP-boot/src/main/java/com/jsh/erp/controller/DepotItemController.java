@@ -791,6 +791,12 @@ public class DepotItemController {
                                                @RequestParam("barCode") String barCode,
                                                @RequestParam(value = "batchNumber", required = false) String batchNumber,
                                                HttpServletRequest request) throws Exception{
+        logger.info("getBatchNumberList");
+        logger.info("name: " + name);
+        logger.info("depotItemId: " + depotItemId);
+        logger.info("depotId: " + depotId);
+        logger.info("barCode: " + barCode);
+        logger.info("batchNumber: " + batchNumber);
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
@@ -801,6 +807,7 @@ public class DepotItemController {
             }
             List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
             List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(number, name, depotId, barCode, batchNumber);
+            logger.info("list: " + list);
             for(DepotItemVoBatchNumberList bn: list) {
                 if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
                     reslist.add(bn);

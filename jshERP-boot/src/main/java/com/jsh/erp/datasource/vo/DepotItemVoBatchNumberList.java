@@ -87,4 +87,13 @@ public class DepotItemVoBatchNumberList {
     public void setTotalNum(BigDecimal totalNum) {
         this.totalNum = totalNum;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id + "; barCode: " + barCode
+                + "; name: " + name + "; internalId: " + internalId
+                + "; model: " + model + "; batchNumber: " + batchNumber
+                + "; expirationDate: " + expirationDate + "; expirationDateStr: " + expirationDateStr
+                + "; totalNum: " + totalNum ;
+    }
 }
