@@ -722,6 +722,10 @@
           return validateFormAndTables(this.form, tables)
         }).then(allValues => {
           let formData = this.classifyIntoFormData(allValues)
+          let compositeStr = this.getCompositeStr(formData)
+          console.log("formData" + JSON.stringify(formData))
+          console.log("composite: " + compositeStr)
+          // TODO: 在这里直接改formdata
           formData.sortList = [];
           if(formData.unit === undefined) {formData.unit = ''}
           if(formData.unitId === undefined) {formData.unitId = ''}
@@ -1053,6 +1057,17 @@
           }
         }
         return num
+      },
+      getCompositeStr(formData) {
+        let str = ""
+        for(let i=0; i<formData.composite.length; i++) {
+          console.log("composite " + i + ": " + JSON.stringify(formData.composite[i]))
+          str = str + "[" + formData.composite[i].barCode + "]*" + formData.composite[i].operNumber + "+"
+        }
+        if (formData.composite.length>0){
+          str = str.slice(0, -1)
+        }
+        return str
       },
       onAdded(event) {
         const { row, target } = event

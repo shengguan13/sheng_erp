@@ -33,10 +33,8 @@ export function getRefPromise(vm, name) {
     (function next() {
       let ref = vm.$refs[name]
       if (ref) {
-        console.log("success " + name)
         resolve(ref)
       } else {
-        console.log("fail " + name)
         setTimeout(() => {
           next()
         }, 10)
