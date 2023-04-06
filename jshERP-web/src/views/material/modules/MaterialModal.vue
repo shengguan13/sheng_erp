@@ -288,24 +288,7 @@
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane key="3" tab="零件组成" forceRender>
-            <j-editable-table
-              :ref="materialComponentTable"
-              :loading="materialTable.loading"
-              :columns="materialTable.columns"
-              :dataSource="materialTable.dataSource"
-              :minWidth="minWidth"
-              :maxHeight="300"
-              :rowNumber="false"
-              :rowSelection="true"
-              :actionButton="true"
-              :dragSort="true"
-              @valueChange="onValueChangeMaterialComposite"
-              @added="onAddedMaterialComposite"
-              @deleted="onDeletedMaterialComposite">
-            </j-editable-table>
-          </a-tab-pane>
-          <a-tab-pane key="4" tab="库存数量" forceRender>
+          <a-tab-pane key="3" tab="库存数量" forceRender>
             <j-editable-table
               ref="editableDepotTable"
               :loading="depotTable.loading"
@@ -325,7 +308,7 @@
             <!-- 表单区域 -->
             <batch-set-stock-modal ref="stockModalForm" @ok="batchSetStockModalFormOk"></batch-set-stock-modal>
           </a-tab-pane>
-          <a-tab-pane key="5" tab="图片信息" forceRender>
+          <a-tab-pane key="4" tab="图片信息" forceRender>
             <a-row class="form-row" :gutter="24">
               <a-col :lg="18" :md="18" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片信息">
@@ -360,14 +343,12 @@
     getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
   import { removeByVal, autoJumpNextInput, handleIntroJs } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
-  import { MaterialCompositeMixin } from '../mixins/MaterialCompositeMixin'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
 
   export default {
     name: "MaterialModal",
-    mixins: [MaterialCompositeMixin],
     components: {
       BatchSetPriceModal,
       BatchSetStockModal,
@@ -479,25 +460,6 @@
             {
               title: '最高安全库存数量', key: 'highSafeStock', width: '15%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             }
-          ]
-        },
-		    materialTable: {
-          loading: false,
-          dataSource: [],
-          columns: [
-            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
-              validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
-            { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
-            { title: '内部零件号', key: 'internalId', width: '7%', type: FormTypes.normal },
-            { title: '客户零件号', key: 'model', width: '7%', type: FormTypes.normal },
-            { title: '颜色编码', key: 'color', width: '5%', type: FormTypes.normal },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
-            { title: '数量', key: 'amount', width: '8%', type: FormTypes.inputNumber, statistics: true,
-              validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '备注', key: 'remark', width: '6%', type: FormTypes.input }
           ]
         },
         confirmLoading: false,
