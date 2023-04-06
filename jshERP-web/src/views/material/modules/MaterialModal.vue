@@ -288,7 +288,23 @@
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane key="3" tab="库存数量" forceRender>
+          <a-tab-pane key="3" tab="零件组成" forceRender>
+            <j-editable-table
+              ref="materialCompositeTable"
+              :loading="compositeTable.loading"
+              :columns="compositeTable.columns"
+              :dataSource="compositeTable.dataSource"
+              :minWidth="1100"
+              :maxHeight="300"
+              :rowNumber="false"
+              :rowSelection="true"
+              :actionButton="true"
+              @added="onAddedMaterialComposite"
+              @deleted="onDeletedMaterialComposite"
+              @valueChange="onValueChangeMaterialComposite">
+            </j-editable-table>
+          </a-tab-pane>
+          <a-tab-pane key="4" tab="库存数量" forceRender>
             <j-editable-table
               ref="editableDepotTable"
               :loading="depotTable.loading"
@@ -308,7 +324,7 @@
             <!-- 表单区域 -->
             <batch-set-stock-modal ref="stockModalForm" @ok="batchSetStockModalFormOk"></batch-set-stock-modal>
           </a-tab-pane>
-          <a-tab-pane key="4" tab="图片信息" forceRender>
+          <a-tab-pane key="5" tab="图片信息" forceRender>
             <a-row class="form-row" :gutter="24">
               <a-col :lg="18" :md="18" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片信息">
@@ -339,9 +355,9 @@
   import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList,
+  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode,
     getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
-  import { removeByVal, autoJumpNextInput, handleIntroJs } from '@/utils/util'
+  import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -444,6 +460,23 @@
             }
           ]
         },
+        compositeTable: {
+          loading: false,
+          dataSource: [],
+          columns: [
+            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
+            { title: '内部零件号', key: 'internalId', width: '9%', type: FormTypes.normal },
+            { title: '客户零件号', key: 'model', width: '9%', type: FormTypes.normal },
+            { title: '颜色编码', key: 'color', width: '7%', type: FormTypes.normal },
+            { title: '数量', key: 'operNumber', width: '8%', type: FormTypes.inputNumber, statistics: true,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal }
+          ]
+        },
         depotTable: {
           loading: false,
           dataSource: [],
@@ -506,11 +539,70 @@
       this.width = realScreenWidth<1500?'1200px':'1400px'
     },
     methods: {
+
+      onAddedMaterialComposite(event) {
+        const { row, target } = event
+        target.setValues([{rowKey: row.id, values: {operNumber:0}}])
+      },
+
+      onDeletedMaterialComposite(ids, target) {
+      },
+
+      onValueChangeMaterialComposite(event) {
+        let that = this
+        const { type, row, column, value, target } = event
+        let param,operNumber
+        switch(column.key) {
+          case "barCode":
+            param = {
+              barCode: value,
+              mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+            }
+            getMaterialByBarCode(param).then((res) => {
+              if (res && res.code === 200) {
+                let mList = res.data
+                if (value.indexOf(',') > -1) {
+                  //多个条码
+                } else {
+                  let mArr = []
+                  let mInfo = mList[0]
+                  let mInfoEx = this.parseInfoToObj(mInfo)
+                  let mObj = {
+                    rowKey: row.id,
+                    values: mInfoEx
+                  }
+                  mArr.push(mObj)
+                  target.setValues(mArr)
+                  target.recalcAllStatisticsColumns()
+                  target.autoSelectBySpecialKey('operNumber', row.orderNum)
+                }
+              }
+            });
+            break;
+          case "operNumber":
+            operNumber = value-0
+            break;
+        }
+      },
+      //转为商品对象
+      parseInfoToObj(mInfo) {
+        return {
+          barCode: mInfo.mBarCode,
+          name: mInfo.name,
+          internalId: mInfo.internalId,
+          model: mInfo.model,
+          color: mInfo.color,
+          unit: mInfo.commodityUnit,
+          operNumber: 1,
+        }
+      },
+
       // 获取所有的editableTable实例
       getAllTable() {
         return Promise.all([
           getRefPromise(this, 'editableMeTable'),
-          getRefPromise(this, 'editableDepotTable')
+          getRefPromise(this, 'editableDepotTable'),
+          getRefPromise(this, 'materialCompositeTable')
         ])
       },
       add () {
@@ -614,6 +706,7 @@
         this.getAllTable().then(editableTables => {
           editableTables[0].initialize()
           editableTables[1].initialize()
+          editableTables[2].initialize()
         })
       },
       handleOk () {
@@ -651,6 +744,7 @@
           ...materialMain, // 展开
           meList: allValues.tablesValue[0].values,
           stock: allValues.tablesValue[1].values,
+          composite: allValues.tablesValue[2].values,
         }
       },
       /** 发起新增或修改的请求 */
