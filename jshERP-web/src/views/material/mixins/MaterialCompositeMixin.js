@@ -87,19 +87,21 @@ export const MaterialCompositeMixin = {
               let mList = res.data
               if (value.indexOf(',') > -1) {
                 //多个条码
+                this.$refs.materialDataTable.getValues((error, values) => {
+                  values.pop()  //移除最后一行数据
+                  let mArr = values
+                  for (let i = 0; i < mList.length; i++) {
+                    let mInfo = mList[i]
+                    this.changeColumnShow(mInfo)
+                    let mObj = this.parseInfoToObj(mInfo)
+                    mArr.push(mObj)
+                  }
+                  this.materialTable.dataSource = mArr
+
+                })
               } else {
-                let mArr = []
-                let mInfo = mList[0]
-                this.changeColumnShow(mInfo)
-                let mInfoEx = this.parseInfoToObj(mInfo)
-                let mObj = {
-                  rowKey: row.id,
-                  values: mInfoEx
-                }
-                mArr.push(mObj)
-                target.setValues(mArr);
-                target.recalcAllStatisticsColumns()
-                target.autoSelectBySpecialKey('operNumber', row.orderNum)
+                //单个条码，原先是一些跟库存有关的无用代码
+
               }
             }
           });

@@ -290,7 +290,7 @@
           </a-tab-pane>
           <a-tab-pane key="3" tab="零件组成" forceRender>
             <j-editable-table
-              :ref="materialCompositeTable"
+              :ref="materialComponentTable"
               :loading="materialTable.loading"
               :columns="materialTable.columns"
               :dataSource="materialTable.dataSource"
@@ -493,7 +493,7 @@
             { title: '客户零件号', key: 'model', width: '7%', type: FormTypes.normal },
             { title: '颜色编码', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
-            { title: '数量', key: 'operNumber', width: '8%', type: FormTypes.inputNumber, statistics: true,
+            { title: '数量', key: 'amount', width: '8%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
@@ -548,8 +548,7 @@
       getAllTable() {
         return Promise.all([
           getRefPromise(this, 'editableMeTable'),
-          getRefPromise(this, 'editableDepotTable'),
-          getRefPromise(this, 'materialCompositeTable')
+          getRefPromise(this, 'editableDepotTable')
         ])
       },
       add () {
@@ -653,7 +652,6 @@
         this.getAllTable().then(editableTables => {
           editableTables[0].initialize()
           editableTables[1].initialize()
-          editableTables[2].initialize()
         })
       },
       handleOk () {
@@ -691,7 +689,6 @@
           ...materialMain, // 展开
           meList: allValues.tablesValue[0].values,
           stock: allValues.tablesValue[1].values,
-          composite: allValues.tablesValue[2].values,
         }
       },
       /** 发起新增或修改的请求 */
