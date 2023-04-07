@@ -597,6 +597,18 @@
         }
       },
 
+      parseInfoToObjWithOperNum(mInfo, operNum) {
+        return {
+          barCode: mInfo.mBarCode,
+          name: mInfo.name,
+          internalId: mInfo.internalId,
+          model: mInfo.model,
+          color: mInfo.color,
+          unit: mInfo.commodityUnit,
+          operNumber: operNum,
+        }
+      },
+
       // 获取所有的editableTable实例
       getAllTable() {
         return Promise.all([
@@ -663,6 +675,8 @@
           let params = { materialId: this.model.id }
           //编辑商品的时候多供应商字段可以修改
           this.meTable.columns[2].readonly = false
+          //手动添加了composite信息到otherField
+          this.requestCompositeTableData(this.model.otherField14, this.compositeTable)
           this.requestMeTableData(this.url.materialsExtendList, params, this.meTable)
           this.requestDepotTableData(this.url.depotWithStock, { mId: this.model.id }, this.depotTable)
         } else {
@@ -696,6 +710,42 @@
           tab.loading = false
         })
       },
+
+      requestCompositeTableData(compositeStr, tab) {
+        tab.loading = true
+        // e.g. [barCode]*n
+        let strArr = compositeStr.split('+')
+        let barCodeArr = []
+        let operNumArr = []
+        for (let i = 0; i < strArr.length; i++) {
+          let split = strArr[i].split(']')
+          // e.g. [barCode
+          barCodeArr.push(split[0].substr(1))
+          // e.g. *n
+          operNumArr.push(split[1].substr(1))
+        }
+
+        let param = {
+          barCode: barCodeArr.toString(),
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+        }
+        getMaterialByBarCode(param).then((res) => {
+          if (res && res.code === 200) {
+            let mList = res.data
+            let mArr = []
+            for (let i = 0; i < mList.length; i++) {
+              let mInfo = mList[i]
+              let index = barCodeArr.indexOf(mInfo.mBarCode)
+
+              let mObj = this.parseInfoToObjWithOperNum(mInfo, Number(operNumArr[index]))
+              mArr.push(mObj)
+            }
+            this.compositeTable.dataSource = mArr
+          }
+        })
+        tab.loading = false
+      },
+
       close () {
         this.$emit('close')
         this.visible = false
@@ -723,9 +773,7 @@
         }).then(allValues => {
           let formData = this.classifyIntoFormData(allValues)
           let compositeStr = this.getCompositeStr(formData)
-          console.log("formData" + JSON.stringify(formData))
-          console.log("composite: " + compositeStr)
-          // TODO: 在这里直接改formdata
+          formData.otherField14 = compositeStr
           formData.sortList = [];
           if(formData.unit === undefined) {formData.unit = ''}
           if(formData.unitId === undefined) {formData.unitId = ''}
@@ -1061,7 +1109,6 @@
       getCompositeStr(formData) {
         let str = ""
         for(let i=0; i<formData.composite.length; i++) {
-          console.log("composite " + i + ": " + JSON.stringify(formData.composite[i]))
           str = str + "[" + formData.composite[i].barCode + "]*" + formData.composite[i].operNumber + "+"
         }
         if (formData.composite.length>0){
