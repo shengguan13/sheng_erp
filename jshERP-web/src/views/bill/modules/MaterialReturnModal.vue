@@ -33,7 +33,7 @@
           </a-col>
           <a-col v-if="!rowCanEdit" :lg="6" :md="12" :sm="24">
             <!-- TODO:直接从领料出库绑定，不需要输入-->
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="99" data-title="领料人员"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="2" data-title="领料人员"
                          data-intro="领料人员的数据来自【经手人管理】菜单中的仓管员">
               <a-select v-model="salesManReadOnly" :disabled="true" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
@@ -48,13 +48,13 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="2" data-title="单据编号"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="3" data-title="单据编号"
                          data-intro="单据编号自动生成、自动累加、开头是单据类型的首字母缩写，累加的规则是每次打开页面会自动占用一个新的编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联领料出库" data-step="3" data-title="关联领料出库"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联领料出库" data-step="4" data-title="关联领料出库"
               data-intro="退料入库必须关联领料出库">
               <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
@@ -75,7 +75,7 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
+            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;" data-step="5" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter" style="margin-right: 8px">扫码录入</a-button>
               </a-col>
@@ -113,7 +113,7 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="5" data-title="附件"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="6" data-title="附件"
                          data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
@@ -333,15 +333,12 @@
         this.$refs.salesManBasedLinkBillList.title = "选择领料出库（已审核的领料出库才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, salesMan, discountMoney, deposit, remark) {
-        console.log("linkBillListOk")
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         this.salesManReadOnly = salesMan
-        console.log("salesMan: " + salesMan)
         // TODO:
-
         //for(let j=0; j<personList.options.length; j++) {
         //  let person = personList.options[j];
         //  console.log("person: " + JSON.stringify(person))

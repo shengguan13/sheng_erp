@@ -59,7 +59,7 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="18" :md="24" :sm="48">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料推荐" data-step="4" data-title="领料推荐"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料推荐" data-step="5" data-title="领料推荐"
                          data-intro="领料推荐根据关联生产单生成，会根据材料型号、生产数量推荐需要领取的物料的数量。">
               <a-input placeholder="领料推荐" v-decorator.trim="[ 'recommendation' ]" :readOnly="true"/>
             </a-form-item>
@@ -80,7 +80,7 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;" data-step="6" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter" style="margin-right: 8px">扫码录入</a-button>
               </a-col>
@@ -118,7 +118,7 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="12" data-title="附件"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="7" data-title="附件"
                          data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
@@ -147,6 +147,7 @@
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort,handleIntroJs } from "@/utils/util"
   import { getAction } from '@/api/manage'
+  import { getMaterialByBarCode } from '@/api/api'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -178,6 +179,8 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
+        orderStatusStr: '',
+        recommendationStr: '',
         prefixNo: 'LLCK',
         depositStatus: false,
         fileList:[],
@@ -257,7 +260,6 @@
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         // TODO: 目前 DepotHeadService 要求销售单必须有accountId，等有了新的单据类型就可以通过check了
-        console.log("this.model: " + JSON.stringify(this.model))
         if (this.action === 'add') {
           this.depositStatus = false
           this.addInit(this.prefixNo)
@@ -331,45 +333,94 @@
         this.$refs.linkBillList.title = "选择生产单（已审核的单据才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+        this.recommendationStr = ''
+        this.orderStatusStr = ''
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
-        let orderStatus = ""
-        let recommendation = ""
+
+        let productionMap = new Map()
+        let materialMap = new Map()
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
-          // 这几行注释掉之后可以防止物料自动填充，但是depotItem表里面的link_id会消失，这个问题也不大
-          // 因为本身生产计划和领料出库的关联就不是为了清楚计数，只要depotHead关联上了就可以
-          // let listEx = []
-          // for(let j=0; j<selectBillDetailRows.length; j++) {
-          //   let info = selectBillDetailRows[j];
-          //   if(info.finishNumber>0) {
-          //     info.operNumber = info.preNumber - info.finishNumber
-          //   }
-          //   info.linkId = info.id
-          //   listEx.push(info)
-          //   this.changeColumnShow(info)
-          // }
           for(let j=0; j<selectBillDetailRows.length; j++) {
+            if (j>0) {
+              this.orderStatusStr = this.orderStatusStr + "，"
+            }
             let info = selectBillDetailRows[j];
             let toDoNumber = info.preNumber
-            orderStatus = orderStatus + "[" + info.name + "]" + info.preNumber + "件"
-            if(info.finishNumber>0) {
-              info.operNumber = info.preNumber - info.finishNumber
+            this.orderStatusStr = this.orderStatusStr + "[" + info.name + "]" + info.preNumber + info.unit
+            if(info.finishNumber > 0) {
               toDoNumber = info.preNumber - info.finishNumber
-              orderStatus = orderStatus + "（已生产" + info.finishNumber + "件，"
-              orderStatus = orderStatus + "还需生产" + toDoNumber + "件）"
+              this.orderStatusStr = this.orderStatusStr + "（还需生产" + toDoNumber + info.unit + "）"
             }
-            // TODO: “件”改成单位
-            orderStatus = orderStatus + "，"
-            recommendation = recommendation + "[" + info.name + "]" + info.preNumber + "件，"
+            productionMap.set(info.barCode, toDoNumber)
           }
-          this.$nextTick(() => {
-            this.form.setFieldsValue({
-              'linkNumber': linkNumber,
-              'remark': remark,
-              'orderStatus': orderStatus,
-              'recommendation': recommendation,
-            })
+
+          // 读取所有生产单的零件barCode
+          let queryArr = []
+          for (let [key, value] of productionMap) {
+            queryArr.push(key)
+          }
+          let param = {
+            barCode: queryArr.toString(),
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+          }
+          // 读取所有生产单零件的composite
+          let res = getMaterialByBarCode(param).then((res) => {
+            if (res && res.code === 200) {
+              let mList = res.data
+              for (let i = 0; i < mList.length; i++) {
+                let mInfo = mList[i]
+                let compositeStr = mInfo.otherField14
+                // e.g. [barCode]*n
+                let strArr = compositeStr.split('+')
+                for (let k = 0; k < strArr.length; k++) {
+                  let split = strArr[k].split(']')
+                  // e.g. [barCode
+                  let code = split[0].substr(1)
+                  // e.g. *n
+                  let num = Number(split[1].substr(1))
+
+                  if (materialMap.has(code)) {
+                    let oldNum = materialMap.get(code)
+                    materialMap.set(code, oldNum + num * productionMap.get(mInfo.mBarCode))
+                  } else {
+                    materialMap.set(code, num * productionMap.get(mInfo.mBarCode))
+                  }
+                }
+              }
+              // 读取所有原材料的信息
+              let materialQueryArr = []
+              for (let [key, value] of materialMap) {
+                materialQueryArr.push(key)
+              }
+              let materialParam = {
+                barCode: materialQueryArr.toString(),
+                mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+              }
+              // 读取所有生产单零件的composite
+              getMaterialByBarCode(materialParam).then((newRes) => {
+                if (newRes && newRes.code === 200) {
+                  let newList = newRes.data
+                  for (let i = 0; i < newList.length; i++) {
+                    if (i > 0) {
+                      this.recommendationStr = this.recommendationStr + "，"
+                    }
+                    let mInfo = newList[i]
+                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + materialMap.get(mInfo.mBarCode) + mInfo.unit
+                  }
+                }
+                this.$nextTick(() => {
+                  this.form.setFieldsValue({
+                    'linkNumber': linkNumber,
+                    'remark': remark,
+                    'orderStatus': this.orderStatusStr,
+                    'recommendation': this.recommendationStr,
+                  })
+                })
+              })
+            }
           })
+
         }
       },
     }
