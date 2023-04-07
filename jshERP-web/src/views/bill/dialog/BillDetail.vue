@@ -1713,6 +1713,8 @@
           this.defColumns = this.materialReturnColumns
         } else if (type === '生产入库') {
           this.defColumns = this.productionInColumns
+        } else if (type === '采购订单') {
+          this.defColumns = this.purchaseOrderColumns
         } else if (type === '采购入库') {
           this.defColumns = this.purchaseInColumns
         } else if (type === '采购退货出库') {
