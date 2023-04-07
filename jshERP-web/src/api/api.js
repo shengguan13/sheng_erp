@@ -63,7 +63,7 @@ const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
 const checkSerialNumber = (params)=>getAction("/serialNumber/checkIsNameExist",params);
 const batAddSerialNumber = (params)=>postAction("/serialNumber/batAddSerialNumber",params);
 const getEnableSerialNumberList = (params)=>getAction("/serialNumber/getEnableSerialNumberList",params);
-//多供应商
+//多属性
 const addMaterialAttribute = (params)=>postAction("/materialAttribute/add",params);
 const editMaterialAttribute = (params)=>putAction("/materialAttribute/update",params);
 const checkMaterialAttribute = (params)=>getAction("/materialAttribute/checkIsNameExist",params);

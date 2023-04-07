@@ -112,7 +112,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24" v-if="!model.id">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多供应商" data-step="10" data-title="多供应商"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="10" data-title="多属性"
                   data-intro="同一零件可能存在多个供应商">
                   <a-tooltip title="同一零件可能存在多个供应商，需要先录入单位才能激活此处输入框">
                     <a-tag class="tag-info" v-if="!manySkuStatus">需要先录入单位才能激活</a-tag>
@@ -444,7 +444,7 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             {
-              title: '多供应商', key: 'sku', width: '20%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '请输入${title}'
+              title: '多属性', key: 'sku', width: '20%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '请输入${title}'
             },
             {
               title: '采购价', key: 'purchaseDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
@@ -618,7 +618,7 @@
         ])
       },
       add () {
-        //隐藏多供应商
+        //隐藏多属性
         this.meTable.columns[2].type = FormTypes.hidden
         // 默认新增一条数据
         this.getAllTable().then(editableTables => {
@@ -660,7 +660,7 @@
         this.loadUnitListData()
         // 加载子表数据
         if (this.model.id) {
-          //禁用多供应商开关
+          //禁用多属性开关
           this.switchDisabled = true
           // 判断是否是多单位
           if(this.model.unit){
@@ -673,10 +673,12 @@
             this.manyUnitStatus = false
           }
           let params = { materialId: this.model.id }
-          //编辑商品的时候多供应商字段可以修改
+          //编辑商品的时候多属性字段可以修改
           this.meTable.columns[2].readonly = false
           //手动添加了composite信息到otherField
-          this.requestCompositeTableData(this.model.otherField14, this.compositeTable)
+          if (this.model.otherField14) {
+            this.requestCompositeTableData(this.model.otherField14, this.compositeTable)
+          }
           this.requestMeTableData(this.url.materialsExtendList, params, this.meTable)
           this.requestDepotTableData(this.url.depotWithStock, { mId: this.model.id }, this.depotTable)
         } else {
@@ -1023,7 +1025,7 @@
             }
           })
         }
-        //控制条码列表中的多供应商列
+        //控制条码列表中的多属性列
         if(value.length>0) {
           this.meTable.columns[2].type = FormTypes.input
         } else {
@@ -1052,7 +1054,7 @@
       autoSkuList(skuOneData, skuTwoData) {
         let unit = this.form.getFieldValue('unit')
         if(unit) {
-          //计算多供应商已经选择了几个
+          //计算多属性已经选择了几个
           let count = this.getNumByField('skuOne') + this.getNumByField('skuTwo')
           let barCodeSku = []
           if(count === 1) {
@@ -1208,7 +1210,7 @@
           this.$refs.priceModalForm.add(type);
           this.$refs.priceModalForm.disableSubmit = false;
         } else {
-          this.$message.warning('抱歉，只有开启多供应商才能进行批量操作！');
+          this.$message.warning('抱歉，只有开启多属性才能进行批量操作！');
         }
       },
       batchSetStock(type) {
@@ -1336,7 +1338,7 @@
       },
       onlyUnitOnChange(e) {
         if(e.target.value) {
-          //单位有填写了之后则显示多供应商的文本框
+          //单位有填写了之后则显示多属性的文本框
           this.manySkuStatus = true
         } else {
           this.manySkuStatus = false
