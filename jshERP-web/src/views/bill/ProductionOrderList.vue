@@ -194,7 +194,7 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '生产单号', dataIndex: 'number',width:145,
             customRender:function (text,record,index) {
-              text = record.linkNumber?text+"[计划]":text
+              text = record.linkNumber?text+"[关联]":text
               return text
             }
           },

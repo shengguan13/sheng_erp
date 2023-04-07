@@ -194,7 +194,7 @@
           // TODO: 显示绑定的领料出库单号
           { title: '退料入库单号', dataIndex: 'number',width:120,
             customRender:function (text,record,index) {
-              text = record.linkNumber?text+"[领料]":text
+              text = record.linkNumber?text+"[关联]":text
               return text
             }
           },
