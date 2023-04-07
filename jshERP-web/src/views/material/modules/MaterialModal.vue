@@ -563,6 +563,16 @@
                 let mList = res.data
                 if (value.indexOf(',') > -1) {
                   //多个条码
+                  this.$refs.materialCompositeTable.getValues((error, values) => {
+                    values.pop()  //移除最后一行数据
+                    let mArr = values
+                    for (let i = 0; i < mList.length; i++) {
+                      let mInfo = mList[i]
+                      let mObj = this.parseInfoToObj(mInfo)
+                      mArr.push(mObj)
+                    }
+                    this.compositeTable.dataSource = mArr
+                  })
                 } else {
                   let mArr = []
                   let mInfo = mList[0]
