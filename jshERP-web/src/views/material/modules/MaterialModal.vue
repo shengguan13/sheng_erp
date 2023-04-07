@@ -117,7 +117,7 @@
                   <a-tooltip title="同一零件可能存在多个供应商，需要先录入单位才能激活此处输入框">
                     <a-tag class="tag-info" v-if="!manySkuStatus">需要先录入单位才能激活</a-tag>
                     <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children"
-                      placeholder="请选择零件类型" @change="onManySkuChange" v-show="manySkuStatus">
+                      placeholder="请选择多属性" @change="onManySkuChange" v-show="manySkuStatus">
                       <a-select-option v-for="(item,index) in materialAttributeList" :key="index" :value="item.value" :disabled="item.disabled">
                         {{ item.name }}
                       </a-select-option>
@@ -990,7 +990,7 @@
       },
       onManySkuChange(value) {
         this.manySkuSelected = value.length
-        //控制多供应商下拉框中选择项的状态，目前只能选择一种零件类型
+        //控制多属性下拉框中选择项的状态，目前只能选择一种多属性
         if(value.length < 1){
           this.materialAttributeList.forEach((item,index,array)=>{
             (array.indexOf(item.value) === -1)?Vue.set(array[index], 'disabled', false):''

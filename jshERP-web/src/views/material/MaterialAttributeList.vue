@@ -9,8 +9,8 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
-                <a-form-item label="零件类型" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input placeholder="请输入零件类型查询" v-model="queryParam.attributeName"></a-input>
+                <a-form-item label="多属性" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="请输入属性类型查询" v-model="queryParam.attributeName"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -104,8 +104,8 @@
             align:"center",
             scopedSlots: { customRender: 'action' },
           },
-          {title: '零件类型', dataIndex: 'attributeName', width: 200},
-          {title: '供应商（用竖线隔开）', dataIndex: 'attributeValue', width: 500}
+          {title: '属性类型', dataIndex: 'attributeName', width: 200},
+          {title: '属性值（用竖线隔开）', dataIndex: 'attributeValue', width: 500}
         ],
         url: {
           list: "/materialAttribute/list",
