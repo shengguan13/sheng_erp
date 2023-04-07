@@ -1032,7 +1032,7 @@ CREATE TABLE `jsh_system_config`  (
 -- ----------------------------
 -- Records of jsh_system_config
 -- ----------------------------
-INSERT INTO `jsh_system_config` VALUES (11, '吉林宏泽汽车部件有限公司', '', '', '', NULL, NULL, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '0', '', 63, '0');
+INSERT INTO `jsh_system_config` VALUES (11, '吉林宏泽汽车部件有限公司', '', '', '', NULL, NULL, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '0', '0', '0', '', 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_tenant

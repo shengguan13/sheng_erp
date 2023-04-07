@@ -71,8 +71,7 @@
       <div class="login-copyright">
         <a-row>
           <a-col>
-            © 2015-2030 {{systemTitle}} - Powered By
-            <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
+            © 2015-2030 {{systemTitle}} - Powered By Hornze
           </a-col>
         </a-row>
       </div>
