@@ -203,7 +203,7 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row v-if="mpShort.otherField3.enabled" class="form-row" :gutter="24">
+            <a-row v-show="false" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField3.name">
                   <a-input v-decorator.trim="[ 'otherField3' ]" />
@@ -280,7 +280,7 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row v-if="mpShort.otherField14.enabled" class="form-row" :gutter="24">
+            <a-row v-show="false" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField14.name">
                   <a-input v-decorator.trim="[ 'otherField14' ]" />
