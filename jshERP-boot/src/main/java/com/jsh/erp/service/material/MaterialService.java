@@ -165,8 +165,6 @@ public class MaterialService {
         Material m = JSONObject.parseObject(obj.toJSONString(), Material.class);
         m.setEnabled(true);
         try{
-            // 如果产品有组装关系，确保没有引入循环依赖
-
             materialMapperEx.insertSelectiveEx(m);
             Long mId = m.getId();
             materialExtendService.saveDetials(obj, obj.getString("sortList"), mId, "insert");
@@ -205,6 +203,58 @@ public class MaterialService {
         }
     }
 
+    private boolean isValidDependency(List<MaterialVo4Unit> allMaterials) {
+        Map<String, Set<String>> dependency = new HashMap<>();
+        for (MaterialVo4Unit m : allMaterials) {
+            Set<String> composite = parseComposite(m.getOtherField14());
+            dependency.put(String.valueOf(m.getMeId()), composite);
+        }
+        Map<String, Integer> visited = new HashMap<>();
+        for (String id : dependency.keySet()) {
+            if (!dfs(id, dependency, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(String meId, Map<String, Set<String>> dependency, Map<String, Integer> visited) {
+        if (visited.containsKey(meId)) {
+            // -1 代表有circular dependency
+            if (visited.get(meId) == -1) {
+                return false;
+            }
+            if (visited.get(meId) == 1) {
+                return true;
+            }
+        }
+        visited.put(meId, -1);
+        for (String composite : dependency.getOrDefault(meId, new HashSet<>())) {
+            if (dfs(composite, dependency, visited) == false) {
+                return false;
+            }
+        }
+        visited.put(meId, 1);
+        return true;
+    }
+
+    /**
+     * List of meIds of material composites
+     * @param compositeStr
+     * @return
+     */
+    private Set<String> parseComposite(String compositeStr) {
+        Set<String> res = new HashSet<>();
+        if (compositeStr == null || "".equals(compositeStr)) {
+            return res;
+        }
+        String[] parts = compositeStr.split("\\+");
+        for (String part : parts) {
+            String[] split = part.split("]");
+            res.add(split[0].substring(1));
+        }
+        return res;
+    }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateMaterial(JSONObject obj, HttpServletRequest request) throws Exception{
@@ -218,6 +268,14 @@ public class MaterialService {
                 materialMapperEx.setExpiryNumToNull(material.getId());
             }
             materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
+            // 如果产品有组装关系，确保没有引入循环依赖
+            List<MaterialVo4Unit> allMaterials = materialMapperEx.getMaterialListAll();
+            if (material.getOtherField14() != null && !"".equals(material.getOtherField14())) {
+                if (!isValidDependency(allMaterials)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_CODE,
+                            ExceptionConstants.MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_MSG);
+                }
+            }
             if(obj.get("stock")!=null) {
                 JSONArray stockArr = obj.getJSONArray("stock");
                 for (int i = 0; i < stockArr.size(); i++) {
