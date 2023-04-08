@@ -161,12 +161,10 @@
           {title: '颜色编码', dataIndex: 'color'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'unitName'},
-          {title: '单价', dataIndex: 'purchaseDecimal', sorter: (a, b) => a.purchaseDecimal - b.purchaseDecimal},
           {title: '初始库存', dataIndex: 'initialStock', sorter: (a, b) => a.initialStock - b.initialStock},
           {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock,
             scopedSlots: { customRender: 'customRenderStock' }
-          },
-          {title: '库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice}
+          }
         ],
         url: {
           list: "/material/getListWithStock"
@@ -249,11 +247,11 @@
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '类别', '单位', '单价', '初始库存', '库存', '库存金额']]
+        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '类别', '单位', '初始库存', '库存']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.mBarCode, ds.name, ds.internalId, ds.model, ds.color, ds.categoryName, ds.unitName,
-            ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice]
+          let item = [ds.mBarCode, ds.name, ds.internalId, ds.model, ds.color, ds.categoryName,
+          ds.unitName, ds.initialStock, ds.currentStock]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '商品库存')

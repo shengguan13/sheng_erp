@@ -621,11 +621,11 @@ public class DepotHeadService {
         List<DepotHeadVo4InOutMCount> list = null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
-            String subType = "出库".equals(type)? "销售" : "";
-            String [] organArray = getOrganArray(subType, "");
-            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, oId,
+            // 查询进出库明细的时候，不需要指定客户/供应商，直接查询所有的出入库（包括生产入库、领料、退料、采购销售的退货等）
+            String [] organArray = null;
+            list = depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, oId,
                     creatorArray, organArray, offset, rows);
-        }catch(Exception e){
+        } catch (Exception e){
             JshException.readFail(logger, e);
         }
         return list;
