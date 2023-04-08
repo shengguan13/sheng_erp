@@ -147,7 +147,7 @@
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort,handleIntroJs } from "@/utils/util"
   import { getAction } from '@/api/manage'
-  import { getMaterialByBarCode } from '@/api/api'
+  import { getMaterialByBarCode, getMaterialByMeIdList } from '@/api/api'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -354,7 +354,6 @@
             }
             productionMap.set(info.barCode, toDoNumber)
           }
-
           // 读取所有生产单的零件barCode
           let queryArr = []
           for (let [key, value] of productionMap) {
@@ -371,20 +370,19 @@
               for (let i = 0; i < mList.length; i++) {
                 let mInfo = mList[i]
                 let compositeStr = mInfo.otherField14
-                // e.g. [barCode]*n
+                // e.g. [meId]*n
                 let strArr = compositeStr.split('+')
                 for (let k = 0; k < strArr.length; k++) {
                   let split = strArr[k].split(']')
-                  // e.g. [barCode
-                  let code = split[0].substr(1)
+                  // e.g. [meId
+                  let id = split[0].substr(1)
                   // e.g. *n
                   let num = Number(split[1].substr(1))
-
-                  if (materialMap.has(code)) {
-                    let oldNum = materialMap.get(code)
-                    materialMap.set(code, oldNum + num * productionMap.get(mInfo.mBarCode))
+                  if (materialMap.has(id)) {
+                    let oldNum = materialMap.get(id)
+                    materialMap.set(id, oldNum + num * productionMap.get(mInfo.mBarCode))
                   } else {
-                    materialMap.set(code, num * productionMap.get(mInfo.mBarCode))
+                    materialMap.set(id, num * productionMap.get(mInfo.mBarCode))
                   }
                 }
               }
@@ -394,11 +392,11 @@
                 materialQueryArr.push(key)
               }
               let materialParam = {
-                barCode: materialQueryArr.toString(),
+                meIdList: materialQueryArr.toString(),
                 mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
               }
               // 读取所有生产单零件的composite
-              getMaterialByBarCode(materialParam).then((newRes) => {
+              getMaterialByMeIdList(materialParam).then((newRes) => {
                 if (newRes && newRes.code === 200) {
                   let newList = newRes.data
                   for (let i = 0; i < newList.length; i++) {
@@ -406,7 +404,7 @@
                       this.recommendationStr = this.recommendationStr + "，"
                     }
                     let mInfo = newList[i]
-                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + materialMap.get(mInfo.mBarCode) + mInfo.unit
+                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + materialMap.get(String(mInfo.meId)) + mInfo.unit
                   }
                 }
                 this.$nextTick(() => {

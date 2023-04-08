@@ -92,11 +92,15 @@ public interface MaterialMapperEx {
 
     int batchDeleteMaterialByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 
+    List<MaterialVo4Unit> getMaterialListAll();
+
     List<Material> getMaterialListByCategoryIds(@Param("categoryIds") String[] categoryIds);
 
     List<Material> getMaterialListByUnitIds(@Param("unitIds") String[] unitIds);
 
     String getMaxBarCode();
+
+    List<MaterialVo4Unit> getMaterialByMeIdList(@Param("meIdList") List<Long> meIdList);
 
     List<MaterialVo4Unit> getMaterialByMeId(
             @Param("meId") Long meId);

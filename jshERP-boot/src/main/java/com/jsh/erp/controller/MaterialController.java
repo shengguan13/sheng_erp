@@ -504,10 +504,10 @@ public class MaterialController {
     @GetMapping(value = "/getMaterialByBarCode")
     @ApiOperation(value = "根据条码查询商品信息")
     public BaseResponseInfo getMaterialByBarCode(@RequestParam("barCode") String barCode,
-                                          @RequestParam(value = "depotId", required = false) Long depotId,
-                                          @RequestParam("mpList") String mpList,
-                                          @RequestParam(required = false, value = "prefixNo") String prefixNo,
-                                          HttpServletRequest request) throws Exception {
+                                                 @RequestParam(value = "depotId", required = false) Long depotId,
+                                                 @RequestParam("mpList") String mpList,
+                                                 @RequestParam(required = false, value = "prefixNo") String prefixNo,
+                                                 HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             String[] mpArr = mpList.split(",");
@@ -552,6 +552,35 @@ public class MaterialController {
             }
             res.code = 200;
             res.data = list;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/getMaterialByMeIdList")
+    @ApiOperation(value = "根据商品id查找商品信息")
+    public BaseResponseInfo getMaterialByMeIdList(@RequestParam("meIdList") String meIdList,
+                                                  @RequestParam("mpList") String mpList,
+                                                  HttpServletRequest request) throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            String[] meIdArr = meIdList.split(",");
+            List<Long> list = new ArrayList<>();
+            for (String id : meIdArr) {
+                list.add(Long.valueOf(id));
+            }
+            String[] mpArr = mpList.split(",");
+            List<MaterialVo4Unit> result = materialService.getMaterialByMeIdList(list);
+            if(result != null && result.size()>0) {
+                for(MaterialVo4Unit mvo: result) {
+                    mvo.setMaterialOther(materialService.getMaterialOtherByParam(mpArr, mvo));
+                }
+            }
+            res.code = 200;
+            res.data = result;
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;

@@ -349,7 +349,7 @@
   import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode,
+  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode, getMaterialByMeIdList,
     getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
   import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
@@ -453,6 +453,7 @@
             { title: '内部零件号', key: 'internalId', width: '9%', type: FormTypes.normal },
             { title: '客户零件号', key: 'model', width: '9%', type: FormTypes.normal },
             { title: '颜色编码', key: 'color', width: '7%', type: FormTypes.normal },
+            { title: 'meId', key: 'meId', width: '5%', type: FormTypes.hidden },
             { title: '数量', key: 'operNumber', width: '8%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -579,6 +580,7 @@
       //转为商品对象
       parseInfoToObj(mInfo) {
         return {
+          meId: mInfo.meId,
           barCode: mInfo.mBarCode,
           name: mInfo.name,
           internalId: mInfo.internalId,
@@ -591,6 +593,7 @@
 
       parseInfoToObjWithOperNum(mInfo, operNum) {
         return {
+          meId: mInfo.meId,
           barCode: mInfo.mBarCode,
           name: mInfo.name,
           internalId: mInfo.internalId,
@@ -707,29 +710,29 @@
 
       requestCompositeTableData(compositeStr, tab) {
         tab.loading = true
-        // e.g. [barCode]*n
+        // e.g. [meId]*n
         let strArr = compositeStr.split('+')
-        let barCodeArr = []
+        let meIdArr = []
         let operNumArr = []
         for (let i = 0; i < strArr.length; i++) {
           let split = strArr[i].split(']')
-          // e.g. [barCode
-          barCodeArr.push(split[0].substr(1))
+          // e.g. [meId
+          meIdArr.push(split[0].substr(1))
           // e.g. *n
           operNumArr.push(split[1].substr(1))
         }
 
         let param = {
-          barCode: barCodeArr.toString(),
+          meIdList: meIdArr.toString(),
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
         }
-        getMaterialByBarCode(param).then((res) => {
+        getMaterialByMeIdList(param).then((res) => {
           if (res && res.code === 200) {
             let mList = res.data
             let mArr = []
             for (let i = 0; i < mList.length; i++) {
               let mInfo = mList[i]
-              let index = barCodeArr.indexOf(mInfo.mBarCode)
+              let index = meIdArr.indexOf(String(mInfo.meId))
 
               let mObj = this.parseInfoToObjWithOperNum(mInfo, Number(operNumArr[index]))
               mArr.push(mObj)
@@ -1000,10 +1003,10 @@
           let skuTwoId = value[1]
           this.materialAttributeList.forEach(item => {
             if(item.value === skuOneId) {
-              this.skuOneTitle = item.name + "供应商"
+              this.skuOneTitle = item.name
             }
             if(item.value === skuTwoId) {
-              this.skuTwoTitle = item.name + "供应商"
+              this.skuTwoTitle = item.name
             }
           })
           getMaterialAttributeValueListById({'id': skuOneId}).then((res)=>{
@@ -1103,7 +1106,7 @@
       getCompositeStr(formData) {
         let str = ""
         for(let i=0; i<formData.composite.length; i++) {
-          str = str + "[" + formData.composite[i].barCode + "]*" + formData.composite[i].operNumber + "+"
+          str = str + "[" + formData.composite[i].meId + "]*" + formData.composite[i].operNumber + "+"
         }
         if (formData.composite.length>0){
           str = str.slice(0, -1)

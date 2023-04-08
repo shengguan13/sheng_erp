@@ -332,6 +332,9 @@ public class ExceptionConstants {
     //EXCEL中存在重复的条码
     public static final int MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE = 80000021;
     public static final String MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG = "抱歉，EXCEL中存在重复的条码，具体条码为：%s";
+    //零件组成存在循环依赖
+    public static final int MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_CODE = 80000022;
+    public static final String MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_MSG = "抱歉，零件组成存在循环依赖（例如A由B组成，B由C组成，C又由A组成），具体关系为：%s";
 
     /**
      *  单据信息

@@ -165,10 +165,12 @@ public class MaterialService {
         Material m = JSONObject.parseObject(obj.toJSONString(), Material.class);
         m.setEnabled(true);
         try{
+            // 如果产品有组装关系，确保没有引入循环依赖
+
             materialMapperEx.insertSelectiveEx(m);
             Long mId = m.getId();
             materialExtendService.saveDetials(obj, obj.getString("sortList"), mId, "insert");
-            if(obj.get("stock")!=null) {
+            if(obj.get("stock") != null) {
                 JSONArray stockArr = obj.getJSONArray("stock");
                 for (int i = 0; i < stockArr.size(); i++) {
                     JSONObject jsonObj = stockArr.getJSONObject(i);
@@ -202,6 +204,7 @@ public class MaterialService {
             return 0;
         }
     }
+
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateMaterial(JSONObject obj, HttpServletRequest request) throws Exception{
@@ -1084,8 +1087,20 @@ public class MaterialService {
     public List<MaterialVo4Unit> getMaterialByMeId(Long meId) {
         List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
         try{
-            if(meId!=null) {
+            if(meId != null) {
                 result= materialMapperEx.getMaterialByMeId(meId);
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
+    public List<MaterialVo4Unit> getMaterialByMeIdList(List<Long> meIdList) {
+        List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
+        try{
+            if(meIdList != null) {
+                result= materialMapperEx.getMaterialByMeIdList(meIdList);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
