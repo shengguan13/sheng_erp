@@ -208,7 +208,7 @@
           { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
-              text = record.linkNumber?text+"[转]":text
+              text = record.linkNumber?text+"[退货]":text
               return text
             }
           },

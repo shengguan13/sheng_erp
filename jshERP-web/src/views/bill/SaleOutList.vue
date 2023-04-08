@@ -228,8 +228,8 @@
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
-              text = record.linkNumber?text+"[订]":text
-              text = record.hasBackFlag?text+"[退]":text
+              text = record.linkNumber?text+"[订单]":text
+              text = record.hasBackFlag?text+"[退货]":text
               return text
             }
           },
