@@ -264,6 +264,7 @@ public class DepotHeadService {
 
     /**
      * 获取机构数组
+     * 系统里有个设置叫做客户权限 - 在某些情况下，销售人员只有特定的客户权限，在我们的erp中不适用
      * @return
      */
     public String[] getOrganArray(String subType, String purchaseStatus) throws Exception {

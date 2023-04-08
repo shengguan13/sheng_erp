@@ -122,8 +122,8 @@ public class DepotHeadController {
             }
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
-            String subType = "出库".equals(type)? "销售" : "";
-            String [] organArray = depotHeadService.getOrganArray(subType, "");
+            // 查询进出库明细的时候，不需要指定客户/供应商，直接查询所有的出入库（包括生产入库、领料、退料、采购销售的退货等）
+            String [] organArray = null;
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray,
