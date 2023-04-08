@@ -75,10 +75,12 @@
             <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">完成生产</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">完成生产</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分生产</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分生产</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
           </template>
           <!-- 销售转采购 -->
           <template v-if="queryParam.purchaseStatus">

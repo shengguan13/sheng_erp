@@ -18,14 +18,6 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <chart-card :loading="loading" title="今日零售" data-step="3" data-title="今日零售" data-intro="统计今日零售单据的总金额">
-          <a-tooltip title="统计今日零售单据的总金额" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <head-info :content="statistics.todayRetailSale"></head-info>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <chart-card :loading="loading" title="本月累计采购">
           <a-tooltip title="统计本月采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
@@ -39,14 +31,6 @@
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.monthSale"></head-info>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <chart-card :loading="loading" title="本月累计零售">
-          <a-tooltip placement="left" title="统计本月零售单据的总金额" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <head-info :content="statistics.monthRetailSale"></head-info>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
@@ -66,14 +50,6 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <chart-card :loading="loading" title="昨日零售">
-          <a-tooltip title="统计昨日零售单据的总金额" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <head-info :content="statistics.yesterdayRetailSale"></head-info>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <chart-card :loading="loading" title="今年累计采购">
           <a-tooltip title="统计今年采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
@@ -87,14 +63,6 @@
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.yearSale"></head-info>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <chart-card :loading="loading" title="今年累计零售">
-          <a-tooltip placement="left" title="统计今年零售单据的总金额" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <head-info :content="statistics.yearRetailSale"></head-info>
         </chart-card>
       </a-col>
     </a-row>
@@ -115,31 +83,6 @@
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="6" data-title="零售统计"
                 data-intro="统计往前6个月每月零售的总金额">
           <bar title="零售统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="retailPriceData"/>
-        </a-card>
-      </a-col>
-    </a-row>
-    <a-row :gutter="24">
-      <a-col :sm="24" :md="24" :xl="24" :style="{ paddingRight: '0px',marginBottom: '6px' }">
-        <a-card :bordered="false" :body-style="{padding: '5'}" data-step="7" data-title="服务和版权"
-                data-intro="展示服务到期时间（快到期时会出现续费链接，请注意及时续费）、
-          用户数量（是指最多可以录入的用户数量）、版权信息">
-          <div class="hidden-xs" style="float:right;">
-            <a-popover
-              trigger="hover"
-              :visible="hovered"
-              @visibleChange="handleHoverChange">
-              <div slot="content">
-                <img src="/static/weixin.jpg" style="width:258px" />
-              </div>
-              <a-button type="link" v-if="showWeixinSpan()">华夏ERP微信小程序</a-button>
-            </a-popover>
-            &copy; 2015-2030 {{systemTitle}} V3.2
-          </div>
-          <a-tag v-if="tenant.type==0" color="blue">试用到期：{{tenant.expireTime}}</a-tag>
-          <a-tag v-if="tenant.type==0" color="blue">试用用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
-          <a-tag v-if="tenant.type==1" color="blue">服务到期：{{tenant.expireTime}}</a-tag>
-          <a-tag v-if="tenant.type==1" color="blue">授权用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
-          <a v-if="hasExpire" style="color: red;" :href="payFeeUrl" target="_blank">立即续费</a>
         </a-card>
       </a-col>
     </a-row>

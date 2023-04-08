@@ -113,8 +113,8 @@
               </a-col>
               <a-col :md="6" :sm="24" v-if="!model.id">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="10" data-title="多属性"
-                  data-intro="同一零件可能存在多个供应商">
-                  <a-tooltip title="同一零件可能存在多个供应商，需要先录入单位才能激活此处输入框">
+                  data-intro="同一种零件可存在多种属性—颜色、尺寸、供应商等">
+                  <a-tooltip title="同一种零件可存在多种属性—颜色、尺寸、供应商等，需要先录入单位才能激活此处输入框">
                     <a-tag class="tag-info" v-if="!manySkuStatus">需要先录入单位才能激活</a-tag>
                     <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children"
                       placeholder="请选择多属性" @change="onManySkuChange" v-show="manySkuStatus">
@@ -163,12 +163,6 @@
                 @valueChange="onValueChange"
                 @added="onAdded"
                 @deleted="onDeleted">
-                <template #buttonAfter>
-                  <a-button @click="batchSetPrice('purchase')">采购价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSetPrice('commodity')">零售价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSetPrice('wholesale')">销售价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSetPrice('low')">最低售价-批量</a-button>
-                </template>
               </j-editable-table>
               <!-- 表单区域 -->
               <batch-set-price-modal ref="priceModalForm" @ok="batchSetPriceModalFormOk"></batch-set-price-modal>
@@ -445,18 +439,6 @@
             },
             {
               title: '多属性', key: 'sku', width: '20%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '请输入${title}'
-            },
-            {
-              title: '采购价', key: 'purchaseDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
-            },
-            {
-              title: '零售价', key: 'commodityDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
-            },
-            {
-              title: '销售价', key: 'wholesaleDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
-            },
-            {
-              title: '最低售价', key: 'lowDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
