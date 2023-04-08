@@ -1286,9 +1286,10 @@ public class MaterialService {
             if (mpArr[i].equals("表面积（m²）")) {
                 materialOther = materialOther + ((m.getOtherField13() == null || m.getOtherField13().equals("")) ? "" : "(" + m.getOtherField13() + ")");
             }
-            if (mpArr[i].equals("组装等级关系")) {
-                materialOther = materialOther + ((m.getOtherField14() == null || m.getOtherField14().equals("")) ? "" : "(" + m.getOtherField14() + ")");
-            }
+            // 暂时不在拓展信息里面显示组装等级关系
+//            if (mpArr[i].equals("组装等级关系")) {
+//                materialOther = materialOther + ((m.getOtherField14() == null || m.getOtherField14().equals("")) ? "" : "(" + m.getOtherField14() + ")");
+//            }
         }
         return materialOther;
     }
