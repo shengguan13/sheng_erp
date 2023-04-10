@@ -34,6 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MaterialService {
@@ -522,6 +523,7 @@ public class MaterialService {
         return resList;
     }
 
+    // TODO: 增加项目校验、组装等级校验
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public BaseResponseInfo importExcel(MultipartFile file, HttpServletRequest request) throws Exception {
         BaseResponseInfo info = new BaseResponseInfo();
@@ -551,15 +553,37 @@ public class MaterialService {
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
             for (int i = 2; i < rightRows; i++) {
-                String name = ExcelUtils.getContent(src, i, 0); //名称
-                String internalId = ExcelUtils.getContent(src, i, 1); //内部零件号
-                String model = ExcelUtils.getContent(src, i, 2); //客户零件号
-                String color = ExcelUtils.getContent(src, i, 3); //颜色编码
-                String project = ExcelUtils.getContent(src, i, 4); //项目
-                String categoryName = ExcelUtils.getContent(src, i, 5); //类别
-                String weight = ExcelUtils.getContent(src, i, 6); //净重量(kg)
-                String expiryNum = ExcelUtils.getContent(src, i, 7); //保质期(天)
-                String unit = ExcelUtils.getContent(src, i, 8); //基本单位
+                String barCode = ExcelUtils.getContent(src, i, 0); //基础条码
+                String manyBarCode = ExcelUtils.getContent(src, i, 1); //副条码
+                String name = ExcelUtils.getContent(src, i, 2); //名称
+                String internalId = ExcelUtils.getContent(src, i, 3); //内部零件号
+                String model = ExcelUtils.getContent(src, i, 4); //客户零件号
+                String unit = ExcelUtils.getContent(src, i, 5); //基本单位
+                String manyUnit = ExcelUtils.getContent(src, i, 6); //副单位
+                String ratio = ExcelUtils.getContent(src, i, 7); //比例
+                String color = ExcelUtils.getContent(src, i, 8); //颜色编码
+                String weight = ExcelUtils.getContent(src, i, 9); //净重量(kg)
+                String expiryNum = ExcelUtils.getContent(src, i, 10); //保质期(天)
+                String categoryName = ExcelUtils.getContent(src, i, 11); //类别
+                String project = ExcelUtils.getContent(src, i, 12); //项目
+                String enableBatchNumber = ExcelUtils.getContent(src, i, 13); //批号
+                String mfrs = ExcelUtils.getContent(src, i, 14); //制造商
+
+                String other1 = ExcelUtils.getContent(src, i, 15); //工艺类别
+                String other2 = ExcelUtils.getContent(src, i, 16); //配置
+                String other4 = ExcelUtils.getContent(src, i, 17); //材料牌号
+                String other5 = ExcelUtils.getContent(src, i, 18); //材料类型/标准
+                String other6 = ExcelUtils.getContent(src, i, 19); //原材料厂家
+                String other7 = ExcelUtils.getContent(src, i, 20); //外协件厂家
+                String other8 = ExcelUtils.getContent(src, i, 21); //尺寸
+                String other9 = ExcelUtils.getContent(src, i, 22); //检具
+                String other10 = ExcelUtils.getContent(src, i, 23); //用量/车（件）
+                String other11 = ExcelUtils.getContent(src, i, 24); //料道（kg）
+                String other12 = ExcelUtils.getContent(src, i, 25); //表面处理纹理
+                String other13 = ExcelUtils.getContent(src, i, 26); //表面积（m²）
+                String other14 = ExcelUtils.getContent(src, i, 27); //组装等级关系
+                String enabled = ExcelUtils.getContent(src, i, 28); //状态
+
                 //名称为空
                 if(StringUtil.isEmpty(name)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
@@ -578,6 +602,21 @@ public class MaterialService {
                 m.setModel(model);
                 m.setColor(color);
                 m.setProject(project);
+                m.setMfrs(mfrs);
+                m.setOtherField1(other1);
+                m.setOtherField2(other2);
+                m.setOtherField4(other4);
+                m.setOtherField5(other5);
+                m.setOtherField6(other6);
+                m.setOtherField7(other7);
+                m.setOtherField8(other8);
+                m.setOtherField9(other9);
+                m.setOtherField10(other10);
+                m.setOtherField11(other11);
+                m.setOtherField12(other12);
+                m.setOtherField13(other13);
+                m.setOtherField14(other14);
+
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
                 if(null!=categoryId){
                     m.setCategoryId(categoryId);
@@ -598,17 +637,6 @@ public class MaterialService {
                     }
                     m.setExpiryNum(Integer.parseInt(expiryNum));
                 }
-                String manyUnit = ExcelUtils.getContent(src, i, 8); //副单位
-                String barCode = ExcelUtils.getContent(src, i, 9); //基础条码
-                String manyBarCode = ExcelUtils.getContent(src, i, 10); //副条码
-                String ratio = ExcelUtils.getContent(src, i, 11); //比例
-                String purchaseDecimal = ExcelUtils.getContent(src, i, 12); //采购价
-                String commodityDecimal = ExcelUtils.getContent(src, i, 13); //零售价
-                String wholesaleDecimal = ExcelUtils.getContent(src, i, 14); //销售价
-                String lowDecimal = ExcelUtils.getContent(src, i, 15); //最低售价
-                String enabled = ExcelUtils.getContent(src, i, 16); //状态
-                String enableSerialNumber = ExcelUtils.getContent(src, i, 17); //序列号
-                String enableBatchNumber = ExcelUtils.getContent(src, i, 18); //批号
                 //状态格式错误
                 if(!"1".equals(enabled) && !"0".equals(enabled)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ENABLED_ERROR_CODE,
@@ -619,21 +647,12 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_CODE,
                             String.format(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_MSG, barCode));
                 }
-                //校验副条码长度为4到40位
-                if(StringUtil.isNotEmpty(manyBarCode) && !StringUtil.checkBarCodeLength(manyBarCode)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_CODE,
-                            String.format(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_MSG, manyBarCode));
-                }
                 //批量校验excel中有无重复条码
                 batchCheckExistBarCodeByParam(mList, barCode, manyBarCode);
                 JSONObject materialExObj = new JSONObject();
                 JSONObject basicObj = new JSONObject();
                 basicObj.put("barCode", barCode);
                 basicObj.put("commodityUnit", unit);
-                basicObj.put("purchaseDecimal", purchaseDecimal);
-                basicObj.put("commodityDecimal", commodityDecimal);
-                basicObj.put("wholesaleDecimal", wholesaleDecimal);
-                basicObj.put("lowDecimal", lowDecimal);
                 materialExObj.put("basic", basicObj);
                 if(StringUtil.isNotEmpty(manyUnit) && StringUtil.isNotEmpty(ratio)){ //多单位
                     //校验比例是否是正整数
@@ -651,29 +670,16 @@ public class MaterialService {
                     JSONObject otherObj = new JSONObject();
                     otherObj.put("barCode", manyBarCode);
                     otherObj.put("commodityUnit", manyUnit);
-                    otherObj.put("purchaseDecimal", parsePrice(purchaseDecimal,ratio));
-                    otherObj.put("commodityDecimal", parsePrice(commodityDecimal,ratio));
-                    otherObj.put("wholesaleDecimal", parsePrice(wholesaleDecimal,ratio));
-                    otherObj.put("lowDecimal", parsePrice(lowDecimal,ratio));
                     materialExObj.put("other", otherObj);
                 } else {
                     m.setUnit(unit);
                 }
                 m.setMaterialExObj(materialExObj);
                 m.setEnabled("1".equals(enabled));
-                if(StringUtil.isNotEmpty(enableSerialNumber) && "1".equals(enableSerialNumber)) {
-                    m.setEnableSerialNumber("1");
-                } else {
-                    m.setEnableSerialNumber("0");
-                }
                 if(StringUtil.isNotEmpty(enableBatchNumber) && "1".equals(enableBatchNumber)) {
                     m.setEnableBatchNumber("1");
                 } else {
                     m.setEnableBatchNumber("0");
-                }
-                if("1".equals(enableSerialNumber) && "1".equals(enableBatchNumber)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ENABLE_MUST_ONE_CODE,
-                            String.format(ExceptionConstants.MATERIAL_ENABLE_MUST_ONE_MSG, barCode));
                 }
                 m.setStockMap(getStockMapCache(src, depotCount, depotMap, i));
                 mList.add(m);
@@ -740,6 +746,51 @@ public class MaterialService {
                     }
                 }
             }
+            // 导入组装等级关系
+            List<MaterialVo4Unit> allMaterials = materialMapperEx.getMaterialListAll();
+            Map<String, String> barCodeToExtendId = allMaterials.stream()
+                    .collect(Collectors.toMap(e -> e.getmBarCode(), e -> String.valueOf(e.getMeId())));
+            for(MaterialWithInitStock m: mList) {
+                if (m.getOtherField14() != null && !"".equals(m.getOtherField14())) {
+                    Long mId = 0L;
+                    //判断该商品是否存在，如果不存在就新增，如果存在就更新
+                    String basicBarCode = getBasicBarCode(m);
+                    List<Material> materials = getMaterialListByParam(m.getName(), m.getInternalId(),
+                            m.getModel(), m.getColor(), m.getProject(), m.getUnit(), m.getUnitId(), basicBarCode);
+                    Map<String, String> compositeMap = parseCompositeString(m.getOtherField14());
+                    if (compositeMap == null) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_COMPOSITE_INVALID_CODE,
+                                String.format(ExceptionConstants.MATERIAL_COMPOSITE_INVALID_MSG, m.getOtherField14()));
+                    }
+                    for (String code : compositeMap.keySet()) {
+                        if (!barCodeToExtendId.containsKey(code)) {
+                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_COMPOSITE_NOT_EXIST_CODE,
+                                    String.format(ExceptionConstants.MATERIAL_COMPOSITE_NOT_EXIST_MSG, m.getOtherField14(), code));
+                        }
+                    }
+                    List<String> compositeList = compositeMap.entrySet().stream()
+                            .map(e -> "[" + barCodeToExtendId.get(e.getKey()) + "]*" + e.getValue())
+                            .collect(Collectors.toList());
+                    m.setOtherField14(String.join("+", compositeList));
+                    logger.info("compositeStr: " + m.getOtherField14());
+
+                    if (materials.size() == 0) {
+                        materialMapperEx.insertSelectiveEx(m);
+                    } else {
+                        mId = materials.get(0).getId();
+                        String materialJson = JSON.toJSONString(m);
+                        Material material = JSONObject.parseObject(materialJson, Material.class);
+                        material.setId(mId);
+                        materialMapper.updateByPrimaryKeySelective(material);
+                    }
+                }
+            }
+            List<MaterialVo4Unit> allMaterialsAfter = materialMapperEx.getMaterialListAll();
+            if (!isValidDependency(allMaterialsAfter)) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_CODE,
+                        ExceptionConstants.MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_MSG);
+            }
+
             //批量更新库存
             batchDeleteInitialStockByMaterialList(deleteStockMaterialIdList);
             if(insertInitialStockMaterialList.size()>0) {
@@ -757,14 +808,50 @@ public class MaterialService {
             info.code = 200;
             info.data = "导入成功";
         } catch (BusinessRunTimeException e) {
-            info.code = e.getCode();
-            info.data = e.getData().get("message");
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             info.code = 500;
             info.data = "导入失败";
         }
         return info;
+    }
+
+    private Map<String, String> parseCompositeString(String compositeStr) {
+        Map<String, String> result = new HashMap<>();
+        String[] split = compositeStr.split("\\+");
+        for (String str : split) {
+            if (!isValid(str)) {
+                return null;
+            }
+            String[] barCodeAndAmount = str.split("]");
+            result.put(barCodeAndAmount[0].substring(1), barCodeAndAmount[1].substring(1));
+        }
+        return result;
+    }
+
+    private boolean isValid(String str) {
+        if (!str.contains("*")) {
+            return false;
+        }
+        String[] split = str.split("\\*");
+        if (split.length != 2) {
+            return false;
+        }
+        try {
+            Integer.parseInt(split[1]);
+        } catch (Exception e) {
+            return false;
+        }
+        if (split[0].length() <= 2 || split[0].charAt(0) != '[' || split[0].charAt(split[0].length() - 1) != ']') {
+            return false;
+        }
+        try {
+            Long.parseLong(split[0].substring(1, split[0].length() - 1));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     private Map<String, Long> parseDepotToMap(List<Depot> depotList) {
@@ -787,7 +874,7 @@ public class MaterialService {
     private Map<Long, BigDecimal> getStockMapCache(Sheet src, int depotCount, Map<String, Long> depotMap, int i) throws Exception {
         Map<Long, BigDecimal> stockMap = new HashMap<>();
         for(int j = 1; j<= depotCount; j++) {
-            int col = 18+j;
+            int col = 28 + j;       // 仓库之前的列数
             if(col < src.getColumns()){
                 String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                 if(StringUtil.isNotEmpty(depotName)) {

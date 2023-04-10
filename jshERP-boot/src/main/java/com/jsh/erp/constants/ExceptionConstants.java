@@ -335,6 +335,12 @@ public class ExceptionConstants {
     //零件组成存在循环依赖
     public static final int MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_CODE = 80000022;
     public static final String MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_MSG = "抱歉，编辑后零件组成存在循环依赖（例如A由B组成，B由C组成，C又由A组成）";
+    //零件组成不合法
+    public static final int MATERIAL_COMPOSITE_INVALID_CODE = 80000023;
+    public static final String MATERIAL_COMPOSITE_INVALID_MSG = "存在不合规的零件组装关系：%s";
+    //零件组成不合法
+    public static final int MATERIAL_COMPOSITE_NOT_EXIST_CODE = 80000024;
+    public static final String MATERIAL_COMPOSITE_NOT_EXIST_MSG = "零件组装关系中有不存在的条码：%s, %s不存在";
 
     /**
      *  单据信息

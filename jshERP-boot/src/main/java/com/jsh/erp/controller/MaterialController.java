@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.MaterialInitialStockWithMaterial;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.entities.Unit;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
@@ -412,6 +413,11 @@ public class MaterialController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             res = materialService.importExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
         } catch (Exception e) {
             e.printStackTrace();
         }
