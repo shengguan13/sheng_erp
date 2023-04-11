@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
@@ -364,31 +365,57 @@ public class MaterialController {
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
                     StringUtil.toNull(project), StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled),
                     StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"条码", "名称", "内部零件号", "客户零件号", "颜色编码", "项目", "类别", "扩展信息", "单位", "净重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
+            String[] names = {"条码", "名称", "内部零件号", "客户零件号", "单位", "颜色编码", "净重量（kg）", "保质期（天）", "类别", "项目", "批号",
+                    "制造商", "工艺类别", "配置", "材料牌号", "材料类型/标准", "原材料厂家", "外协件厂家", "尺寸", "检具", "用量/车（件）", "料道（kg）",
+                    "表面处理纹理", "表面积（m²）", "组装等级关系", "状态", "备注"};
             String title = "商品信息";
+            Map<String, String> meIdToBarCodeMap = new HashMap<>();
+            if (dataList != null) {
+                for (MaterialVo4Unit m : dataList) {
+                    if (m.getMeId() != null) {
+                        meIdToBarCodeMap.put(String.valueOf(m.getMeId()), m.getmBarCode());
+                    }
+                }
+            }
             List<String[]> objects = new ArrayList<>();
             if (null != dataList) {
                 for (MaterialVo4Unit m : dataList) {
                     String[] objs = new String[100];
-                    objs[0] = m.getmBarCode();
-                    objs[1] = m.getName();
-                    objs[2] = m.getInternalId();
-                    objs[3] = m.getModel();
-                    objs[4] = m.getColor();
-                    objs[5] = m.getProject();
-                    objs[6] = m.getCategoryName();
-                    objs[7] = materialService.getMaterialOtherByParam(mpArr, m);
-                    objs[8] = m.getCommodityUnit();
-                    objs[9] = m.getWeight() == null? "" : m.getWeight().toString();
-                    objs[10] = m.getExpiryNum() == null? "" : m.getExpiryNum().toString();
-                    objs[11] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[12] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[13] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[14] = m.getLowDecimal() == null? "" : m.getLowDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[15] = m.getRemark();
-                    objs[16] = m.getEnabled() ? "启用" : "禁用";
-                    objs[17] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无";
-                    objs[18] = "1".equals(m.getEnableBatchNumber()) ? "有" : "无";
+                    objs[0] = m.getmBarCode(); //条码
+                    objs[1] = m.getName(); //名称
+                    objs[2] = m.getInternalId(); //内部零件号
+                    objs[3] = m.getModel(); //客户零件号
+                    objs[4] = m.getUnit(); //单位
+                    objs[5] = m.getColor(); //颜色编码
+                    objs[6] = m.getWeight() == null ? "" : String.valueOf(m.getWeight()); //净重量（kg）
+                    objs[7] = m.getExpiryNum() == null ? "" : String.valueOf(m.getExpiryNum()); //保质期（天）
+                    objs[8] = m.getCategoryName(); //类别
+                    objs[9] = m.getProject(); //项目
+                    objs[10] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无"; //批号
+                    objs[11] = m.getMfrs(); //制造商
+                    objs[12] = m.getOtherField1(); //工艺类别
+                    objs[13] = m.getOtherField2(); //配置
+                    objs[14] = m.getOtherField4(); //材料牌号
+                    objs[15] = m.getOtherField5(); //材料类型/标准
+                    objs[16] = m.getOtherField6(); //原材料厂家
+                    objs[17] = m.getOtherField7(); //外协件厂家
+                    objs[18] = m.getOtherField8(); //尺寸
+                    objs[19] = m.getOtherField9(); //检具
+                    objs[20] = m.getOtherField10(); //用量/车（件）
+                    objs[21] = m.getOtherField11(); //料道（kg）
+                    objs[22] = m.getOtherField12(); //表面处理纹理
+                    objs[23] = m.getOtherField13(); //表面积（m²）
+                    if (m.getOtherField14() != null && !"".equals(m.getOtherField14())) {
+                        Map<String, String> meIdToAmountMap = parseCompositeString(m.getOtherField14());
+                        List<String> compositeList = meIdToAmountMap.entrySet().stream()
+                                .map(e -> "[" + meIdToBarCodeMap.get(e.getKey()) + "]*" + e.getValue())
+                                .collect(Collectors.toList());
+                        objs[24] = String.join("+", compositeList); //组装等级关系
+                    } else {
+                        objs[24] = "";
+                    }
+                    objs[25] = m.getEnabled() ? "启用" : "禁用"; //状态
+                    objs[26] = m.getRemark(); //备注
                     objects.add(objs);
                 }
             }
@@ -397,6 +424,16 @@ public class MaterialController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Map<String, String> parseCompositeString(String compositeStr) {
+        Map<String, String> result = new HashMap<>();
+        String[] split = compositeStr.split("\\+");
+        for (String str : split) {
+            String[] meIdAndAmount = str.split("]");
+            result.put(meIdAndAmount[0].substring(1), meIdAndAmount[1].substring(1));
+        }
+        return result;
     }
 
     /**

@@ -562,8 +562,8 @@ public class MaterialService {
                 String manyUnit = ExcelUtils.getContent(src, i, 6); //副单位
                 String ratio = ExcelUtils.getContent(src, i, 7); //比例
                 String color = ExcelUtils.getContent(src, i, 8); //颜色编码
-                String weight = ExcelUtils.getContent(src, i, 9); //净重量(kg)
-                String expiryNum = ExcelUtils.getContent(src, i, 10); //保质期(天)
+                String weight = ExcelUtils.getContent(src, i, 9); //净重量（kg）
+                String expiryNum = ExcelUtils.getContent(src, i, 10); //保质期（天）
                 String categoryName = ExcelUtils.getContent(src, i, 11); //类别
                 String project = ExcelUtils.getContent(src, i, 12); //项目
                 String enableBatchNumber = ExcelUtils.getContent(src, i, 13); //批号
@@ -583,6 +583,7 @@ public class MaterialService {
                 String other13 = ExcelUtils.getContent(src, i, 26); //表面积（m²）
                 String other14 = ExcelUtils.getContent(src, i, 27); //组装等级关系
                 String enabled = ExcelUtils.getContent(src, i, 28); //状态
+                String remark = ExcelUtils.getContent(src, i, 29); //备注
 
                 //名称为空
                 if(StringUtil.isEmpty(name)) {
@@ -616,6 +617,7 @@ public class MaterialService {
                 m.setOtherField12(other12);
                 m.setOtherField13(other13);
                 m.setOtherField14(other14);
+                m.setRemark(remark);
 
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
                 if(null!=categoryId){
@@ -877,7 +879,7 @@ public class MaterialService {
     private Map<Long, BigDecimal> getStockMapCache(Sheet src, int depotCount, Map<String, Long> depotMap, int i) throws Exception {
         Map<Long, BigDecimal> stockMap = new HashMap<>();
         for(int j = 1; j<= depotCount; j++) {
-            int col = 28 + j;       // 仓库之前的列数
+            int col = 29 + j;       // 仓库之前的列数
             if(col < src.getColumns()){
                 String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                 if(StringUtil.isNotEmpty(depotName)) {
