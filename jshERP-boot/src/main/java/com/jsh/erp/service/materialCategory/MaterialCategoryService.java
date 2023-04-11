@@ -130,6 +130,7 @@ public class MaterialCategoryService {
         MaterialCategory materialCategory = JSONObject.parseObject(obj.toJSONString(), MaterialCategory.class);
         materialCategory.setCreateTime(new Date());
         materialCategory.setUpdateTime(new Date());
+        checkMaterialCategorySerialNo(materialCategory);
         int result=0;
         try{
             result=materialCategoryMapper.insertSelective(materialCategory);
@@ -145,6 +146,7 @@ public class MaterialCategoryService {
     public int updateMaterialCategory(JSONObject obj, HttpServletRequest request) throws Exception{
         MaterialCategory materialCategory = JSONObject.parseObject(obj.toJSONString(), MaterialCategory.class);
         materialCategory.setUpdateTime(new Date());
+        checkMaterialCategorySerialNo(materialCategory);
         int result=0;
         try{
             result=materialCategoryMapper.updateByPrimaryKeySelective(materialCategory);
@@ -332,25 +334,8 @@ public class MaterialCategoryService {
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
-        if(mList==null||mList.size()<1){
-            //未查询到对应数据，编号可用
-            return;
-        }
-        if(mList.size()>1){
-            //查询到的数据条数大于1，编号已存在
-            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE,
-                    ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG);
-        }
-        if(mc.getId()==null){
-            //新增时，编号已存在
-            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE,
-                    ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG);
-        }
-        /**
-         * 包装类型用equals来比较
-         * */
-        if(mc.getId().equals(mList.get(0).getId())){
-            //修改时，相同编号，id不同
+        if(mList!=null && mList.size()>=1){
+            //查询到的数据条数大于等于1，编号已存在
             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE,
                     ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG);
         }
