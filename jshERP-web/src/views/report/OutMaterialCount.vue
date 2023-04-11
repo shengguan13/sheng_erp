@@ -151,14 +151,13 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 200, fixed: 'left'},
+          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'mName', width: 200, fixed: 'left'},
           {title: '内部零件号', dataIndex: 'internalId'},
           {title: '客户零件号', dataIndex: 'model'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'materialUnit'},
-          {title: '出库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum},
-          {title: '出库金额', dataIndex: 'priceSum', sorter: (a, b) => a.priceSum - b.priceSum}
+          {title: '出库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum}
         ],
         url: {
           list: "/depotHead/findInOutMaterialCount",

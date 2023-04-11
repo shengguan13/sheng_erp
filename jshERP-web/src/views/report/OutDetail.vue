@@ -175,16 +175,12 @@
             title: '单据编号', dataIndex: 'number', width: 150, fixed: 'left',
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          {title: '条码', dataIndex: 'barCode', width: 150, fixed: 'left'},
+          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'mname', width: 150, fixed: 'left'},
           {title: '内部零件号', dataIndex: 'internalId'},
           {title: '客户零件号', dataIndex: 'model'},
           {title: '单位', dataIndex: 'mUnit'},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber},
-          {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice},
-          {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice},
-          {title: '税率(%)', dataIndex: 'taxRate'},
-          {title: '税额', dataIndex: 'taxMoney', sorter: (a, b) => a.taxMoney - b.taxMoney},
           {title: '往来单位', dataIndex: 'sname'},
           {title: '仓库', dataIndex: 'dname'},
           {title: '出库日期', dataIndex: 'operTime'},
@@ -201,7 +197,7 @@
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
-      this.scroll.x = 2300
+      this.scroll.x = 1400
     },
     methods: {
       moment,

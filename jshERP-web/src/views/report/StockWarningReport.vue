@@ -114,7 +114,7 @@
             }
           },
           {title: '仓库', dataIndex: 'depotName', width: 150, fixed: 'left'},
-          {title: '条码', dataIndex: 'barCode', width: 150, fixed: 'left'},
+          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'mname', width: 150, fixed: 'left'},
           {title: '内部零件号', dataIndex: 'mInternalId'},
           {title: '客户零件号', dataIndex: 'mmodel'},

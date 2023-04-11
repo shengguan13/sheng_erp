@@ -135,20 +135,18 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 150, fixed: 'left'},
+          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
           {title: '内部零件号', dataIndex: 'materialInternalId'},
           {title: '客户零件号', dataIndex: 'materialModel'},
           {title: '扩展信息', dataIndex: 'materialOther'},
           {title: '单位', dataIndex: 'unitName'},
-          {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice},
           {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum},
           {title: '入库数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum},
           {title: '出库数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum},
           {title: '本月结存数量', dataIndex: 'thisSum', sorter: (a, b) => a.thisSum - b.thisSum,
             scopedSlots: { customRender: 'customRenderStock' }
-          },
-          {title: '结存金额', dataIndex: 'thisAllPrice', sorter: (a, b) => a.thisAllPrice - b.thisAllPrice}
+          }
         ],
         url: {
           list: "/depotItem/findByAll",
@@ -162,7 +160,7 @@
       this.getTotalCountMoney()
     },
     mounted () {
-      this.scroll.x = 2100
+      this.scroll.x = 1400
     },
     methods: {
       moment,

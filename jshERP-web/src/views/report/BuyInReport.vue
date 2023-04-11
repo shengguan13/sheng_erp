@@ -115,8 +115,8 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 160, fixed: 'left'},
-          {title: '名称', dataIndex: 'materialName', width: 160, fixed: 'left'},
+          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
+          {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
           {title: '内部零件号', dataIndex: 'materialInternalId'},
           {title: '客户零件号', dataIndex: 'materialModel'},
           {title: '扩展信息', dataIndex: 'materialOther', ellipsis:true},
@@ -136,7 +136,7 @@
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
-      this.scroll.x = 2100
+      this.scroll.x = 1400
     },
     methods: {
       moment,

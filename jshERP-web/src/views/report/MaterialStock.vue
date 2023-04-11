@@ -154,7 +154,7 @@
           {title: '库存流水', dataIndex: 'action', align:"center", width: 100, fixed: 'left',
             scopedSlots: { customRender: 'action' }
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 150, fixed: 'left'},
+          {title: '条码', dataIndex: 'mBarCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'name', width: 150, fixed: 'left'},
           {title: '内部零件号', dataIndex: 'internalId'},
           {title: '客户零件号', dataIndex: 'model'},
@@ -176,7 +176,7 @@
       this.loadTreeData()
     },
     mounted () {
-      this.scroll.x = 2100
+      this.scroll.x = 1400
     },
     methods: {
       moment,
