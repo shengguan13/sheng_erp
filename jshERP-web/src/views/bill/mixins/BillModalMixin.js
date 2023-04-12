@@ -405,7 +405,9 @@ export const BillModalMixin = {
                     }
                   }
                   this.materialTable.dataSource = mArr
-                  target.statisticsColumns.allPrice = allPriceTotal
+                  if (!Number.isNaN(allPriceTotal)) {
+                    target.statisticsColumns.allPrice = allPriceTotal
+                  }
                   that.autoChangePrice(target)
                 })
               } else {
@@ -484,8 +486,6 @@ export const BillModalMixin = {
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
         operNumber: 1,
-        unitPrice: mInfo.billPrice,
-        allPrice: mInfo.billPrice,
         taxRate: 0,
         taxMoney: 0,
         taxLastMoney: mInfo.billPrice
@@ -648,11 +648,6 @@ export const BillModalMixin = {
                   item.unit = mInfo.commodityUnit
                   item.sku = mInfo.sku
                   item.operNumber = 1
-                  item.unitPrice = mInfo.billPrice
-                  item.allPrice = mInfo.billPrice
-                  item.taxRate = 0
-                  item.taxMoney = 0
-                  item.taxLastMoney = mInfo.billPrice
                   newDetailArr.push(item)
                 } else {
                   this.$message.warning('抱歉，此条码不存在商品信息！');

@@ -98,15 +98,6 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="总金额" data-step="7" data-title="总金额"
-                         data-intro="单据明细中商品的总金额">
-              <a-input placeholder="请输入总金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24"></a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="8" data-title="结算账户"
                          data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
               <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId' ]"
@@ -126,6 +117,13 @@
               </a-tooltip>
             </a-form-item>
           </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="总金额" data-step="7" data-title="总金额"
+                         data-intro="单据明细中商品的总金额">
+              <a-input placeholder="请输入总金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24"></a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支付订金" data-step="9" data-title="支付订金"
                          data-intro="填写订金之后，在采购入库单会自动计算扣除订金">
@@ -231,7 +229,9 @@
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true },
+            { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input},
             { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
           ]
