@@ -100,7 +100,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="8" data-title="结算账户"
                          data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
-              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId' ]"
+              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                         :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -123,7 +123,6 @@
               <a-input placeholder="请输入总金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24"></a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支付订金" data-step="9" data-title="支付订金"
                          data-intro="填写订金之后，在采购入库单会自动计算扣除订金">
@@ -247,7 +246,12 @@
             rules: [
               { required: true, message: '请选择供应商!' }
             ]
-          }
+          },
+          accountId:{
+            rules: [
+              { required: true, message: '请选择结算账户！' }
+            ]
+          },
         },
         url: {
           add: '/depotHead/addDepotHeadAndDetail',

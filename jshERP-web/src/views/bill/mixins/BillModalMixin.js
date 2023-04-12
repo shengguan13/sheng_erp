@@ -77,15 +77,6 @@ export const BillModalMixin = {
           'discountLastMoney': 0, 'otherMoney': 0, 'changeAmount': 0, 'debt': 0})
       })
       this.$nextTick(() => {
-        getAccount({}).then((res)=>{
-          if(res && res.code === 200) {
-            for (const item of res.data.accountList) {
-              if(item.isDefault){
-                this.form.setFieldsValue({'accountId': item.id})
-              }
-            }
-          }
-        })
       })
       this.accountIdList = []
       this.accountMoneyList = []

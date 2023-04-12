@@ -243,22 +243,6 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
-          { title: '金额合计', dataIndex: 'totalPrice',width:80},
-          { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:80,
-            customRender:function (text,record,index) {
-              return record.discountLastMoney;
-            }
-          },
-          { title: '待收金额', dataIndex: 'needOutMoney',width:80,
-            customRender:function (text,record,index) {
-              let needOutMoney = record.discountLastMoney + record.otherMoney - record.deposit
-              return needOutMoney? needOutMoney.toFixed(2):''
-            }
-          },
-          { title: '收款', dataIndex: 'changeAmount',width:60},
-          { title: '欠款', dataIndex: 'debt',width:60,
-            scopedSlots: { customRender: 'customRenderDebt' }
-          },
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
