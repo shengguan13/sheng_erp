@@ -73,8 +73,8 @@ export const BillModalMixin = {
         }
       })
       this.$nextTick(() => {
-        this.form.setFieldsValue({'operTime':getNowFormatDateTime(), 'discount': 0,
-          'discountMoney': 0, 'discountLastMoney': 0, 'otherMoney': 0, 'changeAmount': 0, 'debt': 0})
+        this.form.setFieldsValue({'operTime':getNowFormatDateTime(),
+          'discountLastMoney': 0, 'otherMoney': 0, 'changeAmount': 0, 'debt': 0})
       })
       this.$nextTick(() => {
         getAccount({}).then((res)=>{
@@ -601,55 +601,16 @@ export const BillModalMixin = {
     //改变优惠、本次付款、欠款的值
     autoChangePrice(target) {
       let allTaxLastMoney = target.statisticsColumns.taxLastMoney-0
-      let discount = this.form.getFieldValue('discount')-0
       let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
       let deposit = this.form.getFieldValue('deposit')
-      let discountMoney = (discount*0.01*allTaxLastMoney).toFixed(2)-0
-      let discountLastMoney = (allTaxLastMoney-discountMoney).toFixed(2)-0
+      let discountLastMoney = allTaxLastMoney-0
       let changeAmountNew = (discountLastMoney + otherMoney).toFixed(2)-0
       if(deposit) {
         changeAmountNew = (changeAmountNew - deposit).toFixed(2)-0
       }
       this.$nextTick(() => {
         changeAmountNew = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:changeAmountNew
-        this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
-          'changeAmount':changeAmountNew,'debt':0})
-      });
-    },
-    //改变优惠率
-    onChangeDiscount(e) {
-      const value = e.target.value-0
-      let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
-      let deposit = this.form.getFieldValue('deposit')
-      let allTaxLastMoney = this.$refs.materialDataTable.statisticsColumns.taxLastMoney-0
-      let discountMoneyNew = (allTaxLastMoney*value*0.01).toFixed(2)-0
-      let discountLastMoneyNew = (allTaxLastMoney - discountMoneyNew).toFixed(2)-0
-      let changeAmountNew = (discountLastMoneyNew + otherMoney).toFixed(2)-0
-      if(deposit) {
-        changeAmountNew = (changeAmountNew - deposit).toFixed(2)-0
-      }
-      this.$nextTick(() => {
-        changeAmountNew = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:changeAmountNew
-        this.form.setFieldsValue({'discountMoney':discountMoneyNew,'discountLastMoney':discountLastMoneyNew,
-          'changeAmount':changeAmountNew,'debt':0})
-      });
-    },
-    //改变付款优惠
-    onChangeDiscountMoney(e) {
-      const value = e.target.value-0
-      let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
-      let deposit = this.form.getFieldValue('deposit')
-      let allTaxLastMoney = this.$refs.materialDataTable.statisticsColumns.taxLastMoney-0
-      let discountNew = (value/allTaxLastMoney*100).toFixed(2)-0
-      let discountLastMoneyNew = (allTaxLastMoney - value).toFixed(2)-0
-      let changeAmountNew = (discountLastMoneyNew + otherMoney).toFixed(2)-0
-      if(deposit) {
-        changeAmountNew = (changeAmountNew - deposit).toFixed(2)-0
-      }
-      this.$nextTick(() => {
-        changeAmountNew = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:changeAmountNew
-        this.form.setFieldsValue({'discount':discountNew,'discountLastMoney':discountLastMoneyNew,
-          'changeAmount':changeAmountNew,'debt':0})
+        this.form.setFieldsValue({'discountLastMoney':discountLastMoney,'changeAmount':changeAmountNew,'debt':0})
       });
     },
     //其它费用
@@ -776,11 +737,9 @@ export const BillModalMixin = {
                 allLastMoney = allLastMoney + (newDetail.allPrice-0)
                 allTaxLastMoney = allTaxLastMoney + (newDetail.taxLastMoney-0)
               }
-              let discount = this.form.getFieldValue('discount')-0
               let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
               let deposit = this.form.getFieldValue('deposit')
-              let discountMoney = (discount*0.01*allTaxLastMoney).toFixed(2)-0
-              let discountLastMoney = (allTaxLastMoney-discountMoney).toFixed(2)-0
+              let discountLastMoney = allTaxLastMoney-0
               let changeAmountNew = (discountLastMoney + otherMoney).toFixed(2)-0
               if(deposit) {
                 changeAmountNew = (changeAmountNew - deposit).toFixed(2)-0
@@ -792,8 +751,7 @@ export const BillModalMixin = {
               } else {
                 this.$nextTick(() => {
                   changeAmountNew = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:changeAmountNew
-                  this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
-                    'changeAmount':changeAmountNew,'debt':0})
+                  this.form.setFieldsValue({'discountLastMoney':discountLastMoney,'changeAmount':changeAmountNew,'debt':0})
                 });
               }
               //置空扫码的内容

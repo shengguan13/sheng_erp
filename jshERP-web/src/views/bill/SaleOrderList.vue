@@ -207,7 +207,7 @@
           { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:80,
             customRender:function (text,record,index) {
               if(record.discountLastMoney) {
-                return (record.discountMoney + record.discountLastMoney).toFixed(2);
+                return record.discountLastMoney;
               } else {
                 return record.totalPrice;
               }

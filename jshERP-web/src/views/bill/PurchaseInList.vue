@@ -246,7 +246,7 @@
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
           { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:80,
             customRender:function (text,record,index) {
-              return (record.discountMoney + record.discountLastMoney).toFixed(2);
+              return record.discountLastMoney;
             }
           },
           { title: '待付金额', dataIndex: 'needInMoney',width:80,

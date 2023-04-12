@@ -97,16 +97,6 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
-              <a-input style="width:185px;" placeholder="请输入优惠率" v-decorator.trim="[ 'discount' ]" suffix="%" @change="onChangeDiscount"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退款优惠">
-              <a-input placeholder="请输入付款优惠" v-decorator.trim="[ 'discountMoney' ]" @change="onChangeDiscountMoney"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠后金额">
               <a-input placeholder="请输入优惠后金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
             </a-form-item>
@@ -325,7 +315,7 @@
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
-              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','debt','salesMan'))
+              'discountLastMoney','otherMoney','accountId','changeAmount','debt','salesMan'))
           });
           // 加载子表数据
           let params = {
@@ -411,17 +401,11 @@
           this.materialTable.dataSource = listEx
           ///给优惠后金额重新赋值
           allTaxLastMoney = allTaxLastMoney?allTaxLastMoney:0
-          let discount = 0
-          if(allTaxLastMoney!==0) {
-            discount = (discountMoney/allTaxLastMoney*100).toFixed(2)-0
-          }
-          let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
+          let discountLastMoney = allTaxLastMoney-0
           this.$nextTick(() => {
             this.form.setFieldsValue({
               'organId': organId,
               'linkNumber': linkNumber,
-              'discount': discount,
-              'discountMoney': discountMoney,
               'discountLastMoney': discountLastMoney,
               'changeAmount': discountLastMoney,
               'remark': remark
