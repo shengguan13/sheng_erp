@@ -1195,7 +1195,7 @@ public class DepotHeadService {
             if(null!=list && list.size()>0) {
                 depotHead = list.get(0);
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return depotHead;
@@ -1304,14 +1304,8 @@ public class DepotHeadService {
                 //通过批量查询去构造map
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
                 for (DepotHeadVo4List dh : list) {
-                    if(dh.getChangeAmount() != null) {
-                        dh.setChangeAmount(dh.getChangeAmount().abs());
-                    }
                     if(dh.getTotalPrice() != null) {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
-                    }
-                    if(dh.getDeposit() == null) {
-                        dh.setDeposit(BigDecimal.ZERO);
                     }
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
@@ -1322,22 +1316,27 @@ public class DepotHeadService {
                     if(dh.getPlanFinishTime() != null) {
                         dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
-                    BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
-                    BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
-                    BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
-                    BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount().abs():BigDecimal.ZERO;
-                    //本单欠款(如果退货则为负数)
-                    dh.setNeedDebt(discountLastMoney.add(otherMoney).subtract(deposit.add(changeAmount)));
-                    if(BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(dh.getSubType()) || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(dh.getSubType())) {
-                        dh.setNeedDebt(BigDecimal.ZERO.subtract(dh.getNeedDebt()));
+
+                    if(dh.getChangeAmount() == null) {                // 已申请付款 、 已申请收款
+                        dh.setChangeAmount(BigDecimal.ZERO);
                     }
-                    BigDecimal needDebt = dh.getNeedDebt()!=null?dh.getNeedDebt():BigDecimal.ZERO;
-                    BigDecimal finishDebt = accountItemService.getEachAmountByBillId(dh.getId());
-                    finishDebt = finishDebt!=null?finishDebt:BigDecimal.ZERO;
-                    //已收欠款
-                    dh.setFinishDebt(finishDebt);
-                    //待收欠款
-                    dh.setDebt(needDebt.subtract(finishDebt));
+                    if(dh.getBackAmount() == null) {                  // 已支付付款 、 已收到收款
+                        dh.setBackAmount(BigDecimal.ZERO);
+                    }
+
+                    if(dh.getDiscount() == null) {             // 已申请退款
+                        dh.setDiscount(BigDecimal.ZERO);
+                    }
+                    if(dh.getDiscountMoney() == null) {        // 已收到退款 、 已支付退款
+                        dh.setDiscountMoney(BigDecimal.ZERO);
+                    }
+
+                    if(dh.getDeposit() == null) {           // 已申请定金
+                        dh.setDeposit(BigDecimal.ZERO);
+                    }
+                    if(dh.getOtherMoney() == null) {        // 已支付定金 、 已收到定金
+                        dh.setOtherMoney(BigDecimal.ZERO);
+                    }
                     //商品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));
@@ -1345,7 +1344,7 @@ public class DepotHeadService {
                     resList.add(dh);
                 }
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return resList;

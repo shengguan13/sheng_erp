@@ -102,16 +102,6 @@
               <a-input placeholder="请输入合计付款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'discountMoney', validatorRules.discountMoney ]" @change="onChangeDiscountMoney" />
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际付款">
-              <a-input placeholder="请输入实际付款" v-decorator.trim="[ 'changeAmount' ]" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
@@ -136,12 +126,12 @@
   import PersonModal from '../../system/modules/PersonModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
-  import { FinancialModalMixin } from '../../financial/mixins/FinancialModalMixin'
+  import { PaymentApplicationModalMixin } from '../mixins/PaymentApplicationModalMixin'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "PaymentApplicationModal",
-    mixins: [JEditableTableMixin, FinancialModalMixin],
+    mixins: [JEditableTableMixin, PaymentApplicationModalMixin],
     components: {
       PurchaseAndSaleList,
       VendorModal,
@@ -180,9 +170,7 @@
           dataSource: [],
           columns: [
             { title: '采购单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
-            { title: '应付欠款',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
-            { title: '已付欠款', key: 'finishDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
-            { title: '本次付款',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
+            { title: '申请金额',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注',key: 'remark', width: '20%', type: FormTypes.input, placeholder: '请输入${title}'}
@@ -250,10 +238,9 @@
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
         for(let item of detailArr){
-          totalPrice += item.eachAmount-0
+          totalPrice += item.needDebt-0
         }
-        billMain.totalPrice = 0-totalPrice
-        billMain.changeAmount = 0-billMain.changeAmount
+        billMain.totalPrice = totalPrice-0
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         }

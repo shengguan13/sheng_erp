@@ -126,7 +126,13 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
-          { title: '操作员', dataIndex: 'userName',width:70, ellipsis:true}
+          { title: '操作员', dataIndex: 'userName',width:70, ellipsis:true},
+          { title: '已申请定金', dataIndex: 'changeAmount',width:70, ellipsis:true},
+          { title: '已支付定金', dataIndex: 'backAmount',width:70, ellipsis:true},
+          { title: '已申请付款', dataIndex: 'discount',width:70, ellipsis:true},
+          { title: '已付款', dataIndex: 'discountMoney',width:70, ellipsis:true},
+          { title: '已提交退款', dataIndex: 'deposit',width:70, ellipsis:true},
+          { title: '已退款', dataIndex: 'otherMoney',width:70, ellipsis:true}
         ],
         url: {
           list: "/depotHead/purchaseAndSaleList"
