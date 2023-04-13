@@ -145,24 +145,24 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <money-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></money-out-modal>
+        <payment-application-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></payment-application-modal>
         <financial-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></financial-detail>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
-  import MoneyOutModal from './modules/MoneyOutModal'
-  import FinancialDetail from './dialog/FinancialDetail'
+  import PaymentApplicationModal from './modules/PaymentApplicationModal'
+  import FinancialDetail from '../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { FinancialListMixin } from './mixins/FinancialListMixin'
+  import { FinancialListMixin } from '../financial/mixins/FinancialListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "MoneyOutList",
+    name: "PaymentApplicationList",
     mixins:[JeecgListMixin, FinancialListMixin],
     components: {
-      MoneyOutModal,
+      PaymentApplicationModal,
       FinancialDetail,
       JDate
     },
@@ -179,7 +179,7 @@
         queryParam: {
           billNo: "",
           searchMaterial: "",
-          type: "付款",
+          type: "全部采购",
           organId: "",
           creator: "",
           handsPersonId: "",

@@ -97,8 +97,45 @@ public class AccountHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+            List<AccountHeadVo4ListEx> list;
+            if ("全部采购".equals(type)) {
+                List<AccountHeadVo4ListEx> list1 = accountHeadMapperEx.selectByConditionAccountHead("采购定金", creatorArray, billNo,
+                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+                List<AccountHeadVo4ListEx> list2 = accountHeadMapperEx.selectByConditionAccountHead("采购付款", creatorArray, billNo,
+                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+                List<AccountHeadVo4ListEx> list3 = accountHeadMapperEx.selectByConditionAccountHead("采购退款", creatorArray, billNo,
+                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+                list = new ArrayList<>();
+                if (list1 != null) {
+                    list.addAll(list1);
+                }
+                if (list2 != null) {
+                    list.addAll(list2);
+                }
+                if (list3 != null) {
+                    list.addAll(list3);
+                }
+            } else if ("全部销售".equals(type)) {
+                List<AccountHeadVo4ListEx> list1 = accountHeadMapperEx.selectByConditionAccountHead("销售定金", creatorArray, billNo,
+                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+                List<AccountHeadVo4ListEx> list2 = accountHeadMapperEx.selectByConditionAccountHead("销售付款", creatorArray, billNo,
+                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+                List<AccountHeadVo4ListEx> list3 = accountHeadMapperEx.selectByConditionAccountHead("销售退款", creatorArray, billNo,
+                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+                list = new ArrayList<>();
+                if (list1 != null) {
+                    list.addAll(list1);
+                }
+                if (list2 != null) {
+                    list.addAll(list2);
+                }
+                if (list3 != null) {
+                    list.addAll(list3);
+                }
+            } else {
+                list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
+                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+            }
             if (null != list) {
                 for (AccountHeadVo4ListEx ah : list) {
                     if(ah.getChangeAmount() != null) {

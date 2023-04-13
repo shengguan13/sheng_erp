@@ -242,6 +242,32 @@ export const FinancialModalMixin = {
         this.requestSubTableDataEx(selectBillRows, this.accountTable);
       }
     },
+    //选择需要申请付款的单据
+    purchaseAndSaleListOk(selectBillRows) {
+      if(selectBillRows && selectBillRows.length>0) {
+        this.requestSubTableDataExPaymentApplication(selectBillRows, this.accountTable);
+      }
+    },
+    /** 查询某个tab的数据,给明细里面的金额赋值 */
+    requestSubTableDataExPaymentApplication(selectBillRows, tab, success) {
+      tab.loading = true
+      let listEx = []
+      let changeAmount = 0
+      for(let i=0; i<selectBillRows.length; i++){
+        let info = selectBillRows[i]
+        info.billNumber = info.number
+        info.needDebt = info.needDebt
+        info.eachAmount = info.debt
+        changeAmount += info.eachAmount-0
+        listEx.push(info)
+      }
+      tab.dataSource = listEx
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'totalPrice':changeAmount, 'changeAmount':changeAmount})
+      });
+      typeof success === 'function' ? success(res) : ''
+      tab.loading = false
+    },
     /** 查询某个tab的数据,给明细里面的金额赋值 */
     requestSubTableDataEx(selectBillRows, tab, success) {
       tab.loading = true

@@ -223,6 +223,28 @@ public interface DepotHeadMapperEx {
             @Param("materialParam") String materialParam,
             @Param("depotArray") String[] depotArray);
 
+    List<DepotHeadVo4List> purchaseAndSaleList(
+            @Param("organId") Long organId,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("status") String status,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("materialParam") String materialParam,
+            @Param("depotArray") String[] depotArray,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    int purchaseAndSaleListCount(
+            @Param("organId") Long organId,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("status") String status,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("materialParam") String materialParam,
+            @Param("depotArray") String[] depotArray);
+
     List<FinishDepositVo> getFinishDepositByNumberList(
             @Param("numberList") List<String> numberList);
 

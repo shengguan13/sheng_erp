@@ -21,12 +21,6 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
               <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="onChangeOrgan">
-                <div slot="dropdownRender" slot-scope="menu">
-                  <v-nodes :vnodes="menu" />
-                  <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
-                       @mousedown="e => e.preventDefault()" @click="addSupplier"><a-icon type="plus" /> 新增供应商</div>
-                </div>
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -34,18 +28,12 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-              <a-select placeholder="选择财务人员" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="款项种类">
+              <a-select placeholder="选择款项种类" v-decorator="[ 'type', validatorRules.type ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <div slot="dropdownRender" slot-scope="menu">
-                  <v-nodes :vnodes="menu" />
-                  <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
-                       @mousedown="e => e.preventDefault()" @click="addPerson"><a-icon type="plus" /> 新增经手人</div>
-                </div>
-                <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
-                  {{ item.name }}
-                </a-select-option>
+                <a-select-option value="采购定金">付定金</a-select-option>
+                <a-select-option value="采购付款">付款</a-select-option>
+                <a-select-option value="采购退款">退款</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -65,8 +53,6 @@
             <!-- 操作按钮 -->
             <div class="action-button">
               <a-button type="primary" icon="plus" @click="handleClickAdd">选择单据</a-button>
-              <span class="gap"></span>
-              <a-button type="primary" icon="plus" @click="selectBeginNeed('供应商')">选择期初</a-button>
               <span class="gap"></span>
               <a-button icon="minus" @click="handleClear">清空</a-button>
             </div>
@@ -136,7 +122,7 @@
         </a-row>
       </a-form>
     </a-spin>
-    <debt-bill-list ref="debtBillList" @ok="debtBillListOk"></debt-bill-list>
+    <purchase-and-sale-list ref="purchaseAndSaleList" @ok="purchaseAndSaleListOk"></purchase-and-sale-list>
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
@@ -144,20 +130,20 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import DebtBillList from '../dialog/DebtBillList'
+  import PurchaseAndSaleList from '../dialog/PurchaseAndSaleList'
   import VendorModal from '../../system/modules/VendorModal'
   import AccountModal from '../../system/modules/AccountModal'
   import PersonModal from '../../system/modules/PersonModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
-  import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
+  import { FinancialModalMixin } from '../../financial/mixins/FinancialModalMixin'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "PaymentApplicationModal",
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
-      DebtBillList,
+      PurchaseAndSaleList,
       VendorModal,
       AccountModal,
       PersonModal,
@@ -207,8 +193,8 @@
           organId:{
             rules: [{ required: true, message: '请选择供应商!' }]
           },
-          handsPersonId:{
-            rules: [{ required: true, message: '请选择财务人员!' }]
+          type:{
+            rules: [{ required: true, message: '请选择款项种类!' }]
           },
           billTime:{
             rules: [{ required: true, message: '请选择单据日期!' }]
@@ -242,7 +228,7 @@
         } else {
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'type', 'billTime', 'billNo', 'remark',
                   'accountId', 'totalPrice', 'discountMoney', 'changeAmount'))
           });
           this.fileList = this.model.fileName
@@ -263,7 +249,6 @@
         let totalPrice = 0
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '付款'
         for(let item of detailArr){
           totalPrice += item.eachAmount-0
         }
@@ -284,8 +269,8 @@
       handleClickAdd() {
         let organId = this.form.getFieldValue('organId')
         if(organId){
-          this.$refs.debtBillList.show(organId, '入库', '采购', '供应商', "")
-          this.$refs.debtBillList.title = "选择采购欠款单据"
+          this.$refs.purchaseAndSaleList.show(organId, '其它', '采购订单', '供应商', "")
+          this.$refs.purchaseAndSaleList.title = "选择采购订单"
         } else {
           this.$message.warning('请选择供应商！');
         }
