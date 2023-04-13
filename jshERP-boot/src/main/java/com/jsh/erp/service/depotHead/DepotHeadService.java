@@ -909,7 +909,7 @@ public class DepotHeadService {
             String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
             BigDecimal sum = StringUtil.getArrSum(accountMoneyList.split(","));
             BigDecimal manyAccountSum = sum.abs();
-            if(manyAccountSum.compareTo(depotHead.getChangeAmount().abs())!=0) {
+            if(manyAccountSum.compareTo(depotHead.getTotalPrice().abs())!=0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
             }

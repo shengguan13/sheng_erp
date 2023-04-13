@@ -234,11 +234,7 @@ export const BillModalMixin = {
     manyAccountModalFormOk(idList, moneyList, allPrice) {
       this.accountIdList = idList
       this.accountMoneyList = moneyList
-      let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0
-      let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
-      let debt = (discountLastMoney + otherMoney - allPrice).toFixed(2)
       this.$nextTick(() => {
-        this.form.setFieldsValue({'changeAmount':allPrice, 'debt':debt})
       });
     },
     addSupplier() {
@@ -385,7 +381,6 @@ export const BillModalMixin = {
                     mArr.push(mObj)
                   }
                   let allPriceTotal = 0
-                  let taxLastMoneyTotal = 0
                   for (let j = 0; j < mArr.length; j++) {
                     allPriceTotal += mArr[j].allPrice-0
                     //组合和拆分单据给商品类型进行重新赋值
@@ -479,7 +474,7 @@ export const BillModalMixin = {
         operNumber: 1,
         taxRate: 0,
         taxMoney: 0,
-        taxLastMoney: mInfo.billPrice
+        taxLastMoney: 0
       }
     },
     //使得型号、颜色编码、扩展信息、sku等为隐藏
@@ -600,7 +595,6 @@ export const BillModalMixin = {
             if (res && res.code === 200) {
               let hasFinished = false
               let allLastMoney = 0
-              let allTaxLastMoney = 0
               //获取单据明细列表信息
               let detailArr = allValues.tablesValue[0].values
               //构造新的列表数组，用于存放单据明细信息
@@ -610,12 +604,6 @@ export const BillModalMixin = {
                   //如果条码重复，就在给原来的数量加1
                   if(detail.barCode === this.scanBarCode) {
                     detail.operNumber = (detail.operNumber-0)+1
-                    //由于改变了商品数量，需要同时更新相关金额和价税合计
-                    let taxRate = detail.taxRate-0 //税率
-                    let unitPrice = detail.unitPrice-0 //单价
-                    detail.allPrice = (unitPrice*detail.operNumber).toFixed(2)-0
-                    detail.taxMoney = ((taxRate*0.01)*detail.allPrice).toFixed(2)-0
-                    detail.taxLastMoney = (detail.allPrice + detail.taxMoney).toFixed(2)-0
                     hasFinished = true
                   }
                   newDetailArr.push(detail)
@@ -656,23 +644,16 @@ export const BillModalMixin = {
               //更新优惠后金额、本次付款等信息
               for(let newDetail of newDetailArr){
                 allLastMoney = allLastMoney + (newDetail.allPrice-0)
-                allTaxLastMoney = allTaxLastMoney + (newDetail.taxLastMoney-0)
               }
-              let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
-              let deposit = this.form.getFieldValue('deposit')
-              let discountLastMoney = allTaxLastMoney-0
-              let changeAmountNew = (discountLastMoney + otherMoney).toFixed(2)-0
-              if(deposit) {
-                changeAmountNew = (changeAmountNew - deposit).toFixed(2)-0
-              }
+              let discountLastMoney = allLastMoney-0
               if(this.prefixNo === 'LSCK' || this.prefixNo === 'LSTH') {
                 this.$nextTick(() => {
-                  this.form.setFieldsValue({'changeAmount':allLastMoney,'getAmount':allLastMoney,'backAmount':0})
+                  //this.form.setFieldsValue({'changeAmount':0,'getAmount':0,'backAmount':0})
                 });
               } else {
                 this.$nextTick(() => {
                   changeAmountNew = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:changeAmountNew
-                  this.form.setFieldsValue({'discountLastMoney':discountLastMoney,'changeAmount':changeAmountNew,'debt':0})
+                  this.form.setFieldsValue({'discountLastMoney':discountLastMoney,'changeAmount':0,'debt':0})
                 });
               }
               //置空扫码的内容
