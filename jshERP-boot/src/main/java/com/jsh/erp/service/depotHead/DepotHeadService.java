@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.Tools.getCenternTime;
 import static com.jsh.erp.utils.Tools.getNow3;
@@ -389,6 +390,84 @@ public class DepotHeadService {
             JshException.writeFail(logger, e);
         }
         return result;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void recalcDepotHeadPayments(Set<Long> depotHeadIds) throws Exception {
+        // 可以有多个accountItem对应同一个depotHead
+        List<AccountItem> accountItems = new ArrayList<>();
+        // 也可以有多个accountHead对应同一个depotHead
+        List<AccountHead> accountHeads = new ArrayList<>();
+        try {
+            accountItems = accountItemService.selectByBillIds(new ArrayList<>(depotHeadIds));
+            Set<Long> headIds = accountItems.stream().map(e -> e.getHeaderId()).collect(Collectors.toSet());
+            accountHeads = accountHeadService.getAccountHeadByIds(new ArrayList<>(headIds));
+        } catch (Exception e) {
+            JshException.readFail(logger, e);
+        }
+
+        Map<Long, List<AccountItem>> depotHeadIdToAccountItems = new HashMap<>();
+        Map<Long, AccountHead> accountItemIdToAccountHeads = new HashMap<>();
+        for (AccountItem accountItem : accountItems) {
+            if (depotHeadIds.contains(accountItem.getBillId())) {
+                depotHeadIdToAccountItems.computeIfAbsent(accountItem.getBillId(), k -> new ArrayList<>()).add(accountItem);
+            }
+            for (AccountHead accountHead : accountHeads) {
+                if (accountHead.getId().longValue() == accountItem.getHeaderId().longValue()) {
+                    accountItemIdToAccountHeads.put(accountItem.getId(), accountHead);
+                    break;
+                }
+            }
+        }
+        for (Long id : depotHeadIds) {
+            DepotHead dh=null;
+            try{
+                dh = depotHeadMapper.selectByPrimaryKey(id);
+            }catch(Exception e){
+                JshException.readFail(logger, e);
+            }
+            BigDecimal changeAmount = BigDecimal.ZERO;
+            BigDecimal backAmount = BigDecimal.ZERO;
+            BigDecimal discount = BigDecimal.ZERO;
+            BigDecimal discountMoney = BigDecimal.ZERO;
+            BigDecimal otherMoney = BigDecimal.ZERO;
+            BigDecimal deposit = BigDecimal.ZERO;
+            for (AccountItem accountItem : depotHeadIdToAccountItems.getOrDefault(id, new ArrayList<>())) {
+                BigDecimal need = accountItem.getNeedDebt()==null ? BigDecimal.ZERO : accountItem.getNeedDebt();
+                BigDecimal finish = accountItem.getFinishDebt()==null ? BigDecimal.ZERO : accountItem.getFinishDebt();
+                if (accountItemIdToAccountHeads.containsKey(accountItem.getId())) {
+                    AccountHead accountHead = accountItemIdToAccountHeads.get(accountItem.getId());
+                    switch (accountHead.getType()) {
+                        case "采购定金":
+                        case "销售定金":
+                            changeAmount = changeAmount.add(need);
+                            backAmount = backAmount.add(finish);
+                            break;
+                        case "采购付款":
+                        case "销售付款":
+                            discount = discount.add(need);
+                            discountMoney = discountMoney.add(finish);
+                            break;
+                        case "采购退款":
+                        case "销售退款":
+                            otherMoney = otherMoney.add(need);
+                            deposit = deposit.add(finish);
+                            break;
+                    }
+                }
+            }
+            dh.setChangeAmount(changeAmount);           //已申请定金
+            dh.setBackAmount(backAmount);             //已支付定金
+            dh.setDiscount(discount);               //已申请付款
+            dh.setDiscountMoney(discountMoney);          //已付款
+            dh.setOtherMoney(otherMoney);             //已提交退款
+            dh.setDeposit(deposit);                //已退款
+            try{
+                depotHeadMapper.updateByPrimaryKey(dh);
+            }catch(Exception e){
+                JshException.writeFail(logger, e);
+            }
+        }
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

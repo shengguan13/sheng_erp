@@ -68,6 +68,18 @@ public class AccountItemService {
         return list;
     }
 
+    public List<AccountItem> selectByBillIds(List<Long> billIds)throws Exception {
+        AccountItemExample example = new AccountItemExample();
+        example.createCriteria().andBillIdIn(billIds).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<AccountItem> list=null;
+        try{
+            list=accountItemMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<AccountItem> select(String name, Integer type, String remark, int offset, int rows)throws Exception {
         List<AccountItem> list=null;
         try{

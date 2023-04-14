@@ -98,7 +98,7 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计付款">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计金额">
               <a-input placeholder="请输入合计付款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>

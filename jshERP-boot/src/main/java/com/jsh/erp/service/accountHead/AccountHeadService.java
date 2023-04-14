@@ -1,5 +1,6 @@
 package com.jsh.erp.service.accountHead;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
@@ -27,9 +28,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.jsh.erp.utils.Tools.getCenternTime;
 
@@ -71,6 +70,18 @@ public class AccountHeadService {
         try{
             AccountHeadExample example = new AccountHeadExample();
             example.createCriteria().andIdIn(idList);
+            list = accountHeadMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public List<AccountHead> getAccountHeadByIds(List<Long> idList)throws Exception {
+        List<AccountHead> list = new ArrayList<>();
+        try{
+            AccountHeadExample example = new AccountHeadExample();
+            example.createCriteria().andIdIn(idList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             list = accountHeadMapper.selectByExample(example);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -353,8 +364,28 @@ public class AccountHeadService {
         if("收预付款".equals(accountHead.getType())){
             supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice());
         }
+        if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "采购退款".equals(accountHead.getType()) ||
+                "销售定金".equals(accountHead.getType()) || "销售定金".equals(accountHead.getType()) || "销售定金".equals(accountHead.getType())) {
+            depotHeadService.recalcDepotHeadPayments(getImpactedBillIds(rows));
+        }
         logService.insertLog("财务单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).toString(), request);
+    }
+
+    private Set<Long> getImpactedBillIds(String rows) throws Exception {
+        JSONArray rowArr = JSONArray.parseArray(rows);
+        Set<Long> result = new HashSet<>();
+        if (null != rowArr && rowArr.size()>0) {
+            for (int i = 0; i < rowArr.size(); i++) {
+                JSONObject tempInsertedJson = JSONObject.parseObject(rowArr.getString(i));
+                if (tempInsertedJson.get("billNumber") != null && !tempInsertedJson.get("billNumber").equals("")) {
+                    String billNo = tempInsertedJson.getString("billNumber");
+                    result.add(depotHeadService.getDepotHead(billNo).getId());
+                }
+
+            }
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -380,6 +411,12 @@ public class AccountHeadService {
         }
         if("收预付款".equals(accountHead.getType())){
             supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice().subtract(preTotalPrice));
+        }
+        logger.info("Updating account head with type: " + accountHead.getType());
+        if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "采购退款".equals(accountHead.getType()) ||
+                "销售定金".equals(accountHead.getType()) || "销售定金".equals(accountHead.getType()) || "销售定金".equals(accountHead.getType())) {
+            logger.info("Recalculating: " + accountHead.getType());
+            depotHeadService.recalcDepotHeadPayments(getImpactedBillIds(rows));
         }
         logService.insertLog("财务单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillNo()).toString(), request);
