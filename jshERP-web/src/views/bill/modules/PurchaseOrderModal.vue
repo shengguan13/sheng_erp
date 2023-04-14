@@ -124,12 +124,6 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支付订金" data-step="9" data-title="支付订金"
-                         data-intro="填写订金之后，在采购入库单会自动计算扣除订金">
-              <a-input placeholder="请输入支付订金" v-decorator.trim="[ 'changeAmount', validatorRules.price ]" @change="onChangeChangeAmount"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
           </a-col>
@@ -295,7 +289,7 @@
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
-            'discountLastMoney','accountId','changeAmount'))
+            'discountLastMoney','accountId'))
           });
           // 加载子表数据
           let params = {
@@ -329,7 +323,6 @@
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = 0-totalPrice
-        billMain.changeAmount = 0-billMain.changeAmount
         if(billMain.accountId === 0) {
           billMain.accountId = ''
         }
@@ -389,7 +382,6 @@
           this.$nextTick(() => {
             this.form.setFieldsValue({
               'discountLastMoney': discountLastMoney.toFixed(2),
-              'changeAmount': discountLastMoney
             })
           })
           this.materialTable.dataSource = selectBillDetailRows
