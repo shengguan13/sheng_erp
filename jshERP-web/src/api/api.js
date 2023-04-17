@@ -107,6 +107,7 @@ const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
 const getBatchNumberList = (params)=>getAction("/depotItem/getBatchNumberList",params);
 const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailByNumber",params);
+const getAccountItemList = (params)=>getAction("/accountItem/getDetailList",params);
 
 export {
   getBuyAndSaleStatistics,
@@ -194,7 +195,8 @@ export {
   findBillDetailByNumber,
   findStockByDepotAndBarCode,
   getBatchNumberList,
-  findFinancialDetailByNumber
+  findFinancialDetailByNumber,
+  getAccountItemList
 }
 
 

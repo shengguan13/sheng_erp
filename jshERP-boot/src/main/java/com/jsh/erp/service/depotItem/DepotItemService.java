@@ -411,9 +411,6 @@ public class DepotItemService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetials(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
-        logger.info("rows: " + rows);
-        logger.info("headerId: " + headerId);
-        logger.info("actionType: " + actionType);
         //查询单据主表信息
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         //删除序列号和回收序列号
@@ -533,7 +530,6 @@ public class DepotItemService {
                         BigDecimal planOrderedNumber = rowObj.getBigDecimal("planOrderedNumber");
                         if ("生产计划".equals(depotHead.getSubType())) {
                             if (depotItem.getOperNumber().add(planOrderedNumber).compareTo(preNumber) > 0) {
-                                logger.info("preNumber:" + preNumber + ",planOrderedNumber:" + planOrderedNumber + ",operNumber:" + depotItem.getOperNumber() );
                                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                         String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG_2, barCode));
                             }
@@ -541,7 +537,6 @@ public class DepotItemService {
                             // 生产单不需要检查什么，允许实际入库比生产多的情况
                         } else {
                             if (depotItem.getOperNumber().add(finishNumber).compareTo(preNumber) > 0) {
-                                logger.info("preNumber:" + preNumber + ",finishNumber:" + finishNumber + ",operNumber:" + depotItem.getOperNumber() );
                                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                         String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
                             }
@@ -557,7 +552,6 @@ public class DepotItemService {
                         //除去此单据之外的已入库|已出库|已下生产单（生产单不能多下，但是实际入库是可以超过生产单的）
                         BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
                         if(!"生产单".equals(depotHead.getSubType()) && depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber) > 0) {
-                            logger.info("preNumber:" + preNumber + ",finishNumber:" + realFinishNumber + ",operNumber:" + depotItem.getOperNumber() );
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
                         }

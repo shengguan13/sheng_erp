@@ -205,6 +205,10 @@ public class AccountItemService {
         deleteAccountItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
         if (null != rowArr && rowArr.size()>0) {
+            if(rowArr.size() > 1) {
+                throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_ROW_TOO_MANY_CODE,
+                        String.format(ExceptionConstants.ACCOUNT_HEAD_ROW_TOO_MANY_MSG));
+            }
             for (int i = 0; i < rowArr.size(); i++) {
                 AccountItem accountItem = new AccountItem();
                 JSONObject tempInsertedJson = JSONObject.parseObject(rowArr.getString(i));

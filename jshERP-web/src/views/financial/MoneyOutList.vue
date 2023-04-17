@@ -122,6 +122,9 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <span slot="numberCustomRender" slot-scope="text, record">
+              <a @click="myHandleBillDetail(record)">详情</a>
+            </span>
             <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
@@ -133,15 +136,18 @@
         <!-- 表单区域 -->
         <money-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></money-out-modal>
         <financial-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></financial-detail>
+        <bill-detail ref="billDetail"></bill-detail>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
   import MoneyOutModal from './modules/MoneyOutModal'
+  import BillDetail from '../bill/dialog/BillDetail'
   import FinancialDetail from './dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { FinancialListMixin } from './mixins/FinancialListMixin'
+  import { findBillDetailByNumber, findFinancialDetailByNumber, getAccountItemList } from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
@@ -150,6 +156,7 @@
     components: {
       MoneyOutModal,
       FinancialDetail,
+      BillDetail,
       JDate
     },
     data () {
@@ -190,6 +197,9 @@
           { title: '财务人员', dataIndex: 'handsPersonName',width:80},
           { title: '单据编号', dataIndex: 'billNo',width:130},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
+          { title: '采购订单', dataIndex: 'cgdd',width:70,
+            scopedSlots: { customRender: 'numberCustomRender' },
+          },
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '应付金额', dataIndex: 'totalPrice',width:80},
           { title: '实际付款', dataIndex: 'changeAmount',width:80},
@@ -216,6 +226,27 @@
       this.initAccount()
     },
     methods: {
+      myHandleBillDetail(record) {
+        findFinancialDetailByNumber({ billNo: record.billNo }).then((res) => {
+          if (res && res.code === 200) {
+            let header = res.data
+            getAccountItemList({ headerId: header.id }).then((res2) => {
+              if (res2 && res2.code === 200) {
+                let item = res2.data.rows[0]
+                let that = this
+                findBillDetailByNumber({ number: item.billNumber }).then((res3) => {
+                  if (res3 && res3.code === 200) {
+                    let type = res3.data.type === "其它"? "":res3.data.type
+                    this.$refs.billDetail.isCanBackCheck = false
+                    that.$refs.billDetail.show(res3.data, res3.data.subType + type);
+                    that.$refs.billDetail.title="详情";
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
     }
   }
 </script>
