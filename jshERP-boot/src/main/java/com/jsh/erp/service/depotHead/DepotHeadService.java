@@ -444,7 +444,7 @@ public class DepotHeadService {
                             backAmount = backAmount.add(finish);
                             break;
                         case "采购付款":
-                        case "销售付款":
+                        case "销售收款":
                             discount = discount.add(need);
                             discountMoney = discountMoney.add(finish);
                             break;

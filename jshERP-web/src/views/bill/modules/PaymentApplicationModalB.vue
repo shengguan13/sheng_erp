@@ -21,7 +21,7 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
               <a-select placeholder="选择客户" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="onChangeOrgan">
-                <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
               </a-select>
@@ -113,7 +113,7 @@
       </a-form>
     </a-spin>
     <purchase-and-sale-list ref="purchaseAndSaleList" @ok="purchaseAndSaleListOk"></purchase-and-sale-list>
-    <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
+    <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
   </j-modal>
@@ -121,7 +121,7 @@
 <script>
   import pick from 'lodash.pick'
   import PurchaseAndSaleList from '../dialog/PurchaseAndSaleList'
-  import VendorModal from '../../system/modules/VendorModal'
+  import CustomerModal from '../../system/modules/CustomerModal'
   import AccountModal from '../../system/modules/AccountModal'
   import PersonModal from '../../system/modules/PersonModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
@@ -134,7 +134,7 @@
     mixins: [JEditableTableMixin, PaymentApplicationModalMixin],
     components: {
       PurchaseAndSaleList,
-      VendorModal,
+      CustomerModal,
       AccountModal,
       PersonModal,
       JUpload,

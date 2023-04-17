@@ -129,7 +129,7 @@ public class AccountHeadService {
             } else if ("全部销售".equals(type)) {
                 List<AccountHeadVo4ListEx> list1 = accountHeadMapperEx.selectByConditionAccountHead("销售定金", creatorArray, billNo,
                         beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
-                List<AccountHeadVo4ListEx> list2 = accountHeadMapperEx.selectByConditionAccountHead("销售付款", creatorArray, billNo,
+                List<AccountHeadVo4ListEx> list2 = accountHeadMapperEx.selectByConditionAccountHead("销售收款", creatorArray, billNo,
                         beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
                 List<AccountHeadVo4ListEx> list3 = accountHeadMapperEx.selectByConditionAccountHead("销售退款", creatorArray, billNo,
                         beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
@@ -365,7 +365,7 @@ public class AccountHeadService {
             supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice());
         }
         if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "采购退款".equals(accountHead.getType()) ||
-                "销售定金".equals(accountHead.getType()) || "销售定金".equals(accountHead.getType()) || "销售定金".equals(accountHead.getType())) {
+                "销售定金".equals(accountHead.getType()) || "销售收款".equals(accountHead.getType()) || "销售退款".equals(accountHead.getType())) {
             depotHeadService.recalcDepotHeadPayments(getImpactedBillIds(rows));
         }
         logService.insertLog("财务单据",
@@ -414,7 +414,7 @@ public class AccountHeadService {
         }
         logger.info("Updating account head with type: " + accountHead.getType());
         if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "采购退款".equals(accountHead.getType()) ||
-                "销售定金".equals(accountHead.getType()) || "销售定金".equals(accountHead.getType()) || "销售定金".equals(accountHead.getType())) {
+                "销售定金".equals(accountHead.getType()) || "销售收款".equals(accountHead.getType()) || "销售退款".equals(accountHead.getType())) {
             logger.info("Recalculating: " + accountHead.getType());
             depotHeadService.recalcDepotHeadPayments(getImpactedBillIds(rows));
         }
