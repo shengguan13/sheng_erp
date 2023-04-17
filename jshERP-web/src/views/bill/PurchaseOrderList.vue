@@ -182,11 +182,11 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 150,
+            align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
           { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:130,
+          { title: '单据编号', dataIndex: 'number',width:140,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[转]":text
               return text
@@ -202,13 +202,10 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
-          { title: '金额合计', dataIndex: 'totalPrice',width:70},
-          { title: '已申请定金', dataIndex: 'changeAmount',width:70},
-          { title: '已支付定金', dataIndex: 'backAmount',width:70},
-          { title: '已申请付款', dataIndex: 'discount',width:70},
-          { title: '已付款', dataIndex: 'discountMoney',width:70},
-          { title: '已提交退款', dataIndex: 'deposit',width:70},
-          { title: '已退款', dataIndex: 'otherMoney',width:70},
+          { title: '金额合计', dataIndex: 'totalPrice',width:90},
+          { title: '已申请定金', dataIndex: 'changeAmount',width:90},
+          { title: '已申请付款', dataIndex: 'discount',width:90},
+          { title: '已提交退款', dataIndex: 'deposit',width:90},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
