@@ -26,8 +26,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select placeholder="选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select placeholder="选择客户" showSearch optionFilterProp="children" v-model="queryParam.organId">
                     <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                       {{ item.supplier }}
                     </a-select-option>
@@ -64,8 +64,8 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="付款账户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择付款账户" showSearch optionFilterProp="children" v-model="queryParam.accountId">
+                  <a-form-item label="收款账户" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择收款账户" showSearch optionFilterProp="children" v-model="queryParam.accountId">
                       <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                         {{ item.name }}
                       </a-select-option>
@@ -86,8 +86,8 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="采购单号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入采购单号" v-model="queryParam.number"></a-input>
+                  <a-form-item label="销售单号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入销售单号" v-model="queryParam.number"></a-input>
                   </a-form-item>
                 </a-col>
               </template>
@@ -107,8 +107,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="付款单的要素和录入原则与“收款单”相同。
-          付款单中优惠金额计入支出类中的付款优惠中，为负值 （因优惠意味着实际少付款）。" slot="action">
+          <a-tooltip placement="left" title="申请与销售相关的款项。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
@@ -128,7 +127,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '付款', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '收款', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -145,24 +144,24 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <payment-application-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></payment-application-modal>
+        <payment-application-modal-b ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></payment-application-modal-b>
         <financial-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></financial-detail>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
-  import PaymentApplicationModal from './modules/PaymentApplicationModal'
+  import PaymentApplicationModalB from './modules/PaymentApplicationModalB'
   import FinancialDetail from '../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { FinancialListMixin } from '../financial/mixins/FinancialListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "PaymentApplicationList",
+    name: "PaymentApplicationListB",
     mixins:[JeecgListMixin, FinancialListMixin],
     components: {
-      PaymentApplicationModal,
+      PaymentApplicationModalB,
       FinancialDetail,
       JDate
     },
@@ -179,7 +178,7 @@
         queryParam: {
           billNo: "",
           searchMaterial: "",
-          type: "全部采购",
+          type: "全部销售",
           organId: "",
           creator: "",
           handsPersonId: "",
@@ -189,7 +188,7 @@
           number: "",
           roleType: Vue.ls.get('roleType')
         },
-        prefixNo: 'FK',
+        prefixNo: 'SK',
         // 表头
         columns: [
           {
@@ -200,7 +199,7 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '种类', dataIndex: 'type',width:100, ellipsis:true },
-          { title: '供应商', dataIndex: 'organName',width:140, ellipsis:true},
+          { title: '客户', dataIndex: 'organName',width:140, ellipsis:true},
           { title: '财务人员', dataIndex: 'handsPersonName',width:80},
           { title: '单据编号', dataIndex: 'billNo',width:130},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
@@ -224,7 +223,7 @@
     },
     created () {
       this.initSystemConfig()
-      this.initSupplier()
+      this.initCustomer()
       this.initUser()
       this.initPerson()
       this.initAccount()

@@ -107,8 +107,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="付款单的要素和录入原则与“收款单”相同。
-          付款单中优惠金额计入支出类中的付款优惠中，为负值 （因优惠意味着实际少付款）。" slot="action">
+          <a-tooltip placement="left" title="申请与采购相关的款项。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>

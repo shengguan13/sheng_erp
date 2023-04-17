@@ -18,8 +18,8 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+              <a-select placeholder="选择客户" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="onChangeOrgan">
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                   {{ item.supplier }}
@@ -31,9 +31,9 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="款项种类">
               <a-select placeholder="选择款项种类" v-decorator="[ 'type', validatorRules.type ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option value="采购定金">付定金</a-select-option>
-                <a-select-option value="采购付款">付款</a-select-option>
-                <a-select-option value="采购退款">退款</a-select-option>
+                <a-select-option value="销售定金">收定金</a-select-option>
+                <a-select-option value="销售收款">收款</a-select-option>
+                <a-select-option value="销售退款">退款</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -82,8 +82,8 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-              <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
+              <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -99,7 +99,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计金额">
-              <a-input placeholder="请输入合计付款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
+              <a-input placeholder="请输入合计收款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -130,7 +130,7 @@
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   export default {
-    name: "PaymentApplicationModal",
+    name: "PaymentApplicationModalB",
     mixins: [JEditableTableMixin, PaymentApplicationModalMixin],
     components: {
       PurchaseAndSaleList,
@@ -152,7 +152,7 @@
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 0,
         visible: false,
-        prefixNo: 'FK',
+        prefixNo: 'SK',
         model: {},
         fileList:[],
         labelCol: {
@@ -169,7 +169,7 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '采购单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
+            { title: '销售单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
             { title: '申请金额',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -179,7 +179,7 @@
         confirmLoading: false,
         validatorRules:{
           organId:{
-            rules: [{ required: true, message: '请选择供应商!' }]
+            rules: [{ required: true, message: '请选择客户!' }]
           },
           type:{
             rules: [{ required: true, message: '请选择款项种类!' }]
@@ -188,7 +188,7 @@
             rules: [{ required: true, message: '请选择单据日期!' }]
           },
           accountId:{
-            rules: [{ required: true, message: '请选择付款账户!' }]
+            rules: [{ required: true, message: '请选择收款账户!' }]
           },
           discountMoney:{
             rules: [{ required: true, message: '请输入优惠金额!' }]
@@ -228,7 +228,7 @@
           this.requestSubTableData(url, params, this.accountTable);
         }
         this.initSystemConfig()
-        this.initSupplier()
+        this.initCustomer()
         this.initPerson()
         this.initAccount()
       },
@@ -256,10 +256,10 @@
       handleClickAdd() {
         let organId = this.form.getFieldValue('organId')
         if(organId){
-          this.$refs.purchaseAndSaleList.show(organId, '其它', '采购订单', '供应商', "")
-          this.$refs.purchaseAndSaleList.title = "选择采购订单"
+          this.$refs.purchaseAndSaleList.show(organId, '其它', '销售订单', '客户', "")
+          this.$refs.purchaseAndSaleList.title = "选择销售订单"
         } else {
-          this.$message.warning('请选择供应商！');
+          this.$message.warning('请选择客户！');
         }
       },
       handleClear() {
