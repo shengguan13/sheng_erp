@@ -165,7 +165,7 @@
         queryParam: {
           billNo: "",
           searchMaterial: "",
-          type: "全部采购",
+          type: "全部销售",
           organId: "",
           creator: "",
           handsPersonId: "",
