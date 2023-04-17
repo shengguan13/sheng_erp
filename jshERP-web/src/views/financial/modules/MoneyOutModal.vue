@@ -254,14 +254,8 @@
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
-        let totalPrice = 0
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        for(let item of detailArr){
-          totalPrice += item.eachAmount-0
-        }
-        billMain.totalPrice = 0-totalPrice
-        billMain.changeAmount = 0-billMain.changeAmount
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         }

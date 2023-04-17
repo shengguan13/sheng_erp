@@ -97,6 +97,14 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
+          <a-dropdown>
+            <a-menu slot="overlay">
+              <a-menu-item key="1" v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
+            </a-menu>
+            <a-button>
+              批量操作 <a-icon type="down" />
+            </a-button>
+          </a-dropdown>
         </div>
         <!-- table区域-begin -->
         <div>
