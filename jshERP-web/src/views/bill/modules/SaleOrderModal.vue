@@ -97,12 +97,6 @@
               <a-input placeholder="请输入总金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收取订金" data-step="9" data-title="收取订金"
-                         data-intro="填写订金之后，在销售出库单会自动计算扣除订金">
-              <a-input placeholder="请输入收取订金" v-decorator.trim="[ 'changeAmount', validatorRules.price ]" @change="onChangeChangeAmount"/>
-            </a-form-item>
-          </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">

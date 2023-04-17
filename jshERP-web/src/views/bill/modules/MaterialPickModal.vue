@@ -404,7 +404,7 @@
                       this.recommendationStr = this.recommendationStr + "，"
                     }
                     let mInfo = newList[i]
-                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + materialMap.get(String(mInfo.meId)) + mInfo.unit
+                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + materialMap.get(String(mInfo.meId)) + mInfo.commodityUnit
                   }
                 }
                 this.$nextTick(() => {
