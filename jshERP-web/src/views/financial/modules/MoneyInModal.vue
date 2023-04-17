@@ -84,7 +84,7 @@
               :rowNumber="false"
               :rowSelection="false"
               :actionButton="false"
-              @valueChange="onValueChange" />
+              @valueChange="onValueChangePayment" />
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
@@ -112,18 +112,13 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计收款">
-              <a-input placeholder="请输入合计收款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'discountMoney', validatorRules.discountMoney ]" @change="onChangeDiscountMoney" />
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计应收">
+              <a-input placeholder="合计应收" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际收款">
-              <a-input placeholder="请输入实际收款" v-decorator.trim="[ 'changeAmount' ]" :readOnly="true"/>
+              <a-input placeholder="实际收款" v-decorator.trim="[ 'changeAmount' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -194,9 +189,8 @@
           dataSource: [],
           columns: [
             { title: '销售单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
-            { title: '应收欠款',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
-            { title: '已收欠款', key: 'finishDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
-            { title: '本次收款',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
+            { title: '应收金额',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
+            { title: '实际收款',key: 'finishDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注',key: 'remark', width: '20%', type: FormTypes.input, placeholder: '请输入${title}'}
@@ -260,7 +254,6 @@
         let totalPrice = 0
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '收款'
         for(let item of detailArr){
           totalPrice += item.eachAmount-0
         }

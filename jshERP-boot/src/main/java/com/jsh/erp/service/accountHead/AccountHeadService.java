@@ -415,7 +415,6 @@ public class AccountHeadService {
         logger.info("Updating account head with type: " + accountHead.getType());
         if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "采购退款".equals(accountHead.getType()) ||
                 "销售定金".equals(accountHead.getType()) || "销售收款".equals(accountHead.getType()) || "销售退款".equals(accountHead.getType())) {
-            logger.info("Recalculating: " + accountHead.getType());
             depotHeadService.recalcDepotHeadPayments(getImpactedBillIds(rows));
         }
         logService.insertLog("财务单据",

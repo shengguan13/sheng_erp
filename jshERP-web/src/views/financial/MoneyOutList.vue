@@ -97,20 +97,6 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown>
-            <a-menu slot="overlay">
-              <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-              <a-menu-item key="2" v-if="checkFlag && btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
-              <a-menu-item key="3" v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
-            </a-menu>
-            <a-button>
-              批量操作 <a-icon type="down" />
-            </a-button>
-          </a-dropdown>
-          <a-tooltip placement="left" title="付款单的要素和录入原则与“收款单”相同。
-          付款单中优惠金额计入支出类中的付款优惠中，为负值 （因优惠意味着实际少付款）。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
-          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>
@@ -179,7 +165,7 @@
         queryParam: {
           billNo: "",
           searchMaterial: "",
-          type: "全部采购",
+          type: "全部销售",
           organId: "",
           creator: "",
           handsPersonId: "",
@@ -205,8 +191,8 @@
           { title: '单据编号', dataIndex: 'billNo',width:130},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
-          { title: '申请金额', dataIndex: 'totalPrice',width:80},
-          { title: '实际金额', dataIndex: 'changeAmount',width:80},
+          { title: '应付金额', dataIndex: 'totalPrice',width:80},
+          { title: '实际付款', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }

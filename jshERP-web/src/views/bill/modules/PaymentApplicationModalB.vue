@@ -82,22 +82,6 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-              <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <div slot="dropdownRender" slot-scope="menu">
-                  <v-nodes :vnodes="menu" />
-                  <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
-                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
-                </div>
-                <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                  {{ item.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计金额">
               <a-input placeholder="请输入合计收款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
             </a-form-item>
@@ -257,7 +241,7 @@
         let organId = this.form.getFieldValue('organId')
         if(organId){
           this.$refs.purchaseAndSaleList.show(organId, '其它', '销售订单', '客户', "")
-          this.$refs.purchaseAndSaleList.title = "选择销售订单"
+          this.$refs.purchaseAndSaleList.title = "选择销售订单（已审核的订单才能申请款项）"
         } else {
           this.$message.warning('请选择客户！');
         }

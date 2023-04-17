@@ -227,6 +227,24 @@ export const FinancialModalMixin = {
         this.form.setFieldsValue({'totalPrice':allEachAmount, 'changeAmount':changeAmount})
       });
     },
+    onValueChangePayment(event) {
+      let that = this
+      const { type, row, column, value, target } = event
+      switch(column.key) {
+        case "finishDebt":
+          target.recalcAllStatisticsColumns()
+          that.autoChangeAmountPayment(target)
+          break;
+      }
+    },
+    //改变本次欠款的值
+    autoChangeAmountPayment(target) {
+      let allNeedDebt = target.statisticsColumns.needDebt-0
+      let allFinishDebt = target.statisticsColumns.finishDebt-0
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'totalPrice':allNeedDebt, 'changeAmount':allFinishDebt})
+      });
+    },
     //改变优惠金额
     onChangeDiscountMoney(e) {
       const value = e.target.value-0
@@ -267,12 +285,12 @@ export const FinancialModalMixin = {
     //选择期初
     selectBeginNeed(type) {
       let that = this
-      let info = type === '供应商'? '付款':'收款'
+      let word = type === '供应商'? '付款':'收款'
       let organId = this.form.getFieldValue('organId')
       if(organId){
         this.$confirm({
           title: "确认操作",
-          content: "是否选择期初金额，对期初进行" + info + "?",
+          content: "是否选择期初金额，对期初进行" + word + "?",
           onOk: function () {
             let listEx = []
             let info = {}

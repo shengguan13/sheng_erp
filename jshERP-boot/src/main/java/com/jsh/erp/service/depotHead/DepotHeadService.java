@@ -964,13 +964,6 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG));
             }
         }
-        //结算账户校验
-        if("采购订单".equals(subType) || "销售订单".equals(subType)) {
-            if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
-            }
-        }
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
         depotHead.setCreator(userInfo==null?null:userInfo.getId());
@@ -1092,13 +1085,6 @@ public class DepotHeadService {
                     .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) != 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_MSG));
-            }
-        }
-        //结算账户校验
-        if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
-            if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
             }
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){

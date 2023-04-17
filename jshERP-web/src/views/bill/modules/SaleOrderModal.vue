@@ -98,26 +98,6 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="8" data-title="结算账户"
-                         data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
-              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
-                        :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
-                <div slot="dropdownRender" slot-scope="menu">
-                  <v-nodes :vnodes="menu" />
-                  <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
-                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
-                </div>
-                <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                  {{ item.name }}
-                </a-select-option>
-              </a-select>
-              <a-tooltip title="多账户明细">
-                <a-button type="default" icon="folder" style="margin-left: 8px;" size="small" v-show="manyAccountBtnStatus" @click="handleManyAccount"/>
-              </a-tooltip>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="总金额" data-step="7" data-title="总金额"
                          data-intro="单据明细中商品的总金额">
               <a-input placeholder="请输入总金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>

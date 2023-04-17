@@ -97,20 +97,6 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown>
-            <a-menu slot="overlay">
-              <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-              <a-menu-item key="2" v-if="checkFlag && btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
-              <a-menu-item key="3" v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
-            </a-menu>
-            <a-button>
-              批量操作 <a-icon type="down" />
-            </a-button>
-          </a-dropdown>
-          <a-tooltip placement="left" title="收款单所收金额只对付款单位的应收应付产生影响，可以在回款统计中进行查看。
-          收款单的优惠金额会对利润产生影响，但不影响付款单位的应收应付。优惠金额计入收入类的收款优惠中。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
-          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>
@@ -179,7 +165,7 @@
         queryParam: {
           billNo: "",
           searchMaterial: "",
-          type: "全部销售",
+          type: "全部采购",
           organId: "",
           creator: "",
           handsPersonId: "",
@@ -205,8 +191,8 @@
           { title: '单据编号', dataIndex: 'billNo',width:130},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
-          { title: '申请金额', dataIndex: 'totalPrice',width:80},
-          { title: '实际金额', dataIndex: 'changeAmount',width:80},
+          { title: '应收金额', dataIndex: 'totalPrice',width:80},
+          { title: '实际收款', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
