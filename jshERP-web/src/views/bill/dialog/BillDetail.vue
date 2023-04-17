@@ -506,34 +506,38 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
-                {{model.discount}}%
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请定金">
+                {{model.changeAmount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠">
-                {{model.discountMoney}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请付款">
+                {{model.discount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
-                {{model.discountLastMoney}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交退款">
+                {{model.otherMoney}}
               </a-form-item>
             </a-col>
             <a-col :span="6"></a-col>
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-                {{model.accountName}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已支付订金">
+                {{model.backAmount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支付订金">
-                {{model.changeAmount}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已付款">
+                {{model.discountMoney}}
               </a-form-item>
             </a-col>
-            <a-col :span="6"></a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已退款">
+                {{model.deposit}}
+              </a-form-item>
+            </a-col>
             <a-col :span="6"></a-col>
           </a-row>
         </section>
@@ -583,61 +587,10 @@
             </a-col>
           </a-row>
           <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
-                {{model.discount}}%
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠">
-                {{model.discountMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
-                {{model.discountLastMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="其它费用">
-                {{model.otherMoney}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col v-if="model.deposit" :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="扣除订金">
-                {{model.deposit}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次付款">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次欠款">
-                {{model.debt}}
-              </a-form-item>
-            </a-col>
             <a-col v-if="model.hasBackFlag" :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退货单号">
                 <template v-for="(item, index) in linkNumberList">
                   <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
-                </template>
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col v-if="financialBillNoList.length" :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款单号">
-                <template v-for="(item, index) in financialBillNoList">
-                  <a @click="myHandleFinancialDetail(item.billNo)">{{item.billNo}}</a><br/>
                 </template>
               </a-form-item>
             </a-col>
@@ -688,47 +641,6 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
-                {{model.discount}}%
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退款优惠">
-                {{model.discountMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
-                {{model.discountLastMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="其它费用">
-                {{model.otherMoney}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次退款">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次欠款">
-                {{model.debt}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-            </a-col>
-          </a-row>
         </section>
       </template>
       <!--销售订单-->
@@ -777,34 +689,38 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
-                {{model.discount}}%
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交定金">
+                {{model.changeAmount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠">
-                {{model.discountMoney}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交收款">
+                {{model.discount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
-                {{model.discountLastMoney}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请退款">
+                {{model.otherMoney}}
               </a-form-item>
             </a-col>
             <a-col :span="6"></a-col>
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-                {{model.accountName}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已收到定金">
+                {{model.backAmount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收取订金">
-                {{model.changeAmount}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已收款">
+                {{model.discountMoney}}
               </a-form-item>
             </a-col>
-            <a-col :span="6"></a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已退款">
+                {{model.deposit}}
+              </a-form-item>
+            </a-col>
             <a-col :span="6"></a-col>
           </a-row>
         </section>
@@ -854,66 +770,10 @@
             </a-col>
           </a-row>
           <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
-                {{model.discount}}%
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款优惠">
-                {{model.discountMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
-                {{model.discountLastMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="其它费用">
-                {{model.otherMoney}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col v-if="model.deposit" :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="扣除订金">
-                {{model.deposit}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次收款">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次欠款">
-                {{model.debt}}
-              </a-form-item>
-            </a-col>
             <a-col v-if="model.hasBackFlag" :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退货单号">
                 <template v-for="(item, index) in linkNumberList">
                   <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
-                </template>
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
-                {{model.salesManStr}}
-              </a-form-item>
-            </a-col>
-            <a-col v-if="financialBillNoList.length" :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款单号">
-                <template v-for="(item, index) in financialBillNoList">
-                  <a @click="myHandleFinancialDetail(item.billNo)">{{item.billNo}}</a><br/>
                 </template>
               </a-form-item>
             </a-col>
@@ -961,50 +821,6 @@
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
                 {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
-                {{model.discount}}%
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退款优惠">
-                {{model.discountMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
-                {{model.discountLastMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="其它费用">
-                {{model.otherMoney}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次退款">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次欠款">
-                {{model.debt}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
-                {{model.salesManStr}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -1453,11 +1269,7 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '已入库', dataIndex: 'finishNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
-          { title: '税率(%)', dataIndex: 'taxRate'},
-          { title: '税额', dataIndex: 'taxMoney'},
-          { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseInColumns: [
@@ -1476,12 +1288,6 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
-          { title: '税率(%)', dataIndex: 'taxRate'},
-          { title: '税额', dataIndex: 'taxMoney'},
-          { title: '价税合计', dataIndex: 'taxLastMoney'},
-          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseBackColumns: [
@@ -1500,12 +1306,6 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
-          { title: '税率(%)', dataIndex: 'taxRate'},
-          { title: '税额', dataIndex: 'taxMoney'},
-          { title: '价税合计', dataIndex: 'taxLastMoney'},
-          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOrderColumns: [
@@ -1521,11 +1321,7 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '已出库', dataIndex: 'finishNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
-          { title: '税率(%)', dataIndex: 'taxRate'},
-          { title: '税额', dataIndex: 'taxMoney'},
-          { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOutColumns: [
@@ -1544,12 +1340,6 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
-          { title: '税率(%)', dataIndex: 'taxRate'},
-          { title: '税额', dataIndex: 'taxMoney'},
-          { title: '价税合计', dataIndex: 'taxLastMoney'},
-          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleBackColumns: [
@@ -1568,12 +1358,6 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
-          { title: '税率(%)', dataIndex: 'taxRate'},
-          { title: '税额', dataIndex: 'taxMoney'},
-          { title: '价税合计', dataIndex: 'taxLastMoney'},
-          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         otherInColumns: [
@@ -1592,8 +1376,6 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
         ],
         otherOutColumns: [
@@ -1612,8 +1394,6 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
         ],
         allocationOutColumns: [
@@ -1630,8 +1410,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
         ],
         assembleColumns: [
@@ -1648,8 +1426,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
         ],
         disassembleColumns: [
@@ -1666,8 +1442,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '单价', dataIndex: 'unitPrice'},
-          { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
         ],
         stockCheckReplayColumns: [

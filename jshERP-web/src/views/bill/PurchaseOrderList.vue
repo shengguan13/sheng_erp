@@ -205,7 +205,7 @@
           { title: '金额合计', dataIndex: 'totalPrice',width:90},
           { title: '已申请定金', dataIndex: 'changeAmount',width:90},
           { title: '已申请付款', dataIndex: 'discount',width:90},
-          { title: '已提交退款', dataIndex: 'deposit',width:90},
+          { title: '已提交退款', dataIndex: 'otherMoney',width:90},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

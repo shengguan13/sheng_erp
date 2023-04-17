@@ -96,7 +96,7 @@
         </a-row>
       </a-form>
     </a-spin>
-    <purchase-and-sale-list ref="purchaseAndSaleList" @ok="purchaseAndSaleListOk"></purchase-and-sale-list>
+    <purchase-and-sale-list-b ref="purchaseAndSaleListB" @ok="purchaseAndSaleListOk"></purchase-and-sale-list-b>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
@@ -104,7 +104,7 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import PurchaseAndSaleList from '../dialog/PurchaseAndSaleList'
+  import PurchaseAndSaleListB from '../dialog/PurchaseAndSaleListB'
   import CustomerModal from '../../system/modules/CustomerModal'
   import AccountModal from '../../system/modules/AccountModal'
   import PersonModal from '../../system/modules/PersonModal'
@@ -117,7 +117,7 @@
     name: "PaymentApplicationModalB",
     mixins: [JEditableTableMixin, PaymentApplicationModalMixin],
     components: {
-      PurchaseAndSaleList,
+      PurchaseAndSaleListB,
       CustomerModal,
       AccountModal,
       PersonModal,
@@ -240,8 +240,8 @@
       handleClickAdd() {
         let organId = this.form.getFieldValue('organId')
         if(organId){
-          this.$refs.purchaseAndSaleList.show(organId, '其它', '销售订单', '客户', "")
-          this.$refs.purchaseAndSaleList.title = "选择销售订单（已审核的订单才能申请款项）"
+          this.$refs.purchaseAndSaleListB.show(organId, '其它', '销售订单', '客户', "")
+          this.$refs.purchaseAndSaleListB.title = "选择销售订单（已审核的订单才能申请款项）"
         } else {
           this.$message.warning('请选择客户！');
         }

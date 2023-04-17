@@ -49,12 +49,6 @@
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员" data-step="3" data-title="销售人员"
-              data-intro="销售人员的数据来自【经手人管理】菜单中的业务员">
-              <j-select-multiple placeholder="请选择销售人员" v-model="personList.value" :options="personList.options"/>
-            </a-form-item>
-          </a-col>
         </a-row>
         <j-editable-table id="billModal"
           :ref="refKeys[0]"
