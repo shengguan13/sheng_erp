@@ -96,7 +96,6 @@
         </div>
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
-          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
@@ -209,8 +208,8 @@
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
-          { title: '应付金额', dataIndex: 'totalPrice',width:80},
-          { title: '实际付款', dataIndex: 'changeAmount',width:80},
+          { title: '申请金额', dataIndex: 'totalPrice',width:80},
+          { title: '实际金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
