@@ -120,7 +120,7 @@ public class AccountController {
                 for (AccountVo4InOutList aEx : dataList) {
                     String type = aEx.getType().replace("其它", "");
                     aEx.setType(type);
-                    if ("采购定金".equals(type) || "采购付款".equals(type) || "销售退款".equals(type)) {
+                    if ("采购定金".equals(type) || "采购付款".equals(type) || "销售退款".equals(type) || "支出".equals(type)) {
                         aEx.setChangeAmount(BigDecimal.ZERO.subtract(aEx.getChangeAmount()));
                     }
                     String timeStr = aEx.getOperTime().toString();

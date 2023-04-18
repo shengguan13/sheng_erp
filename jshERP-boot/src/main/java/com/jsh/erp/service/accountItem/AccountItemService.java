@@ -205,7 +205,8 @@ public class AccountItemService {
         deleteAccountItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
         if (null != rowArr && rowArr.size()>0) {
-            if(rowArr.size() > 1) {
+            if(rowArr.size() > 1 && ("采购定金".equals(type) || "采购付款".equals(type) || "采购退款".equals(type)
+                    || "销售定金".equals(type) || "销售收款".equals(type) || "销售退款".equals(type))) {
                 throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_ROW_TOO_MANY_CODE,
                         String.format(ExceptionConstants.ACCOUNT_HEAD_ROW_TOO_MANY_MSG));
             }
@@ -230,11 +231,7 @@ public class AccountItemService {
                     accountItem.setFinishDebt(tempInsertedJson.getBigDecimal("finishDebt"));
                 }
                 if (tempInsertedJson.get("eachAmount") != null && !tempInsertedJson.get("eachAmount").equals("")) {
-                    BigDecimal eachAmount = tempInsertedJson.getBigDecimal("eachAmount");
-                    if (type.equals("付款")) {
-                        eachAmount = BigDecimal.ZERO.subtract(eachAmount);
-                    }
-                    accountItem.setEachAmount(eachAmount);
+                    accountItem.setEachAmount( tempInsertedJson.getBigDecimal("eachAmount"));
                 } else {
                     accountItem.setEachAmount(BigDecimal.ZERO);
                 }

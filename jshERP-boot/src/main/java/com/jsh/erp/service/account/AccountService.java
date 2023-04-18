@@ -348,7 +348,8 @@ public class AccountService {
             if (dataList != null) {
                 for (AccountHead accountHead : dataList) {
                     if(accountHead.getChangeAmount()!=null) {
-                        if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "销售退款".equals(accountHead.getType())) {
+                        if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType())
+                                || "销售退款".equals(accountHead.getType()) || "支出".equals(accountHead.getType())) {
                             accountSum = accountSum.subtract(accountHead.getChangeAmount());
                         } else {
                             accountSum = accountSum.add(accountHead.getChangeAmount());

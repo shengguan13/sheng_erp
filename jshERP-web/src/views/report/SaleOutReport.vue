@@ -127,10 +127,7 @@
           {title: '扩展信息', dataIndex: 'materialOther'},
           {title: '单位', dataIndex: 'materialUnit'},
           {title: '销售数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum},
-          {title: '销售金额', dataIndex: 'outSumPrice', sorter: (a, b) => a.outSumPrice - b.outSumPrice},
           {title: '退货数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum},
-          {title: '退货金额', dataIndex: 'inSumPrice', sorter: (a, b) => a.inSumPrice - b.inSumPrice},
-          {title: '实际销售金额', dataIndex: 'outInSumPrice', sorter: (a, b) => a.outInSumPrice - b.outInSumPrice}
         ],
         url: {
           list: "/depotItem/saleOut"
@@ -168,11 +165,11 @@
         }
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '销售数量', '销售金额', '退货数量', '退货金额', '实际销售金额']]
+        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '销售数量', 退货数量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.materialUnit, ds.outSum,
-            ds.outSumPrice, ds.inSum, ds.inSumPrice, ds.outInSumPrice]
+          let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.materialUnit,
+            ds.outSum, ds.inSum]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '销售统计')

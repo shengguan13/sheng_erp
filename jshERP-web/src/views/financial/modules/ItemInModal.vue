@@ -64,7 +64,7 @@
           :rowNumber="false"
           :rowSelection="true"
           :actionButton="true"
-          @valueChange="onValueChange" />
+          @valueChange="onValueChangePayment" />
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
@@ -162,7 +162,7 @@
             { title: '收入项目',key: 'inOutItemId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
+            { title: '金额',key: 'finishDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注',key: 'remark', width: '30%', type: FormTypes.input, placeholder: '请选择${title}'}
@@ -234,14 +234,9 @@
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
-        let totalPrice = 0
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
         billMain.type = '收入'
-        for(let item of detailArr){
-          totalPrice += item.eachAmount-0
-        }
-        billMain.totalPrice = totalPrice
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         }
