@@ -35,11 +35,6 @@
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item>
-                  {{firstTotal}} {{lastTotal}}
-                </a-form-item>
-              </a-col>
             </a-row>
           </a-form>
         </div>
@@ -199,8 +194,6 @@
             this.dataSource = res.data.rows;
             this.ipagination.total = res.data.total;
             this.tableAddTotalRow(this.columns, this.dataSource)
-            this.firstTotal = '期初应付：' + res.data.firstMoney + "，"
-            this.lastTotal = '期末应付：' + res.data.lastMoney
           }
           if(res.code===510){
             this.$message.warning(res.data)

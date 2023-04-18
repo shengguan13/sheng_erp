@@ -103,48 +103,6 @@ public class SupplierService {
         try{
             List<Supplier> list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, offset, rows);
             for(Supplier s : list) {
-                Integer supplierId = s.getId().intValue();
-                String beginTime = Tools.getYearBegin();
-                String endTime = Tools.getCenternTime(new Date());
-                BigDecimal sum = BigDecimal.ZERO;
-                String supplierType = type;
-                String inOutType = "";
-                String subType = "";
-                String typeBack = "";
-                String subTypeBack = "";
-                String billType = "";
-                if (("供应商").equals(supplierType)) {
-                    inOutType = "入库";
-                    subType = "采购";
-                    typeBack = "出库";
-                    subTypeBack = "采购退货";
-                    billType = "付款";
-                } else if (("客户").equals(supplierType)) {
-                    inOutType = "出库";
-                    subType = "销售";
-                    typeBack = "入库";
-                    subTypeBack = "销售退货";
-                    billType = "收款";
-                }
-                List<DepotHeadVo4StatementAccount> saList = depotHeadService.getStatementAccount(beginTime, endTime, supplierId, null,
-                        supplierType, inOutType, subType, typeBack, subTypeBack, billType, null, null);
-                if(saList.size()>0) {
-                    DepotHeadVo4StatementAccount item = saList.get(0);
-                    //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
-                    BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreReturnDebtMoney()).subtract(item.getPreBackMoney());
-                    item.setPreNeed(preNeed);
-                    //实际欠款 = 本期欠款-本期退货的欠款金额
-                    BigDecimal realDebtMoney = item.getDebtMoney().subtract(item.getReturnDebtMoney());
-                    item.setDebtMoney(realDebtMoney);
-                    //期末 = 期初+实际欠款-本期收款
-                    BigDecimal allNeedGet = preNeed.add(realDebtMoney).subtract(item.getBackMoney());
-                    sum = sum.add(allNeedGet);
-                }
-                if(("客户").equals(s.getType())) {
-                    s.setAllNeedGet(sum);
-                } else if(("供应商").equals(s.getType())) {
-                    s.setAllNeedPay(sum);
-                }
                 resList.add(s);
             }
         }catch(Exception e){
@@ -622,49 +580,6 @@ public class SupplierService {
         List<String[]> objects = new ArrayList<String[]>();
         if (null != dataList) {
             for (Supplier s : dataList) {
-                Integer supplierId = s.getId().intValue();
-
-                String beginTime = Tools.getYearBegin();
-                String endTime = Tools.getCenternTime(new Date());
-                BigDecimal sum = BigDecimal.ZERO;
-                String supplierType = type;
-                String inOutType = "";
-                String subType = "";
-                String typeBack = "";
-                String subTypeBack = "";
-                String billType = "";
-                if (("供应商").equals(supplierType)) {
-                    inOutType = "入库";
-                    subType = "采购";
-                    typeBack = "出库";
-                    subTypeBack = "采购退货";
-                    billType = "付款";
-                } else if (("客户").equals(supplierType)) {
-                    inOutType = "出库";
-                    subType = "销售";
-                    typeBack = "入库";
-                    subTypeBack = "销售退货";
-                    billType = "收款";
-                }
-                List<DepotHeadVo4StatementAccount> saList = depotHeadService.getStatementAccount(beginTime, endTime, supplierId, null,
-                        supplierType, inOutType, subType, typeBack, subTypeBack, billType, null, null);
-                if(saList.size()>0) {
-                    DepotHeadVo4StatementAccount item = saList.get(0);
-                    //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
-                    BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreReturnDebtMoney()).subtract(item.getPreBackMoney());
-                    item.setPreNeed(preNeed);
-                    //实际欠款 = 本期欠款-本期退货的欠款金额
-                    BigDecimal realDebtMoney = item.getDebtMoney().subtract(item.getReturnDebtMoney());
-                    item.setDebtMoney(realDebtMoney);
-                    //期末 = 期初+实际欠款-本期收款
-                    BigDecimal allNeedGet = preNeed.add(realDebtMoney).subtract(item.getBackMoney());
-                    sum = sum.add(allNeedGet);
-                }
-                if(("客户").equals(s.getType())) {
-                    s.setAllNeedGet(sum);
-                } else if(("供应商").equals(s.getType())) {
-                    s.setAllNeedPay(sum);
-                }
                 String[] objs = new String[20];
                 objs[0] = s.getSupplier();
                 objs[1] = s.getContacts();

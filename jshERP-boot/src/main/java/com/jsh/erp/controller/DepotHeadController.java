@@ -306,17 +306,11 @@ public class DepotHeadController {
             String subTypeBack = "";
             String billType = "";
             if (("供应商").equals(supplierType)) {
-                type = "入库";
-                subType = "采购";
-                typeBack = "出库";
-                subTypeBack = "采购退货";
-                billType = "付款";
+                type = "其它";
+                subType = "采购订单";
             } else if (("客户").equals(supplierType)) {
-                type = "出库";
-                subType = "销售";
-                typeBack = "入库";
-                subTypeBack = "销售退货";
-                billType = "收款";
+                type = "其它";
+                subType = "销售订单";
             }
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
@@ -326,33 +320,11 @@ public class DepotHeadController {
             int total = depotHeadService.getStatementAccountCount(beginTime, endTime, organId, organArray,
                     supplierType, type, subType,typeBack, subTypeBack, billType);
             for(DepotHeadVo4StatementAccount item: list) {
-                //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
-                BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreReturnDebtMoney()).subtract(item.getPreBackMoney());
-                item.setPreNeed(preNeed);
-                //实际欠款 = 本期欠款-本期退货的欠款金额
-                BigDecimal realDebtMoney = item.getDebtMoney().subtract(item.getReturnDebtMoney());
-                item.setDebtMoney(realDebtMoney);
-                //期末 = 期初+实际欠款-本期收款
-                BigDecimal allNeedGet = preNeed.add(realDebtMoney).subtract(item.getBackMoney());
+                BigDecimal allNeedGet = item.getPreNeed().add(item.getDebtMoney()).subtract(item.getBackMoney());
                 item.setAllNeed(allNeedGet);
             }
             map.put("rows", list);
             map.put("total", total);
-            List<DepotHeadVo4StatementAccount> totalPayList = depotHeadService.getStatementAccountTotalPay(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType, typeBack, subTypeBack, billType);
-            if(totalPayList.size()>0) {
-                DepotHeadVo4StatementAccount totalPayItem = totalPayList.get(0);
-                BigDecimal firstMoney = BigDecimal.ZERO;
-                BigDecimal lastMoney = BigDecimal.ZERO;
-                if(totalPayItem!=null) {
-                    //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
-                    firstMoney = totalPayItem.getBeginNeed().add(totalPayItem.getPreDebtMoney()).subtract(totalPayItem.getPreReturnDebtMoney()).subtract(totalPayItem.getPreBackMoney());
-                    //期末 = 期初+本期欠款-本期退货的欠款金额-本期收款
-                    lastMoney = firstMoney.add(totalPayItem.getDebtMoney()).subtract(totalPayItem.getReturnDebtMoney()).subtract(totalPayItem.getBackMoney());
-                }
-                map.put("firstMoney", firstMoney); //期初
-                map.put("lastMoney", lastMoney);  //期末
-            }
             res.code = 200;
             res.data = map;
         } catch(Exception e){

@@ -18,23 +18,23 @@ public class DepotHeadVo4StatementAccount {
     private String email;
 
     /**
-     * 起始期初金额
+     * 起始期初金额（不用）
      */
     private BigDecimal beginNeed;
 
     /**
-     * 上期欠款金额
+     * 上期欠款金额（不用）
      */
     private BigDecimal preDebtMoney;
 
     /**
-     * 上期退货的欠款金额
+     * 上期退货的欠款金额（不用）
      */
     private BigDecimal preReturnDebtMoney;
 
 
     /**
-     * 上期收付款
+     * 上期收付款（不用）
      */
     private BigDecimal preBackMoney;
 
@@ -49,7 +49,7 @@ public class DepotHeadVo4StatementAccount {
     private BigDecimal debtMoney;
 
     /**
-     * 本期退货的欠款金额
+     * 本期退货的欠款金额（不用）
      */
     private BigDecimal returnDebtMoney;
 
@@ -59,7 +59,7 @@ public class DepotHeadVo4StatementAccount {
     private BigDecimal backMoney;
 
     /**
-     * 期末应收
+     * 期末应收（不用）（后填）
      */
     private BigDecimal allNeed;
 

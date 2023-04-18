@@ -30,8 +30,14 @@ public class DepotHead {
 
     private Long accountId;
 
+    /**
+     * 申请的定金
+     */
     private BigDecimal changeAmount;
 
+    /**
+     * 实际的定金
+     */
     private BigDecimal backAmount;
 
     private BigDecimal totalPrice;
@@ -50,14 +56,26 @@ public class DepotHead {
 
     private String accountMoneyList;
 
+    /**
+     * 申请的款项
+     */
     private BigDecimal discount;
 
+    /**
+     * 实际的款项
+     */
     private BigDecimal discountMoney;
 
     private BigDecimal discountLastMoney;
 
+    /**
+     * 申请的退款
+     */
     private BigDecimal otherMoney;
 
+    /**
+     * 实际的退款
+     */
     private BigDecimal deposit;
 
     private String status;
