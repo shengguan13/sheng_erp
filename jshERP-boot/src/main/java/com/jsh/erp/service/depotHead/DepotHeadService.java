@@ -1285,40 +1285,18 @@ public class DepotHeadService {
                 //通过批量查询去构造map
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
                 for (DepotHeadVo4List dh : list) {
-                    if(dh.getChangeAmount() != null) {
-                        dh.setChangeAmount(dh.getChangeAmount().abs());
-                    }
-                    if(dh.getTotalPrice() != null) {
-                        dh.setTotalPrice(dh.getTotalPrice().abs());
-                    }
-                    if(dh.getDeposit() == null) {
-                        dh.setDeposit(BigDecimal.ZERO);
-                    }
+                    BigDecimal needDebt = (dh.getChangeAmount()==null?BigDecimal.ZERO:dh.getChangeAmount())
+                            .add(dh.getDiscount()==null?BigDecimal.ZERO:dh.getDiscount())
+                            .subtract(dh.getOtherMoney()==null?BigDecimal.ZERO:dh.getOtherMoney());
+                    BigDecimal finishDebt = (dh.getBackAmount()==null?BigDecimal.ZERO:dh.getBackAmount())
+                            .add(dh.getDiscountMoney()==null?BigDecimal.ZERO:dh.getDiscountMoney())
+                            .subtract(dh.getDeposit()==null?BigDecimal.ZERO:dh.getDeposit());
+                    dh.setNeedDebt(needDebt);
+                    dh.setFinishDebt(finishDebt);
+                    dh.setDebt(needDebt.subtract(finishDebt));
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
-                    if(dh.getPlanStartTime() != null) {
-                        dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
-                    }
-                    if(dh.getPlanFinishTime() != null) {
-                        dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
-                    }
-                    BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
-                    BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
-                    BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
-                    BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount().abs():BigDecimal.ZERO;
-                    //本单欠款(如果退货则为负数)
-                    dh.setNeedDebt(discountLastMoney.add(otherMoney).subtract(deposit.add(changeAmount)));
-                    if(BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(dh.getSubType()) || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(dh.getSubType())) {
-                        dh.setNeedDebt(BigDecimal.ZERO.subtract(dh.getNeedDebt()));
-                    }
-                    BigDecimal needDebt = dh.getNeedDebt()!=null?dh.getNeedDebt():BigDecimal.ZERO;
-                    BigDecimal finishDebt = accountItemService.getEachAmountByBillId(dh.getId());
-                    finishDebt = finishDebt!=null?finishDebt:BigDecimal.ZERO;
-                    //已收欠款
-                    dh.setFinishDebt(finishDebt);
-                    //待收欠款
-                    dh.setDebt(needDebt.subtract(finishDebt));
                     //商品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));

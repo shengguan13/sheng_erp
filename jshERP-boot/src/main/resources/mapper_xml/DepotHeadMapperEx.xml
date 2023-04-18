@@ -924,8 +924,8 @@
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
-        and (dh.type='入库' or dh.type='出库')
-        and (dh.sub_type='采购' or dh.sub_type='销售' or dh.sub_type='采购退货' or dh.sub_type='销售退货')
+        and (dh.type='其它')
+        and (dh.sub_type='采购订单' or dh.sub_type='销售订单')
         <if test="organId != null">
             and dh.organ_id = #{organId}
         </if>
@@ -946,13 +946,6 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
         </if>
-        <if test="depotArray != null and depotArray !=''">
-            and di.depot_id in (
-            <foreach collection="depotArray" item="depotId" separator=",">
-                #{depotId}
-            </foreach>
-            )
-        </if>
         <if test="creatorArray != null">
             and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
@@ -960,8 +953,6 @@
             </foreach>
             )
         </if>
-        and (abs(dh.change_amount)+(select ifnull(sum(abs(ai.each_amount)),0) from jsh_account_item ai where ai.bill_id=dh.id and ifnull(ai.delete_flag,'0') !='1'))
-        &lt; (dh.discount_last_money + dh.other_money - ifnull(dh.deposit,0))
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.oper_time desc
         <if test="offset != null and rows != null">
@@ -978,8 +969,8 @@
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
-        and (dh.type='入库' or dh.type='出库')
-        and (dh.sub_type='采购' or dh.sub_type='销售' or dh.sub_type='采购退货' or dh.sub_type='销售退货')
+        and (dh.type='其它')
+        and (dh.sub_type='采购订单' or dh.sub_type='销售订单')
         <if test="organId != null">
             and dh.organ_id = #{organId}
         </if>
@@ -1000,13 +991,6 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        <if test="depotArray != null and depotArray !=''">
-            and di.depot_id in (
-            <foreach collection="depotArray" item="depotId" separator=",">
-                #{depotId}
-            </foreach>
-            )
-        </if>
         <if test="creatorArray != null">
             and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
@@ -1014,8 +998,6 @@
             </foreach>
             )
         </if>
-        and (abs(dh.change_amount)+(select ifnull(sum(abs(ai.each_amount)),0) from jsh_account_item ai where ai.bill_id=dh.id and ifnull(ai.delete_flag,'0') !='1'))
-        &lt; (dh.discount_last_money + dh.other_money - ifnull(dh.deposit,0))
         and ifnull(dh.delete_flag,'0') !='1' ) tb
     </select>
 
