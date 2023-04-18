@@ -13,4 +13,9 @@ public class AccountVo4List extends Account{
     public void setThisMonthAmount(String thisMonthAmount) {
         this.thisMonthAmount = thisMonthAmount;
     }
+
+    @Override
+    public String toString() {
+        return "thisMonthAmount: " + thisMonthAmount;
+    }
 }

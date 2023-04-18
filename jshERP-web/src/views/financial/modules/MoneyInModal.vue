@@ -96,8 +96,8 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-              <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
+              <a-select placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -208,7 +208,7 @@
             rules: [{ required: true, message: '请选择单据日期!' }]
           },
           accountId:{
-            rules: [{ required: true, message: '请选择收款账户!' }]
+            rules: [{ required: true, message: '请选择结算账户!' }]
           },
           discountMoney:{
             rules: [{ required: true, message: '请输入优惠金额!' }]

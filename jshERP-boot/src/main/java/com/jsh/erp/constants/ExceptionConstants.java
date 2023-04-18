@@ -422,6 +422,9 @@ public class ExceptionConstants {
     //单据录入-单据编号已经存在
     public static final int DEPOT_HEAD_BILL_NUMBER_EXIST_CODE = 8000027;
     public static final String DEPOT_HEAD_BILL_NUMBER_EXIST_MSG = "抱歉，单据编号已经存在";
+    //单据录入-单据编号已经存在
+    public static final int DEPOT_ITEM_NUMBER_MUST_BE_POSITIVE_CODE = 8000028;
+    public static final String DEPOT_ITEM_NUMBER_MUST_BE_POSITIVE_MSG = "抱歉，数量必须大于0";
 
     /**
      *  单据明细信息

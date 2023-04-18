@@ -120,9 +120,12 @@ public class AccountController {
                 for (AccountVo4InOutList aEx : dataList) {
                     String type = aEx.getType().replace("其它", "");
                     aEx.setType(type);
+                    if ("采购定金".equals(type) || "采购付款".equals(type) || "销售退款".equals(type)) {
+                        aEx.setChangeAmount(BigDecimal.ZERO.subtract(aEx.getChangeAmount()));
+                    }
                     String timeStr = aEx.getOperTime().toString();
-                    BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date").add(accountService.getAccountSumByHead(accountId, timeStr, "date"))
-                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date")).add(accountService.getManyAccountSum(accountId, timeStr, "date")).add(initialAmount);
+                    BigDecimal accountSumByHead = accountService.getAccountSumByHead(accountId, timeStr, "date");
+                    BigDecimal balance = accountSumByHead.add(initialAmount);
                     aEx.setBalance(balance);
                     aEx.setAccountId(accountId);
                     dataArray.add(aEx);

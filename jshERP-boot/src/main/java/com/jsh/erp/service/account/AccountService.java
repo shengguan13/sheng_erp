@@ -302,7 +302,7 @@ public class AccountService {
             if (dataList != null) {
                 for (DepotHead depotHead : dataList) {
                     if(depotHead.getChangeAmount()!=null) {
-                        accountSum = accountSum .add(depotHead.getChangeAmount()) ;
+                        accountSum = accountSum.add(depotHead.getChangeAmount());
                     }
                 }
             }
@@ -348,7 +348,11 @@ public class AccountService {
             if (dataList != null) {
                 for (AccountHead accountHead : dataList) {
                     if(accountHead.getChangeAmount()!=null) {
-                        accountSum = accountSum.add(accountHead.getChangeAmount());
+                        if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "销售退款".equals(accountHead.getType())) {
+                            accountSum = accountSum.subtract(accountHead.getChangeAmount());
+                        } else {
+                            accountSum = accountSum.add(accountHead.getChangeAmount());
+                        }
                     }
                 }
             }

@@ -503,6 +503,10 @@ public class DepotItemService {
                 Unit unitInfo = materialService.findUnit(materialExtend.getMaterialId()); //查询计量单位信息
                 if (StringUtil.isExist(rowObj.get("operNumber"))) {
                     depotItem.setOperNumber(rowObj.getBigDecimal("operNumber"));
+                    if (depotItem.getOperNumber().doubleValue() <= 0.0) {
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_NUMBER_MUST_BE_POSITIVE_CODE,
+                                ExceptionConstants.DEPOT_ITEM_NUMBER_MUST_BE_POSITIVE_MSG);
+                    }
                     String unit = rowObj.get("unit").toString();
                     BigDecimal oNumber = rowObj.getBigDecimal("operNumber");
                     if (StringUtil.isNotEmpty(unitInfo.getName())) {

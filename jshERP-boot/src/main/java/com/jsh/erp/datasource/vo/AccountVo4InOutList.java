@@ -113,4 +113,11 @@ public class AccountVo4InOutList {
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
+
+    @Override
+    public String toString() {
+        return "accountId: " + accountId + "; number: " + number + "; type: " + type + "; fromType: " + fromType
+                + "; supplierName: " + supplierName + "; changeAmount: " + changeAmount + "; balance: " + balance
+                + "; operTime: " + operTime + "; aList: " + aList + "; amList: " + amList;
+    }
 }
