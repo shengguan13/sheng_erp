@@ -55,23 +55,8 @@
               </a-form-item>
             </a-col>
             <a-col :span="24/2">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初应收">
-                <a-input placeholder="请输入期初应收" v-decorator.trim="[ 'beginNeedGet' ]" />
-              </a-form-item>
-            </a-col>
-            <a-col :span="24/2">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应收">
-                <a-input v-decorator.trim="[ 'allNeedGet' ]" :readOnly="true" />
-              </a-form-item>
-            </a-col>
-            <a-col :span="24/2">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="纳税人识别号">
                 <a-input placeholder="请输入纳税人识别号" v-decorator.trim="[ 'taxNum' ]" />
-              </a-form-item>
-            </a-col>
-            <a-col :span="24/2">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="税率(%)">
-                <a-input-number style="width:100%" placeholder="请输入税率" v-decorator.trim="[ 'taxRate' ]" />
               </a-form-item>
             </a-col>
             <a-col :span="24/2">
