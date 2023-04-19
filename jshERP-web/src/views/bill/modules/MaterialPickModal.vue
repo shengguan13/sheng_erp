@@ -21,10 +21,9 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <!-- TODO:设置为必填 -->
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="1" data-title="领料人员"
-                         data-intro="领料人员的数据来自【经手人管理】菜单中的仓管员">
-              <a-select v-model="personList.value" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员">
+              <a-select placeholder="选择领料人员" v-decorator="[ 'salesMan', validatorRules.salesMan ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
                   {{ item.text }}
                 </a-select-option>
@@ -265,14 +264,14 @@
         if (this.action === 'add') {
           this.depositStatus = false
           this.addInit(this.prefixNo)
-          this.personList.value = ''
+          this.salesMan = ''
           this.fileList = []
           this.$nextTick(() => {
             handleIntroJs(this.prefixNo, 1)
           })
         } else {
           this.model.operTime = this.model.operTimeStr
-          this.personList.value = this.model.salesMan
+          this.salesMan = this.model.salesMan
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model, 'operTime', 'number', 'linkNumber', 'remark','salesMan'))
@@ -318,7 +317,6 @@
         if(this.model.id){
           billMain.id = this.model.id
         }
-        billMain.salesMan = this.personList.value
         billMain.status = this.billStatus
         return {
           info: JSON.stringify(billMain),
@@ -352,8 +350,8 @@
             this.orderStatusStr = this.orderStatusStr + "[" + info.name + "]" + info.preNumber + info.unit
             if(info.finishNumber > 0) {
               toDoNumber = info.preNumber - info.finishNumber
-              this.orderStatusStr = this.orderStatusStr + "（还需生产" + toDoNumber + info.unit + "）"
             }
+            this.orderStatusStr = this.orderStatusStr + "（还需生产" + toDoNumber + info.unit + "）"
             productionMap.set(info.barCode, toDoNumber)
           }
           // 读取所有生产单的零件barCode
@@ -373,18 +371,20 @@
                 let mInfo = mList[i]
                 let compositeStr = mInfo.otherField14
                 // e.g. [meId]*n
-                let strArr = compositeStr.split('+')
-                for (let k = 0; k < strArr.length; k++) {
-                  let split = strArr[k].split(']')
-                  // e.g. [meId
-                  let id = split[0].substr(1)
-                  // e.g. *n
-                  let num = Number(split[1].substr(1))
-                  if (materialMap.has(id)) {
-                    let oldNum = materialMap.get(id)
-                    materialMap.set(id, oldNum + num * productionMap.get(mInfo.mBarCode))
-                  } else {
-                    materialMap.set(id, num * productionMap.get(mInfo.mBarCode))
+                if (compositeStr && compositeStr != "") {
+                  let strArr = compositeStr.split('+')
+                  for (let k = 0; k < strArr.length; k++) {
+                    let split = strArr[k].split(']')
+                    // e.g. [meId
+                    let id = split[0].substr(1)
+                    // e.g. *n
+                    let num = Number(split[1].substr(1))
+                    if (materialMap.has(id)) {
+                      let oldNum = materialMap.get(id)
+                      materialMap.set(id, oldNum + num * productionMap.get(mInfo.mBarCode))
+                    } else {
+                      materialMap.set(id, num * productionMap.get(mInfo.mBarCode))
+                    }
                   }
                 }
               }
