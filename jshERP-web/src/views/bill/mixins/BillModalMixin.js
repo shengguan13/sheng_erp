@@ -114,7 +114,8 @@ export const BillModalMixin = {
         if(columns[i].key === key) {
           if(type){
             if(key === 'snList' || key === 'batchNumber') {
-              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'DBCK') {
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK'
+                  || this.prefixNo === 'QTCK' || this.prefixNo === 'DBCK' || this.prefixNo === 'LLCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 if(key === 'snList') {

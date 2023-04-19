@@ -212,6 +212,8 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', readonly: true, multi: false },
+            { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input, readonly: true },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
             { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
           ]
