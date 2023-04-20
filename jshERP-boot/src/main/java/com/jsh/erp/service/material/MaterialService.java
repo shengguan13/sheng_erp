@@ -307,7 +307,9 @@ public class MaterialService {
             logService.insertLog("商品",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(material.getName()).toString(), request);
             return 1;
-        }catch(Exception e){
+        } catch (BusinessRunTimeException ex) {
+            throw new BusinessRunTimeException(ex.getCode(), ex.getMessage());
+        } catch(Exception e){
             JshException.writeFail(logger, e);
             return 0;
         }
