@@ -477,21 +477,22 @@ public class DepotItemService {
                         }
                     }
                 }
-                if (StringUtil.isExist(rowObj.get("batchNumber"))) {
-                    depotItem.setBatchNumber(rowObj.getString("batchNumber"));
-                } else {
-                    //入库或出库
-                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) ||
-                            BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
-                        //批号不能为空
-                        if (BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
+                // 开启批号的情况下，记录批号以及保质期，且批号不能为空
+                if (BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
+                    if (StringUtil.isExist(rowObj.get("batchNumber"))) {
+                        depotItem.setBatchNumber(rowObj.getString("batchNumber"));
+                    } else {
+                        if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())
+                            || BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
+                            //批号不能为空
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
                         }
                     }
-                }
-                if (StringUtil.isExist(rowObj.get("expirationDate"))) {
-                    depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
+                    // 有批号的情况下才记录保质期，但不强制
+                    if (StringUtil.isExist(rowObj.get("expirationDate"))) {
+                        depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
+                    }
                 }
                 if (StringUtil.isExist(rowObj.get("sku"))) {
                     depotItem.setSku(rowObj.getString("sku"));

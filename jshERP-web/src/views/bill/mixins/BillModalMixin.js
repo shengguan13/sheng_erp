@@ -125,7 +125,8 @@ export const BillModalMixin = {
                 }
               }
             } else if(key === 'expirationDate') {
-              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK'
+                  || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
                 columns[i].type = FormTypes.date //显示
               } else {
                 columns[i].type = FormTypes.input //显示
@@ -379,6 +380,9 @@ export const BillModalMixin = {
                     let mObj = this.parseInfoToObj(mInfo)
                     mObj.depotId = mInfo.depotId
                     mObj.stock = mInfo.stock
+                    if (mObj.enableBatchNumber === '0') {
+                      mObj.batchNumber = '无需批号保质期'
+                    }
                     mArr.push(mObj)
                   }
                   let allPriceTotal = 0
@@ -406,6 +410,9 @@ export const BillModalMixin = {
                     let mInfo = mList[0]
                     this.changeColumnShow(mInfo)
                     let mInfoEx = this.parseInfoToObj(mInfo)
+                    if (mObj.enableBatchNumber === '0') {
+                      mObj.batchNumber = '无需批号保质期'
+                    }
                     mInfoEx.stock = res.data.stock
                     let mObj = {
                       rowKey: row.id,
@@ -470,6 +477,7 @@ export const BillModalMixin = {
         model: mInfo.model,
         color: mInfo.color,
         materialOther: mInfo.materialOther,
+        enableBatchNumber: mInfo.enableBatchNumber,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
         operNumber: 1,
