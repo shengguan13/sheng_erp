@@ -797,7 +797,7 @@ CREATE TABLE `jsh_tenant`  (
 -- ----------------------------
 -- Records of jsh_tenant
 -- ----------------------------
-INSERT INTO `jsh_tenant` VALUES (13, 63, 'jsh', 2000, '1', b'1', '2021-02-17 23:19:17', '2099-02-17 23:19:17', NULL);
+INSERT INTO `jsh_tenant` VALUES (13, 63, 'guansheng', 2000, '1', b'1', '2021-02-17 23:19:17', '2099-02-17 23:19:17', NULL);
 
 -- ----------------------------
 -- Table structure for jsh_unit
@@ -850,7 +850,7 @@ CREATE TABLE `jsh_user`  (
 -- ----------------------------
 -- Records of jsh_user
 -- ----------------------------
-INSERT INTO `jsh_user` VALUES (63, '测试', 'jsh', 'd5c64a6be9b950778506c0647fa592da', '0', '', NULL, '', '', 1, 1, 0, '', NULL, 63);
+INSERT INTO `jsh_user` VALUES (63, '测试', 'guansheng', 'd5c64a6be9b950778506c0647fa592da', '0', '', NULL, '', '', 1, 1, 0, '', NULL, 63);
 INSERT INTO `jsh_user` VALUES (120, '管理员', 'admin', 'd5c64a6be9b950778506c0647fa592da', '0', NULL, NULL, NULL, NULL, 1, 0, 0, NULL, NULL, 0);
 
 -- ----------------------------
