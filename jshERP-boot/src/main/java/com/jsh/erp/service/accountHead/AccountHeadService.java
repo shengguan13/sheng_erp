@@ -261,6 +261,8 @@ public class AccountHeadService {
         StringBuffer sb = new StringBuffer();
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         List<AccountHead> list = getAccountHeadListByIds(ids);
+        List<Long> needRecalcHeaderIdList = new ArrayList<>();
+        Set<Long> needRecalcBillNoSet = new HashSet<>();
         for(AccountHead accountHead: list){
             sb.append("[").append(accountHead.getBillNo()).append("]");
             if("1".equals(accountHead.getStatus())) {
@@ -273,16 +275,33 @@ public class AccountHeadService {
                     supplierService.updateAdvanceIn(accountHead.getOrganId(), BigDecimal.ZERO.subtract(accountHead.getTotalPrice()));
                 }
             }
+            if (needRecalc(accountHead.getType())) {
+                needRecalcHeaderIdList.add(accountHead.getId());
+            }
         }
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        //删除主表
-        accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        List<AccountItem> needRecalcAccountItems = accountItemService.selectByHeaderIds(needRecalcHeaderIdList);
+        for (AccountItem item : needRecalcAccountItems) {
+            if (item.getBillId() != null) {
+                needRecalcBillNoSet.add(item.getBillId());
+            }
+        }
         //删除子表
+        accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        //删除主表
         accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        if (!needRecalcBillNoSet.isEmpty()) {
+            depotHeadService.recalcDepotHeadPayments(needRecalcBillNoSet);
+        }
         logService.insertLog("财务", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         return 1;
+    }
+
+    private boolean needRecalc(String type) {
+        return "采购定金".equals(type) || "采购付款".equals(type) || "采购退款".equals(type)
+                || "销售定金".equals(type) || "销售收款".equals(type) || "销售退款".equals(type);
     }
 
     /**
@@ -309,16 +328,23 @@ public class AccountHeadService {
         int result = 0;
         try{
             List<Long> ahIds = new ArrayList<>();
+            List<Long> needRecalcAhIds = new ArrayList<>();
             List<Long> ids = StringUtil.strToLongList(accountHeadIds);
             for(Long id: ids) {
                 AccountHead accountHead = getAccountHead(id);
                 if("0".equals(status)){
                     if("1".equals(accountHead.getStatus())) {
                         ahIds.add(id);
+                        if (needRecalc(accountHead.getType())) {
+                            needRecalcAhIds.add(id);
+                        }
                     }
                 } else if("1".equals(status)){
                     if("0".equals(accountHead.getStatus())) {
                         ahIds.add(id);
+                        if (needRecalc(accountHead.getType())) {
+                            needRecalcAhIds.add(id);
+                        }
                     }
                 }
             }
@@ -328,6 +354,18 @@ public class AccountHeadService {
                 AccountHeadExample example = new AccountHeadExample();
                 example.createCriteria().andIdIn(ahIds);
                 result = accountHeadMapper.updateByExampleSelective(accountHead, example);
+                if (needRecalcAhIds.size()>0) {
+                    Set<Long> needRecalcBillNoSet = new HashSet<>();
+                    List<AccountItem> needRecalcAccountItems = accountItemService.selectByHeaderIds(needRecalcAhIds);
+                    for (AccountItem item : needRecalcAccountItems) {
+                        if (item.getBillId() != null) {
+                            needRecalcBillNoSet.add(item.getBillId());
+                        }
+                    }
+                    if (needRecalcBillNoSet.size()>0) {
+                        depotHeadService.recalcDepotHeadPayments(needRecalcBillNoSet);
+                    }
+                }
             } else {
                 return 1;
             }
@@ -364,8 +402,7 @@ public class AccountHeadService {
         if("收预付款".equals(accountHead.getType())){
             supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice());
         }
-        if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "采购退款".equals(accountHead.getType()) ||
-                "销售定金".equals(accountHead.getType()) || "销售收款".equals(accountHead.getType()) || "销售退款".equals(accountHead.getType())) {
+        if (needRecalc(accountHead.getType())) {
             depotHeadService.recalcDepotHeadPayments(getImpactedBillIds(rows));
         }
         logService.insertLog("财务单据",
@@ -382,7 +419,6 @@ public class AccountHeadService {
                     String billNo = tempInsertedJson.getString("billNumber");
                     result.add(depotHeadService.getDepotHead(billNo).getId());
                 }
-
             }
         }
         return result;
@@ -412,9 +448,7 @@ public class AccountHeadService {
         if("收预付款".equals(accountHead.getType())){
             supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice().subtract(preTotalPrice));
         }
-        logger.info("Updating account head with type: " + accountHead.getType());
-        if ("采购定金".equals(accountHead.getType()) || "采购付款".equals(accountHead.getType()) || "采购退款".equals(accountHead.getType()) ||
-                "销售定金".equals(accountHead.getType()) || "销售收款".equals(accountHead.getType()) || "销售退款".equals(accountHead.getType())) {
+        if (needRecalc(accountHead.getType())) {
             depotHeadService.recalcDepotHeadPayments(getImpactedBillIds(rows));
         }
         logService.insertLog("财务单据",

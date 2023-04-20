@@ -441,17 +441,23 @@ public class DepotHeadService {
                         case "采购定金":
                         case "销售定金":
                             changeAmount = changeAmount.add(need);
-                            backAmount = backAmount.add(finish);
+                            if (Integer.valueOf(accountHead.getStatus()) > 0) {
+                                backAmount = backAmount.add(finish);
+                            }
                             break;
                         case "采购付款":
                         case "销售收款":
                             discount = discount.add(need);
-                            discountMoney = discountMoney.add(finish);
+                            if (Integer.valueOf(accountHead.getStatus()) > 0) {
+                                discountMoney = discountMoney.add(finish);
+                            }
                             break;
                         case "采购退款":
                         case "销售退款":
                             otherMoney = otherMoney.add(need);
-                            deposit = deposit.add(finish);
+                            if (Integer.valueOf(accountHead.getStatus()) > 0) {
+                                deposit = deposit.add(finish);
+                            }
                             break;
                     }
                 }
