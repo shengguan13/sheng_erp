@@ -245,7 +245,6 @@
       editAfter() {
         this.billStatus = '0'
         this.rowCanEdit = true
-        this.materialTable.columns[1].type = FormTypes.popupJsh
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'planOrderedNumber', 0)

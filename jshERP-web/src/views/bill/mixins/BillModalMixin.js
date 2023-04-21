@@ -410,8 +410,8 @@ export const BillModalMixin = {
                     let mInfo = mList[0]
                     this.changeColumnShow(mInfo)
                     let mInfoEx = this.parseInfoToObj(mInfo)
-                    if (mObj.enableBatchNumber === '0') {
-                      mObj.batchNumber = '无需批号保质期'
+                    if (mInfoEx.enableBatchNumber === '0') {
+                      mInfoEx.batchNumber = '无需批号保质期'
                     }
                     mInfoEx.stock = res.data.stock
                     let mObj = {
