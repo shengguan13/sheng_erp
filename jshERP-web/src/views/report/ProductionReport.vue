@@ -8,17 +8,12 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select placeholder="选择客户" v-model="queryParam.organId"
-                    :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
-                    <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                      {{ item.supplier }}
-                    </a-select-option>
-                  </a-select>
+                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="条码/名称/内部零件号/客户零件号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="账单周期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 100%"
                     v-model="queryParam.createTimeRange"
@@ -29,8 +24,8 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <span class="table-page-search-submitButtons">
+              <a-col :md="6" :sm="24">
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
@@ -51,15 +46,6 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
-            <span slot="action" slot-scope="text, record">
-              <a @click="showDebtAccountList(record)">{{record.id?'详情':''}}</a>
-            </span>
-            <span slot="customTitle">
-              期末应收
-              <a-tooltip title="期末应收=期初应收+本期欠款-本期收款">
-                <a-icon type="question-circle" />
-              </a-tooltip>
-            </span>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
             <a-col :md="24" :sm="24">
@@ -80,25 +66,20 @@
           </a-row>
         </section>
         <!-- table区域-end -->
-        <!-- 表单区域 -->
-        <debt-account-list ref="debtAccountList"></debt-account-list>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
-  import DebtAccountList from './modules/DebtAccountList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
-  import { getAction } from '@/api/manage'
-  import {findBySelectCus} from '@/api/api'
+  import { getNowFormatYear, getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
+  import Vue from 'vue'
   export default {
     name: "ProductionReport",
     mixins:[JeecgListMixin],
     components: {
-      DebtAccountList,
       JEllipsis
     },
     data () {
@@ -110,12 +91,12 @@
           span: 18,
           offset: 1
         },
-        // 查询条件
         queryParam: {
-          supplierType: "客户",
-          organId: '',
+          materialParam:'',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
+          roleType: Vue.ls.get('roleType'),
         },
         ipagination:{
           pageSize: 11,
@@ -124,103 +105,59 @@
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
         defaultTimeStr: '',
-        supList: [],
-        firstTotal: '',
-        lastTotal: '',
         tabKey: "1",
         // 表头
         columns: [
-          {
-            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
-            customRender:function (t,r,index) {
-              return (t !== '合计') ? (parseInt(index) + 1) : t
-            }
-          },
-          {title: '欠款详情', dataIndex: 'action', align:"center", width: 150, fixed: 'left',
-            scopedSlots: { customRender: 'action' }
-          },
-          {title: '客户', dataIndex: 'supplier', width: 200, fixed: 'left'},
-          {title: '联系人', dataIndex: 'contacts'},
-          {title: '手机号码', dataIndex: 'telephone'},
-          {title: '联系电话', dataIndex: 'phoneNum'},
-          {title: '电子邮箱', dataIndex: 'email'},
-          {title: '期初应收', dataIndex: 'preNeed'},
-          {title: '本期欠款', dataIndex: 'debtMoney'},
-          {title: '本期收款', dataIndex: 'backMoney'},
-          {dataIndex: 'allNeed', slots: { title: 'customTitle' } }
+          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
+          {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
+          {title: '内部零件号', dataIndex: 'materialInternalId'},
+          {title: '客户零件号', dataIndex: 'materialModel'},
+          {title: '扩展信息', dataIndex: 'materialOther', ellipsis:true},
+          {title: '单位', dataIndex: 'materialUnit', ellipsis:true},
+          {title: '生产入库数量', dataIndex: 'productionIn', sorter: (a, b) => a.productionIn - b.productionIn}
         ],
         url: {
-          list: "/depotHead/getStatementAccount",
+          list: "/depotItem/productionIn"
         }
       }
     },
     created () {
-      this.initSupplier()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
-      this.scroll.x = 1620
+      this.scroll.x = 1400
     },
     methods: {
+      moment,
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
+        param.monthTime = this.queryParam.monthTime;
         param.field = this.getQueryField();
         param.currentPage = this.ipagination.current;
         param.pageSize = this.ipagination.pageSize-1;
         return param;
-      },
-      initSupplier() {
-        let that = this;
-        findBySelectCus({}).then((res)=>{
-          if(res) {
-            that.supList = res;
-          }
-        });
       },
       onDateChange: function (value, dateString) {
         console.log(dateString[0],dateString[1]);
         this.queryParam.beginTime=dateString[0];
         this.queryParam.endTime=dateString[1];
       },
-      loadData(arg) {
-        //加载数据 若传入参数1则加载第一页的内容
-        if (arg === 1) {
-          this.ipagination.current = 1;
-        }
-        let params = this.getQueryParams();//查询条件
-        this.loading = true;
-        getAction(this.url.list, params).then((res) => {
-          if (res.code===200) {
-            this.dataSource = res.data.rows;
-            this.ipagination.total = res.data.total;
-            this.tableAddTotalRow(this.columns, this.dataSource)
-          }
-          if(res.code===510){
-            this.$message.warning(res.data)
-          }
-          this.loading = false;
-        })
-      },
       searchQuery() {
-        if(this.queryParam.beginTime === '' || this.queryParam.endTime === ''){
+        if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
           this.$message.warning('请选择单据日期！')
         } else {
           this.loadData(1);
         }
       },
       exportExcel() {
-        let aoa = [['客户', '联系人', '手机号码', '联系电话', '电子邮箱', '期初应收', '本期欠款', '本期收款', '期末应收']]
+        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '进货数量', '退货数量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.preNeed, ds.debtMoney, ds.backMoney, ds.allNeed]
+          let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.materialUnit,
+            ds.inSum, ds.outSum]
           aoa.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '客户对账')
-      },
-      showDebtAccountList(record) {
-        this.$refs.debtAccountList.show(record.id, '出库', '销售', '客户', "", this.queryParam.beginTime, this.queryParam.endTime)
-        this.$refs.debtAccountList.title = "欠款详情"
-        this.$refs.debtAccountList.disableSubmit = false
+        openDownloadDialog(sheet2blob(aoa), '进货统计')
       }
     }
   }

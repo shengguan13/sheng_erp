@@ -637,6 +637,70 @@ public class DepotItemController {
     }
 
     /**
+     * 生产统计
+     * @param currentPage
+     * @param pageSize
+     * @param beginTime
+     * @param endTime
+     * @param materialParam
+     * @param mpList
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/productionIn")
+    @ApiOperation(value = "生产统计")
+    public BaseResponseInfo productionIn(@RequestParam("currentPage") Integer currentPage,
+                                         @RequestParam("pageSize") Integer pageSize,
+                                         @RequestParam("beginTime") String beginTime,
+                                         @RequestParam("endTime") String endTime,
+                                         @RequestParam("materialParam") String materialParam,
+                                         @RequestParam("mpList") String mpList,
+                                         @RequestParam(value = "roleType", required = false) String roleType,
+                                         HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+        endTime = Tools.parseDayToTime(endTime, BusinessConstants.DAY_LAST_TIME);
+        try {
+            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithProductionIn(
+                    StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, (currentPage-1)*pageSize, pageSize);
+            String[] mpArr = mpList.split(",");
+            int total = depotItemService.getListWithProductionInCount(StringUtil.toNull(materialParam), beginTime, endTime, creatorArray);
+            map.put("total", total);
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (DepotItemVo4WithInfoEx diEx : dataList) {
+                    JSONObject item = new JSONObject();
+                    BigDecimal productionIn = depotItemService.productionIn(diEx.getMId(), beginTime, endTime, creatorArray);
+                    item.put("barCode", diEx.getBarCode());
+                    item.put("materialName", diEx.getMName());
+                    item.put("materialModel", diEx.getMModel());
+                    item.put("materialInternalId", diEx.getMInternalId());
+                    //扩展信息
+                    String materialOther = getOtherInfo(mpArr, diEx);
+                    item.put("materialOther", materialOther);
+                    item.put("materialColor", diEx.getMColor());
+                    item.put("materialProject", diEx.getMProject());
+                    item.put("materialUnit", diEx.getMaterialUnit());
+                    item.put("unitName", diEx.getUnitName());
+                    item.put("productionIn", productionIn);
+                    dataArray.add(item);
+                }
+            }
+            map.put("rows", dataArray);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
      * 获取单位
      * @param materialUnit
      * @param uName

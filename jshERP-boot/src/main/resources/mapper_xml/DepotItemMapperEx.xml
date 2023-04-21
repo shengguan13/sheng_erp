@@ -467,6 +467,93 @@
         group by m.id) cc
     </select>
 
+    <select id="getListWithProductionIn" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
+        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
+        m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
+        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field13 MOtherField13,m.other_field14 MOtherField14,concat_ws('', m.unit, u.basic_unit) MaterialUnit,
+        m.color MColor, m.project MProject, u.name unit_name
+        from jsh_material m
+        left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where 1=1
+        and dh.sub_type = '生产'
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(m.delete_flag,'0') !='1'
+        group by m.id
+        order by m.id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="getListWithProductionInCount" resultType="java.lang.Integer">
+        select count(1) from (select m.id
+        from jsh_material m
+        left join jsh_depot_item di on di.material_id=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
+        where 1=1
+        and dh.sub_type = '生产'
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(di.delete_flag,'0') !='1'
+        group by m.id) cc
+    </select>
+
+    <select id="productionInNumber" resultType="java.math.BigDecimal">
+        select ifnull(sum(basic_number),0) as BasicNumber from jsh_depot_item di,jsh_depot_head dh
+        where di.header_id = dh.id
+        and dh.type='入库' and dh.sub_type='生产'
+        and di.material_id =#{MId}
+        and dh.oper_time &gt;= #{beginTime}
+        and dh.oper_time &lt;= #{endTime}
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag,'0') !='1'
+    </select>
+
     <select id="buyOrSaleNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(basic_number),0) as BasicNumber from jsh_depot_item di,jsh_depot_head dh
         where di.header_id = dh.id

@@ -338,6 +338,48 @@ public class DepotItemService {
         return result;
     }
 
+    /**
+     * 查询生产单详细
+     * @param materialParam
+     * @param beginTime
+     * @param endTime
+     * @param creatorArray
+     * @param offset
+     * @param rows
+     * @return
+     * @throws Exception
+     */
+    public List<DepotItemVo4WithInfoEx> getListWithProductionIn(String materialParam, String beginTime, String endTime,
+                                                                String[] creatorArray, Integer offset, Integer rows)throws Exception {
+        List<DepotItemVo4WithInfoEx> list =null;
+        try{
+            list = depotItemMapperEx.getListWithProductionIn(materialParam, beginTime, endTime, creatorArray, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    /**
+     * 统计生产单数量
+     * @param materialParam
+     * @param beginTime
+     * @param endTime
+     * @param creatorArray
+     * @return
+     * @throws Exception
+     */
+    public int getListWithProductionInCount(String materialParam,  String beginTime,
+                                            String endTime, String[] creatorArray)throws Exception {
+        int result=0;
+        try{
+            result = depotItemMapperEx.getListWithProductionInCount(materialParam, beginTime, endTime, creatorArray);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     public BigDecimal buyOrSale(String type, String subType, Long MId, String beginTime, String endTime,
                                 String[] creatorArray, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
@@ -347,6 +389,17 @@ public class DepotItemService {
             } else {
                 result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, creatorArray, sumType);
             }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+
+    }
+
+    public BigDecimal productionIn(Long MId, String beginTime, String endTime, String[] creatorArray) throws Exception{
+        BigDecimal result= BigDecimal.ZERO;
+        try{
+            result= depotItemMapperEx.productionInNumber(MId, beginTime, endTime, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

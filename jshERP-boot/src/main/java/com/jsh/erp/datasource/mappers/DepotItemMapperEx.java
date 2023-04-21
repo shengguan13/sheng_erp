@@ -78,6 +78,20 @@ public interface DepotItemMapperEx {
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray);
 
+    List<DepotItemVo4WithInfoEx> getListWithProductionIn(
+            @Param("materialParam") String materialParam,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    int getListWithProductionInCount(
+            @Param("materialParam") String materialParam,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("creatorArray") String[] creatorArray);
+
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,
             @Param("subType") String subType,
@@ -95,6 +109,12 @@ public interface DepotItemMapperEx {
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
             @Param("sumType") String sumType);
+
+    BigDecimal productionInNumber(
+            @Param("MId") Long MId,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("creatorArray") String[] creatorArray);
 
     BigDecimal inOrOutPrice(
             @Param("type") String type,
