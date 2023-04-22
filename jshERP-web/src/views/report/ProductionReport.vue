@@ -46,6 +46,9 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
+            <span slot="action" slot-scope="text, record">
+              <a @click="showProductionInList(record)">{{record.materialId?'详情':''}}</a>
+            </span>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
             <a-col :md="24" :sm="24">
@@ -66,11 +69,13 @@
           </a-row>
         </section>
         <!-- table区域-end -->
+        <production-in-list ref="productionInList" @ok="modalFormOk"></production-in-list>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
+  import ProductionInList from './modules/ProductionInList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -80,6 +85,7 @@
     name: "ProductionReport",
     mixins:[JeecgListMixin],
     components: {
+      ProductionInList,
       JEllipsis
     },
     data () {
@@ -108,6 +114,15 @@
         tabKey: "1",
         // 表头
         columns: [
+          {
+            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
+            customRender:function (t,r,index) {
+              return (t !== '合计') ? (parseInt(index) + 1) : t
+            }
+          },
+          {title: '入库详情', dataIndex: 'action', align:"center", width: 100, fixed: 'left',
+            scopedSlots: { customRender: 'action' }
+          },
           {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
           {title: '内部零件号', dataIndex: 'materialInternalId'},
@@ -149,15 +164,23 @@
           this.loadData(1);
         }
       },
+      showProductionInList(record) {
+        let depotIds = ''
+        if(this.depotSelected && this.depotSelected.length>0) {
+          depotIds = this.depotSelected.join()
+        }
+        this.$refs.productionInList.show(record, depotIds);
+        this.$refs.productionInList.title = "查看入库详情";
+        this.$refs.productionInList.disableSubmit = false;
+      },
       exportExcel() {
-        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '进货数量', '退货数量']]
+        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '生产入库数量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.materialUnit,
-            ds.inSum, ds.outSum]
+          let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.materialUnit, ds.productionIn]
           aoa.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '进货统计')
+        openDownloadDialog(sheet2blob(aoa), '生产统计')
       }
     }
   }

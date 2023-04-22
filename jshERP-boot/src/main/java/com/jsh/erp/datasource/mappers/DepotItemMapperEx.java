@@ -49,6 +49,28 @@ public interface DepotItemMapperEx {
             @Param("endTime") String endTime,
             @Param("mId") Long mId);
 
+    List<DepotItemVo4DetailByTypeAndMId> findProductionInByDepotIdsAndMaterialIdList(
+            @Param("depotIdArray") String[] depotIdArray,
+            @Param("productionOrderIdArray") String[] productionOrderIdArray,
+            @Param("sku") String sku,
+            @Param("batchNumber") String batchNumber,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("mId") Long mId,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    Long findProductionInByDepotIdsAndMaterialIdCount(
+            @Param("depotIdArray") String[] depotIdArray,
+            @Param("productionOrderIdArray") String[] productionOrderIdArray,
+            @Param("sku") String sku,
+            @Param("batchNumber") String batchNumber,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("mId") Long mId);
+
     List<DepotItemVo4WithInfoEx> getDetailList(
             @Param("headerId") Long headerId);
 

@@ -209,6 +209,50 @@ public class DepotItemService {
         return result;
     }
 
+    public List<DepotItemVo4DetailByTypeAndMId> findProductionInByDepotIdsAndMaterialIdList(
+            String depotIds, String productionOrderIds, String sku, String batchNumber, String number,
+            String beginTime, String endTime, Long mId, int offset, int rows)throws Exception {
+
+        String [] depotIdArray = null;
+        String [] productionOrderIdArray = null;
+        if(StringUtil.isNotEmpty(depotIds)) {
+            depotIdArray = depotIds.split(",");
+        }
+        if(StringUtil.isNotEmpty(productionOrderIds)) {
+            productionOrderIdArray = depotIds.split(",");
+        }
+        List<DepotItemVo4DetailByTypeAndMId> list =null;
+        try{
+            list = depotItemMapperEx.findProductionInByDepotIdsAndMaterialIdList(
+                    depotIdArray, productionOrderIdArray, sku, batchNumber, number, beginTime, endTime, mId, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public Long findProductionInByDepotIdsAndMaterialIdCount(
+            String depotIds, String productionOrderIds, String sku, String batchNumber, String number,
+            String beginTime, String endTime, Long mId)throws Exception {
+
+        String [] depotIdArray = null;
+        String [] productionOrderIdArray = null;
+        if(StringUtil.isNotEmpty(depotIds)) {
+            depotIdArray = depotIds.split(",");
+        }
+        if(StringUtil.isNotEmpty(productionOrderIds)) {
+            productionOrderIdArray = depotIds.split(",");
+        }
+        Long result =null;
+        try{
+            result = depotItemMapperEx.findProductionInByDepotIdsAndMaterialIdCount(
+                    depotIdArray, productionOrderIdArray, sku, batchNumber, number, beginTime, endTime, mId);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertDepotItemWithObj(DepotItem depotItem)throws Exception {
         int result =0;

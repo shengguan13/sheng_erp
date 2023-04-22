@@ -323,6 +323,86 @@
         and ifnull(dh.delete_flag,'0') !='1') tb
     </select>
 
+    <select id="findProductionInByDepotIdsAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
+        select tb.* from
+        (select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
+        ifnull(di.basic_number,0) as b_num,
+        (select name from jsh_depot d where d.id=di.depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
+        date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
+        from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on di.material_id=m.id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
+        where (dh.type='入库' and dh.sub_type='生产')
+        <if test="depotIdArray != null">
+            and di.depot_id in (
+            <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
+            )
+        </if>
+        <if test="productionOrderIdArray != null">
+            and dh.link_number in (
+            <foreach collection="productionOrderIdArray" item="productionOrderId" separator=",">#{productionOrderId}</foreach>
+            )
+        </if>
+        <if test="sku != null and sku !=''">
+            and di.sku = #{sku}
+        </if>
+        <if test="batchNumber != null and batchNumber !=''">
+            and di.batch_number = #{batchNumber}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        and di.material_id = #{mId}
+        and ifnull(dh.delete_flag,'0') !='1') tb
+        order by tb.oTime desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="findProductionInByDepotIdsAndMaterialIdCount" resultType="java.lang.Long">
+        select count(tb.number) from
+        (select dh.number from jsh_depot_head dh
+        left JOIN jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where (dh.type='入库' and dh.sub_type='生产')
+        <if test="depotIdArray != null">
+            and di.depot_id in (
+            <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
+            )
+        </if>
+        <if test="productionOrderIdArray != null">
+            and dh.link_number in (
+            <foreach collection="productionOrderIdArray" item="productionOrderId" separator=",">#{productionOrderId}</foreach>
+            )
+        </if>
+        <if test="sku != null and sku !=''">
+            and di.sku = #{sku}
+        </if>
+        <if test="batchNumber != null and batchNumber !=''">
+            and di.batch_number = #{batchNumber}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        and di.material_id =#{mId}
+        and ifnull(dh.delete_flag,'0') !='1') tb
+    </select>
+
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.project MProject, m.internal_id MInternalId,
         m.mfrs MMfrs,m.weight,m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,

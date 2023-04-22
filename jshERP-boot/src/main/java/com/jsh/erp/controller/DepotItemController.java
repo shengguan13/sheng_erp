@@ -125,6 +125,60 @@ public class DepotItemController {
     }
 
     /**
+     * 根据仓库、商品、生产单号查询生产入库列表
+     * @param mId
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findProductionInByDepotIdsAndMaterialId")
+    @ApiOperation(value = "根据仓库和商品查询单据列表")
+    public String findProductionInByDepotIdsAndMaterialId(
+            @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
+            @RequestParam(value = "depotIds",required = false) String depotIds,
+            @RequestParam(value = "productionOrderIds",required = false) String productionOrderIds,
+            @RequestParam(value = "sku",required = false) String sku,
+            @RequestParam(value = "batchNumber",required = false) String batchNumber,
+            @RequestParam(value = "number",required = false) String number,
+            @RequestParam(value = "beginTime",required = false) String beginTime,
+            @RequestParam(value = "endTime",required = false) String endTime,
+            @RequestParam("materialId") Long mId,
+            HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        if(StringUtil.isNotEmpty(beginTime)) {
+            beginTime = beginTime + BusinessConstants.DAY_FIRST_TIME;
+        }
+        if(StringUtil.isNotEmpty(endTime)) {
+            endTime = endTime + BusinessConstants.DAY_LAST_TIME;
+        }
+        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findProductionInByDepotIdsAndMaterialIdList(
+                depotIds, productionOrderIds, sku, batchNumber, StringUtil.toNull(number),
+                beginTime, endTime, mId, (currentPage-1)*pageSize, pageSize);
+        JSONArray dataArray = new JSONArray();
+        if (list != null) {
+            for (DepotItemVo4DetailByTypeAndMId d: list) {
+                JSONObject item = new JSONObject();
+                item.put("number", d.getNumber()); //编号
+                item.put("barCode", d.getBarCode()); //条码
+                item.put("materialName", d.getMaterialName()); //名称
+                item.put("depotName", d.getDepotName()); //仓库名称
+                item.put("basicNumber", d.getBnum()); //数量
+                item.put("operTime", Tools.getCenternTime(d.getOtime())); //时间
+                dataArray.add(item);
+            }
+        }
+        if (list == null) {
+            objectMap.put("rows", new ArrayList<Object>());
+            objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
+        objectMap.put("rows", dataArray);
+        objectMap.put("total", depotItemService.findProductionInByDepotIdsAndMaterialIdCount(
+                depotIds, productionOrderIds, sku, batchNumber, StringUtil.toNull(number), beginTime, endTime, mId));
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
+
+    /**
      * 根据商品条码和仓库id查询库存数量
      * @param depotId
      * @param barCode
@@ -682,6 +736,7 @@ public class DepotItemController {
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
+                    item.put("materialId", diEx.getMId());
                     item.put("materialInternalId", diEx.getMInternalId());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
@@ -691,7 +746,11 @@ public class DepotItemController {
                     item.put("materialUnit", diEx.getMaterialUnit());
                     item.put("unitName", diEx.getUnitName());
                     item.put("productionIn", productionIn);
-                    dataArray.add(item);
+                    item.put("productionOrders", String.join(",", productionOrderNumberList));
+                    // 只添加有实际生产入库的（不是所有生产单都有生产入库）
+                    if (productionIn.doubleValue() > 0.0) {
+                        dataArray.add(item);
+                    }
                 }
             }
             map.put("rows", dataArray);
