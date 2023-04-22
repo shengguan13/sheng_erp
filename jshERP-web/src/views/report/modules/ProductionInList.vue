@@ -151,6 +151,7 @@
         this.currentMaterialId = record.materialId
         this.visible = true;
         this.queryParam.depotIds = depotIds
+        this.queryParam.productionOrderIds = record.productionOrders
         this.queryParam.materialId = record.id
         this.loadData(1)
       },

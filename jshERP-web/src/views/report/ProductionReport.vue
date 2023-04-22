@@ -13,7 +13,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="生产单日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 100%"
                     v-model="queryParam.createTimeRange"
@@ -159,7 +159,7 @@
       },
       searchQuery() {
         if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
-          this.$message.warning('请选择单据日期！')
+          this.$message.warning('请选择生产单日期！')
         } else {
           this.loadData(1);
         }

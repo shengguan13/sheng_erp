@@ -219,7 +219,7 @@ public class DepotItemService {
             depotIdArray = depotIds.split(",");
         }
         if(StringUtil.isNotEmpty(productionOrderIds)) {
-            productionOrderIdArray = depotIds.split(",");
+            productionOrderIdArray = productionOrderIds.split(",");
         }
         List<DepotItemVo4DetailByTypeAndMId> list =null;
         try{
@@ -241,7 +241,7 @@ public class DepotItemService {
             depotIdArray = depotIds.split(",");
         }
         if(StringUtil.isNotEmpty(productionOrderIds)) {
-            productionOrderIdArray = depotIds.split(",");
+            productionOrderIdArray = productionOrderIds.split(",");
         }
         Long result =null;
         try{
