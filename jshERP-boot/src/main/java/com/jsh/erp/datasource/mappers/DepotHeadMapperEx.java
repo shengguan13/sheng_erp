@@ -251,4 +251,9 @@ public interface DepotHeadMapperEx {
     BigDecimal getFinishDepositByNumberExceptCurrent(
             @Param("linkNumber") String linkNumber,
             @Param("number") String number);
+
+    List<DepotHeadVo4List> getDepotHeadListWithProductionOrder(@Param("MId") Long MId,
+                                                               @Param("beginTime") String beginTime,
+                                                               @Param("endTime") String endTime,
+                                                               @Param("creatorArray") String[] creatorArray);
 }

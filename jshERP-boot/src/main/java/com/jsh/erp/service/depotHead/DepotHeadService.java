@@ -687,8 +687,8 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InDetail> findInOutDetail(String beginTime, String endTime, String type, String [] creatorArray,
-                                                String [] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
-                                                String remark, Integer offset, Integer rows) throws Exception{
+                                                      String [] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
+                                                      String remark, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
             list =depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark, offset, rows);
@@ -698,9 +698,19 @@ public class DepotHeadService {
         return list;
     }
 
+    public List<DepotHeadVo4List> productionOrders(Long MId, String beginTime, String endTime, String[] creatorArray) throws Exception{
+        List<DepotHeadVo4List> list = null;
+        try{
+            list= depotHeadMapperEx.getDepotHeadListWithProductionOrder(MId, beginTime, endTime, creatorArray);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public int findInOutDetailCount(String beginTime, String endTime, String type, String [] creatorArray,
-                              String [] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
-                              String remark) throws Exception{
+                                    String [] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
+                                    String remark) throws Exception{
         int result = 0;
         try{
             result =depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark);
@@ -711,7 +721,7 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, String materialParam,
-                              List<Long> depotList, Integer oId, String roleType, Integer offset, Integer rows)throws Exception {
+                                                                List<Long> depotList, Integer oId, String roleType, Integer offset, Integer rows)throws Exception {
         List<DepotHeadVo4InOutMCount> list = null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
@@ -726,7 +736,7 @@ public class DepotHeadService {
     }
 
     public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, String materialParam,
-                               List<Long> depotList, Integer oId, String roleType)throws Exception {
+                                           List<Long> depotList, Integer oId, String roleType)throws Exception {
         int result = 0;
         try{
             String [] creatorArray = getCreatorArray(roleType);
@@ -741,8 +751,8 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InDetail> findAllocationDetail(String beginTime, String endTime, String subType, String number,
-                            String [] creatorArray, String materialParam, List<Long> depotList, List<Long> depotFList,
-                            String remark, Integer offset, Integer rows) throws Exception{
+                                                           String [] creatorArray, String materialParam, List<Long> depotList, List<Long> depotFList,
+                                                           String remark, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
             list =depotHeadMapperEx.findAllocationDetail(beginTime, endTime, subType, number, creatorArray,
@@ -754,8 +764,8 @@ public class DepotHeadService {
     }
 
     public int findAllocationDetailCount(String beginTime, String endTime, String subType, String number,
-                            String [] creatorArray, String materialParam, List<Long> depotList,  List<Long> depotFList,
-                            String remark) throws Exception{
+                                         String [] creatorArray, String materialParam, List<Long> depotList,  List<Long> depotFList,
+                                         String remark) throws Exception{
         int result = 0;
         try{
             result =depotHeadMapperEx.findAllocationDetailCount(beginTime, endTime, subType, number, creatorArray,
@@ -767,7 +777,8 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4StatementAccount> getStatementAccount(String beginTime, String endTime, Integer organId, String [] organArray,
-                                              String supplierType, String type, String subType, String typeBack, String subTypeBack, String billType, Integer offset, Integer rows) {
+                                                                  String supplierType, String type, String subType, String typeBack,
+                                                                  String subTypeBack, String billType, Integer offset, Integer rows) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
             list = depotHeadMapperEx.getStatementAccount(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType, offset, rows);
@@ -778,7 +789,8 @@ public class DepotHeadService {
     }
 
     public int getStatementAccountCount(String beginTime, String endTime, Integer organId,
-                                        String [] organArray, String supplierType, String type, String subType, String typeBack, String subTypeBack, String billType) {
+                                        String [] organArray, String supplierType, String type,
+                                        String subType, String typeBack, String subTypeBack, String billType) {
         int result = 0;
         try{
             result = depotHeadMapperEx.getStatementAccountCount(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType);
@@ -790,7 +802,7 @@ public class DepotHeadService {
 
     public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId,
                                                                           String [] organArray, String supplierType,
-                                        String type, String subType, String typeBack, String subTypeBack, String billType) {
+                                                                          String type, String subType, String typeBack, String subTypeBack, String billType) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
             list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType);
@@ -1076,21 +1088,10 @@ public class DepotHeadService {
             }
         }
         if("生产单".equals(subType)) {
-            // 生产单开工时间要<完工时间
-            if (depotHead.getPlanStartTime().toInstant().compareTo(depotHead.getPlanFinishTime().toInstant()) >= 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_TIME_RANGE_FAILED_MSG));
-            }
             // 生产单开工时间要>现在时间
             if (depotHead.getPlanStartTime().toInstant().compareTo(Instant.now()) <= 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG));
-            }
-            // 生产单开工时间和完工时间要在同一天
-            if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) != 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_ORDER_DAY_FAILED_MSG));
             }
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
@@ -32,6 +33,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 import static com.jsh.erp.utils.Tools.getCenternTime;
@@ -663,17 +665,20 @@ public class DepotItemController {
         endTime = Tools.parseDayToTime(endTime, BusinessConstants.DAY_LAST_TIME);
         try {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithProductionIn(
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithProductionOrder(
                     StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.getListWithProductionInCount(StringUtil.toNull(materialParam), beginTime, endTime, creatorArray);
+            int total = depotItemService.getListWithProductionOrderCount(StringUtil.toNull(materialParam), beginTime, endTime, creatorArray);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    BigDecimal productionIn = depotItemService.productionIn(diEx.getMId(), beginTime, endTime, creatorArray);
+                    List<DepotHeadVo4List> productionOrders = depotHeadService.productionOrders(diEx.getMId(), beginTime, endTime, creatorArray);
+                    List<String> productionOrderNumberList = productionOrders.stream().map(e -> e.getNumber()).collect(Collectors.toList());
+                    BigDecimal productionIn = depotItemService.productionIn(diEx.getMId(),
+                            productionOrderNumberList.toArray(new String[productionOrderNumberList.size()]));
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());

@@ -60,6 +60,8 @@ public class DepotItemService {
     @Resource
     private DepotHeadMapper depotHeadMapper;
     @Resource
+    private DepotHeadMapperEx depotHeadMapperEx;
+    @Resource
     private SerialNumberService serialNumberService;
     @Resource
     private UserService userService;
@@ -349,11 +351,11 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public List<DepotItemVo4WithInfoEx> getListWithProductionIn(String materialParam, String beginTime, String endTime,
-                                                                String[] creatorArray, Integer offset, Integer rows)throws Exception {
+    public List<DepotItemVo4WithInfoEx> getListWithProductionOrder(String materialParam, String beginTime, String endTime,
+                                                                   String[] creatorArray, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.getListWithProductionIn(materialParam, beginTime, endTime, creatorArray, offset, rows);
+            list = depotItemMapperEx.getListWithProductionOrder(materialParam, beginTime, endTime, creatorArray, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -369,11 +371,11 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public int getListWithProductionInCount(String materialParam,  String beginTime,
-                                            String endTime, String[] creatorArray)throws Exception {
+    public int getListWithProductionOrderCount(String materialParam,  String beginTime,
+                                               String endTime, String[] creatorArray)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.getListWithProductionInCount(materialParam, beginTime, endTime, creatorArray);
+            result = depotItemMapperEx.getListWithProductionOrderCount(materialParam, beginTime, endTime, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -396,10 +398,10 @@ public class DepotItemService {
 
     }
 
-    public BigDecimal productionIn(Long MId, String beginTime, String endTime, String[] creatorArray) throws Exception{
+    public BigDecimal productionIn(Long MId, String[] productionOrderNumberArray) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            result= depotItemMapperEx.productionInNumber(MId, beginTime, endTime, creatorArray);
+            result= depotItemMapperEx.productionInNumber(MId, productionOrderNumberArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

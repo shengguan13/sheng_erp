@@ -78,7 +78,10 @@ public interface DepotItemMapperEx {
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray);
 
-    List<DepotItemVo4WithInfoEx> getListWithProductionIn(
+    /**
+     * beginTime and endTime 和 planStartTime 比较，不是 operTime
+     */
+    List<DepotItemVo4WithInfoEx> getListWithProductionOrder(
             @Param("materialParam") String materialParam,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -86,7 +89,10 @@ public interface DepotItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int getListWithProductionInCount(
+    /**
+     * beginTime and endTime 和 planStartTime 比较，不是 operTime
+     */
+    int getListWithProductionOrderCount(
             @Param("materialParam") String materialParam,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -112,9 +118,7 @@ public interface DepotItemMapperEx {
 
     BigDecimal productionInNumber(
             @Param("MId") Long MId,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("creatorArray") String[] creatorArray);
+            @Param("productionOrderNumberArray") String[] productionOrderNumberArray);
 
     BigDecimal inOrOutPrice(
             @Param("type") String type,
