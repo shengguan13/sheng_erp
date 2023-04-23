@@ -262,11 +262,9 @@ public class DepotItemService {
         }
         List<DepotItemVo4MaterialUsageDetail> list =null;
         for (String productionOrderId : productionOrderIdArray) {
-            logger.info("query productionOrderId: " + productionOrderId);
         }
         try{
             list = depotItemMapperEx.findMaterialUsageByProductionOrderIdList(productionOrderIdArray, offset, rows);
-            logger.info("1st list: " + list);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

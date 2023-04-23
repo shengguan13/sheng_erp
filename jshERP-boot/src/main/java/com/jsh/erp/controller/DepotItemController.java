@@ -193,10 +193,8 @@ public class DepotItemController {
         Map<String, Object> objectMap = new HashMap<>();
         List<DepotItemVo4MaterialUsageDetail> list = depotItemService.findMaterialUsageByProductionOrderIdList(
                 productionOrderIds, (currentPage-1)*pageSize, pageSize);
-        logger.info("2nd list: " + list);
         JSONArray dataArray = new JSONArray();
         if (list != null) {
-            logger.info("list 不是 null!");
             for (DepotItemVo4MaterialUsageDetail d: list) {
                 JSONObject item = new JSONObject();
                 item.put("barCode", d.getBarCode()); //条码
@@ -206,7 +204,6 @@ public class DepotItemController {
             }
         }
         if (list == null) {
-            logger.info("list 是 null!");
             objectMap.put("rows", new ArrayList<Object>());
             objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
@@ -954,12 +951,6 @@ public class DepotItemController {
                                                @RequestParam("barCode") String barCode,
                                                @RequestParam(value = "batchNumber", required = false) String batchNumber,
                                                HttpServletRequest request) throws Exception{
-        logger.info("getBatchNumberList");
-        logger.info("name: " + name);
-        logger.info("depotItemId: " + depotItemId);
-        logger.info("depotId: " + depotId);
-        logger.info("barCode: " + barCode);
-        logger.info("batchNumber: " + batchNumber);
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
