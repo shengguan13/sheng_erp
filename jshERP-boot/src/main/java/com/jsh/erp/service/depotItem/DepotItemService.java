@@ -430,11 +430,15 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public List<DepotItemVo4WithInfoEx> getListWithProductionOrder(String materialParam, String beginTime, String endTime,
-                                                                   String[] creatorArray, Integer offset, Integer rows)throws Exception {
+    public List<DepotItemVo4WithInfoEx> getMaterialListWithProductionOrder(String materialParam,
+                                                                           String beginTime,
+                                                                           String endTime,
+                                                                           String[] creatorArray,
+                                                                           Integer offset,
+                                                                           Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.getListWithProductionOrder(materialParam, beginTime, endTime, creatorArray, offset, rows);
+            list = depotItemMapperEx.getMaterialListWithProductionOrder(materialParam, beginTime, endTime, creatorArray, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -450,11 +454,13 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public int getListWithProductionOrderCount(String materialParam,  String beginTime,
-                                               String endTime, String[] creatorArray)throws Exception {
+    public int getMaterialListWithProductionOrderCount(String materialParam,
+                                                       String beginTime,
+                                                       String endTime,
+                                                       String[] creatorArray)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.getListWithProductionOrderCount(materialParam, beginTime, endTime, creatorArray);
+            result = depotItemMapperEx.getMaterialListWithProductionOrderCount(materialParam, beginTime, endTime, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

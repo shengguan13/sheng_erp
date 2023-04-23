@@ -111,7 +111,7 @@ public interface DepotItemMapperEx {
     /**
      * beginTime and endTime 和 planStartTime 比较，不是 operTime
      */
-    List<DepotItemVo4WithInfoEx> getListWithProductionOrder(
+    List<DepotItemVo4WithInfoEx> getMaterialListWithProductionOrder(
             @Param("materialParam") String materialParam,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -122,7 +122,7 @@ public interface DepotItemMapperEx {
     /**
      * beginTime and endTime 和 planStartTime 比较，不是 operTime
      */
-    int getListWithProductionOrderCount(
+    int getMaterialListWithProductionOrderCount(
             @Param("materialParam") String materialParam,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,

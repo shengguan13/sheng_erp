@@ -626,7 +626,7 @@
         group by m.id) cc
     </select>
 
-    <select id="getListWithProductionOrder" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
+    <select id="getMaterialListWithProductionOrder" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
@@ -666,7 +666,7 @@
         </if>
     </select>
 
-    <select id="getListWithProductionOrderCount" resultType="java.lang.Integer">
+    <select id="getMaterialListWithProductionOrderCount" resultType="java.lang.Integer">
         select count(1) from (select m.id
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(m.delete_Flag,'0') !='1'

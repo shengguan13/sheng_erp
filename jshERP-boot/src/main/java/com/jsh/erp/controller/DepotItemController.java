@@ -757,15 +757,15 @@ public class DepotItemController {
         endTime = Tools.parseDayToTime(endTime, BusinessConstants.DAY_LAST_TIME);
         try {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithProductionOrder(
+            List<DepotItemVo4WithInfoEx> materialList = depotItemService.getMaterialListWithProductionOrder(
                     StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.getListWithProductionOrderCount(StringUtil.toNull(materialParam), beginTime, endTime, creatorArray);
+            int total = depotItemService.getMaterialListWithProductionOrderCount(StringUtil.toNull(materialParam), beginTime, endTime, creatorArray);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if (null != dataList) {
-                for (DepotItemVo4WithInfoEx diEx : dataList) {
+            if (null != materialList) {
+                for (DepotItemVo4WithInfoEx diEx : materialList) {
                     JSONObject item = new JSONObject();
                     List<DepotHeadVo4List> productionOrders = depotHeadService.productionOrders(diEx.getMId(), beginTime, endTime, creatorArray);
                     List<String> productionOrderNumberList = productionOrders.stream().map(e -> e.getNumber()).collect(Collectors.toList());
