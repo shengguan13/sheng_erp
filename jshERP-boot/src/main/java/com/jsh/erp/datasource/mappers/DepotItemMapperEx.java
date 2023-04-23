@@ -71,6 +71,14 @@ public interface DepotItemMapperEx {
             @Param("endTime") String endTime,
             @Param("mId") Long mId);
 
+    List<DepotItemVo4MaterialUsageDetail> findMaterialUsageByProductionOrderIdList(
+            @Param("productionOrderIdArray") String[] productionOrderIdArray,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    Long findMaterialUsageByProductionOrderIdCount(
+            @Param("productionOrderIdArray") String[] productionOrderIdArray);
+
     List<DepotItemVo4WithInfoEx> getDetailList(
             @Param("headerId") Long headerId);
 

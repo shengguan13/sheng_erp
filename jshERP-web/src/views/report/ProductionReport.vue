@@ -49,6 +49,9 @@
             <span slot="action" slot-scope="text, record">
               <a @click="showProductionInList(record)">{{record.materialId?'详情':''}}</a>
             </span>
+            <span slot="action2" slot-scope="text, record">
+              <a @click="showMaterialUsageList(record)">{{record.materialId?'详情':''}}</a>
+            </span>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
             <a-col :md="24" :sm="24">
@@ -70,12 +73,14 @@
         </section>
         <!-- table区域-end -->
         <production-in-list ref="productionInList" @ok="modalFormOk"></production-in-list>
+        <material-usage-list ref="materialUsageList" @ok="modalFormOk"></material-usage-list>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
   import ProductionInList from './modules/ProductionInList'
+  import MaterialUsageList from './modules/MaterialUsageList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -86,6 +91,7 @@
     mixins:[JeecgListMixin],
     components: {
       ProductionInList,
+      MaterialUsageList,
       JEllipsis
     },
     data () {
@@ -122,6 +128,9 @@
           },
           {title: '入库详情', dataIndex: 'action', align:"center", width: 100, fixed: 'left',
             scopedSlots: { customRender: 'action' }
+          },
+          {title: '用料详情', dataIndex: 'action2', align:"center", width: 100, fixed: 'left',
+            scopedSlots: { customRender: 'action2' }
           },
           {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
@@ -172,6 +181,15 @@
         this.$refs.productionInList.show(record, depotIds);
         this.$refs.productionInList.title = "查看入库详情";
         this.$refs.productionInList.disableSubmit = false;
+      },
+      showMaterialUsageList(record) {
+        let depotIds = ''
+        if(this.depotSelected && this.depotSelected.length>0) {
+          depotIds = this.depotSelected.join()
+        }
+        this.$refs.materialUsageList.show(record, depotIds);
+        this.$refs.materialUsageList.title = "查看用料详情";
+        this.$refs.materialUsageList.disableSubmit = false;
       },
       exportExcel() {
         let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '生产入库数量']]

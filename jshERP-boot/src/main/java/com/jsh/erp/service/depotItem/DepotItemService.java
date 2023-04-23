@@ -253,6 +253,41 @@ public class DepotItemService {
         return result;
     }
 
+    public List<DepotItemVo4MaterialUsageDetail> findMaterialUsageByProductionOrderIdList(
+            String productionOrderIds, int offset, int rows)throws Exception {
+
+        String [] productionOrderIdArray = null;
+        if(StringUtil.isNotEmpty(productionOrderIds)) {
+            productionOrderIdArray = productionOrderIds.split(",");
+        }
+        List<DepotItemVo4MaterialUsageDetail> list =null;
+        for (String productionOrderId : productionOrderIdArray) {
+            logger.info("query productionOrderId: " + productionOrderId);
+        }
+        try{
+            list = depotItemMapperEx.findMaterialUsageByProductionOrderIdList(productionOrderIdArray, offset, rows);
+            logger.info("1st list: " + list);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public Long findMaterialUsageByProductionOrderIdCount(String productionOrderIds)throws Exception {
+
+        String [] productionOrderIdArray = null;
+        if(StringUtil.isNotEmpty(productionOrderIds)) {
+            productionOrderIdArray = productionOrderIds.split(",");
+        }
+        Long result =null;
+        try{
+            result = depotItemMapperEx.findMaterialUsageByProductionOrderIdCount(productionOrderIdArray);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertDepotItemWithObj(DepotItem depotItem)throws Exception {
         int result =0;

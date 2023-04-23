@@ -131,7 +131,7 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/findProductionInByDepotIdsAndMaterialId")
-    @ApiOperation(value = "根据仓库和商品查询单据列表")
+    @ApiOperation(value = "根据仓库、商品、生产单号查询生产入库列表")
     public String findProductionInByDepotIdsAndMaterialId(
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
@@ -175,6 +175,44 @@ public class DepotItemController {
         objectMap.put("rows", dataArray);
         objectMap.put("total", depotItemService.findProductionInByDepotIdsAndMaterialIdCount(
                 depotIds, productionOrderIds, sku, batchNumber, StringUtil.toNull(number), beginTime, endTime, mId));
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
+
+    /**
+     * 根据仓库、生产单号查询领退料列表
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findMaterialUsageByProductionOrderId")
+    @ApiOperation(value = "根据仓库、生产单号查询领退料列表")
+    public String findMaterialUsageByProductionOrderId(
+            @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
+            @RequestParam(value = "productionOrderIds",required = false) String productionOrderIds,
+            HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        List<DepotItemVo4MaterialUsageDetail> list = depotItemService.findMaterialUsageByProductionOrderIdList(
+                productionOrderIds, (currentPage-1)*pageSize, pageSize);
+        logger.info("2nd list: " + list);
+        JSONArray dataArray = new JSONArray();
+        if (list != null) {
+            logger.info("list 不是 null!");
+            for (DepotItemVo4MaterialUsageDetail d: list) {
+                JSONObject item = new JSONObject();
+                item.put("barCode", d.getBarCode()); //条码
+                item.put("materialName", d.getMaterialName()); //名称
+                item.put("useNum", d.getUseNum()); //领料数量 - 退料数量
+                dataArray.add(item);
+            }
+        }
+        if (list == null) {
+            logger.info("list 是 null!");
+            objectMap.put("rows", new ArrayList<Object>());
+            objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
+        objectMap.put("rows", dataArray);
+        objectMap.put("total", depotItemService.findMaterialUsageByProductionOrderIdCount(productionOrderIds));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 
@@ -747,10 +785,7 @@ public class DepotItemController {
                     item.put("unitName", diEx.getUnitName());
                     item.put("productionIn", productionIn);
                     item.put("productionOrders", String.join(",", productionOrderNumberList));
-                    // 只添加有实际生产入库的（不是所有生产单都有生产入库）
-                    if (productionIn.doubleValue() > 0.0) {
-                        dataArray.add(item);
-                    }
+                    dataArray.add(item);
                 }
             }
             map.put("rows", dataArray);
