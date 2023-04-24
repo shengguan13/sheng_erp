@@ -558,32 +558,34 @@ public class MaterialService {
                 String barCode = ExcelUtils.getContent(src, i, 0); //基础条码
                 String manyBarCode = ExcelUtils.getContent(src, i, 1); //副条码
                 String name = ExcelUtils.getContent(src, i, 2); //名称
-                String internalId = ExcelUtils.getContent(src, i, 3); //内部零件号
-                String model = ExcelUtils.getContent(src, i, 4); //客户零件号
-                String unit = ExcelUtils.getContent(src, i, 5); //基本单位
-                String manyUnit = ExcelUtils.getContent(src, i, 6); //副单位
-                String ratio = ExcelUtils.getContent(src, i, 7); //比例
-                String color = ExcelUtils.getContent(src, i, 8); //颜色编码
-                String weight = ExcelUtils.getContent(src, i, 9); //净重量（kg）
-                String expiryNum = ExcelUtils.getContent(src, i, 10); //保质期（天）
-                String categoryName = ExcelUtils.getContent(src, i, 11); //类别
-                String project = ExcelUtils.getContent(src, i, 12); //项目
-                String enableBatchNumber = ExcelUtils.getContent(src, i, 13); //批号
-                String mfrs = ExcelUtils.getContent(src, i, 14); //制造商
 
-                String other1 = ExcelUtils.getContent(src, i, 15); //工艺类别
-                String other2 = ExcelUtils.getContent(src, i, 16); //配置
-                String other4 = ExcelUtils.getContent(src, i, 17); //材料牌号
-                String other5 = ExcelUtils.getContent(src, i, 18); //材料类型/标准
-                String other6 = ExcelUtils.getContent(src, i, 19); //原材料厂家
-                String other7 = ExcelUtils.getContent(src, i, 20); //外协件厂家
-                String other8 = ExcelUtils.getContent(src, i, 21); //尺寸
-                String other9 = ExcelUtils.getContent(src, i, 22); //检具
-                String other10 = ExcelUtils.getContent(src, i, 23); //用量/车（件）
-                String other11 = ExcelUtils.getContent(src, i, 24); //料道（kg）
-                String other12 = ExcelUtils.getContent(src, i, 25); //表面处理纹理
-                String other13 = ExcelUtils.getContent(src, i, 26); //表面积（m²）
-                String other14 = ExcelUtils.getContent(src, i, 27); //组装等级关系
+                String other14 = ExcelUtils.getContent(src, i, 3); //组装等级关系
+
+                String internalId = ExcelUtils.getContent(src, i, 4); //内部零件号
+                String model = ExcelUtils.getContent(src, i, 5); //客户零件号
+                String unit = ExcelUtils.getContent(src, i, 6); //基本单位
+                String manyUnit = ExcelUtils.getContent(src, i, 7); //副单位
+                String ratio = ExcelUtils.getContent(src, i, 8); //比例
+                String color = ExcelUtils.getContent(src, i, 9); //颜色编码
+                String weight = ExcelUtils.getContent(src, i, 10); //净重量（kg）
+                String expiryNum = ExcelUtils.getContent(src, i, 11); //保质期（天）
+                String categoryName = ExcelUtils.getContent(src, i, 12); //类别
+                String project = ExcelUtils.getContent(src, i, 13); //项目
+                String enableBatchNumber = ExcelUtils.getContent(src, i, 14); //批号
+                String mfrs = ExcelUtils.getContent(src, i, 15); //制造商
+
+                String other1 = ExcelUtils.getContent(src, i, 16); //工艺类别
+                String other2 = ExcelUtils.getContent(src, i, 17); //配置
+                String other4 = ExcelUtils.getContent(src, i, 18); //材料牌号
+                String other5 = ExcelUtils.getContent(src, i, 19); //材料类型/标准
+                String other6 = ExcelUtils.getContent(src, i, 20); //原材料厂家
+                String other7 = ExcelUtils.getContent(src, i, 21); //外协件厂家
+                String other8 = ExcelUtils.getContent(src, i, 22); //尺寸
+                String other9 = ExcelUtils.getContent(src, i, 23); //检具
+                String other10 = ExcelUtils.getContent(src, i, 24); //用量/车（件）
+                String other11 = ExcelUtils.getContent(src, i, 25); //料道（kg）
+                String other12 = ExcelUtils.getContent(src, i, 26); //表面处理纹理
+                String other13 = ExcelUtils.getContent(src, i, 27); //表面积（m²）
                 String enabled = ExcelUtils.getContent(src, i, 28); //状态
                 String remark = ExcelUtils.getContent(src, i, 29); //备注
 
@@ -618,7 +620,7 @@ public class MaterialService {
                 m.setOtherField11(other11);
                 m.setOtherField12(other12);
                 m.setOtherField13(other13);
-                m.setOtherField14(other14);
+                m.setOtherField14(other14.replace(" ", ""));
                 m.setRemark(remark);
 
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
