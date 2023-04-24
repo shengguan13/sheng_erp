@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 import static com.jsh.erp.utils.Tools.getCenternTime;
+import static java.math.RoundingMode.CEILING;
 
 /**
  *仓库管理
@@ -189,6 +190,8 @@ public class DepotItemController {
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
             @RequestParam(value = "productionOrderIds",required = false) String productionOrderIds,
+            @RequestParam(value = "productionInNum",required = false) String productionInNum,
+            @RequestParam(value = "productionUnit",required = false) String productionUnit,
             HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
         List<DepotItemVo4MaterialUsageDetail> list = depotItemService.findMaterialUsageByProductionOrderIdList(
@@ -201,6 +204,20 @@ public class DepotItemController {
                 item.put("materialName", d.getMaterialName()); //名称
                 item.put("useNum", d.getUseNum()); //领料数量 - 退料数量
                 item.put("materialUnit", d.getMaterialUnit()); //单位
+                if (!"".equals(productionInNum)) {
+                    Double num = null;
+                    try {
+                        num = Double.valueOf(productionInNum);
+                    } catch (Exception e) {}
+                    if (num != null && num > 0.0) {
+                        item.put("averageUsage", d.getUseNum().divide(BigDecimal.valueOf(num), CEILING)
+                                + " " + d.getMaterialUnit() + "/" + (productionUnit == null ? "" : productionUnit));
+                    } else {
+                        item.put("averageUsage", "-");
+                    }
+                } else {
+                    item.put("averageUsage", "-");
+                }
                 dataArray.add(item);
             }
         }

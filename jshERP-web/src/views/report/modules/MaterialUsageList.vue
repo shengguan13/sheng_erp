@@ -53,6 +53,8 @@
         // 查询条件
         queryParam: {
           productionOrderIds: '',
+          productionInNum: '',
+          productionUnit: '',
         },
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']
@@ -70,10 +72,11 @@
               return parseInt(index)+1;
             }
           },
-          { title: '条码', dataIndex: 'barCode', width: 100},
+          { title: '条码', dataIndex: 'barCode', width: 70},
           { title: '名称', dataIndex: 'materialName', width: 200},
-          { title: '领料-退料', dataIndex: 'useNum', width: 70},
+          { title: '用料（领-退）', dataIndex: 'useNum', width: 70},
           { title: '单位', dataIndex: 'materialUnit', width:50 },
+          { title: '平均用料（用料/生产数量）', dataIndex: 'averageUsage', width:50 },
         ],
         labelCol: {
           xs: { span: 1 },
@@ -102,6 +105,8 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.queryParam.productionOrderIds = record.productionOrders
+        this.queryParam.productionInNum = record.productionIn
+        this.queryParam.productionUnit = record.materialUnit
         this.loadData(1)
       },
       close () {
