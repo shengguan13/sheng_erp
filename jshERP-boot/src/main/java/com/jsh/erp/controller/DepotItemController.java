@@ -200,6 +200,7 @@ public class DepotItemController {
                 item.put("barCode", d.getBarCode()); //条码
                 item.put("materialName", d.getMaterialName()); //名称
                 item.put("useNum", d.getUseNum()); //领料数量 - 退料数量
+                item.put("materialUnit", d.getMaterialUnit()); //单位
                 dataArray.add(item);
             }
         }

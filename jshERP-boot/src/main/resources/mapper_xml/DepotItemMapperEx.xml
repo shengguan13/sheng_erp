@@ -18,6 +18,7 @@
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="material_name" jdbcType="VARCHAR" property="materialName" />
         <result column="use_num" jdbcType="DECIMAL" property="useNum" />
+        <result column="materialUnit" jdbcType="VARCHAR" property="materialUnit" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultAndMaterialMap" type="com.jsh.erp.datasource.entities.DepotItemVo4Material">
@@ -413,7 +414,7 @@
     <select id="findMaterialUsageByProductionOrderIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="MaterialUsageDetailResultMap">
         select tb.* from
         (
-            select me.bar_code,m.name material_name,di.material_id,
+            select me.bar_code,m.name material_name,di.material_id,concat_ws('', m.unit, u.basic_unit) materialUnit,
             sum(
                 case
                     when dh.type='出库' and dh.sub_type='领料' then ifnull(di.basic_number,0)
@@ -424,6 +425,7 @@
             from jsh_depot_head dh
             left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
             left join jsh_material m on di.material_id=m.id and ifnull(m.delete_flag,'0') !='1'
+            left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
             left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
             where ((dh.type='出库' and dh.sub_type='领料') or (dh.type='入库' and dh.sub_type='退料'))
             <if test="productionOrderIdArray != null">
@@ -440,7 +442,7 @@
                 )
             </if>
             and ifnull(dh.delete_flag,'0') !='1'
-            group by me.bar_code
+            group by di.material_id
         ) tb
         order by tb.use_num desc
         <if test="offset != null and rows != null">
@@ -451,7 +453,7 @@
     <select id="findMaterialUsageByProductionOrderIdCount" resultType="java.lang.Long">
         select count(tb.bar_code) from
         (
-        select me.bar_code,m.name material_name,di.material_id,
+        select me.bar_code,m.name material_name,di.material_id,concat_ws('', m.unit, u.basic_unit) materialUnit,
         sum(
         case
         when dh.type='出库' and dh.sub_type='领料' then ifnull(di.basic_number,0)
@@ -462,6 +464,7 @@
         from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id=m.id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         where ((dh.type='出库' and dh.sub_type='领料') or (dh.type='入库' and dh.sub_type='退料'))
         <if test="productionOrderIdArray != null">
@@ -478,7 +481,7 @@
             )
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        group by me.bar_code
+        group by di.material_id
         ) tb
     </select>
 

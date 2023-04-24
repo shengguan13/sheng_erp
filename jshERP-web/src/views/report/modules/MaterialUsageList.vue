@@ -73,6 +73,7 @@
           { title: '条码', dataIndex: 'barCode', width: 100},
           { title: '名称', dataIndex: 'materialName', width: 200},
           { title: '领料-退料', dataIndex: 'useNum', width: 70},
+          { title: '单位', dataIndex: 'materialUnit', width:50 },
         ],
         labelCol: {
           xs: { span: 1 },

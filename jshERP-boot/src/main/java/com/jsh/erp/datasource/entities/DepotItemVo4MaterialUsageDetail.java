@@ -12,6 +12,8 @@ public class DepotItemVo4MaterialUsageDetail {
 
     private BigDecimal useNum;
 
+    private String materialUnit;
+
     public Long getMaterialId() {
         return materialId;
     }
@@ -42,6 +44,14 @@ public class DepotItemVo4MaterialUsageDetail {
 
     public void setUseNum(BigDecimal useNum) {
         this.useNum = useNum;
+    }
+
+    public String getMaterialUnit() {
+        return materialUnit;
+    }
+
+    public void setMaterialUnit(String materialUnit) {
+        this.materialUnit = materialUnit;
     }
 
     @Override
