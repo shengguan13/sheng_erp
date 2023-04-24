@@ -127,6 +127,9 @@
           {title: '单位', dataIndex: 'materialUnit'},
           {title: '销售数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum},
           {title: '退货数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum},
+          {title: '销售金额', dataIndex: 'sumPrice', sorter: (a, b) => a.sumPrice - b.sumPrice},
+          {title: '退货金额', dataIndex: 'sumBack', sorter: (a, b) => a.sumBack - b.sumBack},
+          {title: '实际销售金额', dataIndex: 'sumSalePrice', sorter: (a, b) => a.sumSalePrice - b.sumSalePrice},
         ],
         url: {
           list: "/depotItem/saleOut"

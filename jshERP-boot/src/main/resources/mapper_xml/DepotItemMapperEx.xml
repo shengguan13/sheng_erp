@@ -750,6 +750,24 @@
         and ifnull(di.delete_flag,'0') !='1'
     </select>
 
+    <select id="buyOrSaleBackPrice" resultType="java.math.BigDecimal">
+        select ifnull(sum(dh.other_money),0) as AllPrice from jsh_depot_item di,jsh_depot_head dh
+        where di.header_id = dh.id
+        and dh.type=#{type} and dh.sub_type=#{subType}
+        and di.material_id =#{MId}
+        and dh.oper_time &gt;= #{beginTime}
+        and dh.oper_time &lt;= #{endTime}
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag,'0') !='1'
+    </select>
+
     <select id="inOrOutPrice" resultType="java.math.BigDecimal">
         select ifnull(sum(discount_last_money),0) as allMoney from
         (select distinct dh.id, dh.discount_last_money

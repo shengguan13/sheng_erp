@@ -449,7 +449,7 @@ export const JeecgListMixin = {
         let parseCols = 'initialStock,currentStock,currentStockPrice,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,' +
           'inOutSumPrice,outSum,outSumPrice,outInSumPrice,operNumber,allPrice,numSum,priceSum,prevSum,thisSum,thisAllPrice,changeAmount,' +
           'allPrice,taxMoney,currentNumber,lowSafeStock,highSafeStock,lowCritical,highCritical,preNeed,debtMoney,backMoney,allNeed,productionIn' +
-          'needDebt,realNeedDebt,finishDebt,debt'
+          'needDebt,realNeedDebt,finishDebt,debt,sumPrice,sumBack,sumSalePrice,sumBuyPrice'
         columns.forEach(column => {
           let { key, dataIndex } = column
           if (![key, dataIndex].includes(numKey)) {

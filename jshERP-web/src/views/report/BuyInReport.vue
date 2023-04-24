@@ -122,6 +122,9 @@
           {title: '单位', dataIndex: 'materialUnit', ellipsis:true},
           {title: '采购数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum},
           {title: '退货数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum},
+          {title: '采购金额', dataIndex: 'sumPrice', sorter: (a, b) => a.sumPrice - b.sumPrice},
+          {title: '退货金额', dataIndex: 'sumBack', sorter: (a, b) => a.sumBack - b.sumBack},
+          {title: '实际采购金额', dataIndex: 'sumBuyPrice', sorter: (a, b) => a.sumBuyPrice - b.sumBuyPrice},
         ],
         url: {
           list: "/depotItem/buyIn"

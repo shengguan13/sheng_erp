@@ -633,11 +633,11 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    BigDecimal InSum = depotItemService.buyOrSale("入库", "采购", diEx.getMId(), beginTime, endTime, creatorArray, "number");
-                    BigDecimal OutSum = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), beginTime, endTime, creatorArray, "number");
-                    BigDecimal InSumPrice = depotItemService.buyOrSale("入库", "采购", diEx.getMId(), beginTime, endTime, creatorArray, "price");
-                    BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), beginTime, endTime, creatorArray, "price");
-                    BigDecimal InOutSumPrice = InSumPrice.subtract(OutSumPrice);
+                    BigDecimal InSum = depotItemService.buyOrSaleCount("入库", "采购", diEx.getMId(), beginTime, endTime, creatorArray);
+                    BigDecimal OutSum = depotItemService.buyOrSaleCount("出库", "采购退货", diEx.getMId(), beginTime, endTime, creatorArray);
+                    BigDecimal sumPrice = depotItemService.buyOrSalePrice("其它", "采购订单", diEx.getMId(), beginTime, endTime, creatorArray);
+                    BigDecimal sumBack = depotItemService.buyOrSaleBackPrice("其它", "采购订单", diEx.getMId(), beginTime, endTime, creatorArray);
+                    BigDecimal sumBuyPrice = sumPrice.subtract(sumBack);
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
@@ -651,9 +651,9 @@ public class DepotItemController {
                     item.put("unitName", diEx.getUnitName());
                     item.put("inSum", InSum);
                     item.put("outSum", OutSum);
-                    item.put("inSumPrice", InSumPrice);
-                    item.put("outSumPrice", OutSumPrice);
-                    item.put("inOutSumPrice",InOutSumPrice);//实际采购金额
+                    item.put("sumPrice", sumPrice);
+                    item.put("sumBack", sumBack);
+                    item.put("sumBuyPrice",sumBuyPrice); //实际采购金额
                     dataArray.add(item);
                 }
             }
@@ -682,13 +682,13 @@ public class DepotItemController {
     @GetMapping(value = "/saleOut")
     @ApiOperation(value = "销售统计")
     public BaseResponseInfo saleOut(@RequestParam("currentPage") Integer currentPage,
-                                  @RequestParam("pageSize") Integer pageSize,
-                                  @RequestParam("beginTime") String beginTime,
-                                  @RequestParam("endTime") String endTime,
-                                  @RequestParam("materialParam") String materialParam,
-                                  @RequestParam("mpList") String mpList,
-                                  @RequestParam(value = "roleType", required = false) String roleType,
-                                  HttpServletRequest request)throws Exception {
+                                    @RequestParam("pageSize") Integer pageSize,
+                                    @RequestParam("beginTime") String beginTime,
+                                    @RequestParam("endTime") String endTime,
+                                    @RequestParam("materialParam") String materialParam,
+                                    @RequestParam("mpList") String mpList,
+                                    @RequestParam(value = "roleType", required = false) String roleType,
+                                    HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
@@ -706,15 +706,11 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    BigDecimal OutSumRetail = depotItemService.buyOrSale("出库", "零售", diEx.getMId(), beginTime, endTime, creatorArray,"number");
-                    BigDecimal OutSum = depotItemService.buyOrSale("出库", "销售", diEx.getMId(), beginTime, endTime, creatorArray,"number");
-                    BigDecimal InSumRetail = depotItemService.buyOrSale("入库", "零售退货", diEx.getMId(), beginTime, endTime, creatorArray,"number");
-                    BigDecimal InSum = depotItemService.buyOrSale("入库", "销售退货", diEx.getMId(), beginTime, endTime, creatorArray,"number");
-                    BigDecimal OutSumRetailPrice = depotItemService.buyOrSale("出库", "零售", diEx.getMId(), beginTime, endTime, creatorArray,"price");
-                    BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "销售", diEx.getMId(), beginTime, endTime, creatorArray,"price");
-                    BigDecimal InSumRetailPrice = depotItemService.buyOrSale("入库", "零售退货", diEx.getMId(), beginTime, endTime, creatorArray,"price");
-                    BigDecimal InSumPrice = depotItemService.buyOrSale("入库", "销售退货", diEx.getMId(), beginTime, endTime, creatorArray,"price");
-                    BigDecimal OutInSumPrice = (OutSumRetailPrice.add(OutSumPrice)).subtract(InSumRetailPrice.add(InSumPrice));
+                    BigDecimal OutSum = depotItemService.buyOrSaleCount("出库", "销售", diEx.getMId(), beginTime, endTime, creatorArray);
+                    BigDecimal InSum = depotItemService.buyOrSaleCount("入库", "销售退货", diEx.getMId(), beginTime, endTime, creatorArray);
+                    BigDecimal sumPrice = depotItemService.buyOrSalePrice("其它", "销售订单", diEx.getMId(), beginTime, endTime, creatorArray);
+                    BigDecimal sumBack = depotItemService.buyOrSaleBackPrice("其它", "销售订单", diEx.getMId(), beginTime, endTime, creatorArray);
+                    BigDecimal sumSalePrice = sumPrice.subtract(sumBack);
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
@@ -726,11 +722,11 @@ public class DepotItemController {
                     item.put("materialProject", diEx.getMProject());
                     item.put("materialUnit", diEx.getMaterialUnit());
                     item.put("unitName", diEx.getUnitName());
-                    item.put("outSum", OutSumRetail.add(OutSum));
-                    item.put("inSum", InSumRetail.add(InSum));
-                    item.put("outSumPrice", OutSumRetailPrice.add(OutSumPrice));
-                    item.put("inSumPrice", InSumRetailPrice.add(InSumPrice));
-                    item.put("outInSumPrice",OutInSumPrice);//实际销售金额
+                    item.put("outSum", OutSum);
+                    item.put("inSum", InSum);
+                    item.put("sumPrice", sumPrice);
+                    item.put("sumBack", sumBack);
+                    item.put("sumSalePrice",sumSalePrice);//实际销售金额
                     dataArray.add(item);
                 }
             }

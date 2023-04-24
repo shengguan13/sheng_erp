@@ -465,20 +465,37 @@ public class DepotItemService {
         return result;
     }
 
-    public BigDecimal buyOrSale(String type, String subType, Long MId, String beginTime, String endTime,
-                                String[] creatorArray, String sumType) throws Exception{
+    public BigDecimal buyOrSaleCount(String type, String subType, Long MId, String beginTime,
+                                     String endTime, String[] creatorArray) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            if (SUM_TYPE.equals(sumType)) {
-                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, creatorArray, sumType);
-            } else {
-                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, creatorArray, sumType);
-            }
+            result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
+    }
 
+    public BigDecimal buyOrSalePrice(String type, String subType, Long MId, String beginTime, String endTime,
+                                     String[] creatorArray) throws Exception{
+        BigDecimal result= BigDecimal.ZERO;
+        try {
+            result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, creatorArray);
+        } catch(Exception e) {
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
+    public BigDecimal buyOrSaleBackPrice(String type, String subType, Long MId, String beginTime, String endTime,
+                                         String[] creatorArray) throws Exception{
+        BigDecimal result= BigDecimal.ZERO;
+        try {
+            result= depotItemMapperEx.buyOrSaleBackPrice(type, subType, MId, beginTime, endTime, creatorArray);
+        } catch(Exception e) {
+            JshException.readFail(logger, e);
+        }
+        return result;
     }
 
     public BigDecimal productionIn(Long MId, String[] productionOrderNumberArray) throws Exception{
