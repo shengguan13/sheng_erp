@@ -109,7 +109,9 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, columnWidth:'2%'}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="handleEdit(record)">编辑</a>
+              <a @click="handleDetail(record)">查看</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+              <a v-if="btnEnableList.indexOf(1)>-1" @click="handleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                 <a>删除</a>
@@ -142,6 +144,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
+        <read-only-material-modal ref="readOnlyModalForm"></read-only-material-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
@@ -150,6 +153,7 @@
 </template>
 <script>
   import MaterialModal from './modules/MaterialModal'
+  import ReadOnlyMaterialModal from './modules/ReadOnlyMaterialModal'
   import ImportFileModal from '@/components/tools/ImportFileModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
@@ -165,6 +169,7 @@
     mixins:[JeecgListMixin],
     components: {
       MaterialModal,
+      ReadOnlyMaterialModal,
       ImportFileModal,
       BatchSetInfoModal,
       JEllipsis,
@@ -210,7 +215,7 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: 100,
+            width: 120,
             scopedSlots: { customRender: 'action' },
           },
           {title: '条码', dataIndex: 'mBarCode', width: 160, scopedSlots: { customRender: 'customBarCode' }},
@@ -348,6 +353,14 @@
         this.$refs.modalForm.edit(record);
         this.$refs.modalForm.title = "编辑";
         this.$refs.modalForm.disableSubmit = false;
+        if(this.btnEnableList.indexOf(1)===-1) {
+          this.$refs.modalForm.isReadOnly = true
+        }
+      },
+      handleDetail: function (record) {
+        this.$refs.readOnlyModalForm.edit(record);
+        this.$refs.readOnlyModalForm.title = "详情";
+        this.$refs.readOnlyModalForm.disableSubmit = false;
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
