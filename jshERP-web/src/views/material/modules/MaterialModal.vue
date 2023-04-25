@@ -111,8 +111,19 @@
                   </a-tooltip>
                 </a-form-item>
               </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="外协件" data-step="10" data-title="外协件"
+                  data-intro="选择商品是否属于外协件">
+                  <a-tooltip title="选择商品是否属于外协件">
+                    <a-select placeholder="是否外协" v-decorator="[ 'outsource' ]">
+                      <a-select-option value="1">是</a-select-option>
+                      <a-select-option value="0">否</a-select-option>
+                    </a-select>
+                  </a-tooltip>
+                </a-form-item>
+              </a-col>
               <a-col :md="6" :sm="24" v-if="!model.id">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="10" data-title="多属性"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
                   data-intro="同一种零件可存在多种属性—颜色、尺寸、供应商等">
                   <a-tooltip title="同一种零件可存在多种属性—颜色、尺寸、供应商等，需要先录入单位才能激活此处输入框">
                     <a-tag class="tag-info" v-if="!manySkuStatus">需要先录入单位才能激活</a-tag>
@@ -644,7 +655,7 @@
         this.$nextTick(() => {
         // TODO: enableSerialNumber是否可以去掉,目前默认enableSerialNumber===0
           this.form.setFieldsValue(pick(this.model, 'name', 'internalId', 'unit', 'unitId', 'model', 'color', 'project',
-            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','weight','remark','mfrs',
+            'categoryId','enableSerialNumber','enableBatchNumber','outsource','expiryNum','weight','remark','mfrs',
             'otherField1','otherField2','otherField3','otherField4','otherField5','otherField6','otherField7',
             'otherField8','otherField9','otherField10','otherField11','otherField12','otherField13','otherField14'))
           autoJumpNextInput('materialHeadModal')

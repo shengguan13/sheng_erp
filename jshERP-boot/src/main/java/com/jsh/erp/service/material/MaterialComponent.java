@@ -42,11 +42,13 @@ public class MaterialComponent implements ICommonQuery {
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
         String enableSerialNumber = StringUtil.getInfo(search, "enableSerialNumber");
         String enableBatchNumber = StringUtil.getInfo(search, "enableBatchNumber");
+        String outSource = StringUtil.getInfo(search, "outsource");
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
         return materialService.select(materialParam, color, project, materialOther, weight, expiryNum,
-                enableSerialNumber, enableBatchNumber, enabled, remark, categoryId, mpList, QueryUtils.offset(map), QueryUtils.rows(map));
+                enableSerialNumber, enableBatchNumber, outSource, enabled, remark, categoryId, mpList,
+                QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -61,11 +63,12 @@ public class MaterialComponent implements ICommonQuery {
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
         String enableSerialNumber = StringUtil.getInfo(search, "enableSerialNumber");
         String enableBatchNumber = StringUtil.getInfo(search, "enableBatchNumber");
+        String outSource = StringUtil.getInfo(search, "outSource");
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
         return materialService.countMaterial(materialParam, color, project, materialOther, weight, expiryNum,
-                enableSerialNumber, enableBatchNumber, enabled, remark, categoryId, mpList);
+                enableSerialNumber, enableBatchNumber, outSource, enabled, remark, categoryId, mpList);
     }
 
     @Override

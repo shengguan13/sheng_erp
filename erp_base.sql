@@ -11,7 +11,7 @@
  Target Server Version : 50704 (5.7.4-m14)
  File Encoding         : 65001
 
- Date: 17/04/2023 17:39:38
+ Date: 25/04/2023 11:30:39
 */
 
 SET NAMES utf8mb4;
@@ -383,6 +383,7 @@ CREATE TABLE `jsh_material`  (
   `other_field14` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组装等级关系',
   `enable_serial_number` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '是否开启序列号，0否，1是',
   `enable_batch_number` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '是否开启批号，0否，1是',
+  `outsource` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '是否为外协件，0否，1是',
   `tenant_id` bigint(20) NULL DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`) USING BTREE,

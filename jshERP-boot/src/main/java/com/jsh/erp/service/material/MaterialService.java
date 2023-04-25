@@ -112,8 +112,8 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String materialParam, String color, String project, String materialOther,
-                                        String weight, String expiryNum, String enableSerialNumber, String enableBatchNumber,
+    public List<MaterialVo4Unit> select(String materialParam, String color, String project, String materialOther, String weight,
+                                        String expiryNum, String enableSerialNumber, String enableBatchNumber, String outsource,
                                         String enabled, String remark, String categoryId, String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = new String[]{};
@@ -128,7 +128,7 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             list= materialMapperEx.selectByConditionMaterial(materialParam, color, project, materialOther, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, enabled, remark, idList, mpList, offset, rows);
+                    enableSerialNumber, enableBatchNumber, outsource, enabled, remark, idList, mpList, offset, rows);
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
@@ -144,8 +144,8 @@ public class MaterialService {
         return resList;
     }
 
-    public Long countMaterial(String materialParam, String color, String project, String materialOther,
-                              String weight, String expiryNum, String enableSerialNumber, String enableBatchNumber,
+    public Long countMaterial(String materialParam, String color, String project, String materialOther, String weight,
+                              String expiryNum, String enableSerialNumber, String enableBatchNumber, String outsource,
                               String enabled, String remark, String categoryId,String mpList)throws Exception {
         Long result =null;
         try{
@@ -154,7 +154,7 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             result= materialMapperEx.countsByMaterial(materialParam, color, project, materialOther, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, enabled, remark, idList, mpList);
+                    enableSerialNumber, enableBatchNumber, outsource, enabled, remark, idList, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -781,7 +781,6 @@ public class MaterialService {
                             .map(e -> "[" + barCodeToExtendId.get(e.getKey()) + "]*" + e.getValue())
                             .collect(Collectors.toList());
                     m.setOtherField14(String.join("+", compositeList));
-                    logger.info("compositeStr: " + m.getOtherField14());
 
                     if (materials.size() == 0) {
                         materialMapperEx.insertSelectiveEx(m);
@@ -1349,9 +1348,9 @@ public class MaterialService {
             if (mpArr[i].equals("配置")) {
                 materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
             }
-            if (mpArr[i].equals("自定义1")) {
-                materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
-            }
+            // if (mpArr[i].equals("自定义1")) {
+            //     materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
+            // }
             if (mpArr[i].equals("材料牌号")) {
                 materialOther = materialOther + ((m.getOtherField4() == null || m.getOtherField4().equals("")) ? "" : "(" + m.getOtherField4() + ")");
             }
@@ -1383,9 +1382,9 @@ public class MaterialService {
                 materialOther = materialOther + ((m.getOtherField13() == null || m.getOtherField13().equals("")) ? "" : "(" + m.getOtherField13() + ")");
             }
             // 暂时不在拓展信息里面显示组装等级关系
-//            if (mpArr[i].equals("组装等级关系")) {
-//                materialOther = materialOther + ((m.getOtherField14() == null || m.getOtherField14().equals("")) ? "" : "(" + m.getOtherField14() + ")");
-//            }
+            // if (mpArr[i].equals("组装等级关系")) {
+            //     materialOther = materialOther + ((m.getOtherField14() == null || m.getOtherField14().equals("")) ? "" : "(" + m.getOtherField14() + ")");
+            // }
         }
         return materialOther;
     }

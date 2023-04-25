@@ -54,6 +54,14 @@
                     <a-input placeholder="请输入备注查询" v-model="queryParam.remark"></a-input>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="是否外协" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择是否" v-model="queryParam.outsource">
+                      <a-select-option value="1">是</a-select-option>
+                      <a-select-option value="0">否</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -194,6 +202,7 @@
           color:'',
           project:'',
           materialOther:'',
+          outsource:'',
           weight:'',
           expiryNum:'',
           enabled: '',

@@ -78,6 +78,9 @@
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
         </if>
+        <if test="outsource != null and outsource !=''">
+            and m.outsource = #{outsource}
+        </if>
         <if test="enabled != null and enabled !=''">
             and m.enabled = #{enabled}
         </if>
@@ -142,6 +145,9 @@
         </if>
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
+        </if>
+        <if test="outsource != null and outsource !=''">
+            and m.outsource = #{outsource}
         </if>
         <if test="enabled != null and enabled !=''">
             and m.enabled = #{enabled}
@@ -255,6 +261,9 @@
             <if test="enableBatchNumber != null">
                 enable_batch_number,
             </if>
+            <if test="outsource != null">
+                outsource,
+            </if>
             <if test="tenantId != null">
                 tenant_id,
             </if>
@@ -356,6 +365,9 @@
             <if test="enableBatchNumber != null">
                 #{enableBatchNumber,jdbcType=VARCHAR},
             </if>
+            <if test="outsource != null">
+                #{outsource,jdbcType=VARCHAR},
+            </if>
             <if test="tenantId != null">
                 #{tenantId,jdbcType=BIGINT},
             </if>
@@ -409,6 +421,9 @@
         <if test="enableSerialNumber != null and enableSerialNumber !=''">
             and m.enable_serial_number = #{enableSerialNumber}
         </if>
+        <if test="outsource != null and outsource !=''">
+            and m.outsource = #{outsource}
+        </if>
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
         </if>
@@ -439,6 +454,9 @@
         </if>
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
+        </if>
+        <if test="outsource != null and outsource !=''">
+            and m.outsource = #{outsource}
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>
@@ -478,6 +496,9 @@
         </if>
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
+        </if>
+        <if test="outsource != null and outsource !=''">
+            and m.outsource = #{outsource}
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
