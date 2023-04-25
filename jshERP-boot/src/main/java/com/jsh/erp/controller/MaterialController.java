@@ -354,6 +354,7 @@ public class MaterialController {
                             @RequestParam(value = "enabled", required = false) String enabled,
                             @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
                             @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
+                            @RequestParam(value = "outsource", required = false) String outsource,
                             @RequestParam(value = "remark", required = false) String remark,
                             @RequestParam(value = "mpList", required = false) String mpList,
                             HttpServletRequest request, HttpServletResponse response) {
@@ -364,10 +365,11 @@ public class MaterialController {
             }
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
                     StringUtil.toNull(project), StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled),
-                    StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"条码", "名称", "内部零件号", "客户零件号", "单位", "颜色编码", "净重量（kg）", "保质期（天）", "类别", "项目", "批号",
-                    "制造商", "工艺类别", "配置", "材料牌号", "材料类型/标准", "原材料厂家", "外协件厂家", "尺寸", "检具", "用量/车（件）", "料道（kg）",
-                    "表面处理纹理", "表面积（m²）", "组装等级关系", "状态", "备注"};
+                    StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber), StringUtil.toNull(outsource),
+                    StringUtil.toNull(remark), StringUtil.toNull(categoryId));
+            String[] names = {"条码", "名称", "组装等级关系", "内部零件号", "客户零件号", "单位", "颜色编码", "净重量（kg）", "保质期（天）", "类别", "项目", "批号",
+                    "外协", "制造商", "工艺类别", "配置", "材料牌号", "材料类型/标准", "原材料厂家", "外协件厂家", "尺寸", "检具", "用量/车（件）", "料道（kg）",
+                    "表面处理纹理", "表面积（m²）", "状态", "备注"};
             String title = "商品信息";
             Map<String, String> meIdToBarCodeMap = new HashMap<>();
             if (dataList != null) {
@@ -383,39 +385,40 @@ public class MaterialController {
                     String[] objs = new String[100];
                     objs[0] = m.getmBarCode(); //条码
                     objs[1] = m.getName(); //名称
-                    objs[2] = m.getInternalId(); //内部零件号
-                    objs[3] = m.getModel(); //客户零件号
-                    objs[4] = m.getUnit(); //单位
-                    objs[5] = m.getColor(); //颜色编码
-                    objs[6] = m.getWeight() == null ? "" : String.valueOf(m.getWeight()); //净重量（kg）
-                    objs[7] = m.getExpiryNum() == null ? "" : String.valueOf(m.getExpiryNum()); //保质期（天）
-                    objs[8] = m.getCategoryName(); //类别
-                    objs[9] = m.getProject(); //项目
-                    objs[10] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无"; //批号
-                    objs[11] = m.getMfrs(); //制造商
-                    objs[12] = m.getOtherField1(); //工艺类别
-                    objs[13] = m.getOtherField2(); //配置
-                    objs[14] = m.getOtherField4(); //材料牌号
-                    objs[15] = m.getOtherField5(); //材料类型/标准
-                    objs[16] = m.getOtherField6(); //原材料厂家
-                    objs[17] = m.getOtherField7(); //外协件厂家
-                    objs[18] = m.getOtherField8(); //尺寸
-                    objs[19] = m.getOtherField9(); //检具
-                    objs[20] = m.getOtherField10(); //用量/车（件）
-                    objs[21] = m.getOtherField11(); //料道（kg）
-                    objs[22] = m.getOtherField12(); //表面处理纹理
-                    objs[23] = m.getOtherField13(); //表面积（m²）
                     if (m.getOtherField14() != null && !"".equals(m.getOtherField14())) {
                         Map<String, String> meIdToAmountMap = parseCompositeString(m.getOtherField14());
                         List<String> compositeList = meIdToAmountMap.entrySet().stream()
                                 .map(e -> "[" + meIdToBarCodeMap.get(e.getKey()) + "]*" + e.getValue())
                                 .collect(Collectors.toList());
-                        objs[24] = String.join("+", compositeList); //组装等级关系
+                        objs[2] = String.join("+", compositeList); //组装等级关系
                     } else {
-                        objs[24] = "";
+                        objs[2] = "";
                     }
-                    objs[25] = m.getEnabled() ? "启用" : "禁用"; //状态
-                    objs[26] = m.getRemark(); //备注
+                    objs[3] = m.getInternalId(); //内部零件号
+                    objs[4] = m.getModel(); //客户零件号
+                    objs[5] = m.getUnit(); //单位
+                    objs[6] = m.getColor(); //颜色编码
+                    objs[7] = m.getWeight() == null ? "" : String.valueOf(m.getWeight()); //净重量（kg）
+                    objs[8] = m.getExpiryNum() == null ? "" : String.valueOf(m.getExpiryNum()); //保质期（天）
+                    objs[9] = m.getCategoryName(); //类别
+                    objs[10] = m.getProject(); //项目
+                    objs[11] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无"; //批号
+                    objs[12] = "1".equals(m.getOutsource()) ? "是" : "否"; //外协
+                    objs[13] = m.getMfrs(); //制造商
+                    objs[14] = m.getOtherField1(); //工艺类别
+                    objs[15] = m.getOtherField2(); //配置
+                    objs[16] = m.getOtherField4(); //材料牌号
+                    objs[17] = m.getOtherField5(); //材料类型/标准
+                    objs[18] = m.getOtherField6(); //原材料厂家
+                    objs[19] = m.getOtherField7(); //外协件厂家
+                    objs[20] = m.getOtherField8(); //尺寸
+                    objs[21] = m.getOtherField9(); //检具
+                    objs[22] = m.getOtherField10(); //用量/车（件）
+                    objs[23] = m.getOtherField11(); //料道（kg）
+                    objs[24] = m.getOtherField12(); //表面处理纹理
+                    objs[25] = m.getOtherField13(); //表面积（m²）
+                    objs[26] = m.getEnabled() ? "启用" : "禁用"; //状态
+                    objs[27] = m.getRemark(); //备注
                     objects.add(objs);
                 }
             }

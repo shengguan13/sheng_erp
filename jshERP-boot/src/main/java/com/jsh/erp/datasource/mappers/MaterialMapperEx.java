@@ -77,6 +77,7 @@ public interface MaterialMapperEx {
             @Param("enabled") String enabled,
             @Param("enableSerialNumber") String enableSerialNumber,
             @Param("enableBatchNumber") String enableBatchNumber,
+            @Param("outsource") String outsource,
             @Param("remark") String remark,
             @Param("idList") List<Long> idList);
     /**

@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 @Service
 public class MaterialService {
     private Logger logger = LoggerFactory.getLogger(MaterialService.class);
+    private static final int MAX_COL_NUM = 30;
 
     @Resource
     private MaterialMapper materialMapper;
@@ -503,8 +504,9 @@ public class MaterialService {
         return result;
     }
 
-    public List<MaterialVo4Unit> exportExcel(String materialParam, String color, String project, String weight, String expiryNum, String enabled,
-                                             String enableSerialNumber, String enableBatchNumber, String remark, String categoryId)throws Exception {
+    public List<MaterialVo4Unit> exportExcel(String materialParam, String color, String project, String weight, String expiryNum,
+                                             String enabled, String enableSerialNumber, String enableBatchNumber, String outsource,
+                                             String remark, String categoryId)throws Exception {
         List<MaterialVo4Unit> resList = new ArrayList<>();
         List<MaterialVo4Unit> list =null;
         try{
@@ -513,7 +515,7 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             list=  materialMapperEx.exportExcel(materialParam, color, project, weight, expiryNum, enabled,
-                    enableSerialNumber, enableBatchNumber, remark, idList);
+                    enableSerialNumber, enableBatchNumber, outsource, remark, idList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -572,22 +574,23 @@ public class MaterialService {
                 String categoryName = ExcelUtils.getContent(src, i, 12); //类别
                 String project = ExcelUtils.getContent(src, i, 13); //项目
                 String enableBatchNumber = ExcelUtils.getContent(src, i, 14); //批号
-                String mfrs = ExcelUtils.getContent(src, i, 15); //制造商
+                String outsource = ExcelUtils.getContent(src, i, 15); //外协
+                String mfrs = ExcelUtils.getContent(src, i, 16); //制造商
 
-                String other1 = ExcelUtils.getContent(src, i, 16); //工艺类别
-                String other2 = ExcelUtils.getContent(src, i, 17); //配置
-                String other4 = ExcelUtils.getContent(src, i, 18); //材料牌号
-                String other5 = ExcelUtils.getContent(src, i, 19); //材料类型/标准
-                String other6 = ExcelUtils.getContent(src, i, 20); //原材料厂家
-                String other7 = ExcelUtils.getContent(src, i, 21); //外协件厂家
-                String other8 = ExcelUtils.getContent(src, i, 22); //尺寸
-                String other9 = ExcelUtils.getContent(src, i, 23); //检具
-                String other10 = ExcelUtils.getContent(src, i, 24); //用量/车（件）
-                String other11 = ExcelUtils.getContent(src, i, 25); //料道（kg）
-                String other12 = ExcelUtils.getContent(src, i, 26); //表面处理纹理
-                String other13 = ExcelUtils.getContent(src, i, 27); //表面积（m²）
-                String enabled = ExcelUtils.getContent(src, i, 28); //状态
-                String remark = ExcelUtils.getContent(src, i, 29); //备注
+                String other1 = ExcelUtils.getContent(src, i, 17); //工艺类别
+                String other2 = ExcelUtils.getContent(src, i, 18); //配置
+                String other4 = ExcelUtils.getContent(src, i, 19); //材料牌号
+                String other5 = ExcelUtils.getContent(src, i, 20); //材料类型/标准
+                String other6 = ExcelUtils.getContent(src, i, 21); //原材料厂家
+                String other7 = ExcelUtils.getContent(src, i, 22); //外协件厂家
+                String other8 = ExcelUtils.getContent(src, i, 23); //尺寸
+                String other9 = ExcelUtils.getContent(src, i, 24); //检具
+                String other10 = ExcelUtils.getContent(src, i, 25); //用量/车（件）
+                String other11 = ExcelUtils.getContent(src, i, 26); //料道（kg）
+                String other12 = ExcelUtils.getContent(src, i, 27); //表面处理纹理
+                String other13 = ExcelUtils.getContent(src, i, 28); //表面积（m²）
+                String enabled = ExcelUtils.getContent(src, i, 29); //状态
+                String remark = ExcelUtils.getContent(src, i, MAX_COL_NUM); //备注
 
                 //名称为空
                 if(StringUtil.isEmpty(name)) {
@@ -686,6 +689,11 @@ public class MaterialService {
                     m.setEnableBatchNumber("1");
                 } else {
                     m.setEnableBatchNumber("0");
+                }
+                if(StringUtil.isNotEmpty(outsource) && "1".equals(outsource)) {
+                    m.setOutsource("1");
+                } else {
+                    m.setOutsource("0");
                 }
                 m.setStockMap(getStockMapCache(src, depotCount, depotMap, i));
                 mList.add(m);
@@ -882,7 +890,7 @@ public class MaterialService {
     private Map<Long, BigDecimal> getStockMapCache(Sheet src, int depotCount, Map<String, Long> depotMap, int i) throws Exception {
         Map<Long, BigDecimal> stockMap = new HashMap<>();
         for(int j = 1; j<= depotCount; j++) {
-            int col = 29 + j;       // 仓库之前的列数
+            int col = MAX_COL_NUM + j;       // 仓库之前的列数
             if(col < src.getColumns()){
                 String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                 if(StringUtil.isNotEmpty(depotName)) {
