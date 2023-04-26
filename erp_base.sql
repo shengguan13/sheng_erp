@@ -823,7 +823,7 @@ CREATE TABLE `jsh_unit`  (
 -- ----------------------------
 -- Records of jsh_unit
 -- ----------------------------
-INSERT INTO `jsh_unit` VALUES (22, '瓶/(箱=12瓶)', '瓶', '箱', NULL, NULL, 12, NULL, NULL, b'1', 63, '0');
+INSERT INTO `jsh_unit` VALUES (22, 'kg/(袋=25kg)', 'kg', '袋', NULL, NULL, 12, NULL, NULL, b'1', 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_user
