@@ -68,6 +68,14 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="外协件" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="是否外协件" v-model="queryParam.outsource">
+                      <a-select-option value="1">是</a-select-option>
+                      <a-select-option value="0">否</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -128,7 +136,8 @@
           categoryId: '',
           depotId: '',
           enableSerialNumber: '',
-          enableBatchNumber: ''
+          enableBatchNumber: '',
+          outsource: ''
         },
         labelCol: {
           xs: { span: 24 },

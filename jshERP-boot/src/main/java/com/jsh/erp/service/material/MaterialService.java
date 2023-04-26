@@ -462,8 +462,8 @@ public class MaterialService {
         return idList;
     }
 
-    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String enableSerialNumber,
-                                                         String enableBatchNumber, Integer offset, Integer rows)throws Exception{
+    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String enableSerialNumber, String enableBatchNumber,
+                                                         String outsource, Integer offset, Integer rows)throws Exception{
         List<MaterialVo4Unit> list =null;
         try{
             List<Long> idList = new ArrayList<>();
@@ -475,7 +475,7 @@ public class MaterialService {
                 q = q.replace("'", "");
                 q = q.trim();
             }
-            list=  materialMapperEx.findBySelectWithBarCode(idList, q, enableSerialNumber, enableBatchNumber, offset, rows);
+            list=  materialMapperEx.findBySelectWithBarCode(idList, q, enableSerialNumber, enableBatchNumber, outsource, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -483,7 +483,7 @@ public class MaterialService {
     }
 
     public int findBySelectWithBarCodeCount(Long categoryId, String q, String enableSerialNumber,
-                                            String enableBatchNumber)throws Exception{
+                                            String enableBatchNumber, String outsource)throws Exception{
         int result=0;
         try{
             List<Long> idList = new ArrayList<>();
@@ -494,7 +494,7 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
             }
-            result = materialMapperEx.findBySelectWithBarCodeCount(idList, q, enableSerialNumber, enableBatchNumber);
+            result = materialMapperEx.findBySelectWithBarCodeCount(idList, q, enableSerialNumber, enableBatchNumber, outsource);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -855,7 +855,7 @@ public class MaterialService {
             return false;
         }
         try {
-            Integer.parseInt(split[1]);
+            Double.parseDouble(split[1]);
         } catch (Exception e) {
             return false;
         }

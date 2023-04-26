@@ -205,6 +205,7 @@ public class MaterialController {
                                   @RequestParam(value = "depotId", required = false) Long depotId,
                                   @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
                                   @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
+                                  @RequestParam(value = "outsource", required = false) String outsource,
                                   @RequestParam("page") Integer currentPage,
                                   @RequestParam("rows") Integer pageSize,
                                   HttpServletRequest request) throws Exception{
@@ -215,9 +216,8 @@ public class MaterialController {
                 mpArr= mpList.split(",");
             }
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, enableSerialNumber,
-                    enableBatchNumber, (currentPage-1)*pageSize, pageSize);
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, enableSerialNumber,
-                    enableBatchNumber);
+                    enableBatchNumber, outsource,(currentPage-1)*pageSize, pageSize);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, enableSerialNumber, enableBatchNumber, outsource);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组

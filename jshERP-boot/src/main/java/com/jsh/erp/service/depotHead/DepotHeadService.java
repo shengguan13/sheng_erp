@@ -964,20 +964,21 @@ public class DepotHeadService {
         if("生产计划".equals(subType)) {
             // 计划开始时间要<=计划完成时间
             if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
+                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG));
             }
             // 计划开始时间要>=现在时间，不知道为什么 00:00:00 truncate之后变成了前一天，需要手动加回来一天做比较
             if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) <= 0) {
+                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
             }
         }
         if("生产单".equals(subType)) {
-            // 生产单开工时间要>现在时间
-            if (depotHead.getPlanStartTime().toInstant().compareTo(Instant.now()) <= 0) {
+            // 生产单开工时间要>=今天
+            if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
+                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG));
             }
@@ -1076,20 +1077,21 @@ public class DepotHeadService {
         if("生产计划".equals(subType)) {
             // 计划开始时间要<=计划完成时间
             if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
+                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG));
             }
             // 计划开始时间要>=现在时间，不知道为什么 00:00:00 truncate之后变成了前一天，需要手动加回来一天做比较
             if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) <= 0) {
+                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
             }
         }
         if("生产单".equals(subType)) {
-            // 生产单开工时间要>现在时间
-            if (depotHead.getPlanStartTime().toInstant().compareTo(Instant.now()) <= 0) {
+            // 生产单开工时间要>=今天
+            if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
+                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG));
             }
