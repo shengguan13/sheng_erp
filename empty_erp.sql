@@ -121,6 +121,10 @@ CREATE TABLE `jsh_depot`  (
 -- ----------------------------
 -- Records of jsh_depot
 -- ----------------------------
+INSERT INTO `jsh_depot` VALUES (23, '成品库', NULL, NULL, NULL, 0, NULL, NULL, NULL, b'1', 63, '0', b'1');
+INSERT INTO `jsh_depot` VALUES (24, '半成品库', NULL, NULL, NULL, 0, NULL, NULL, NULL, b'1', 63, '0', b'0');
+INSERT INTO `jsh_depot` VALUES (25, '原材料库', NULL, NULL, NULL, 0, NULL, NULL, NULL, b'1', 63, '0', b'0');
+INSERT INTO `jsh_depot` VALUES (26, '辅料库', NULL, NULL, NULL, 0, NULL, NULL, NULL, b'1', 63, '0', b'0');
 
 -- ----------------------------
 -- Table structure for jsh_depot_head
