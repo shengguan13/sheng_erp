@@ -313,6 +313,7 @@ public class DepotItemController {
                     item.put("barCode", diEx.getBarCode());
                     item.put("name", diEx.getMName());
                     item.put("internalId", diEx.getMInternalId());
+                    item.put("categoryName", diEx.getMCategoryName());
                     item.put("model", diEx.getMModel());
                     item.put("color", diEx.getMColor());
                     item.put("project", diEx.getMProject());

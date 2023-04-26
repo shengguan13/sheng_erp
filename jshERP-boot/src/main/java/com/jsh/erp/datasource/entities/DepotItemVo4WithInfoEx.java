@@ -18,6 +18,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String MInternalId;
 
+    private String MCategoryName;
+
     private String MMfrs;
 
     private String MOtherField1;
@@ -128,6 +130,14 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setMInternalId(String MInternalId) {
         this.MInternalId = MInternalId;
+    }
+
+    public String getMCategoryName() {
+        return MCategoryName;
+    }
+
+    public void setMCategoryName(String MCategoryName) {
+        this.MCategoryName = MCategoryName;
     }
 
     public String getMMfrs() {

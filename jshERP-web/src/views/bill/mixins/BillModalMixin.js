@@ -477,6 +477,7 @@ export const BillModalMixin = {
         model: mInfo.model,
         color: mInfo.color,
         materialOther: mInfo.materialOther,
+        categoryName: mInfo.categoryName,
         enableBatchNumber: mInfo.enableBatchNumber,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
@@ -490,6 +491,7 @@ export const BillModalMixin = {
     changeColumnHide() {
       this.changeFormTypes(this.materialTable.columns, 'model', 0)
       this.changeFormTypes(this.materialTable.columns, 'color', 0)
+      this.changeFormTypes(this.materialTable.columns, 'categoryName', 0)
       this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
       this.changeFormTypes(this.materialTable.columns, 'sku', 0)
     },
@@ -503,6 +505,9 @@ export const BillModalMixin = {
       }
       if(info.materialOther) {
         this.changeFormTypes(this.materialTable.columns, 'materialOther', 1)
+      }
+      if(info.categoryName) {
+        this.changeFormTypes(this.materialTable.columns, 'categoryName', 1)
       }
       if(info.sku) {
         this.changeFormTypes(this.materialTable.columns, 'sku', 1)
@@ -631,6 +636,7 @@ export const BillModalMixin = {
                   item.internalId = mInfo.internalId
                   item.model = mInfo.model
                   item.color = mInfo.color
+                  item.categoryName = mInfo.categoryName
                   item.materialOther = mInfo.materialOther
                   item.stock = mInfo.stock
                   item.unit = mInfo.commodityUnit
