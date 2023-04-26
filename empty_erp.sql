@@ -445,6 +445,10 @@ CREATE TABLE `jsh_material_category`  (
 -- ----------------------------
 -- Records of jsh_material_category
 -- ----------------------------
+INSERT INTO `jsh_material_category` VALUES (40, '原材料', NULL, NULL, NULL, '01', NULL, '2023-04-26 13:12:49', '2023-04-26 13:12:49', 63, '0');
+INSERT INTO `jsh_material_category` VALUES (41, '采购件', NULL, NULL, NULL, '02', NULL, '2023-04-26 13:12:58', '2023-04-26 13:12:58', 63, '0');
+INSERT INTO `jsh_material_category` VALUES (42, '半成品', NULL, NULL, NULL, '03', NULL, '2023-04-26 13:13:05', '2023-04-26 13:13:05', 63, '0');
+INSERT INTO `jsh_material_category` VALUES (43, '成品', NULL, NULL, NULL, '04', NULL, '2023-04-26 13:13:13', '2023-04-26 13:13:13', 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_current_stock
