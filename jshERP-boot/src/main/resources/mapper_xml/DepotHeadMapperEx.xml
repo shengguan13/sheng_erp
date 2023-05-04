@@ -1016,7 +1016,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1097,7 +1097,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
