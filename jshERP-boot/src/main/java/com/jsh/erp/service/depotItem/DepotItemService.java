@@ -688,12 +688,12 @@ public class DepotItemService {
                         BigDecimal preNumber = rowObj.getBigDecimal("preNumber");
                         BigDecimal finishNumber = rowObj.getBigDecimal("finishNumber");
                         BigDecimal planOrderedNumber = rowObj.getBigDecimal("planOrderedNumber");
-                        if ("生产计划".equals(depotHead.getSubType())) {
+                        if ("生产单".equals(depotHead.getSubType())) {
                             if (depotItem.getOperNumber().add(planOrderedNumber).compareTo(preNumber) > 0) {
                                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                         String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG_2, barCode));
                             }
-                        } else if ("生产单".equals(depotHead.getSubType())) {
+                        } else if ("生产".equals(depotHead.getSubType()) && "入库".equals(depotHead.getType())) {
                             // 生产单不需要检查什么，允许实际入库比生产多的情况
                         } else {
                             if (depotItem.getOperNumber().add(finishNumber).compareTo(preNumber) > 0) {
