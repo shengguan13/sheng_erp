@@ -1006,35 +1006,10 @@ public class DepotHeadService {
             }
             depotHead.setAccountMoneyList(accountMoneyList);
         }
-        //校验累计扣除订金是否超出订单中的金额
-        if(depotHead.getDeposit()!=null && StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
-            BigDecimal finishDeposit = depotHeadMapperEx.getFinishDepositByNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber());
-            //订单中的订金金额
-            BigDecimal changeAmount = getDepotHead(depotHead.getLinkNumber()).getChangeAmount();
-            if(changeAmount!=null) {
-                BigDecimal preDeposit = changeAmount.abs();
-                if(depotHead.getDeposit().add(finishDeposit).compareTo(preDeposit)>0) {
-                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
-                            String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
-                }
-            }
-        }
         try{
             depotHeadMapper.insertSelective(depotHead);
         }catch(Exception e){
             JshException.writeFail(logger, e);
-        }
-        /**入库和出库处理预付款信息*/
-        if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())){
-            if(depotHead.getOrganId()!=null) {
-                BigDecimal currentAdvanceIn = supplierService.getSupplier(depotHead.getOrganId()).getAdvanceIn();
-                if(currentAdvanceIn.compareTo(depotHead.getTotalPrice())>=0) {
-                    supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice()));
-                } else {
-                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_CODE,
-                            String.format(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_MSG));
-                }
-            }
         }
         //根据单据编号查询单据id
         DepotHeadExample dhExample = new DepotHeadExample();
@@ -1071,8 +1046,6 @@ public class DepotHeadService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
         }
-        //获取之前的金额数据
-        BigDecimal preTotalPrice = getDepotHead(depotHead.getId()).getTotalPrice().abs();
         String subType = depotHead.getSubType();
         if("生产计划".equals(subType)) {
             // 计划开始时间要<=计划完成时间
@@ -1110,35 +1083,10 @@ public class DepotHeadService {
             }
             depotHead.setAccountMoneyList(accountMoneyList);
         }
-        //校验累计扣除订金是否超出订单中的金额
-        if(depotHead.getDeposit()!=null && StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
-            BigDecimal finishDeposit = depotHeadMapperEx.getFinishDepositByNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber());
-            //订单中的订金金额
-            BigDecimal changeAmount = getDepotHead(depotHead.getLinkNumber()).getChangeAmount();
-            if(changeAmount!=null) {
-                BigDecimal preDeposit = changeAmount.abs();
-                if(depotHead.getDeposit().add(finishDeposit).compareTo(preDeposit)>0) {
-                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
-                            String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
-                }
-            }
-        }
         try{
             depotHeadMapper.updateByPrimaryKeySelective(depotHead);
         }catch(Exception e){
             JshException.writeFail(logger, e);
-        }
-        /**入库和出库处理预付款信息*/
-        if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())){
-            if(depotHead.getOrganId()!=null){
-                BigDecimal currentAdvanceIn = supplierService.getSupplier(depotHead.getOrganId()).getAdvanceIn();
-                if(currentAdvanceIn.compareTo(depotHead.getTotalPrice())>=0) {
-                    supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice().subtract(preTotalPrice)));
-                } else {
-                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_CODE,
-                            String.format(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_MSG));
-                }
-            }
         }
         /**入库和出库处理单据子表信息*/
         depotItemService.saveDetials(rows,depotHead.getId(), "update",request);
