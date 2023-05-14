@@ -529,31 +529,24 @@ public class DepotHeadService {
                 depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{depotHead.getId()});
                 //删除单据主表信息
                 batchDeleteDepotHeadByIds(depotHead.getId().toString());
-                //将关联的单据置为审核状态-针对采购入库、销售出库和盘点复盘
+                //更新关联单据的状态
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
-                    // TODO: 检查对于生产计划、生产单和领料出库，若他们的子单据被删除，其他子单据是否需要重新审核？目前不用
                     if((BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
-                        BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))) {
-                        // 如果采购入库绑定了采购订单
-                        String status = BusinessConstants.BILLS_STATUS_AUDIT;
-                        // 查询除当前单据之外的关联单据列表（找到采购订单的其他采购入库）
-                        List<DepotHead> exceptCurrentList = getListByLinkNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber(), depotHead.getType());
-                        if(exceptCurrentList!=null && exceptCurrentList.size()>0) {
-                            status = BusinessConstants.BILLS_STATUS_SKIPING;
-                        }
-                        DepotHead dh = new DepotHead();
-                        dh.setStatus(status);
-                        DepotHeadExample example = new DepotHeadExample();
-                        example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber());
-                        // 把其他绑定的单据设置成待审核状态
-                        depotHeadMapper.updateByExampleSelective(dh, example);
+                        BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))
+                    || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&       // 生产单（关联生产计划）
+                        BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType()))
+                    || (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&          // 生产入库（关联生产单）
+                        BusinessConstants.SUB_TYPE_PRODUCTION.equals(depotHead.getSubType()))) {
+
+                        String billStatus = depotItemService.getBillStatusByParam(depotHead);
+                        depotItemService.changeBillStatus(depotHead, billStatus);
                     }
                 }
-                //将关联的销售订单单据置为未采购状态-针对销售订单转采购订单的情况
+                //将关联的销售订单单据置为未采购状态-针对销售订单转采购订单的情况（目前没有这种情况）
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
                     if(BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
                             BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {

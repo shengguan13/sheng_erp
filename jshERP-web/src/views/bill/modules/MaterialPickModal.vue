@@ -330,7 +330,7 @@
         this.$refs.salesManBasedHistoryBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('其它', '生产单', '客户', "1,3")
+        this.$refs.linkBillList.show('其它', '生产单', '客户', "1,2,3")
         this.$refs.linkBillList.title = "选择生产单（已审核的单据才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {

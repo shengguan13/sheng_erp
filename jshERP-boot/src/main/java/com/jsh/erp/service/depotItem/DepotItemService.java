@@ -844,9 +844,7 @@ public class DepotItemService {
     /**
      * 判断单据的状态
      * 通过数组对比：原单据的商品和商品数量（汇总） 与 分批操作后单据的商品和商品数量（汇总）
-     * TODO: 还需要判断一下生产计划、生产单、（领料出库）的状态
-     * TODO: 对于生产计划和生产单，超过都算完成，没超过就是部分完成
-     * TODO: 对于领料出库，不需要三个状态，只需要两个 - 完成或者未完成
+     * TODO: 对于领料出库，不需要三个状态，只需要两个 - 有退料或者无退料
      * @param depotHead
      * @return
      */
@@ -862,20 +860,27 @@ public class DepotItemService {
         for(DepotItemVo4MaterialAndSum materialAndSum : batchList) {
             materialSumMap.put(materialAndSum.getMaterialExtendId(), materialAndSum.getOperNumber());
         }
+        boolean hasPositiveFinishNumber = false;
         for(DepotItemVo4MaterialAndSum materialAndSum : linkList) {
             //过滤掉原单里面有数量为0的商品
             if(materialAndSum.getOperNumber().compareTo(BigDecimal.ZERO) != 0) {
                 BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
                 if (materialSum != null) {
-                    // 如果finish != pre, res = BusinessConstants.BILLS_STATUS_SKIPING;
-                    if (materialSum.compareTo(materialAndSum.getOperNumber()) != 0) {
+                    // 如果finish < pre, res = BusinessConstants.BILLS_STATUS_SKIPING;
+                    if (materialSum.compareTo(materialAndSum.getOperNumber()) < 0) {
                         res = BusinessConstants.BILLS_STATUS_SKIPING;
+                    }
+                    if (materialSum.compareTo(BigDecimal.ZERO) != 0) {
+                        hasPositiveFinishNumber = true;
                     }
                 } else {
                     res = BusinessConstants.BILLS_STATUS_SKIPING;
                 }
             }
-            // 如果上面的条件都不满足，那就是默认的 res = BusinessConstants.BILLS_STATUS_SKIPED;
+        }
+        // 如果没有完成，但是也没有大于0的finishNumber，说明这个单据还处于没开始的状态
+        if (!hasPositiveFinishNumber && res == BusinessConstants.BILLS_STATUS_SKIPING) {
+            res = BusinessConstants.BILLS_STATUS_AUDIT;
         }
         return res;
     }
