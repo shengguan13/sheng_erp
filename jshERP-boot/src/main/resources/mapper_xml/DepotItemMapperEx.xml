@@ -1188,7 +1188,14 @@
         commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
         (select di.batch_number id, me.bar_code, m.name, m.internal_id, m.model, m.unit_id,
          me.commodity_unit, di.batch_number,di.expiration_date,
-         di.basic_number*(case dh.type when '入库' then 1 when '出库' then -1 end) as basic_number
+         di.basic_number*(case
+            <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
+            when (dh.type='入库'
+            <if test="depotId != null">
+                or (dh.type='出库' and dh.sub_type='调拨' and di.another_depot_id= #{depotId})
+            </if>) then 1
+            when dh.type='出库' then -1
+         end) as basic_number
         from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag, '0') != '1'
@@ -1199,7 +1206,7 @@
             and di.batch_number like #{bindName}
         </if>
         <if test="depotId != null">
-            and di.depot_id= #{depotId}
+            and (di.depot_id= #{depotId} or di.another_depot_id= #{depotId})
         </if>
         <if test="batchNumber != null">
             and di.batch_number= #{batchNumber}

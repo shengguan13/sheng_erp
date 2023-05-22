@@ -1424,6 +1424,8 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '调入仓库', dataIndex: 'anotherDepotName'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
