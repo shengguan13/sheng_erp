@@ -1297,6 +1297,7 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '退货', dataIndex: 'finishNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseBackColumns: [
@@ -1352,6 +1353,7 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '退货', dataIndex: 'finishNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleBackColumns: [

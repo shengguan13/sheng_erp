@@ -50,11 +50,11 @@ public class DepotHeadVo4List extends DepotHead{
     private BigDecimal materialCount;
 
     /**
-     * 是否有付款单或收款单
+     * 是否有二阶关联
      */
     private Boolean hasFinancialFlag;
     /**
-     * 是否有退款单
+     * 是否有一阶关联
      */
     private Boolean hasBackFlag;
 

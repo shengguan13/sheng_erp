@@ -1,6 +1,7 @@
 package com.jsh.erp.service.depotHead;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.ImmutableList;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
@@ -131,10 +132,6 @@ public class DepotHeadService {
                     idList.add(dh.getId());
                     numberList.add(dh.getNumber());
                 }
-                //通过批量查询去构造map
-                Map<String,BigDecimal> finishDepositMap = getFinishDepositMapByNumberList(numberList);
-                Map<Long,Integer> financialBillNoMap = getFinancialBillNoMapByBillIdList(idList);
-                Map<String,Integer> billSizeMap = getBillSizeMapByLinkNumberList(numberList);
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
                 Map<Long,BigDecimal> materialCountListMap = getMaterialCountListMapByHeaderIdList(idList);
                 for (DepotHeadVo4List dh : list) {
@@ -158,27 +155,19 @@ public class DepotHeadService {
                     if(dh.getTotalPrice() != null) {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
                     }
+                    dh.setHasBackFlag(false);
+                    dh.setHasFinancialFlag(false);
+                    List<DepotHead> allLinkedToThis = getBillListByLinkNumberList(ImmutableList.of(dh.getNumber()));
+                    if (allLinkedToThis != null && allLinkedToThis.size() > 0) {
+                        dh.setHasBackFlag(true);
+                        List<String> allDhNumberLinkedToThis = allLinkedToThis.stream().map(e -> e.getNumber()).collect(Collectors.toList());
+                        List<DepotHead> allLinkedToThisSecondLevel = getBillListByLinkNumberList(allDhNumberLinkedToThis);
+                        if (allLinkedToThisSecondLevel.size() > 0) {
+                            dh.setHasFinancialFlag(true);
+                        }
+                    }
                     if(dh.getDeposit() == null) {
                         dh.setDeposit(BigDecimal.ZERO);
-                    }
-                    //已经完成的欠款
-                    if(finishDepositMap!=null) {
-                        dh.setFinishDeposit(finishDepositMap.get(dh.getNumber()) != null ? finishDepositMap.get(dh.getNumber()) : BigDecimal.ZERO);
-                    }
-                    //欠款计算
-                    BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
-                    BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
-                    BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
-                    dh.setDebt(discountLastMoney.add(otherMoney).subtract((dh.getDeposit().add(changeAmount))));
-                    //是否有付款单或收款单
-                    if(financialBillNoMap!=null) {
-                        Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
-                        dh.setHasFinancialFlag(financialBillNoSize!=null && financialBillNoSize>0);
-                    }
-                    //是否有退款单
-                    if(billSizeMap!=null) {
-                        Integer billListSize = billSizeMap.get(dh.getNumber());
-                        dh.setHasBackFlag(billListSize!=null && billListSize>0);
                     }
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
@@ -314,45 +303,6 @@ public class DepotHeadService {
             creator = orgaUserRelService.getUserIdListByUserId(user.getId());
         }
         return creator;
-    }
-
-    public Map<String, BigDecimal> getFinishDepositMapByNumberList(List<String> numberList) {
-        List<FinishDepositVo> list = depotHeadMapperEx.getFinishDepositByNumberList(numberList);
-        Map<String,BigDecimal> finishDepositMap = new HashMap<>();
-        if(list!=null && list.size()>0) {
-            for (FinishDepositVo finishDepositVo : list) {
-                if(finishDepositVo!=null) {
-                    finishDepositMap.put(finishDepositVo.getNumber(), finishDepositVo.getFinishDeposit());
-                }
-            }
-        }
-        return finishDepositMap;
-    }
-
-    public Map<String, Integer> getBillSizeMapByLinkNumberList(List<String> numberList) throws Exception {
-        List<DepotHead> list = getBillListByLinkNumberList(numberList);
-        Map<String, Integer> billListMap = new HashMap<>();
-        if(list!=null && list.size()>0) {
-            for (DepotHead depotHead : list) {
-                if(depotHead!=null) {
-                    billListMap.put(depotHead.getLinkNumber(), list.size());
-                }
-            }
-        }
-        return billListMap;
-    }
-
-    public Map<Long,Integer> getFinancialBillNoMapByBillIdList(List<Long> idList) {
-        List<AccountItem> list = accountHeadService.getFinancialBillNoByBillIdList(idList);
-        Map<Long, Integer> billListMap = new HashMap<>();
-        if(list!=null && list.size()>0) {
-            for (AccountItem accountItem : list) {
-                if(accountItem!=null) {
-                    billListMap.put(accountItem.getBillId(), list.size());
-                }
-            }
-        }
-        return billListMap;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -793,18 +743,6 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId,
-                                                                          String [] organArray, String supplierType,
-                                                                          String type, String subType, String typeBack, String subTypeBack, String billType) {
-        List<DepotHeadVo4StatementAccount> list = null;
-        try{
-            list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType);
-        } catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
     public List<DepotHeadVo4List> getDetailByNumber(String number)throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         try{
@@ -818,9 +756,6 @@ public class DepotHeadService {
                     idList.add(dh.getId());
                     numberList.add(dh.getNumber());
                 }
-                //通过批量查询去构造map
-                Map<Long,Integer> financialBillNoMap = getFinancialBillNoMapByBillIdList(idList);
-                Map<String,Integer> billSizeMap = getBillSizeMapByLinkNumberList(numberList);
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
                 for (DepotHeadVo4List dh : list) {
                     if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
@@ -841,15 +776,16 @@ public class DepotHeadService {
                     if(dh.getTotalPrice() != null) {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
                     }
-                    //是否有付款单或收款单
-                    if(financialBillNoMap!=null) {
-                        Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
-                        dh.setHasFinancialFlag(financialBillNoSize!=null && financialBillNoSize>0);
-                    }
-                    //是否有退款单
-                    if(billSizeMap!=null) {
-                        Integer billListSize = billSizeMap.get(dh.getNumber());
-                        dh.setHasBackFlag(billListSize!=null && billListSize>0);
+                    dh.setHasBackFlag(false);
+                    dh.setHasFinancialFlag(false);
+                    List<DepotHead> allLinkedToThis = getBillListByLinkNumberList(ImmutableList.of(dh.getNumber()));
+                    if (allLinkedToThis != null && allLinkedToThis.size() > 0) {
+                        dh.setHasBackFlag(true);
+                        List<String> allDhNumberLinkedToThis = allLinkedToThis.stream().map(e -> e.getNumber()).collect(Collectors.toList());
+                        List<DepotHead> allLinkedToThisSecondLevel = getBillListByLinkNumberList(allDhNumberLinkedToThis);
+                        if (allLinkedToThisSecondLevel.size() > 0) {
+                            dh.setHasFinancialFlag(true);
+                        }
                     }
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
@@ -875,20 +811,6 @@ public class DepotHeadService {
             JshException.readFail(logger, e);
         }
         return resList;
-    }
-
-    /**
-     * 查询除当前单据之外的关联单据列表
-     * @param linkNumber
-     * @param number
-     * @return
-     * @throws Exception
-     */
-    public List<DepotHead> getListByLinkNumberExceptCurrent(String linkNumber, String number, String type)throws Exception {
-        DepotHeadExample example = new DepotHeadExample();
-        example.createCriteria().andLinkNumberEqualTo(linkNumber).andNumberNotEqualTo(number).andTypeEqualTo(type)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return depotHeadMapper.selectByExample(example);
     }
 
     /**

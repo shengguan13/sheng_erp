@@ -66,6 +66,9 @@ public class DepotHead {
      */
     private BigDecimal discountMoney;
 
+    /**
+     * 订单价格
+     */
     private BigDecimal discountLastMoney;
 
     /**

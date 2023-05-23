@@ -135,19 +135,11 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <template slot="customRenderDebt" slot-scope="value, record">
-              <a-tooltip title="有收款单">
-                <span style="color:green" v-if="value>0 && record.hasFinancialFlag">{{value}}</span>
-              </a-tooltip>
-              <a-tooltip title="暂未收款">
-                <span style="color:red" v-if="value>0 && !record.hasFinancialFlag">{{value}}</span>
-              </a-tooltip>
-              <span v-if="value===0">{{value}}</span>
-            </template>
-            <template slot="customRenderStatus" slot-scope="status">
+            <template slot="customRenderStatus" slot-scope="status, record">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
+              <a-tag v-if="record.hasBackFlag" color="red">有退货</a-tag>
             </template>
           </a-table>
         </div>
@@ -209,12 +201,7 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:160,
-            customRender:function (text,record,index) {
-              text = record.hasBackFlag?text+"[退货]":text
-              return text
-            }
-          },
+          { title: '单据编号', dataIndex: 'number',width:160},
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
