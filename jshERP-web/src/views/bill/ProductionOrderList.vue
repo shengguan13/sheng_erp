@@ -115,6 +115,8 @@
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
               <a @click="myHandleDetail(record, '生产单', prefixNo)">查看</a>
+              <a-divider type="vertical" />
+              <a @click="myHandleDetail(record, '备料', prefixNo)">备料</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />

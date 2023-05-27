@@ -22,6 +22,7 @@
       <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产计划'" v-print="'#productionPlanPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产单'" v-print="'#productionOrderPrint'">普通打印</a-button>
+      <a-button v-if="billType === '备料'" v-print="'#materialPreparePrint'">普通打印</a-button>
       <a-button v-if="billType === '领料出库'" v-print="'#materialPickPrint'">普通打印</a-button>
       <a-button v-if="billType === '退料入库'" v-print="'#materialReturnPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产入库'" v-print="'#productionInPrint'">普通打印</a-button>
@@ -38,6 +39,7 @@
                 @click="purchaseSaleExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产计划'" @click="productionPlanExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产单'" @click="productionOrderExportExcel()">导出</a-button>
+      <a-button v-if="billType === '备料'" @click="materialPrepareExportExcel()">导出</a-button>
       <a-button v-if="billType === '领料出库'" @click="materialPickExportExcel()">导出</a-button>
       <a-button v-if="billType === '退料入库'" @click="materialReturnExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产入库'" @click="productionInExportExcel()">导出</a-button>
@@ -127,7 +129,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联计划">
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
@@ -165,6 +167,65 @@
           </a-row>
         </section>
       </template>
+      <!--备料-->
+        <template v-else-if="billType === '备料'">
+          <section ref="print" id="materialPreparePrint">
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+                  <a-input v-decorator="['id']" hidden/>
+                  {{model.organName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                  {{model.operTimeStr}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                  {{model.number}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联计划">
+                  <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="开工时间">
+                  <a-input v-decorator="['id']" hidden/>
+                  {{model.planStartTimeStr}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生产工时">
+                  {{model.workHour}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <div :style="tableWidth">
+              <a-table
+                ref="table"
+                size="middle"
+                bordered
+                rowKey="id"
+                :pagination="false"
+                :columns="columns"
+                :dataSource="dataSource">
+              </a-table>
+            </div>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                  {{model.remark}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </section>
+        </template>
       <!--领料出库-->
       <template v-else-if="billType === '领料出库'">
         <section ref="print" id="materialPickPrint">
@@ -1140,6 +1201,7 @@
         dataSource: [],
         url: {
           detailList: '/depotItem/getDetailList',
+          materialPrepareList: '/depotItem/getMaterialPrepareList',
           batchSetStatusUrl: "/depotHead/batchSetStatus"
         },
         //表头
@@ -1195,6 +1257,18 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
+        ],
+        materialPrepareColumns: [
+          { title: '条码', dataIndex: 'barCode'},
+          { title: '名称', dataIndex: 'name'},
+          { title: '内部零件号', dataIndex: 'internalId'},
+          { title: '客户零件号', dataIndex: 'model'},
+          { title: '类别', dataIndex: 'categoryName'},
+          { title: '颜色编码', dataIndex: 'color'},
+          { title: '备料数量', dataIndex: 'prepareNumber'},
+          { title: '已领', dataIndex: 'materialPick'},
+          { title: '已退', dataIndex: 'materialReturn'},
+          { title: '单位', dataIndex: 'unit'}
         ],
         materialPickColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
@@ -1504,6 +1578,8 @@
           this.defColumns = this.productionPlanColumns
         } else if (type === '生产单') {
           this.defColumns = this.productionOrderColumns
+        } else if (type === '备料') {
+          this.defColumns = this.materialPrepareColumns
         } else if (type === '领料出库') {
           this.defColumns = this.materialPickColumns
         } else if (type === '退料入库') {
@@ -1665,7 +1741,7 @@
               linkType: showType,
               isReadOnly: '1'
             }
-            let url = this.readOnly ? this.url.detailList : this.url.detailList;
+            let url = type === '备料' ? this.url.materialPrepareList : this.url.detailList;
             this.requestSubTableData(item, type, url, params);
             this.initPlatform()
             this.getSystemConfig()
@@ -1796,6 +1872,21 @@
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project,
           ds.stock, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+      },
+      //备料
+      materialPrepareExportExcel() {
+        let aoa = []
+        aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
+        '', '开始日期：', this.model.planStartTimeStr, '', '生产工时：', this.model.workHour],[]]
+        let title = ['条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '备料数量', '已领', '已退', '单位']
+        aoa.push(title)
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project,
+          ds.prepareNumber, ds.materialPick, ds.materialReturn, ds.unit]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
