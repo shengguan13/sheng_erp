@@ -451,8 +451,7 @@ export const BillModalMixin = {
             if (res && res.code === 200) {
               if(res.data && res.data.rows) {
                 let info = res.data.rows[0]
-                operNumber = info.totalNum
-                target.setValues([{rowKey: row.id, values: {expirationDate: info.expirationDateStr, operNumber: operNumber}}])
+                target.setValues([{rowKey: row.id, values: {expirationDate: info.expirationDateStr}}])
                 target.recalcAllStatisticsColumns()
                 that.autoChangePrice(target)
               }

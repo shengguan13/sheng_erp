@@ -788,8 +788,16 @@ public class DepotItemService {
                     depotItem.setRemark(rowObj.getString("remark"));
                 }
                 //出库时判断库存是否充足
-                // TODO: 领料的时候也要判断库存是否充足
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
+                    if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
+                        List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
+                                null, null, depotItem.getDepotId(), rowObj.getString("barCode"), depotItem.getBatchNumber());
+                        if (batchNumberList.size() != 1 || batchNumberList.get(0).getTotalNum().compareTo(depotItem.getOperNumber()) < 0) {
+                            throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, depotItem.getBatchNumber()));
+                        }
+
+                    }
                     BigDecimal stock = getStockByParam(depotItem.getDepotId(),depotItem.getMaterialId(),null,null);
                     if(StringUtil.isNotEmpty(depotItem.getSku())) {
                         //对于sku商品要换个方式计算库存

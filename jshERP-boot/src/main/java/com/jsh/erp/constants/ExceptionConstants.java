@@ -338,9 +338,12 @@ public class ExceptionConstants {
     //零件组成不合法
     public static final int MATERIAL_COMPOSITE_INVALID_CODE = 80000023;
     public static final String MATERIAL_COMPOSITE_INVALID_MSG = "存在不合规的零件组装关系：%s";
-    //零件组成不合法
+    //零件组成有不存在的条码
     public static final int MATERIAL_COMPOSITE_NOT_EXIST_CODE = 80000024;
     public static final String MATERIAL_COMPOSITE_NOT_EXIST_MSG = "零件组装关系中有不存在的条码：%s, %s不存在";
+    //批号库存不足
+    public static final int BATCH_STOCK_NOT_ENOUGH_CODE = 80000025;
+    public static final String BATCH_STOCK_NOT_ENOUGH_MSG = "批号%s的库存不足";
 
     /**
      *  单据信息
