@@ -564,9 +564,10 @@ public class DepotItemController {
             if (mpArr[i].equals("表面积（m²）")) {
                 materialOther = materialOther + ((diEx.getMOtherField13() == null || diEx.getMOtherField13().equals("")) ? "" : "(" + diEx.getMOtherField13() + ")");
             }
-            if (mpArr[i].equals("组装等级关系")) {
-                materialOther = materialOther + ((diEx.getMOtherField14() == null || diEx.getMOtherField14().equals("")) ? "" : "(" + diEx.getMOtherField14() + ")");
-            }
+            // 暂时不在拓展信息里面显示组装等级关系
+            // if (mpArr[i].equals("组装等级关系")) {
+            //     materialOther = materialOther + ((diEx.getMOtherField14() == null || diEx.getMOtherField14().equals("")) ? "" : "(" + diEx.getMOtherField14() + ")");
+            // }
         }
         return materialOther;
     }
