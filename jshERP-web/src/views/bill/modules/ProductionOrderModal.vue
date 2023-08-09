@@ -120,7 +120,7 @@
       </a-form>
     </a-spin>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
-    <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
+    <production-plan-link-list ref="productionPlanLinkList" @ok="linkBillListOk"></production-plan-link-list>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
@@ -130,7 +130,7 @@
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
-  import LinkBillList from '../dialog/LinkBillList'
+  import ProductionPlanLinkList from '../dialog/ProductionPlanLinkList'
   import CustomerModal from '../../system/modules/CustomerModal'
   import AccountModal from '../../system/modules/AccountModal'
   import HistoryBillList from '../dialog/HistoryBillList'
@@ -147,7 +147,7 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       ManyAccountModal,
-      LinkBillList,
+      ProductionPlanLinkList,
       CustomerModal,
       AccountModal,
       HistoryBillList,
@@ -321,8 +321,8 @@
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('其它', '生产计划', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择生产计划（已审核的生产计划才能关联）"
+        this.$refs.productionPlanLinkList.show('其它', '生产计划', '客户', "1,3")
+        this.$refs.productionPlanLinkList.title = "选择生产计划（已审核的生产计划才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
