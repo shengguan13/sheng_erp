@@ -298,33 +298,7 @@ public class DepotItemController {
             String[] mpArr = mpList.split(",");
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            Map<String, Double> materialPrepare = new HashMap<>();
             if (null != dataList) {
-                // 找出所有根据计划要领的料
-                for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    String composite = "";
-                    for (int i = 0; i < mpArr.length; i++) {
-                        if (mpArr[i].equals("组装等级关系")) {
-                            composite = (diEx.getMOtherField14() == null || diEx.getMOtherField14().equals("")) ? "" :  diEx.getMOtherField14();
-                        }
-                    }
-                    if (!"".equals(composite)) {
-                        String[] strArr = composite.split("\\+");
-                        for (int k = 0; k < strArr.length; k++) {
-                            String[] split = strArr[k].split("]");
-                            // e.g. [meId
-                            String id = split[0].substring(1);
-                            // e.g. *n
-                            double num = Double.valueOf(split[1].substring(1));
-                            if (materialPrepare.containsKey(id)) {
-                                double oldNum = materialPrepare.get(id);
-                                materialPrepare.put(id, oldNum + num * (diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue()));
-                            } else {
-                                materialPrepare.put(id, num * (diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue()));
-                            }
-                        }
-                    }
-                }
                 // 找出已绑定的领料单、退料单
                 DepotHead depotHead = depotHeadService.getDepotHead(headerId);
                 List<DepotHead> linked = depotHeadService.getBillListByLinkNumber(depotHead.getNumber());
@@ -359,27 +333,45 @@ public class DepotItemController {
                         }
                     }
                 }
-                // 整合备料和已领料，然后返回
-                for (Map.Entry<String, Double> materialEntry : materialPrepare.entrySet()) {
-                    List<MaterialVo4Unit> material = materialService.getMaterialByMeId(Long.valueOf(materialEntry.getKey()));
-                    if (material.size() > 0) {
-                        MaterialVo4Unit m = material.get(0);
-                        JSONObject item = new JSONObject();
-                        item.put("materialExtendId", m.getMeId() == null ? "" : m.getMeId());
-                        item.put("barCode", m.getmBarCode());
-                        item.put("name", m.getName());
-                        item.put("internalId", m.getInternalId());
-                        item.put("categoryName", m.getCategoryName());
-                        item.put("model", m.getModel());
-                        item.put("color", m.getColor());
-                        item.put("project", m.getProject());
-                        item.put("unit", m.getUnitName());
-
-                        item.put("prepareNumber", materialEntry.getValue());
-                        item.put("materialPick", materialPicked.containsKey(materialEntry.getKey()) ? materialPicked.get(materialEntry.getKey()) : 0);
-                        item.put("materialReturn", materialReturned.containsKey(materialEntry.getKey()) ? materialReturned.get(materialEntry.getKey()) : 0);
-                        dataArray.add(item);
+                Map<String, Double> materialPrepare = new HashMap<>();
+                List<String> prefixList = new ArrayList<>();
+                // 找出所有根据计划要领的料
+                for (DepotItemVo4WithInfoEx diEx : dataList) {
+                    String composite = "";
+                    for (int i = 0; i < mpArr.length; i++) {
+                        if (mpArr[i].equals("组装等级关系")) {
+                            composite = (diEx.getMOtherField14() == null || diEx.getMOtherField14().equals("")) ? "" :  diEx.getMOtherField14();
+                        }
                     }
+                    double toProduce = diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue();
+                    // 25.1[],25.2[]
+                    if (!"".equals(composite)) {
+                        String[] strArr = composite.split(",");
+                        // 可能一个零件属于多个工艺流程，默认选择第一个，e.g. 25.1
+                        String code = strArr[0].split("\\[")[0];
+                        if (toProduce > 0) {
+                            prefixList.add(code + "[" + toProduce + "]");
+                        }
+                    }
+                }
+                List<MaterialVo4Unit> toBePrepared = materialService.getMaterialByCompositePrefix(prefixList);
+                // 整合备料和已领料，然后返回
+                for (MaterialVo4Unit m : toBePrepared) {
+                    JSONObject item = new JSONObject();
+                    item.put("materialExtendId", m.getMeId() == null ? "" : m.getMeId());
+                    item.put("barCode", m.getmBarCode());
+                    item.put("name", m.getName());
+                    item.put("internalId", m.getInternalId());
+                    item.put("categoryName", m.getCategoryName());
+                    item.put("model", m.getModel());
+                    item.put("color", m.getColor());
+                    item.put("project", m.getProject());
+                    item.put("unit", m.getUnitName());
+
+                    item.put("prepareNumber", Double.valueOf(m.getOtherField14()));
+                    item.put("materialPick", materialPicked.containsKey(String.valueOf(m.getMeId())) ? materialPicked.get(String.valueOf(m.getMeId())) : 0);
+                    item.put("materialReturn", materialReturned.containsKey(String.valueOf(m.getMeId())) ? materialReturned.get(String.valueOf(m.getMeId())) : 0);
+                    dataArray.add(item);
                 }
             }
             JSONObject outer = new JSONObject();

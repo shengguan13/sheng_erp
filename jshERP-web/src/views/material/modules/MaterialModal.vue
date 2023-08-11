@@ -360,7 +360,7 @@
   import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode, getMaterialByMeIdList,
+  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode, getMaterialByCompositePrefix,
     getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
   import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
@@ -721,31 +721,21 @@
 
       requestCompositeTableData(compositeStr, tab) {
         tab.loading = true
-        // e.g. [meId]*n
-        let strArr = compositeStr.split('+')
-        let meIdArr = []
-        let operNumArr = []
-        for (let i = 0; i < strArr.length; i++) {
-          let split = strArr[i].split(']')
-          // e.g. [meId
-          meIdArr.push(split[0].substr(1))
-          // e.g. *n
-          operNumArr.push(split[1].substr(1))
-        }
+        // e.g. 25.1[amount]
+        let strArr = compositeStr.split(',')
+        let split = strArr[0].split('[')
 
         let param = {
-          meIdList: meIdArr.toString(),
+          prefixList: split[0] + "[1]",
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
         }
-        getMaterialByMeIdList(param).then((res) => {
+        getMaterialByCompositePrefix(param).then((res) => {
           if (res && res.code === 200) {
             let mList = res.data
             let mArr = []
             for (let i = 0; i < mList.length; i++) {
               let mInfo = mList[i]
-              let index = meIdArr.indexOf(String(mInfo.meId))
-
-              let mObj = this.parseInfoToObjWithOperNum(mInfo, Number(operNumArr[index]))
+              let mObj = this.parseInfoToObjWithOperNum(mInfo, Number(mInfo.otherField14))
               mArr.push(mObj)
             }
             this.compositeTable.dataSource = mArr

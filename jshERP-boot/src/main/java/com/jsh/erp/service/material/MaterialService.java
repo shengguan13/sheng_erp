@@ -205,6 +205,7 @@ public class MaterialService {
         }
     }
 
+    // -----------------------------------------------------------------
     private boolean isValidDependency(List<MaterialVo4Unit> allMaterials) {
         Map<String, Set<String>> dependency = new HashMap<>();
         for (MaterialVo4Unit m : allMaterials) {
@@ -241,7 +242,7 @@ public class MaterialService {
     }
 
     /**
-     * List of meIds of material composites
+     * List of meIds of material composites ---------------------
      * @param compositeStr
      * @return
      */
@@ -270,7 +271,7 @@ public class MaterialService {
                 materialMapperEx.setExpiryNumToNull(material.getId());
             }
             materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
-            // 如果产品有组装关系，确保没有引入循环依赖
+            // 如果产品有组装关系，确保没有引入循环依赖 ------------------------------------------------------------------
             List<MaterialVo4Unit> allMaterials = materialMapperEx.getMaterialListAll();
             if (material.getOtherField14() != null && !"".equals(material.getOtherField14())) {
                 if (!isValidDependency(allMaterials)) {
@@ -763,7 +764,7 @@ public class MaterialService {
                     }
                 }
             }
-            // 导入组装等级关系
+            // 导入组装等级关系 ----------------------------------------------------------
             List<MaterialVo4Unit> allMaterials = materialMapperEx.getMaterialListAll();
             Map<String, String> barCodeToExtendId = allMaterials.stream()
                     .collect(Collectors.toMap(e -> e.getmBarCode(), e -> String.valueOf(e.getMeId())));
@@ -1267,6 +1268,81 @@ public class MaterialService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    /**
+     * @param prefixList 25.1[amount1],25.2[amount2]
+     * @return
+     */
+    public List<MaterialVo4Unit> getMaterialByCompositePrefix(List<String> prefixList) {
+        List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
+        try{
+            if(prefixList != null) {
+                List<String> prefixListWithoutAmount = prefixList.stream().map(s -> {
+                    String[] split = s.split("\\[");
+                    return split[0] + ".";
+                }).collect(Collectors.toList());
+                List<MaterialVo4Unit> queryResult= materialMapperEx.getMaterialByCompositePrefix(prefixListWithoutAmount);
+                // 可能是更底层的子零件，还需要筛选一下
+                result = filterOnlyNextLevel(prefixList, queryResult);
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
+    /**
+     * @param prefixList 25.1[amount1],25.2[amount2]
+     * @param compositeList m1(25.1.2.3[],25.2.1[]),此时只有25.2.1符合条件
+     * @return nextLevelComposite 但是他们的otherField14已经被改成了所需要的amount
+     */
+    private List<MaterialVo4Unit> filterOnlyNextLevel(List<String> prefixList, List<MaterialVo4Unit> compositeList) {
+        List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
+        Map<String, Double> compositeAmountMap = new HashMap<>();
+        for (String prefix : prefixList) {
+            String[] split = prefix.split("\\[");
+            for (MaterialVo4Unit m : compositeList) {
+                double amount = getDirectCompositeAmount(split[0], m);
+                if (amount > 0) {
+                    compositeAmountMap.merge(m.getmBarCode(),
+                            Double.valueOf(split[1].substring(0, split[1].length() - 1)) * amount,
+                            (a, b) -> a + b);
+                }
+            }
+        }
+        for (MaterialVo4Unit m : compositeList) {
+            if (compositeAmountMap.containsKey(m.getmBarCode())) {
+                m.setOtherField14(String.valueOf(compositeAmountMap.getOrDefault(m.getmBarCode(), 0.0)));
+                result.add(m);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @param prefix 25.1
+     * @param m 25.1.2[0.8],26.3.2.5[1.2]
+     * @return
+     */
+    private double getDirectCompositeAmount(String prefix, MaterialVo4Unit m) {
+        if (m == null || m.getOtherField14() == null || m.getOtherField14().equals("") || !m.getOtherField14().contains(prefix)) {
+            return 0.0;
+        }
+        // e.g. 25.1.2[0.8],26.3.2.5[1.2]
+        String[] split = m.getOtherField14().split(",");
+        for (String s : split) {
+            if (s.startsWith(prefix + ".")) {
+                // e.g. 25.1.2[0.8]
+                String[] split2 = s.split("\\[");
+                if (split2.length > 1) {
+                    if (!split2[0].substring(prefix.length() + 1).contains(".")) {
+                        return Double.valueOf(split2[1].substring(0, split2[1].length() - 1));
+                    }
+                }
+            }
+        }
+        return 0.0;
     }
 
     public String getMaxBarCode() {

@@ -634,6 +634,23 @@
         and ifnull(m.delete_flag,'0') !='1'
     </select>
 
+    <select id="getMaterialByCompositePrefix" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
+        select m.*, me.bar_code, me.id meId,u.name unitName, mc.name categoryName, me.commodity_unit
+        FROM jsh_material m
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="prefixList.size()>0">
+            and (
+            <foreach collection="prefixList" item="prefix" index="index" separator=" OR ">
+                m.other_field14 like CONCAT(#{prefix}, '%') or m.other_field14 like CONCAT(',', CONCAT(#{prefix}, '%'))
+            </foreach>
+            )
+        </if>
+        and ifnull(m.delete_flag,'0') !='1'
+    </select>
+
     <select id="getMaterialNameList" resultType="java.lang.String">
         select m.name from jsh_material m
         where m.name is not null and m.name !='' and ifnull(m.delete_flag,'0') !='1'

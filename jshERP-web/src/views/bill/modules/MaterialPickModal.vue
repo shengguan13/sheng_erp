@@ -146,7 +146,7 @@
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort,handleIntroJs } from "@/utils/util"
   import { getAction } from '@/api/manage'
-  import { getMaterialByBarCode, getMaterialByMeIdList } from '@/api/api'
+  import { getMaterialByBarCode, getMaterialByCompositePrefix } from '@/api/api'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -340,7 +340,7 @@
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
 
         let productionMap = new Map()
-        let materialMap = new Map()
+        let materialQueryArr = []
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           for(let j=0; j<selectBillDetailRows.length; j++) {
             if (j>0) {
@@ -371,35 +371,22 @@
               for (let i = 0; i < mList.length; i++) {
                 let mInfo = mList[i]
                 let compositeStr = mInfo.otherField14
-                // e.g. [meId]*n
+                let amount = Number(productionMap.get(mInfo.mBarCode))
+                // e.g. 25.1[0.98],26.3[2]
                 if (compositeStr && compositeStr != "") {
-                  let strArr = compositeStr.split('+')
-                  for (let k = 0; k < strArr.length; k++) {
-                    let split = strArr[k].split(']')
-                    // e.g. [meId
-                    let id = split[0].substr(1)
-                    // e.g. *n
-                    let num = Number(split[1].substr(1))
-                    if (materialMap.has(id)) {
-                      let oldNum = materialMap.get(id)
-                      materialMap.set(id, oldNum + num * productionMap.get(mInfo.mBarCode))
-                    } else {
-                      materialMap.set(id, num * productionMap.get(mInfo.mBarCode))
-                    }
-                  }
+                  let strArr = compositeStr.split(',')
+                  // 一个零件可能出现在多个工艺流程中，此处默认选取第一个工艺流程
+                  let split = strArr[0].split('[')
+                  // e.g. 25.1[amount]
+                  materialQueryArr.push(split[0] + "[" + String(amount) + "]")
                 }
               }
-              // 读取所有原材料的信息
-              let materialQueryArr = []
-              for (let [key, value] of materialMap) {
-                materialQueryArr.push(key)
-              }
               let materialParam = {
-                meIdList: materialQueryArr.toString(),
+                prefixList: materialQueryArr.toString(),
                 mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
               }
               // 读取所有生产单零件的composite
-              getMaterialByMeIdList(materialParam).then((newRes) => {
+              getMaterialByCompositePrefix(materialParam).then((newRes) => {
                 if (newRes && newRes.code === 200) {
                   let newList = newRes.data
                   for (let i = 0; i < newList.length; i++) {
@@ -407,7 +394,8 @@
                       this.recommendationStr = this.recommendationStr + "，"
                     }
                     let mInfo = newList[i]
-                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + materialMap.get(String(mInfo.meId)) + mInfo.commodityUnit
+                    // 具体的数量在后端部分已经计算好并且放在了otherField14里面
+                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + mInfo.otherField14 + mInfo.commodityUnit
                   }
                 }
                 this.$nextTick(() => {

@@ -24,10 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
@@ -385,15 +382,7 @@ public class MaterialController {
                     String[] objs = new String[100];
                     objs[0] = m.getmBarCode(); //条码
                     objs[1] = m.getName(); //名称
-                    if (m.getOtherField14() != null && !"".equals(m.getOtherField14())) {
-                        Map<String, String> meIdToAmountMap = parseCompositeString(m.getOtherField14());
-                        List<String> compositeList = meIdToAmountMap.entrySet().stream()
-                                .map(e -> "[" + meIdToBarCodeMap.get(e.getKey()) + "]*" + e.getValue())
-                                .collect(Collectors.toList());
-                        objs[2] = String.join("+", compositeList); //组装等级关系
-                    } else {
-                        objs[2] = "";
-                    }
+                    objs[2] = m.getOtherField1(); //工艺流程
                     objs[3] = m.getInternalId(); //内部零件号
                     objs[4] = m.getModel(); //客户零件号
                     objs[5] = m.getUnit(); //单位
@@ -427,16 +416,6 @@ public class MaterialController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private Map<String, String> parseCompositeString(String compositeStr) {
-        Map<String, String> result = new HashMap<>();
-        String[] split = compositeStr.split("\\+");
-        for (String str : split) {
-            String[] meIdAndAmount = str.split("]");
-            result.put(meIdAndAmount[0].substring(1), meIdAndAmount[1].substring(1));
-        }
-        return result;
     }
 
     /**
@@ -620,6 +599,38 @@ public class MaterialController {
             }
             String[] mpArr = mpList.split(",");
             List<MaterialVo4Unit> result = materialService.getMaterialByMeIdList(list);
+            if(result != null && result.size()>0) {
+                for(MaterialVo4Unit mvo: result) {
+                    mvo.setMaterialOther(materialService.getMaterialOtherByParam(mpArr, mvo));
+                }
+            }
+            res.code = 200;
+            res.data = result;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * @param prefixList 25.1[amount1],25.2[amount2]
+     * @param mpList
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getMaterialByCompositePrefix")
+    @ApiOperation(value = "根据商品组成前缀查找子产品")
+    public BaseResponseInfo getMaterialByCompositePrefix(@RequestParam("prefixList") String prefixList,
+                                                         @RequestParam("mpList") String mpList,
+                                                         HttpServletRequest request) throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            String[] prefixArr = prefixList.split(",");
+            String[] mpArr = mpList.split(",");
+            List<MaterialVo4Unit> result = materialService.getMaterialByCompositePrefix(Arrays.asList(prefixArr));
             if(result != null && result.size()>0) {
                 for(MaterialVo4Unit mvo: result) {
                     mvo.setMaterialOther(materialService.getMaterialOtherByParam(mpArr, mvo));
