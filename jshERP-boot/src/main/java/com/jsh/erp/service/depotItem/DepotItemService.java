@@ -16,8 +16,6 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
-import com.jsh.erp.service.role.RoleService;
-import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
@@ -54,15 +52,11 @@ public class DepotItemService {
     @Resource
     private MaterialExtendService materialExtendService;
     @Resource
-    private SerialNumberMapperEx serialNumberMapperEx;
-    @Resource
     private DepotHeadService depotHeadService;
     @Resource
     private DepotHeadMapper depotHeadMapper;
     @Resource
     private DepotHeadMapperEx depotHeadMapperEx;
-    @Resource
-    private SerialNumberService serialNumberService;
     @Resource
     private UserService userService;
     @Resource
@@ -567,9 +561,7 @@ public class DepotItemService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetials(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
         //查询单据主表信息
-        DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
-        //删除序列号和回收序列号
-        deleteOrCancelSerialNumber(actionType, depotHead, headerId);
+        DepotHead depotHead = depotHeadMapper.selectByPrimaryKey(headerId);
         //删除单据的明细
         deleteDepotItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
@@ -586,68 +578,19 @@ public class DepotItemService {
                 depotItem.setMaterialExtendId(materialExtend.getId());
                 depotItem.setMaterialUnit(rowObj.getString("unit"));
                 Material material= materialService.getMaterial(depotItem.getMaterialId());
-                if (BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber()) ||
-                        BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
-                    //组装拆卸单不能选择批号或序列号商品
-                    if(BusinessConstants.SUB_TYPE_ASSEMBLE.equals(depotHead.getSubType()) ||
-                            BusinessConstants.SUB_TYPE_DISASSEMBLE.equals(depotHead.getSubType())) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ASSEMBLE_SELECT_ERROR_CODE,
-                                String.format(ExceptionConstants.MATERIAL_ASSEMBLE_SELECT_ERROR_MSG, barCode));
-                    }
-//                    调拨单不能选择批号或序列号商品（该场景走出库和入库单）
-//                    if(BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
-//                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_TRANSFER_SELECT_ERROR_CODE,
-//                                String.format(ExceptionConstants.MATERIAL_TRANSFER_SELECT_ERROR_MSG, barCode));
-//                    }
-                    //盘点业务不能选择批号或序列号商品（该场景走出库和入库单）
-                    if(BusinessConstants.SUB_TYPE_CHECK_ENTER.equals(depotHead.getSubType())
-                       ||BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType())) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_CHECK_ERROR_CODE,
-                                String.format(ExceptionConstants.MATERIAL_STOCK_CHECK_ERROR_MSG, barCode));
-                    }
-                }
-                // 序列号存在的情况下
-                if (StringUtil.isExist(rowObj.get("snList"))) {
-                    depotItem.setSnList(rowObj.getString("snList"));
-                    if(StringUtil.isExist(rowObj.get("depotId"))) {
-                        String [] snArray = depotItem.getSnList().split(",");
-                        int operNum = rowObj.getInteger("operNumber");
-                        if(snArray.length == operNum) {
-                            Long depotId = rowObj.getLong("depotId");
-                            serialNumberService.addSerialNumberByBill(depotHead.getType(), depotHead.getSubType(),
-                                    depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
-                        } else {
-                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SN_NUMBERE_FAILED_CODE,
-                                    String.format(ExceptionConstants.DEPOT_HEAD_SN_NUMBERE_FAILED_MSG, barCode));
-                        }
-                    }
+                // 记录批号以及保质期，且批号不能为空
+                if (StringUtil.isExist(rowObj.get("batchNumber"))) {
+                    depotItem.setBatchNumber(rowObj.getString("batchNumber"));
                 } else {
-                    //入库或出库
-                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) ||
-                            BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
-                        //序列号不能为空
-                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
-                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_CODE,
-                                    String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_MSG, barCode));
-                        }
+                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())
+                            || BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
+                        //批号不能为空
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
                     }
                 }
-                // 开启批号的情况下，记录批号以及保质期，且批号不能为空
-                if (BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
-                    if (StringUtil.isExist(rowObj.get("batchNumber"))) {
-                        depotItem.setBatchNumber(rowObj.getString("batchNumber"));
-                    } else {
-                        if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())
-                            || BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
-                            //批号不能为空
-                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
-                                    String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
-                        }
-                    }
-                    // 有批号的情况下才记录保质期，但不强制
-                    if (StringUtil.isExist(rowObj.get("expirationDate"))) {
-                        depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
-                    }
+                if (StringUtil.isExist(rowObj.get("expirationDate"))) {
+                    depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
                 }
                 if (StringUtil.isExist(rowObj.get("sku"))) {
                     depotItem.setSku(rowObj.getString("sku"));
@@ -808,15 +751,6 @@ public class DepotItemService {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
                                 String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, material.getName()));
                     }
-                    //出库时处理序列号
-                    if(!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
-                        //判断商品是否开启序列号，开启的售出序列号，未开启的跳过
-                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
-                            //售出序列号，获得当前操作人
-                            User userInfo=userService.getCurrentUser();
-                            serialNumberService.checkAndUpdateSerialNumber(depotItem, depotHead.getNumber(), userInfo, StringUtil.toNull(depotItem.getSnList()));
-                        }
-                    }
                 }
                 this.insertDepotItemWithObj(depotItem);
                 //更新当前库存
@@ -966,37 +900,6 @@ public class DepotItemService {
             }
         }catch(Exception e){
             JshException.writeFail(logger, e);
-        }
-    }
-
-    /**
-     * 删除序列号和回收序列号
-     * @param actionType
-     * @throws Exception
-     */
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void deleteOrCancelSerialNumber(String actionType, DepotHead depotHead, Long headerId) throws Exception {
-        if(actionType.equals("update")) {
-            User userInfo = userService.getCurrentUser();
-            if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())){
-                //入库逻辑
-                String number = depotHead.getNumber();
-                SerialNumberExample example = new SerialNumberExample();
-                example.createCriteria().andInBillNoEqualTo(number);
-                serialNumberService.deleteByExample(example);
-            } else if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
-                //出库逻辑
-                DepotItemExample example = new DepotItemExample();
-                example.createCriteria().andHeaderIdEqualTo(headerId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                List<DepotItem> depotItemList = depotItemMapper.selectByExample(example);
-                if(null != depotItemList && depotItemList.size() > 0){
-                    for (DepotItem depotItem : depotItemList){
-                        if(StringUtil.isNotEmpty(depotItem.getSnList())){
-                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotHead.getNumber(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
-                        }
-                    }
-                }
-            }
         }
     }
 

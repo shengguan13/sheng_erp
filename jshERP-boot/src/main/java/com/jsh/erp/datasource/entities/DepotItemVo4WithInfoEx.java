@@ -50,10 +50,6 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String MOtherField14;
 
-    private String enableSerialNumber;
-
-    private String enableBatchNumber;
-
     private String DepotName;
 
     private String AnotherDepotName;
@@ -258,22 +254,6 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setMOtherField14(String MOtherField14) {
         this.MOtherField14 = MOtherField14;
-    }
-
-    public String getEnableSerialNumber() {
-        return enableSerialNumber;
-    }
-
-    public void setEnableSerialNumber(String enableSerialNumber) {
-        this.enableSerialNumber = enableSerialNumber;
-    }
-
-    public String getEnableBatchNumber() {
-        return enableBatchNumber;
-    }
-
-    public void setEnableBatchNumber(String enableBatchNumber) {
-        this.enableBatchNumber = enableBatchNumber;
     }
 
     public String getDepotName() {

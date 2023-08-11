@@ -191,11 +191,9 @@ public interface DepotItemMapperEx {
     /**
      * 通过单据主表id查询所有单据子表数据
      * @param depotheadId
-     * @param enableSerialNumber
      * @return
      */
-     List<DepotItem> findDepotItemListBydepotheadId(@Param("depotheadId")Long depotheadId,
-                                                    @Param("enableSerialNumber")String enableSerialNumber);
+     List<DepotItem> findDepotItemListBydepotheadId(@Param("depotheadId")Long depotheadId);
      /**
       * 根据单据主表id删除单据子表数据
       * */

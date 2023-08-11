@@ -113,9 +113,9 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String materialParam, String color, String project, String materialOther, String weight,
-                                        String expiryNum, String enableSerialNumber, String enableBatchNumber, String outsource,
-                                        String enabled, String remark, String categoryId, String mpList, int offset, int rows)
+    public List<MaterialVo4Unit> select(String materialParam, String color, String project, String materialOther,
+                                        String weight, String expiryNum, String enabled, String remark,
+                                        String categoryId, String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = new String[]{};
         if(StringUtil.isNotEmpty(mpList)){
@@ -128,8 +128,8 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list= materialMapperEx.selectByConditionMaterial(materialParam, color, project, materialOther, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, outsource, enabled, remark, idList, mpList, offset, rows);
+            list= materialMapperEx.selectByConditionMaterial(materialParam, color, project,
+                    materialOther, weight, expiryNum, enabled, remark, idList, mpList, offset, rows);
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
@@ -145,17 +145,17 @@ public class MaterialService {
         return resList;
     }
 
-    public Long countMaterial(String materialParam, String color, String project, String materialOther, String weight,
-                              String expiryNum, String enableSerialNumber, String enableBatchNumber, String outsource,
-                              String enabled, String remark, String categoryId,String mpList)throws Exception {
+    public Long countMaterial(String materialParam, String color, String project, String materialOther,
+                              String weight, String expiryNum, String enabled, String remark,
+                              String categoryId,String mpList)throws Exception {
         Long result =null;
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            result= materialMapperEx.countsByMaterial(materialParam, color, project, materialOther, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, outsource, enabled, remark, idList, mpList);
+            result= materialMapperEx.countsByMaterial(materialParam, color, project, materialOther,
+                    weight, expiryNum, enabled, remark, idList, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -463,8 +463,7 @@ public class MaterialService {
         return idList;
     }
 
-    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String enableSerialNumber, String enableBatchNumber,
-                                                         String outsource, Integer offset, Integer rows)throws Exception{
+    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, Integer offset, Integer rows)throws Exception{
         List<MaterialVo4Unit> list =null;
         try{
             List<Long> idList = new ArrayList<>();
@@ -476,15 +475,14 @@ public class MaterialService {
                 q = q.replace("'", "");
                 q = q.trim();
             }
-            list=  materialMapperEx.findBySelectWithBarCode(idList, q, enableSerialNumber, enableBatchNumber, outsource, offset, rows);
+            list=  materialMapperEx.findBySelectWithBarCode(idList, q, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findBySelectWithBarCodeCount(Long categoryId, String q, String enableSerialNumber,
-                                            String enableBatchNumber, String outsource)throws Exception{
+    public int findBySelectWithBarCodeCount(Long categoryId, String q)throws Exception{
         int result=0;
         try{
             List<Long> idList = new ArrayList<>();
@@ -495,7 +493,7 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
             }
-            result = materialMapperEx.findBySelectWithBarCodeCount(idList, q, enableSerialNumber, enableBatchNumber, outsource);
+            result = materialMapperEx.findBySelectWithBarCodeCount(idList, q);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -506,8 +504,7 @@ public class MaterialService {
     }
 
     public List<MaterialVo4Unit> exportExcel(String materialParam, String color, String project, String weight, String expiryNum,
-                                             String enabled, String enableSerialNumber, String enableBatchNumber, String outsource,
-                                             String remark, String categoryId)throws Exception {
+                                             String enabled, String remark, String categoryId)throws Exception {
         List<MaterialVo4Unit> resList = new ArrayList<>();
         List<MaterialVo4Unit> list =null;
         try{
@@ -515,8 +512,7 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list=  materialMapperEx.exportExcel(materialParam, color, project, weight, expiryNum, enabled,
-                    enableSerialNumber, enableBatchNumber, outsource, remark, idList);
+            list=  materialMapperEx.exportExcel(materialParam, color, project, weight, expiryNum, enabled, remark, idList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -574,8 +570,6 @@ public class MaterialService {
                 String expiryNum = ExcelUtils.getContent(src, i, 11); //保质期（天）
                 String categoryName = ExcelUtils.getContent(src, i, 12); //类别
                 String project = ExcelUtils.getContent(src, i, 13); //项目
-                String enableBatchNumber = ExcelUtils.getContent(src, i, 14); //批号
-                String outsource = ExcelUtils.getContent(src, i, 15); //外协
                 String mfrs = ExcelUtils.getContent(src, i, 16); //制造商
 
                 String other1 = ExcelUtils.getContent(src, i, 17); //工艺类别
@@ -686,16 +680,6 @@ public class MaterialService {
                 }
                 m.setMaterialExObj(materialExObj);
                 m.setEnabled("1".equals(enabled));
-                if(StringUtil.isNotEmpty(enableBatchNumber) && "1".equals(enableBatchNumber)) {
-                    m.setEnableBatchNumber("1");
-                } else {
-                    m.setEnableBatchNumber("0");
-                }
-                if(StringUtil.isNotEmpty(outsource) && "1".equals(outsource)) {
-                    m.setOutsource("1");
-                } else {
-                    m.setOutsource("0");
-                }
                 m.setStockMap(getStockMapCache(src, depotCount, depotMap, i));
                 mList.add(m);
             }
@@ -1105,26 +1089,6 @@ public class MaterialService {
         MaterialCurrentStockExample example = new MaterialCurrentStockExample();
         example.createCriteria().andMaterialIdIn(mIdList);
         materialCurrentStockMapper.deleteByExample(example);
-    }
-
-    public List<MaterialVo4Unit> getMaterialEnableSerialNumberList(String q, Integer offset, Integer rows)throws Exception {
-        List<MaterialVo4Unit> list =null;
-        try{
-            list=  materialMapperEx.getMaterialEnableSerialNumberList(q, offset, rows);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
-    public Long getMaterialEnableSerialNumberCount(String q)throws Exception {
-        Long count =null;
-        try{
-            count=  materialMapperEx.getMaterialEnableSerialNumberCount(q);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return count;
     }
 
     public BigDecimal parseBigDecimalEx(String str) throws Exception{

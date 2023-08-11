@@ -197,24 +197,20 @@ public class MaterialController {
     @GetMapping(value = "/findBySelect")
     @ApiOperation(value = "查找商品信息")
     public JSONObject findBySelect(@RequestParam(value = "categoryId", required = false) Long categoryId,
-                                  @RequestParam(value = "q", required = false) String q,
-                                  @RequestParam(value = "mpList", required = false) String mpList,
-                                  @RequestParam(value = "depotId", required = false) Long depotId,
-                                  @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
-                                  @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
-                                  @RequestParam(value = "outsource", required = false) String outsource,
-                                  @RequestParam("page") Integer currentPage,
-                                  @RequestParam("rows") Integer pageSize,
-                                  HttpServletRequest request) throws Exception{
+                                   @RequestParam(value = "q", required = false) String q,
+                                   @RequestParam(value = "mpList", required = false) String mpList,
+                                   @RequestParam(value = "depotId", required = false) Long depotId,
+                                   @RequestParam("page") Integer currentPage,
+                                   @RequestParam("rows") Integer pageSize,
+                                   HttpServletRequest request) throws Exception{
         JSONObject object = new JSONObject();
         try {
             String[] mpArr = new String[]{};
             if(StringUtil.isNotEmpty(mpList)){
                 mpArr= mpList.split(",");
             }
-            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, enableSerialNumber,
-                    enableBatchNumber, outsource,(currentPage-1)*pageSize, pageSize);
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, enableSerialNumber, enableBatchNumber, outsource);
+            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q,(currentPage-1)*pageSize, pageSize);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
@@ -252,8 +248,6 @@ public class MaterialController {
                     item.put("project", material.getProject());
                     item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
-                    item.put("enableSerialNumber", material.getEnableSerialNumber());
-                    item.put("enableBatchNumber", material.getEnableBatchNumber());
                     BigDecimal stock;
                     if(StringUtil.isNotEmpty(material.getSku())){
                         stock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
@@ -333,8 +327,6 @@ public class MaterialController {
      * @param weight
      * @param expiryNum
      * @param enabled
-     * @param enableSerialNumber
-     * @param enableBatchNumber
      * @param remark
      * @param mpList
      * @param request
@@ -349,9 +341,6 @@ public class MaterialController {
                             @RequestParam(value = "weight", required = false) String weight,
                             @RequestParam(value = "expiryNum", required = false) String expiryNum,
                             @RequestParam(value = "enabled", required = false) String enabled,
-                            @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
-                            @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
-                            @RequestParam(value = "outsource", required = false) String outsource,
                             @RequestParam(value = "remark", required = false) String remark,
                             @RequestParam(value = "mpList", required = false) String mpList,
                             HttpServletRequest request, HttpServletResponse response) {
@@ -362,11 +351,10 @@ public class MaterialController {
             }
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
                     StringUtil.toNull(project), StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled),
-                    StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber), StringUtil.toNull(outsource),
                     StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"条码", "名称", "组装等级关系", "内部零件号", "客户零件号", "单位", "颜色编码", "净重量（kg）", "保质期（天）", "类别", "项目", "批号",
-                    "外协", "制造商", "工艺类别", "配置", "材料牌号", "材料类型/标准", "原材料厂家", "外协件厂家", "尺寸", "检具", "用量/车（件）", "料道（kg）",
-                    "表面处理纹理", "表面积（m²）", "状态", "备注"};
+            String[] names = {"条码", "名称", "组装等级关系", "内部零件号", "客户零件号", "单位", "颜色编码", "净重量（kg）", "保质期（天）", "类别",
+                    "项目", "制造商", "工艺类别", "配置", "材料牌号", "材料类型/标准", "原材料厂家", "外协件厂家", "尺寸", "检具", "用量/车（件）",
+                    "料道（kg）", "表面处理纹理", "表面积（m²）", "状态", "备注"};
             String title = "商品信息";
             Map<String, String> meIdToBarCodeMap = new HashMap<>();
             if (dataList != null) {
@@ -391,8 +379,6 @@ public class MaterialController {
                     objs[8] = m.getExpiryNum() == null ? "" : String.valueOf(m.getExpiryNum()); //保质期（天）
                     objs[9] = m.getCategoryName(); //类别
                     objs[10] = m.getProject(); //项目
-                    objs[11] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无"; //批号
-                    objs[12] = "1".equals(m.getOutsource()) ? "是" : "否"; //外协
                     objs[13] = m.getMfrs(); //制造商
                     objs[14] = m.getOtherField1(); //工艺类别
                     objs[15] = m.getOtherField2(); //配置
@@ -449,36 +435,6 @@ public class MaterialController {
         } else {
             return null;
         }
-    }
-
-    /**
-     * 获取商品序列号
-     * @param q
-     * @param currentPage
-     * @param pageSize
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/getMaterialEnableSerialNumberList")
-    @ApiOperation(value = "获取商品序列号")
-    public JSONObject getMaterialEnableSerialNumberList(
-                                @RequestParam(value = "q", required = false) String q,
-                                @RequestParam("page") Integer currentPage,
-                                @RequestParam("rows") Integer pageSize,
-                                HttpServletRequest request,
-                                HttpServletResponse response)throws Exception {
-        JSONObject object= new JSONObject();
-        try {
-            List<MaterialVo4Unit> list = materialService.getMaterialEnableSerialNumberList(q, (currentPage-1)*pageSize, pageSize);
-            Long count = materialService.getMaterialEnableSerialNumberCount(q);
-            object.put("rows", list);
-            object.put("total", count);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return object;
     }
 
     /**

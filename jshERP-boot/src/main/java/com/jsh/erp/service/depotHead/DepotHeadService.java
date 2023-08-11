@@ -21,7 +21,6 @@ import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.person.PersonService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
-import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
@@ -71,8 +70,6 @@ public class DepotHeadService {
     private UserBusinessService userBusinessService;
     @Resource
     private SystemConfigService systemConfigService;
-    @Resource
-    private SerialNumberService serialNumberService;
     @Resource
     private OrgaUserRelService orgaUserRelService;
     @Resource
@@ -445,30 +442,10 @@ public class DepotHeadService {
             sb.append("[").append(depotHead.getNumber()).append("]");
             //只有未审核的单据才能被删除
             if("0".equals(depotHead.getStatus())) {
-                User userInfo = userService.getCurrentUser();
-                //删除出库数据回收序列号
-                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                        && !BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
-                    //查询单据子表列表
-                    List<DepotItem> depotItemList = null;
-                    try {
-                        depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(depotHead.getId(), BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
-                    } catch (Exception e) {
-                        JshException.readFail(logger, e);
-                    }
-
-                    /**回收序列号*/
-                    if (depotItemList != null && depotItemList.size() > 0) {
-                        for (DepotItem depotItem : depotItemList) {
-                            //BasicNumber=OperNumber*ratio
-                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotHead.getNumber(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
-                        }
-                    }
-                }
                 //对于零售出库单据，更新会员的预收款信息
                 if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                        && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())){
-                    if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
+                        && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())) {
+                    if (BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
                         if (depotHead.getOrganId() != null) {
                             supplierService.updateAdvanceIn(depotHead.getOrganId(), depotHead.getTotalPrice().abs());
                         }

@@ -380,9 +380,6 @@ export const BillModalMixin = {
                     let mObj = this.parseInfoToObj(mInfo)
                     mObj.depotId = mInfo.depotId
                     mObj.stock = mInfo.stock
-                    if (mObj.enableBatchNumber === '0') {
-                      mObj.batchNumber = '无需批号保质期'
-                    }
                     mArr.push(mObj)
                   }
                   let allPriceTotal = 0
@@ -410,9 +407,6 @@ export const BillModalMixin = {
                     let mInfo = mList[0]
                     this.changeColumnShow(mInfo)
                     let mInfoEx = this.parseInfoToObj(mInfo)
-                    if (mInfoEx.enableBatchNumber === '0') {
-                      mInfoEx.batchNumber = '无需批号保质期'
-                    }
                     mInfoEx.stock = res.data.stock
                     let mObj = {
                       rowKey: row.id,
@@ -477,7 +471,6 @@ export const BillModalMixin = {
         color: mInfo.color,
         materialOther: mInfo.materialOther,
         categoryName: mInfo.categoryName,
-        enableBatchNumber: mInfo.enableBatchNumber,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
         operNumber: 1,
@@ -511,13 +504,8 @@ export const BillModalMixin = {
       if(info.sku) {
         this.changeFormTypes(this.materialTable.columns, 'sku', 1)
       }
-      if(info.enableSerialNumber === "1") {
-        this.changeFormTypes(this.materialTable.columns, 'snList', 1)
-      }
-      if(info.enableBatchNumber === "1") {
-        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
-        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
-      }
+      this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
+      this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
     },
     //删除一行或多行的时候触发
     onDeleted(ids, target) {

@@ -39,22 +39,6 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
-                <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
-                  <a-select-option value="1">有</a-select-option>
-                  <a-select-option value="0">无</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号">
-                <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
-                  <a-select-option value="1">有</a-select-option>
-                  <a-select-option value="0">无</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
                 <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
               </a-form-item>
@@ -128,11 +112,6 @@
             let formData = Object.assign(this.model, values)
             if(JSON.stringify(formData) === '{}') {
               that.$message.warning('抱歉，请输入要批量编辑的内容！')
-              that.confirmLoading = false
-              return
-            }
-            if(formData.enableSerialNumber === '1' && formData.enableBatchNumber === '1' ) {
-              that.$message.warning('抱歉，序列号和批号只能选择一项！')
               that.confirmLoading = false
               return
             }

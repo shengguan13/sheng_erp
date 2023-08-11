@@ -52,19 +52,12 @@ const addMaterial = (params)=>postAction("/material/add",params);
 const editMaterial = (params)=>putAction("/material/update",params);
 const checkMaterial = (params)=>getAction("/material/checkIsExist",params);
 const getMaterialBySelect = (params)=>getAction("/material/findBySelect",params);
-const getSerialMaterialBySelect = (params)=>getAction("/material/getMaterialEnableSerialNumberList",params);
 const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode",params);
 const getMaterialByMeIdList = (params)=>getAction("/material/getMaterialByMeIdList",params);
 const getMaterialByCompositePrefix = (params)=>getAction("/material/getMaterialByCompositePrefix",params);
 const getMaxBarCode = (params)=>getAction("/material/getMaxBarCode",params);
 const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCodeExist",params);
 const batchUpdateMaterial = (params)=>postAction("/material/batchUpdate",params);
-//序列号
-const addSerialNumber = (params)=>postAction("/serialNumber/add",params);
-const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
-const checkSerialNumber = (params)=>getAction("/serialNumber/checkIsNameExist",params);
-const batAddSerialNumber = (params)=>postAction("/serialNumber/batAddSerialNumber",params);
-const getEnableSerialNumberList = (params)=>getAction("/serialNumber/getEnableSerialNumberList",params);
 //多属性
 const addMaterialAttribute = (params)=>postAction("/materialAttribute/add",params);
 const editMaterialAttribute = (params)=>putAction("/materialAttribute/update",params);
@@ -151,18 +144,12 @@ export {
   editMaterial,
   checkMaterial,
   getMaterialBySelect,
-  getSerialMaterialBySelect,
   getMaterialByBarCode,
   getMaterialByMeIdList,
   getMaterialByCompositePrefix,
   getMaxBarCode,
   checkMaterialBarCode,
   batchUpdateMaterial,
-  addSerialNumber,
-  editSerialNumber,
-  checkSerialNumber,
-  batAddSerialNumber,
-  getEnableSerialNumberList,
   addMaterialAttribute,
   editMaterialAttribute,
   checkMaterialAttribute,

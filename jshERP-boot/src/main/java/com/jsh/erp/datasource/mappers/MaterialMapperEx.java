@@ -23,9 +23,6 @@ public interface MaterialMapperEx {
             @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
-            @Param("enableSerialNumber") String enableSerialNumber,
-            @Param("enableBatchNumber") String enableBatchNumber,
-            @Param("outsource") String outsource,
             @Param("enabled") String enabled,
             @Param("remark") String remark,
             @Param("idList") List<Long> idList,
@@ -40,9 +37,6 @@ public interface MaterialMapperEx {
             @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
-            @Param("enableSerialNumber") String enableSerialNumber,
-            @Param("enableBatchNumber") String enableBatchNumber,
-            @Param("outsource") String outsource,
             @Param("enabled") String enabled,
             @Param("remark") String remark,
             @Param("idList") List<Long> idList,
@@ -58,17 +52,11 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("idList") List<Long> idList,
                                                   @Param("q") String q,
-                                                  @Param("enableSerialNumber") String enableSerialNumber,
-                                                  @Param("enableBatchNumber") String enableBatchNumber,
-                                                  @Param("outsource") String outsource,
                                                   @Param("offset") Integer offset,
                                                   @Param("rows") Integer rows);
 
     int findBySelectWithBarCodeCount(@Param("idList") List<Long> idList,
-                                     @Param("q") String q,
-                                     @Param("enableSerialNumber") String enableSerialNumber,
-                                     @Param("enableBatchNumber") String enableBatchNumber,
-                                     @Param("outsource") String outsource);
+                                     @Param("q") String q);
 
     List<MaterialVo4Unit> exportExcel(
             @Param("materialParam") String materialParam,
@@ -77,23 +65,12 @@ public interface MaterialMapperEx {
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
             @Param("enabled") String enabled,
-            @Param("enableSerialNumber") String enableSerialNumber,
-            @Param("enableBatchNumber") String enableBatchNumber,
-            @Param("outsource") String outsource,
             @Param("remark") String remark,
             @Param("idList") List<Long> idList);
     /**
      * 通过商品名称查询商品信息
      * */
     List<Material> findByMaterialName(@Param("name") String name);
-    /**
-     * 获取开启序列号并且状态正常的商品列表
-     * */
-    List<MaterialVo4Unit> getMaterialEnableSerialNumberList(@Param("q") String q,
-                                                     @Param("offset") Integer offset,
-                                                     @Param("rows") Integer rows);
-
-    Long getMaterialEnableSerialNumberCount(@Param("q") String q);
 
     int batchDeleteMaterialByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 

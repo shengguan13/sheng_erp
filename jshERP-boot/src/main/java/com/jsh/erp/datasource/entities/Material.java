@@ -61,12 +61,6 @@ public class Material {
 
     private String otherField14;
 
-    private String enableSerialNumber;
-
-    private String enableBatchNumber;
-
-    private String outsource;
-
     private Long tenantId;
 
     private String deleteFlag;
@@ -301,30 +295,6 @@ public class Material {
 
     public void setOtherField14(String otherField14) {
         this.otherField14 = otherField14 == null ? null : otherField14.trim();
-    }
-
-    public String getEnableSerialNumber() {
-        return enableSerialNumber;
-    }
-
-    public void setEnableSerialNumber(String enableSerialNumber) {
-        this.enableSerialNumber = enableSerialNumber == null ? null : enableSerialNumber.trim();
-    }
-
-    public String getEnableBatchNumber() {
-        return enableBatchNumber;
-    }
-
-    public void setEnableBatchNumber(String enableBatchNumber) {
-        this.enableBatchNumber = enableBatchNumber == null ? null : enableBatchNumber.trim();
-    }
-
-    public String getOutsource() {
-        return outsource;
-    }
-
-    public void setOutsource(String outsource) {
-        this.outsource = outsource;
     }
 
     public Long getTenantId() {

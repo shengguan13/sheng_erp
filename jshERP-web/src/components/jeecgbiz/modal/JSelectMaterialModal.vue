@@ -51,32 +51,6 @@
                   </a>
                 </a-col>
               </span>
-              <template v-if="toggleSearchStatus">
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="序列号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="有无序列号" v-model="queryParam.enableSerialNumber">
-                      <a-select-option value="1">有</a-select-option>
-                      <a-select-option value="0">无</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="批号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="有无批号" v-model="queryParam.enableBatchNumber">
-                      <a-select-option value="1">有</a-select-option>
-                      <a-select-option value="0">无</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="外协件" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="是否外协件" v-model="queryParam.outsource">
-                      <a-select-option value="1">是</a-select-option>
-                      <a-select-option value="0">否</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-              </template>
             </a-row>
           </a-form>
           <a-table
@@ -102,8 +76,6 @@
             </template>
             <template slot="customName" slot-scope="text, record">
               {{record.name}}
-              <a-tag v-if="record.enableSerialNumber==1" color="orange">序</a-tag>
-              <a-tag v-if="record.enableBatchNumber==1" color="orange">批</a-tag>
             </template>
           </a-table>
         </div>
@@ -134,10 +106,7 @@
         queryParam: {
           q: '',
           categoryId: '',
-          depotId: '',
-          enableSerialNumber: '',
-          enableBatchNumber: '',
-          outsource: ''
+          depotId: ''
         },
         labelCol: {
           xs: { span: 24 },

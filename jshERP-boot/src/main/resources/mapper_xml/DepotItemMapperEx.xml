@@ -50,8 +50,6 @@
         <result column="MOtherField12" jdbcType="VARCHAR" property="MOtherField12" />
         <result column="MOtherField13" jdbcType="VARCHAR" property="MOtherField13" />
         <result column="MOtherField14" jdbcType="VARCHAR" property="MOtherField14" />
-        <result column="enable_serial_number" jdbcType="VARCHAR" property="enableSerialNumber" />
-        <result column="enable_batch_number" jdbcType="VARCHAR" property="enableBatchNumber" />
         <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
         <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
         <result column="barCode" jdbcType="VARCHAR" property="barCode" />
@@ -492,7 +490,7 @@
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
         m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
-        m.other_field13 MOtherField13,m.other_field14 MOtherField14,m.enable_serial_number, m.enable_batch_number,
+        m.other_field13 MOtherField13,m.other_field14 MOtherField14,
         dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
         from jsh_depot_item di
         left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
@@ -908,10 +906,7 @@
         <if test="depotheadId != null">
            and dep.header_id = #{depotheadId}
         </if>
-            and dep.material_id=mat.id
-        <if test="enableSerialNumber != null">
-           and mat.enable_serial_number = #{enableSerialNumber}
-        </if>
+           and dep.material_id=mat.id
         and ifnull(dep.delete_flag,'0') !='1'
         and ifnull(mat.delete_flag,'0') !='1'
     </select>
@@ -1214,7 +1209,6 @@
         <if test="number != null">
             and dh.number!= #{number}
         </if>
-        and m.enable_batch_number =1
         and di.delete_flag!=1) tb
         group by batch_number
         order by expiration_date asc

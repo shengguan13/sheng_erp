@@ -382,9 +382,6 @@
             }
             info.linkId = info.id
             allTaxLastMoney += info.taxLastMoney
-            if (info.enableBatchNumber === '0') {
-              info.batchNumber = '无需批号保质期'
-            }
             listEx.push(info)
             this.changeColumnShow(info)
           }

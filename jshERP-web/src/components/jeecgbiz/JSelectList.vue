@@ -12,15 +12,13 @@
 <script>
   import JSelectMaterialModal from './modal/JSelectMaterialModal'
   import JSelectBatchModal from './modal/JSelectBatchModal'
-  import JSelectSnModal from './modal/JSelectSnModal'
-  import JSelectSnAddModal from './modal/JSelectSnAddModal'
   import { getMpListShort } from "@/utils/util"
   import {getMaterialByBarCode} from '@/api/api'
   import Vue from 'vue'
 
   export default {
     name: 'JSelectList',
-    components: {JSelectMaterialModal, JSelectBatchModal, JSelectSnModal, JSelectSnAddModal},
+    components: {JSelectMaterialModal, JSelectBatchModal},
     props: {
       value: {
         type: String,

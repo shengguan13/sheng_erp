@@ -272,9 +272,6 @@ public class ExceptionConstants {
     //商品信息不唯一
     public static final int MATERIAL_NOT_ONLY_CODE = 8000001;
     public static final String MATERIAL_NOT_ONLY_MSG = "商品信息不唯一";
-    //该商品未开启序列号
-    public static final int MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE = 8000002;
-    public static final String MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG = "该商品未开启序列号功能";
     //商品的序列号不能为空
     public static final int MATERIAL_SERIAL_NUMBERE_EMPTY_CODE = 8000003;
     public static final String MATERIAL_SERIAL_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的序列号不能为空";

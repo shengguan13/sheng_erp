@@ -100,28 +100,6 @@
                   <a-input placeholder="若有多个项目，用|隔开" v-decorator.trim="[ 'project' ]" />
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="9" data-title="批号"
-                  data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和有效期，在销售出库单据需要选择该商品的批号进行出库">
-                  <a-tooltip title="如果选择为有，则在采购入库单需要录入该商品的批号和有效期">
-                    <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
-                      <a-select-option value="1">有</a-select-option>
-                      <a-select-option value="0">无</a-select-option>
-                    </a-select>
-                  </a-tooltip>
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="外协件" data-step="10" data-title="外协件"
-                  data-intro="选择商品是否属于外协件">
-                  <a-tooltip title="选择商品是否属于外协件">
-                    <a-select placeholder="是否外协" v-decorator="[ 'outsource' ]">
-                      <a-select-option value="1">是</a-select-option>
-                      <a-select-option value="0">否</a-select-option>
-                    </a-select>
-                  </a-tooltip>
-                </a-form-item>
-              </a-col>
               <a-col :md="6" :sm="24" v-if="!model.id">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
                   data-intro="同一种零件可存在多种属性—颜色、尺寸、供应商等">
@@ -653,9 +631,8 @@
           }, 5)
         }
         this.$nextTick(() => {
-        // TODO: enableSerialNumber是否可以去掉,目前默认enableSerialNumber===0
           this.form.setFieldsValue(pick(this.model, 'name', 'internalId', 'unit', 'unitId', 'model', 'color', 'project',
-            'categoryId','enableSerialNumber','enableBatchNumber','outsource','expiryNum','weight','remark','mfrs',
+            'categoryId','expiryNum','weight','remark','mfrs',
             'otherField1','otherField2','otherField3','otherField4','otherField5','otherField6','otherField7',
             'otherField8','otherField9','otherField10','otherField11','otherField12','otherField13','otherField14'))
           autoJumpNextInput('materialHeadModal')
@@ -801,10 +778,6 @@
       requestAddOrEdit(formData) {
         if(formData.meList.length === 0) {
           this.$message.warning('抱歉，请输入条码信息！');
-          return;
-        }
-        if(formData.enableSerialNumber === '1' && formData.enableBatchNumber === '1') {
-          this.$message.warning('抱歉，序列号和批号只能选择一项！');
           return;
         }
         //校验商品是否存在，通过校验商品的名称、客户零件号、内部零件号、颜色编码、单位、制造商等
