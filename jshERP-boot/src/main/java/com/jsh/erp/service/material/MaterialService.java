@@ -12,6 +12,7 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.materialBom.MaterialBomService;
 import com.jsh.erp.service.materialCategory.MaterialCategoryService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.redis.RedisService;
@@ -43,6 +44,8 @@ public class MaterialService {
 
     @Resource
     private MaterialMapper materialMapper;
+    @Resource
+    private MaterialBomService materialBomService;
     @Resource
     private MaterialExtendMapper materialExtendMapper;
     @Resource
@@ -205,7 +208,6 @@ public class MaterialService {
         }
     }
 
-    // -----------------------------------------------------------------
     private boolean isValidDependency(List<MaterialVo4Unit> allMaterials) {
         Map<String, Set<String>> dependency = new HashMap<>();
         for (MaterialVo4Unit m : allMaterials) {
@@ -242,7 +244,7 @@ public class MaterialService {
     }
 
     /**
-     * List of meIds of material composites ---------------------
+     * List of meIds of material composites
      * @param compositeStr
      * @return
      */
@@ -271,7 +273,7 @@ public class MaterialService {
                 materialMapperEx.setExpiryNumToNull(material.getId());
             }
             materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
-            // 如果产品有组装关系，确保没有引入循环依赖 ------------------------------------------------------------------
+            // 如果产品有组装关系，确保没有引入循环依赖
             List<MaterialVo4Unit> allMaterials = materialMapperEx.getMaterialListAll();
             if (material.getOtherField10() != null && !"".equals(material.getOtherField10())) {
                 if (!isValidDependency(allMaterials)) {

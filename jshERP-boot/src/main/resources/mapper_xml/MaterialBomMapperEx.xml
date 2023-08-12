@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialBomMapperEx">
+
+    <select id="selectByVagueMaterialBom" resultType="com.jsh.erp.datasource.entities.MaterialBom">
+        select * from jsh_material_bom mb
+        where 1=1
+        <if test="process != null">
+            <bind name="bindProcess" value="'%'+process+'%'"/>
+            and mb.process like #{bindProcess}
+        </if>
+        <if test="project != null">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and mb.project like #{bindProject}
+        </if>
+        and ifnull(mb.delete_flag,'0') !='1'
+        order by mb.id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="countsByBom" resultType="java.lang.Long">
+        SELECT count(mb.id) from jsh_material_bom mb
+        where 1=1
+        <if test="process != null">
+            <bind name="bindProcess" value="'%'+process+'%'"/>
+            and mb.process like #{bindProcess}
+        </if>
+        <if test="project != null">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and mb.project like #{bindProject}
+        </if>
+        and ifnull(mb.delete_flag,'0') !='1'
+    </select>
+
+    <update id="batchDeleteMaterialBomByIds">
+        update jsh_material_bom
+        set delete_flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+</mapper>
