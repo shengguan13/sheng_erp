@@ -51,10 +51,6 @@ public class DepotItemStockWarningCount {
 
     private String MOtherField12;
 
-    private String MOtherField13;
-
-    private String MOtherField14;
-
     private String depotName;
 
     private BigDecimal currentNumber;
@@ -249,22 +245,6 @@ public class DepotItemStockWarningCount {
 
     public void setMOtherField12(String MOtherField12) {
         this.MOtherField12 = MOtherField12;
-    }
-
-    public String getMOtherField13() {
-        return MOtherField13;
-    }
-
-    public void setMOtherField13(String MOtherField13) {
-        this.MOtherField13 = MOtherField13;
-    }
-
-    public String getMOtherField14() {
-        return MOtherField14;
-    }
-
-    public void setMOtherField14(String MOtherField14) {
-        this.MOtherField14 = MOtherField14;
     }
 
     public String getDepotName() {

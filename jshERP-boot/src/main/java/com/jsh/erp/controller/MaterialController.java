@@ -74,8 +74,6 @@ public class MaterialController {
      * @param otherField10
      * @param otherField11
      * @param otherField12
-     * @param otherField13
-     * @param otherField14
      * @param unit
      * @param unitId
      * @param request
@@ -94,7 +92,6 @@ public class MaterialController {
                                @RequestParam("otherField7") String otherField7, @RequestParam("otherField8") String otherField8,
                                @RequestParam("otherField9") String otherField9, @RequestParam("otherField10") String otherField10,
                                @RequestParam("otherField11") String otherField11, @RequestParam("otherField12") String otherField12,
-                               @RequestParam("otherField13") String otherField13, @RequestParam("otherField14") String otherField14,
                                @RequestParam("unit") String unit,@RequestParam("unitId") Long unitId,
                                HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
@@ -104,8 +101,7 @@ public class MaterialController {
                 StringUtil.toNull(otherField2), StringUtil.toNull(otherField3), StringUtil.toNull(otherField4),
                 StringUtil.toNull(otherField5), StringUtil.toNull(otherField6), StringUtil.toNull(otherField7),
                 StringUtil.toNull(otherField8), StringUtil.toNull(otherField9), StringUtil.toNull(otherField10),
-                StringUtil.toNull(otherField11), StringUtil.toNull(otherField12), StringUtil.toNull(otherField13),
-                StringUtil.toNull(otherField14), StringUtil.toNull(unit), unitId);
+                StringUtil.toNull(otherField11), StringUtil.toNull(otherField12), StringUtil.toNull(unit), unitId);
         if(exist > 0) {
             objectMap.put("status", true);
         } else {
@@ -391,7 +387,6 @@ public class MaterialController {
                     objs[22] = m.getOtherField10(); //用量/车（件）
                     objs[23] = m.getOtherField11(); //料道（kg）
                     objs[24] = m.getOtherField12(); //表面处理纹理
-                    objs[25] = m.getOtherField13(); //表面积（m²）
                     objs[26] = m.getEnabled() ? "启用" : "禁用"; //状态
                     objs[27] = m.getRemark(); //备注
                     objects.add(objs);

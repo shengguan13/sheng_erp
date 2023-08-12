@@ -209,7 +209,7 @@ public class MaterialService {
     private boolean isValidDependency(List<MaterialVo4Unit> allMaterials) {
         Map<String, Set<String>> dependency = new HashMap<>();
         for (MaterialVo4Unit m : allMaterials) {
-            Set<String> composite = parseComposite(m.getOtherField14());
+            Set<String> composite = parseComposite(m.getOtherField10());
             dependency.put(String.valueOf(m.getMeId()), composite);
         }
         Map<String, Integer> visited = new HashMap<>();
@@ -273,7 +273,7 @@ public class MaterialService {
             materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
             // 如果产品有组装关系，确保没有引入循环依赖 ------------------------------------------------------------------
             List<MaterialVo4Unit> allMaterials = materialMapperEx.getMaterialListAll();
-            if (material.getOtherField14() != null && !"".equals(material.getOtherField14())) {
+            if (material.getOtherField10() != null && !"".equals(material.getOtherField10())) {
                 if (!isValidDependency(allMaterials)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_CODE,
                             ExceptionConstants.MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_MSG);
@@ -384,10 +384,10 @@ public class MaterialService {
                             String otherField4, String otherField5, String otherField6,
                             String otherField7, String otherField8, String otherField9,
                             String otherField10, String otherField11, String otherField12,
-                            String otherField13, String otherField14, String unit, Long unitId)throws Exception {
+                            String unit, Long unitId)throws Exception {
         return materialMapperEx.checkIsExist(id, name, model, color, project, internalId, mfrs, otherField1,
                 otherField2, otherField3, otherField4, otherField5, otherField6, otherField7, otherField8,
-                otherField9, otherField10, otherField11, otherField12, otherField13, otherField14, unit, unitId);
+                otherField9, otherField10, otherField11, otherField12, unit, unitId);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -617,8 +617,6 @@ public class MaterialService {
                 m.setOtherField10(other10);
                 m.setOtherField11(other11);
                 m.setOtherField12(other12);
-                m.setOtherField13(other13);
-                m.setOtherField14(other14.replace(" ", ""));
                 m.setRemark(remark);
 
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
@@ -753,27 +751,27 @@ public class MaterialService {
             Map<String, String> barCodeToExtendId = allMaterials.stream()
                     .collect(Collectors.toMap(e -> e.getmBarCode(), e -> String.valueOf(e.getMeId())));
             for(MaterialWithInitStock m: mList) {
-                if (m.getOtherField14() != null && !"".equals(m.getOtherField14())) {
+                if (m.getOtherField10() != null && !"".equals(m.getOtherField10())) {
                     Long mId = 0L;
                     //判断该商品是否存在，如果不存在就新增，如果存在就更新
                     String basicBarCode = getBasicBarCode(m);
                     List<Material> materials = getMaterialListByParam(m.getName(), m.getInternalId(),
                             m.getModel(), m.getColor(), m.getProject(), m.getUnit(), m.getUnitId(), basicBarCode);
-                    Map<String, String> compositeMap = parseCompositeString(m.getOtherField14());
+                    Map<String, String> compositeMap = parseCompositeString(m.getOtherField10());
                     if (compositeMap == null) {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_COMPOSITE_INVALID_CODE,
-                                String.format(ExceptionConstants.MATERIAL_COMPOSITE_INVALID_MSG, m.getOtherField14()));
+                                String.format(ExceptionConstants.MATERIAL_COMPOSITE_INVALID_MSG, m.getOtherField10()));
                     }
                     for (String code : compositeMap.keySet()) {
                         if (!barCodeToExtendId.containsKey(code)) {
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_COMPOSITE_NOT_EXIST_CODE,
-                                    String.format(ExceptionConstants.MATERIAL_COMPOSITE_NOT_EXIST_MSG, m.getOtherField14(), code));
+                                    String.format(ExceptionConstants.MATERIAL_COMPOSITE_NOT_EXIST_MSG, m.getOtherField10(), code));
                         }
                     }
                     List<String> compositeList = compositeMap.entrySet().stream()
                             .map(e -> "[" + barCodeToExtendId.get(e.getKey()) + "]*" + e.getValue())
                             .collect(Collectors.toList());
-                    m.setOtherField14(String.join("+", compositeList));
+                    m.setOtherField10(String.join("+", compositeList));
 
                     if (materials.size() == 0) {
                         materialMapperEx.insertSelectiveEx(m);
@@ -1259,7 +1257,7 @@ public class MaterialService {
     /**
      * @param prefixList 25.1[amount1],25.2[amount2]
      * @param compositeList m1(25.1.2.3[],25.2.1[]),此时只有25.2.1符合条件
-     * @return nextLevelComposite 但是他们的otherField14已经被改成了所需要的amount
+     * @return nextLevelComposite 但是他们的otherField10已经被改成了所需要的amount
      */
     private List<MaterialVo4Unit> filterOnlyNextLevel(List<String> prefixList, List<MaterialVo4Unit> compositeList) {
         List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
@@ -1277,7 +1275,7 @@ public class MaterialService {
         }
         for (MaterialVo4Unit m : compositeList) {
             if (compositeAmountMap.containsKey(m.getmBarCode())) {
-                m.setOtherField14(String.valueOf(compositeAmountMap.getOrDefault(m.getmBarCode(), 0.0)));
+                m.setOtherField10(String.valueOf(compositeAmountMap.getOrDefault(m.getmBarCode(), 0.0)));
                 result.add(m);
             }
         }
@@ -1290,11 +1288,11 @@ public class MaterialService {
      * @return
      */
     private double getDirectCompositeAmount(String prefix, MaterialVo4Unit m) {
-        if (m == null || m.getOtherField14() == null || m.getOtherField14().equals("") || !m.getOtherField14().contains(prefix)) {
+        if (m == null || m.getOtherField10() == null || m.getOtherField10().equals("") || !m.getOtherField10().contains(prefix)) {
             return 0.0;
         }
         // e.g. 25.1.2[0.8],26.3.2.5[1.2]
-        String[] split = m.getOtherField14().split(",");
+        String[] split = m.getOtherField10().split(",");
         for (String s : split) {
             if (s.startsWith(prefix + ".")) {
                 // e.g. 25.1.2[0.8]
@@ -1426,13 +1424,6 @@ public class MaterialService {
             if (mpArr[i].equals("表面处理纹理")) {
                 materialOther = materialOther + ((m.getOtherField12() == null || m.getOtherField12().equals("")) ? "" : "(" + m.getOtherField12() + ")");
             }
-            if (mpArr[i].equals("表面积（m²）")) {
-                materialOther = materialOther + ((m.getOtherField13() == null || m.getOtherField13().equals("")) ? "" : "(" + m.getOtherField13() + ")");
-            }
-            // 暂时不在拓展信息里面显示组装等级关系
-            // if (mpArr[i].equals("组装等级关系")) {
-            //     materialOther = materialOther + ((m.getOtherField14() == null || m.getOtherField14().equals("")) ? "" : "(" + m.getOtherField14() + ")");
-            // }
         }
         return materialOther;
     }

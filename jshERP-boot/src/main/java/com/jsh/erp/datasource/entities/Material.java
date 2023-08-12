@@ -57,10 +57,6 @@ public class Material {
 
     private String otherField12;
 
-    private String otherField13;
-
-    private String otherField14;
-
     private Long tenantId;
 
     private String deleteFlag;
@@ -279,22 +275,6 @@ public class Material {
 
     public void setOtherField12(String otherField12) {
         this.otherField12 = otherField12 == null ? null : otherField12.trim();
-    }
-
-    public String getOtherField13() {
-        return otherField13;
-    }
-
-    public void setOtherField13(String otherField13) {
-        this.otherField13 = otherField13 == null ? null : otherField13.trim();
-    }
-
-    public String getOtherField14() {
-        return otherField14;
-    }
-
-    public void setOtherField14(String otherField14) {
-        this.otherField14 = otherField14 == null ? null : otherField14.trim();
     }
 
     public Long getTenantId() {

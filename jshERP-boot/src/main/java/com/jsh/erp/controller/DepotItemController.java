@@ -340,7 +340,7 @@ public class DepotItemController {
                     String composite = "";
                     for (int i = 0; i < mpArr.length; i++) {
                         if (mpArr[i].equals("组装等级关系")) {
-                            composite = (diEx.getMOtherField14() == null || diEx.getMOtherField14().equals("")) ? "" :  diEx.getMOtherField14();
+                            composite = (diEx.getMOtherField10() == null || diEx.getMOtherField10().equals("")) ? "" :  diEx.getMOtherField10();
                         }
                     }
                     double toProduce = diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue();
@@ -368,7 +368,7 @@ public class DepotItemController {
                     item.put("project", m.getProject());
                     item.put("unit", m.getUnitName());
 
-                    item.put("prepareNumber", Double.valueOf(m.getOtherField14()));
+                    item.put("prepareNumber", Double.valueOf(m.getOtherField10()));
                     item.put("materialPick", materialPicked.containsKey(String.valueOf(m.getMeId())) ? materialPicked.get(String.valueOf(m.getMeId())) : 0);
                     item.put("materialReturn", materialReturned.containsKey(String.valueOf(m.getMeId())) ? materialReturned.get(String.valueOf(m.getMeId())) : 0);
                     dataArray.add(item);
@@ -551,13 +551,6 @@ public class DepotItemController {
             if (mpArr[i].equals("表面处理纹理")) {
                 materialOther = materialOther + ((diEx.getMOtherField12() == null || diEx.getMOtherField12().equals("")) ? "" : "(" + diEx.getMOtherField12() + ")");
             }
-            if (mpArr[i].equals("表面积（m²）")) {
-                materialOther = materialOther + ((diEx.getMOtherField13() == null || diEx.getMOtherField13().equals("")) ? "" : "(" + diEx.getMOtherField13() + ")");
-            }
-            // 暂时不在拓展信息里面显示组装等级关系
-            // if (mpArr[i].equals("组装等级关系")) {
-            //     materialOther = materialOther + ((diEx.getMOtherField14() == null || diEx.getMOtherField14().equals("")) ? "" : "(" + diEx.getMOtherField14() + ")");
-            // }
         }
         return materialOther;
     }
@@ -985,8 +978,6 @@ public class DepotItemController {
                     diEx.setMOtherField10(disw.getMOtherField10());
                     diEx.setMOtherField11(disw.getMOtherField11());
                     diEx.setMOtherField12(disw.getMOtherField12());
-                    diEx.setMOtherField13(disw.getMOtherField13());
-                    diEx.setMOtherField14(disw.getMOtherField14());
                     disw.setMaterialOther(getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
                     if(null!=disw.getLowSafeStock() && disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {

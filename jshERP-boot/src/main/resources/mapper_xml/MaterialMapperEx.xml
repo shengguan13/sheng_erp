@@ -63,8 +63,7 @@
                 or m.other_field6 like #{bindOther} or m.other_field7 like #{bindOther}
                 or m.other_field8 like #{bindOther} or m.other_field9 like #{bindOther}
                 or m.other_field10 like #{bindOther} or m.other_field11 like #{bindOther}
-                or m.other_field12 like #{bindOther} or m.other_field13 like #{bindOther}
-                or m.other_field14 like #{bindOther})
+                or m.other_field12 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -122,8 +121,7 @@
                 or m.other_field6 like #{bindOther} or m.other_field7 like #{bindOther}
                 or m.other_field8 like #{bindOther} or m.other_field9 like #{bindOther}
                 or m.other_field10 like #{bindOther} or m.other_field11 like #{bindOther}
-                or m.other_field12 like #{bindOther} or m.other_field13 like #{bindOther}
-                or m.other_field14 like #{bindOther})
+                or m.other_field12 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -231,12 +229,6 @@
             <if test="otherField12 != null">
                 other_field12,
             </if>
-            <if test="otherField13 != null">
-                other_field13,
-            </if>
-            <if test="otherField14 != null">
-                other_field14,
-            </if>
             <if test="tenantId != null">
                 tenant_id,
             </if>
@@ -325,12 +317,6 @@
             </if>
             <if test="otherField12 != null">
                 #{otherField12,jdbcType=VARCHAR},
-            </if>
-            <if test="otherField13 != null">
-                #{otherField13,jdbcType=VARCHAR},
-            </if>
-            <if test="otherField14 != null">
-                #{otherField14,jdbcType=VARCHAR},
             </if>
             <if test="tenantId != null">
                 #{tenantId,jdbcType=BIGINT},
@@ -551,7 +537,7 @@
         <if test="prefixList.size()>0">
             and (
             <foreach collection="prefixList" item="prefix" index="index" separator=" OR ">
-                m.other_field14 like CONCAT(#{prefix}, '%') or m.other_field14 like CONCAT(',', CONCAT(#{prefix}, '%'))
+                m.other_field10 like CONCAT(#{prefix}, '%') or m.other_field10 like CONCAT(',', CONCAT(#{prefix}, '%'))
             </foreach>
             )
         </if>
@@ -793,12 +779,6 @@
         </if>
         <if test="otherField12 != null">
             and m.other_field12 = #{otherField12}
-        </if>
-        <if test="otherField13 != null">
-            and m.other_field13 = #{otherField13}
-        </if>
-        <if test="otherField14 != null">
-            and m.other_field14 = #{otherField14}
         </if>
         <if test="unit != null">
             and m.unit = #{unit}

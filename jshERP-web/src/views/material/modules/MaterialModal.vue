@@ -256,20 +256,6 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row v-if="mpShort.otherField13.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField13.name">
-                  <a-input v-decorator.trim="[ 'otherField13' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-show="false" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField14.name">
-                  <a-input v-decorator.trim="[ 'otherField14' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
           </a-tab-pane>
           <a-tab-pane key="3" tab="零件组成" forceRender>
             <j-editable-table
@@ -408,9 +394,7 @@
           otherField9: {},
           otherField10: {},
           otherField11: {},
-          otherField12: {},
-          otherField13: {},
-          otherField14: {}
+          otherField12: {}
         },
         meTable: {
           loading: false,
@@ -634,7 +618,7 @@
           this.form.setFieldsValue(pick(this.model, 'name', 'internalId', 'unit', 'unitId', 'model', 'color', 'project',
             'categoryId','expiryNum','weight','remark','mfrs',
             'otherField1','otherField2','otherField3','otherField4','otherField5','otherField6','otherField7',
-            'otherField8','otherField9','otherField10','otherField11','otherField12','otherField13','otherField14'))
+            'otherField8','otherField9','otherField10','otherField11','otherField12'))
           autoJumpNextInput('materialHeadModal')
           autoJumpNextInput('materialDetailModal')
         });
@@ -659,8 +643,8 @@
           //编辑商品的时候多属性字段可以修改
           this.meTable.columns[2].readonly = false
           //手动添加了composite信息到otherField
-          if (this.model.otherField14) {
-            this.requestCompositeTableData(this.model.otherField14, this.compositeTable)
+          if (this.model.otherField10) {
+            this.requestCompositeTableData(this.model.otherField10, this.compositeTable)
           }
           this.requestMeTableData(this.url.materialsExtendList, params, this.meTable)
           this.requestDepotTableData(this.url.depotWithStock, { mId: this.model.id }, this.depotTable)
@@ -712,7 +696,7 @@
             let mArr = []
             for (let i = 0; i < mList.length; i++) {
               let mInfo = mList[i]
-              let mObj = this.parseInfoToObjWithOperNum(mInfo, Number(mInfo.otherField14))
+              let mObj = this.parseInfoToObjWithOperNum(mInfo, Number(mInfo.otherField10))
               mArr.push(mObj)
             }
             this.compositeTable.dataSource = mArr
@@ -748,7 +732,7 @@
         }).then(allValues => {
           let formData = this.classifyIntoFormData(allValues)
           let compositeStr = this.getCompositeStr(formData)
-          formData.otherField14 = compositeStr
+          formData.otherField10 = compositeStr
           formData.sortList = [];
           if(formData.unit === undefined) {formData.unit = ''}
           if(formData.unitId === undefined) {formData.unitId = ''}
@@ -801,8 +785,6 @@
           otherField10: this.parseParam(this.model.otherField10),
           otherField11: this.parseParam(this.model.otherField11),
           otherField12: this.parseParam(this.model.otherField12),
-          otherField13: this.parseParam(this.model.otherField13),
-          otherField14: this.parseParam(this.model.otherField14),
           unit: this.parseParam(this.model.unit),
           unitId: this.parseParam(this.model.unitId)
         }
@@ -1294,14 +1276,6 @@
           if (mpList[i].nativeName === "表面处理纹理") {
             this.mpShort.otherField12.name = mpList[i].anotherName
             this.mpShort.otherField12.enabled = mpList[i].enabled
-          }
-          if (mpList[i].nativeName === "表面积（m²）") {
-            this.mpShort.otherField13.name = mpList[i].anotherName
-            this.mpShort.otherField13.enabled = mpList[i].enabled
-          }
-          if (mpList[i].nativeName === "组装等级关系") {
-            this.mpShort.otherField14.name = mpList[i].anotherName
-            this.mpShort.otherField14.enabled = mpList[i].enabled
           }
         }
       },

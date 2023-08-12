@@ -370,7 +370,7 @@
               let mList = res.data
               for (let i = 0; i < mList.length; i++) {
                 let mInfo = mList[i]
-                let compositeStr = mInfo.otherField14
+                let compositeStr = mInfo.otherField10
                 let amount = Number(productionMap.get(mInfo.mBarCode))
                 // e.g. 25.1[0.98],26.3[2]
                 if (compositeStr && compositeStr != "") {
@@ -394,8 +394,8 @@
                       this.recommendationStr = this.recommendationStr + "，"
                     }
                     let mInfo = newList[i]
-                    // 具体的数量在后端部分已经计算好并且放在了otherField14里面
-                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + mInfo.otherField14 + mInfo.commodityUnit
+                    // 具体的数量在后端部分已经计算好并且放在了otherField10里面
+                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + mInfo.otherField10 + mInfo.commodityUnit
                   }
                 }
                 this.$nextTick(() => {
