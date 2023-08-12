@@ -125,7 +125,6 @@
           {dataIndex: 'model', title: '客户零件号'},
           {dataIndex: 'color', title: '颜色编码'},
           {dataIndex: 'unit', title: '单位'},
-          {dataIndex: 'sku', title: '多属性'},
           {dataIndex: 'stock', title: '库存'},
           {dataIndex: 'expand', title: '扩展信息'}
         ],

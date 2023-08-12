@@ -101,42 +101,6 @@
                   <a-input placeholder="若有多个项目，用|隔开" v-decorator.trim="[ 'project' ]" />
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24" v-if="!model.id">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
-                  data-intro="同一种零件可存在多种属性—颜色、尺寸、供应商等">
-                  <a-tooltip title="同一种零件可存在多种属性—颜色、尺寸、供应商等，需要先录入单位才能激活此处输入框">
-                    <a-tag class="tag-info" v-if="!manySkuStatus">需要先录入单位才能激活</a-tag>
-                    <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children"
-                      placeholder="请选择多属性" @change="onManySkuChange" v-show="manySkuStatus">
-                      <a-select-option v-for="(item,index) in materialAttributeList" :key="index" :value="item.value" :disabled="item.disabled">
-                        {{ item.name }}
-                      </a-select-option>
-                    </a-select>
-                  </a-tooltip>
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row class="form-row" :gutter="24">
-              <a-col :md="12" :sm="24" v-if="manySkuSelected>=1">
-                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" :label="skuOneTitle">
-                  <a-select mode="multiple" v-decorator="[ 'skuOne' ]" showSearch optionFilterProp="children"
-                            placeholder="请选择" @select="onSkuChange" @deselect="onSkuOneDeSelect">
-                    <a-select-option v-for="(item,index) in skuOneList" :key="index" :value="item.value">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="12" :sm="24" v-if="manySkuSelected>=2">
-                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" :label="skuTwoTitle">
-                  <a-select mode="multiple" v-decorator="[ 'skuTwo' ]" showSearch optionFilterProp="children"
-                            placeholder="请选择" @select="onSkuChange" @deselect="onSkuTwoDeSelect">
-                    <a-select-option v-for="(item,index) in skuTwoList" :key="index" :value="item.value">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
             </a-row>
             <div style="margin-top:8px;" id="materialDetailModal">
               <j-editable-table
@@ -326,7 +290,7 @@
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode, getMaterialByCompositePrefix,
-    getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
+    getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
   import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
@@ -360,18 +324,12 @@
         unitStatus: false,
         manyUnitStatus: true,
         unitChecked: false,
-        manySkuStatus: false,
         switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
         maxBarCodeInfo: '', //最大条码
         meDeleteIdList: [], //删除条码信息的id数组
         prefixNo: 'material',
         materialAttributeList: [],
-        skuOneTitle: '属性1',
-        skuTwoTitle: '属性2',
-        skuOneList: [],
-        skuTwoList: [],
-        manySkuSelected: 0,
         model: {},
         isReadOnly: false,
         labelCol: {
@@ -410,9 +368,6 @@
             {
               title: '单位', key: 'commodityUnit', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
-            {
-              title: '多属性', key: 'sku', width: '20%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '请输入${title}'
             }
           ]
         },
@@ -587,8 +542,6 @@
         ])
       },
       add () {
-        //隐藏多属性
-        this.meTable.columns[2].type = FormTypes.hidden
         // 默认新增一条数据
         this.getAllTable().then(editableTables => {
           editableTables[0].add()
@@ -602,9 +555,7 @@
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.activeKey = '1'
-        this.manySkuSelected = 0
         this.barCodeSwitch = false
-        this.manySkuStatus = false
         this.maxBarCodeInfo = ''
         this.visible = true
         this.modalStyle = 'top:20px;height: 95%;'
@@ -641,8 +592,6 @@
             this.manyUnitStatus = false
           }
           let params = { materialId: this.model.id }
-          //编辑商品的时候多属性字段可以修改
-          this.meTable.columns[2].readonly = false
           //手动添加了composite信息到otherField
           if (this.model.otherField10) {
             this.requestCompositeTableData(this.model.otherField10, this.compositeTable)
@@ -651,7 +600,6 @@
           this.requestDepotTableData(this.url.depotWithStock, { mId: this.model.id }, this.depotTable)
         } else {
           this.switchDisabled = false
-          this.meTable.columns[2].readonly = true
           this.requestDepotTableData(this.url.depotWithStock, { mId: 0 }, this.depotTable)
         }
       },
@@ -659,13 +607,6 @@
       requestMeTableData(url, params, tab) {
         tab.loading = true
         getAction(url, params).then(res => {
-          for (let i = 0; i < res.data.rows.length; i++) {
-            if(res.data.rows[i].sku) {
-              this.meTable.columns[2].type = FormTypes.input
-            } else {
-              this.meTable.columns[2].type = FormTypes.hidden
-            }
-          }
           tab.dataSource = res.data.rows || []
         }).finally(() => {
           tab.loading = false
@@ -942,115 +883,6 @@
           }
         })
       },
-      onManySkuChange(value) {
-        this.manySkuSelected = value.length
-        //控制多属性下拉框中选择项的状态，目前只能选择一种多属性
-        if(value.length < 1){
-          this.materialAttributeList.forEach((item,index,array)=>{
-            (array.indexOf(item.value) === -1)?Vue.set(array[index], 'disabled', false):''
-          })
-        }else{
-          this.materialAttributeList.forEach((item,index,array)=>{
-            (value.indexOf(item.value) === -1)?Vue.set(array[index], 'disabled', true):''
-          })
-        }
-        //更新属性1和属性2的下拉框
-        if(value.length <= 2) {
-          let skuOneId = value[0]
-          let skuTwoId = value[1]
-          this.materialAttributeList.forEach(item => {
-            if(item.value === skuOneId) {
-              this.skuOneTitle = item.name
-            }
-            if(item.value === skuTwoId) {
-              this.skuTwoTitle = item.name
-            }
-          })
-          getMaterialAttributeValueListById({'id': skuOneId}).then((res)=>{
-            if(res) {
-              this.skuOneList = res
-            }
-          })
-          getMaterialAttributeValueListById({'id': skuTwoId}).then((res)=>{
-            if(res) {
-              this.skuTwoList = res
-            }
-          })
-        }
-        //控制条码列表中的多属性列
-        if(value.length>0) {
-          this.meTable.columns[2].type = FormTypes.input
-        } else {
-          this.meTable.columns[2].type = FormTypes.hidden
-        }
-        this.barCodeSwitch = false;
-        this.meTable.dataSource = []
-      },
-      onSkuChange() {
-        let skuOneData = this.form.getFieldValue('skuOne')
-        let skuTwoData = this.form.getFieldValue('skuTwo')
-        this.autoSkuList(skuOneData, skuTwoData)
-      },
-      onSkuOneDeSelect(value) {
-        let skuOneData = this.form.getFieldValue('skuOne')
-        let skuTwoData = this.form.getFieldValue('skuTwo')
-        removeByVal(skuOneData, value)
-        this.autoSkuList(skuOneData, skuTwoData)
-      },
-      onSkuTwoDeSelect(value) {
-        let skuOneData = this.form.getFieldValue('skuOne')
-        let skuTwoData = this.form.getFieldValue('skuTwo')
-        removeByVal(skuTwoData, value)
-        this.autoSkuList(skuOneData, skuTwoData)
-      },
-      autoSkuList(skuOneData, skuTwoData) {
-        let unit = this.form.getFieldValue('unit')
-        if(unit) {
-          //计算多属性已经选择了几个
-          let count = this.getNumByField('skuOne') + this.getNumByField('skuTwo')
-          let barCodeSku = []
-          if(count === 1) {
-            let skuArrOnly = []
-            if(this.getNumByField('skuOne')) {
-              skuArrOnly = skuOneData
-            } else if(this.getNumByField('skuTwo')) {
-              skuArrOnly = skuTwoData
-            }
-            for (let i = 0; i < skuArrOnly.length; i++) {
-              barCodeSku.push(skuArrOnly[i])
-            }
-          } else if(count === 2) {
-            let skuArr = []
-            if(this.getNumByField('skuOne')) {
-              skuArr.push(skuOneData)
-            }
-            if(this.getNumByField('skuTwo')) {
-              skuArr.push(skuTwoData)
-            }
-            let skuArrOne = skuArr[0]
-            let skuArrTwo = skuArr[1]
-            for (let i = 0; i < skuArrOne.length; i++) {
-              for (let j = 0; j < skuArrTwo.length; j++) {
-                barCodeSku.push(skuArrOne[i] + ',' + skuArrTwo[j])
-              }
-            }
-          }
-          let meTableData = []
-          getMaxBarCode({}).then((res)=>{
-            if(res && res.code===200) {
-              let maxBarCode = res.data.barCode-0
-              for (let i = 0; i < barCodeSku.length; i++) {
-                let currentBarCode = maxBarCode + i + 1
-                meTableData.push({barCode: currentBarCode, commodityUnit: unit, sku: barCodeSku[i]})
-              }
-              this.meTable.dataSource = meTableData
-            }
-          })
-        } else {
-          this.$message.warning('请填写单位（注意不要勾选多单位）');
-          this.barCodeSwitch = false;
-        }
-      },
       getNumByField(field) {
         let num = 0
         if(this.form.getFieldValue(field)) {
@@ -1158,12 +990,7 @@
         }
       },
       batchSetPrice(type) {
-        if(this.manySkuSelected>0 || this.model.id){
-          this.$refs.priceModalForm.add(type);
-          this.$refs.priceModalForm.disableSubmit = false;
-        } else {
-          this.$message.warning('抱歉，只有开启多属性才能进行批量操作！');
-        }
+        this.$message.warning('抱歉，只有开启多属性才能进行批量操作！');
       },
       batchSetStock(type) {
         this.$refs.stockModalForm.add(type);
@@ -1176,7 +1003,7 @@
         } else {
           let meTableData = []
           for (let i = 0; i < arr.length; i++) {
-            let meInfo = {barCode: arr[i].barCode, commodityUnit: arr[i].commodityUnit, sku: arr[i].sku,
+            let meInfo = {barCode: arr[i].barCode, commodityUnit: arr[i].commodityUnit,
               purchaseDecimal: arr[i].purchaseDecimal, commodityDecimal: arr[i].commodityDecimal,
               wholesaleDecimal: arr[i].wholesaleDecimal, lowDecimal: arr[i].lowDecimal}
             if(batchType === 'purchase') {
@@ -1281,12 +1108,6 @@
         }
       },
       onlyUnitOnChange(e) {
-        if(e.target.value) {
-          //单位有填写了之后则显示多属性的文本框
-          this.manySkuStatus = true
-        } else {
-          this.manySkuStatus = false
-        }
         this.$refs.editableMeTable.getValues((error, values) => {
           let mArr = values
           for (let i = 0; i < mArr.length; i++) {

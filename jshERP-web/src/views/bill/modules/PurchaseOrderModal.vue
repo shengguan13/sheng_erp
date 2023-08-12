@@ -197,7 +197,6 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '多属性', key: 'sku', width: '4%', type: FormTypes.normal },
             { title: '原数量', key: 'preNumber', width: '4%', type: FormTypes.normal },
             { title: '已采购', key: 'finishNumber', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,

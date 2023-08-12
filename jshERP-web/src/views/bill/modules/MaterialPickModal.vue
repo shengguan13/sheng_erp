@@ -215,7 +215,6 @@
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input, readonly: true },
-            { title: '多属性', key: 'sku', width: '9%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },

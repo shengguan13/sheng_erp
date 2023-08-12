@@ -233,7 +233,6 @@
             { title: '序列号', key: 'snList', width: '12%', type: FormTypes.popupJsh, kind: 'snAdd', multi: true },
             { title: '批号', key: 'batchNumber', width: '8%', type: FormTypes.input },
             { title: '有效期', key: 'expirationDate',width: '9%', type: FormTypes.date },
-            { title: '多属性', key: 'sku', width: '9%', type: FormTypes.normal },
             { title: '原数量', key: 'preNumber', width: '6%', type: FormTypes.normal },
             { title: '已退货', key: 'finishNumber', width: '6%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,

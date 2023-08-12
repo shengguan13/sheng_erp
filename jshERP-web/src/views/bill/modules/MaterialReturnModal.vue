@@ -206,7 +206,6 @@
             { title: '颜色编码', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
-            { title: '多属性', key: 'sku', width: '9%', type: FormTypes.normal },
             { title: '领料数量', key: 'preNumber', width: '6%', type: FormTypes.normal },
             { title: '已退料', key: 'finishNumber', width: '6%', type: FormTypes.normal },
             { title: '退料数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
