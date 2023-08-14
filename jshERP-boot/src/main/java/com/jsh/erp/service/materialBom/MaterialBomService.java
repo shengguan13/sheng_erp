@@ -81,7 +81,7 @@ public class MaterialBomService {
         MaterialBom m = JSONObject.parseObject(obj.toJSONString(), MaterialBom.class);
         try{
             materialBomMapper.insertSelective(m);
-            logService.insertLog("工艺流程",
+            logService.insertLog("产品BOM",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD)
                             .append("[" + m.getProject() + "]")
                             .append(m.getProcess()).toString(), request);
@@ -101,7 +101,7 @@ public class MaterialBomService {
         MaterialBom materialBom = JSONObject.parseObject(obj.toJSONString(), MaterialBom.class);
         try{
             materialBomMapper.updateByPrimaryKeySelective(materialBom);
-            logService.insertLog("工艺流程",
+            logService.insertLog("产品BOM",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT)
                             .append("[" + materialBom.getProject() + "]")
                             .append(materialBom.getProcess()).toString(), request);

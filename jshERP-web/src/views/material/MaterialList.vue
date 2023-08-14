@@ -206,7 +206,7 @@
         columns:[],
         // 初始化设置的表头
         settingColumns:['mBarCode','name','internalId','model','project','color','categoryName','materialOther',
-          'unit', 'stock','enabled','action','weight','remard'],
+          'unit', 'stock','enabled','action','weight','remark'],
         // 默认的列
         defColumns: [
           {
@@ -216,7 +216,7 @@
             width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 160, scopedSlots: { customRender: 'customBarCode' }},
+          {title: '条码', dataIndex: 'mBarCode', width: 100, scopedSlots: { customRender: 'customBarCode' }},
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '内部零件号', dataIndex: 'internalId', width: 120},
           {title: '客户零件号', dataIndex: 'model', width: 120},
@@ -224,7 +224,7 @@
           {title: '颜色编码', dataIndex: 'color', width: 100},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
-          {title: '单位', dataIndex: 'unit', width: 100, ellipsis:true,
+          {title: '单位', dataIndex: 'unit', width: 60, ellipsis:true,
             customRender:function (t,r,index) {
               if (r) {
                 let name = t?t:r.unitName

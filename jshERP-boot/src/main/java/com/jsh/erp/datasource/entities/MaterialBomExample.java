@@ -164,6 +164,66 @@ public class MaterialBomExample {
             return (Criteria) this;
         }
 
+        public Criteria andBarCodeIsNull() {
+            addCriterion("bar_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeIsNotNull() {
+            addCriterion("bar_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeEqualTo(String value) {
+            addCriterion("bar_code =", value, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeNotEqualTo(String value) {
+            addCriterion("bar_code <>", value, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeGreaterThan(String value) {
+            addCriterion("bar_code >", value, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("bar_code >=", value, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeLessThan(String value) {
+            addCriterion("bar_code <", value, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeLessThanOrEqualTo(String value) {
+            addCriterion("bar_code <=", value, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeIn(List<String> values) {
+            addCriterion("bar_code in", values, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeNotIn(List<String> values) {
+            addCriterion("bar_code not in", values, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeBetween(String value1, String value2) {
+            addCriterion("bar_code between", value1, value2, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeNotBetween(String value1, String value2) {
+            addCriterion("bar_code not between", value1, value2, "barCode");
+            return (Criteria) this;
+        }
+
         public Criteria andProcessIsNull() {
             addCriterion("process is null");
             return (Criteria) this;

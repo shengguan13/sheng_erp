@@ -66,10 +66,6 @@
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-              <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
-              <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
-              <a-menu-item key="4" v-if="btnEnableList.indexOf(1)>-1" @click="batchEdit()"><a-icon type="edit"/>批量编辑</a-menu-item>
-              <a-menu-item key="5" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentStock()"><a-icon type="stock"/>修正库存</a-menu-item>
             </a-menu>
             <a-button>
               批量操作 <a-icon type="down" />
@@ -119,30 +115,15 @@
             </span>
             <template slot="customBarCode" slot-scope="text, record">
               {{record.mBarCode}}
-              <a-popover placement="right" trigger="click">
-                <template slot="content">
-                  <img :src='getImgUrl(record.imgName)' width="500px" />
-                </template>
-                <a-icon v-if="record.imgName" style="font-size: 18px" theme="twoTone" type="file-image" />
-              </a-popover>
             </template>
             <template slot="customName" slot-scope="text, record">
               {{record.name}}
-            </template>
-            <template slot="customRenderStock" slot-scope="text, record">
-              <a-tooltip :title="record.bigUnitStock">
-                {{text}}
-              </a-tooltip>
-            </template>
-            <template slot="customRenderEnabled" slot-scope="enabled">
-              <a-tag v-if="enabled" color="green">启用</a-tag>
-              <a-tag v-if="!enabled" color="orange">禁用</a-tag>
             </template>
           </a-table>
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
+        <material-bom-modal ref="modalForm" @ok="modalFormOk"></material-bom-modal>
         <read-only-material-modal ref="readOnlyModalForm"></read-only-material-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
@@ -151,7 +132,7 @@
   </a-row>
 </template>
 <script>
-  import MaterialModal from './modules/MaterialModal'
+  import MaterialBomModal from './modules/MaterialBomModal'
   import ReadOnlyMaterialModal from './modules/ReadOnlyMaterialModal'
   import ImportFileModal from '@/components/tools/ImportFileModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
@@ -164,10 +145,10 @@
   import Vue from 'vue'
 
   export default {
-    name: "MaterialList",
+    name: "MaterialBomList",
     mixins:[JeecgListMixin],
     components: {
-      MaterialModal,
+      MaterialBomModal,
       ReadOnlyMaterialModal,
       ImportFileModal,
       BatchSetInfoModal,
@@ -205,8 +186,8 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['mBarCode','name','internalId','model','project','color','categoryName','materialOther',
-          'unit', 'stock','enabled','action','weight','remard'],
+        settingColumns:['action','project','barCode','process','name','partNo','internalId','model','color',
+          'categoryName','usage','bomUnit','remark'],
         // 默认的列
         defColumns: [
           {
@@ -216,44 +197,25 @@
             width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 160, scopedSlots: { customRender: 'customBarCode' }},
-          {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
-          {title: '内部零件号', dataIndex: 'internalId', width: 120},
-          {title: '客户零件号', dataIndex: 'model', width: 120},
           {title: '项目', dataIndex: 'project', width: 100},
+          {title: '条码', dataIndex: 'barCode', width: 160, scopedSlots: { customRender: 'customBarCode' }},
+          {title: '工艺流程', dataIndex: 'process', width: 120},
+          {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
+          {title: '客户零件号', dataIndex: 'partNo', width: 120},
+          {title: '内部零件号', dataIndex: 'internalId', width: 120},
+          {title: '规格', dataIndex: 'model', width: 120},
           {title: '颜色编码', dataIndex: 'color', width: 100},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
-          {title: '单位', dataIndex: 'unit', width: 100, ellipsis:true,
-            customRender:function (t,r,index) {
-              if (r) {
-                let name = t?t:r.unitName
-                if(r.sku) {
-                  return name + '[SKU]';
-                } else {
-                  return name;
-                }
-              }
-            }
-          },
-          {title: '净重量', dataIndex: 'weight', width: 80},
-          {title: '保质期', dataIndex: 'expiryNum', width: 60},
-          {title: '库存', dataIndex: 'stock', width: 80,
-            scopedSlots: { customRender: 'customRenderStock' }
-          },
-          {title: '备注', dataIndex: 'remark', width: 80},
-          {title: '状态', dataIndex: 'enabled', align: "center", width: 60,
-            scopedSlots: { customRender: 'customRenderEnabled' }
-          }
+          {title: '用量', dataIndex: 'usage', width: 100},
+          {title: '单位', dataIndex: 'bomUnit', width: 100},
+          {title: '备注', dataIndex: 'remark', width: 80}
         ],
         url: {
-          list: "/material/list",
-          delete: "/material/delete",
-          deleteBatch: "/material/deleteBatch",
+          list: "/materialBom/list",
+          delete: "/materialBom/delete",
+          deleteBatch: "/materialBom/deleteBatch",
           importExcelUrl: "/material/importExcel",
-          exportXlsUrl: "/material/exportExcel",
-          batchSetStatusUrl: "/material/batchSetStatus",
-          batchSetMaterialCurrentStockUrl: "/material/batchSetMaterialCurrentStock"
+          exportXlsUrl: "/material/exportExcel"
         }
       }
     },
@@ -306,47 +268,6 @@
           }
         })
       },
-      batchSetMaterialCurrentStock () {
-        if (this.selectedRowKeys.length <= 0) {
-          this.$message.warning('请选择一条记录！');
-        } else {
-          let ids = "";
-          for (let a = 0; a < this.selectedRowKeys.length; a++) {
-            ids += this.selectedRowKeys[a] + ",";
-          }
-          let that = this;
-          this.$confirm({
-            title: "确认操作",
-            content: "是否操作选中数据?",
-            onOk: function () {
-              that.loading = true;
-              postAction(that.url.batchSetMaterialCurrentStockUrl, {ids: ids}).then((res) => {
-                if(res.code === 200){
-                  that.$message.info('修正库存成功！');
-                  that.loadData();
-                  that.onClearSelected();
-                } else {
-                  that.$message.warning(res.data.message);
-                }
-              }).finally(() => {
-                that.loading = false;
-              });
-            }
-          });
-        }
-      },
-      batchEdit() {
-        if (this.selectedRowKeys.length <= 0) {
-          this.$message.warning('请选择一条记录！');
-        } else {
-          let ids = "";
-          for (let a = 0; a < this.selectedRowKeys.length; a++) {
-            ids += this.selectedRowKeys[a] + ",";
-          }
-          this.$refs.batchSetInfoModalForm.edit(ids);
-          this.$refs.batchSetInfoModalForm.title = "批量编辑";
-        }
-      },
       handleEdit: function (record) {
         this.$refs.modalForm.edit(record);
         this.$refs.modalForm.title = "编辑";
@@ -361,13 +282,6 @@
         this.$refs.readOnlyModalForm.disableSubmit = false;
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
-        }
-      },
-      getImgUrl(imgName) {
-        if(imgName && imgName.split(',')) {
-          return getFileAccessHttpUrl('systemConfig/static/' + imgName.split(',')[0])
-        } else {
-          return ''
         }
       },
       handleImportXls() {

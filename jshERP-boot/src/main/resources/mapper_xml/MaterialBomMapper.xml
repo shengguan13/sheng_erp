@@ -3,6 +3,7 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.MaterialBomMapper">
     <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.MaterialBom">
         <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="process" jdbcType="VARCHAR" property="process" />
         <result column="project" jdbcType="VARCHAR" property="project" />
         <result column="part_no" jdbcType="VARCHAR" property="partNo" />
@@ -106,11 +107,12 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
-        insert into jsh_material_bom (id, process, project, part_no, department,
+        insert into jsh_material_bom (id, bar_code, process, project, part_no, department,
         usage, unit, remark, amount_per_car, tenant_id, delete_flag)
-        values (#{id,jdbcType=BIGINT}, #{process,jdbcType=VARCHAR}, #{project,jdbcType=VARCHAR},
-        #{part_no,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{usage,jdbcType=DECIMAL},
-        #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{amount_per_car,jdbcType=DECIMAL},
+        values (#{id,jdbcType=BIGINT}, #{barCode,jdbcType=VARCHAR}, #{process,jdbcType=VARCHAR},
+        #{project,jdbcType=VARCHAR},
+        #{partNo,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{usage,jdbcType=DECIMAL},
+        #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{amountPerCar,jdbcType=DECIMAL},
         #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
@@ -118,6 +120,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
+            </if>
+            <if test="barCode != null">
+                bar_code,
             </if>
             <if test="process != null">
                 process,
@@ -153,6 +158,9 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 #{id,jdbcType=BIGINT},
+            </if>
+            <if test="barCode != null">
+                #{barCode,jdbcType=VARCHAR},
             </if>
             <if test="process != null">
                 #{process,jdbcType=VARCHAR},
@@ -198,6 +206,9 @@
             <if test="record.id != null">
                 id = #{record.id,jdbcType=BIGINT},
             </if>
+            <if test="record.barCode != null">
+                bar_code = #{record.barCode,jdbcType=VARCHAR},
+            </if>
             <if test="record.process != null">
                 process = #{record.process,jdbcType=VARCHAR},
             </if>
@@ -236,6 +247,7 @@
     <update id="updateByExample" parameterType="map">
         update jsh_material_bom
         set id = #{record.id,jdbcType=BIGINT},
+        bar_code = #{record.barCode,jdbcType=VARCHAR},
         process = #{record.process,jdbcType=VARCHAR},
         project = #{record.project,jdbcType=VARCHAR},
         part_no = #{record.partNo,jdbcType=VARCHAR},
@@ -250,9 +262,12 @@
             <include refid="Update_By_Example_Where_Clause" />
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.MaterialAttribute">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         update jsh_material_bom
         <set>
+            <if test="record.barCode != null">
+                bar_code = #{record.barCode,jdbcType=VARCHAR},
+            </if>
             <if test="record.process != null">
                 process = #{record.process,jdbcType=VARCHAR},
             </if>
@@ -286,9 +301,10 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.MaterialAttribute">
+    <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         update jsh_material_bom
-        set process = #{record.process,jdbcType=VARCHAR},
+        set bar_code = #{record.barCode,jdbcType=VARCHAR},
+        process = #{record.process,jdbcType=VARCHAR},
         project = #{record.project,jdbcType=VARCHAR},
         part_no = #{record.partNo,jdbcType=VARCHAR},
         department = #{record.department,jdbcType=VARCHAR},

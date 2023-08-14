@@ -64,6 +64,9 @@ const editMaterialAttribute = (params)=>putAction("/materialAttribute/update",pa
 const checkMaterialAttribute = (params)=>getAction("/materialAttribute/checkIsNameExist",params);
 const getMaterialAttributeNameList = (params)=>getAction("/materialAttribute/getNameList",params);
 const getMaterialAttributeValueListById = (params)=>getAction("/materialAttribute/getValueListById",params);
+//产品BOM
+const addMaterialBom = (params)=>postAction("/materialBom/add",params);
+const editMaterialBom = (params)=>putAction("/materialBom/update",params);
 //功能管理
 const addFunction = (params)=>postAction("/function/add",params);
 const editFunction = (params)=>putAction("/function/update",params);

@@ -6,6 +6,8 @@ public class MaterialBom {
 
     private Long id;
 
+    private String barCode;
+
     private String process;
 
     private String project;
@@ -32,6 +34,14 @@ public class MaterialBom {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 
     public String getProcess() {
