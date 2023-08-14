@@ -124,7 +124,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <material-bom-modal ref="modalForm" @ok="modalFormOk"></material-bom-modal>
-        <read-only-material-modal ref="readOnlyModalForm"></read-only-material-modal>
+        <material-bom-view-modal ref="bomViewModalForm"></material-bom-view-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
@@ -133,7 +133,7 @@
 </template>
 <script>
   import MaterialBomModal from './modules/MaterialBomModal'
-  import ReadOnlyMaterialModal from './modules/ReadOnlyMaterialModal'
+  import MaterialBomViewModal from './modules/MaterialBomViewModal'
   import ImportFileModal from '@/components/tools/ImportFileModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
@@ -149,7 +149,7 @@
     mixins:[JeecgListMixin],
     components: {
       MaterialBomModal,
-      ReadOnlyMaterialModal,
+      MaterialBomViewModal,
       ImportFileModal,
       BatchSetInfoModal,
       JEllipsis,
@@ -277,9 +277,9 @@
         }
       },
       handleDetail: function (record) {
-        this.$refs.readOnlyModalForm.edit(record);
-        this.$refs.readOnlyModalForm.title = "详情";
-        this.$refs.readOnlyModalForm.disableSubmit = false;
+        this.$refs.bomViewModalForm.edit(record);
+        this.$refs.bomViewModalForm.title = "详情";
+        this.$refs.bomViewModalForm.disableSubmit = false;
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
