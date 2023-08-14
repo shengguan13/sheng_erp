@@ -16,7 +16,7 @@ public class MaterialBom {
 
     private String department;
 
-    private BigDecimal usage;
+    private BigDecimal processUsage;
 
     private Long unit;
 
@@ -76,12 +76,12 @@ public class MaterialBom {
         this.department = department;
     }
 
-    public BigDecimal getUsage() {
-        return usage;
+    public BigDecimal getProcessUsage() {
+        return processUsage;
     }
 
-    public void setUsage(BigDecimal usage) {
-        this.usage = usage;
+    public void setProcessUsage(BigDecimal processUsage) {
+        this.processUsage = processUsage;
     }
 
     public Long getUnit() {

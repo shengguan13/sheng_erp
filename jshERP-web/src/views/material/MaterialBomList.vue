@@ -187,7 +187,7 @@
         columns:[],
         // 初始化设置的表头
         settingColumns:['action','project','barCode','process','name','partNo','internalId','model','color',
-          'categoryName','usage','bomUnit','remark'],
+          'categoryName','processUsage','bomUnit','remark'],
         // 默认的列
         defColumns: [
           {
@@ -206,7 +206,7 @@
           {title: '规格', dataIndex: 'model', width: 120},
           {title: '颜色编码', dataIndex: 'color', width: 100},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
-          {title: '用量', dataIndex: 'usage', width: 100},
+          {title: '用量', dataIndex: 'processUsage', width: 100},
           {title: '单位', dataIndex: 'bomUnit', width: 100},
           {title: '备注', dataIndex: 'remark', width: 80}
         ],

@@ -153,6 +153,8 @@ export {
   getMaxBarCode,
   checkMaterialBarCode,
   batchUpdateMaterial,
+  addMaterialBom,
+  editMaterialBom,
   addMaterialAttribute,
   editMaterialAttribute,
   checkMaterialAttribute,

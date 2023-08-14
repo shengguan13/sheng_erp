@@ -8,7 +8,7 @@
         <result column="project" jdbcType="VARCHAR" property="project" />
         <result column="part_no" jdbcType="VARCHAR" property="partNo" />
         <result column="department" jdbcType="VARCHAR" property="department" />
-        <result column="usage" jdbcType="DECIMAL" property="usage" />
+        <result column="process_usage" jdbcType="DECIMAL" property="processUsage" />
         <result column="unit" jdbcType="VARCHAR" property="unit" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
         <result column="amount_per_car" jdbcType="DECIMAL" property="amountPerCar" />
@@ -74,7 +74,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        id, process, project, part_no, department, usage, unit, remark, amount_per_car, tenant_id, delete_flag
+        id, process, project, part_no, department, process_usage, unit, remark, amount_per_car, tenant_id, delete_flag
     </sql>
     <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialBomExample" resultMap="BaseResultMap">
         select
@@ -108,10 +108,10 @@
     </delete>
     <insert id="insert" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         insert into jsh_material_bom (id, bar_code, process, project, part_no, department,
-        usage, unit, remark, amount_per_car, tenant_id, delete_flag)
+        process_usage, unit, remark, amount_per_car, tenant_id, delete_flag)
         values (#{id,jdbcType=BIGINT}, #{barCode,jdbcType=VARCHAR}, #{process,jdbcType=VARCHAR},
         #{project,jdbcType=VARCHAR},
-        #{partNo,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{usage,jdbcType=DECIMAL},
+        #{partNo,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{processUsage,jdbcType=DECIMAL},
         #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{amountPerCar,jdbcType=DECIMAL},
         #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
     </insert>
@@ -136,8 +136,8 @@
             <if test="department != null">
                 department,
             </if>
-            <if test="usage != null">
-                usage,
+            <if test="processUsage != null">
+                process_usage,
             </if>
             <if test="unit != null">
                 unit,
@@ -174,8 +174,8 @@
             <if test="department != null">
                 #{department,jdbcType=VARCHAR},
             </if>
-            <if test="usage != null">
-                #{usage,jdbcType=DECIMAL},
+            <if test="processUsage != null">
+                #{processUsage,jdbcType=DECIMAL},
             </if>
             <if test="unit != null">
                 #{unit,jdbcType=VARCHAR},
@@ -221,8 +221,8 @@
             <if test="record.department != null">
                 department = #{record.department,jdbcType=VARCHAR},
             </if>
-            <if test="record.usage != null">
-                usage = #{record.usage,jdbcType=DECIMAL},
+            <if test="record.processUsage != null">
+                process_usage = #{record.processUsage,jdbcType=DECIMAL},
             </if>
             <if test="record.unit != null">
                 unit = #{record.unit,jdbcType=VARCHAR},
@@ -252,7 +252,7 @@
         project = #{record.project,jdbcType=VARCHAR},
         part_no = #{record.partNo,jdbcType=VARCHAR},
         department = #{record.department,jdbcType=VARCHAR},
-        usage = #{record.usage,jdbcType=DECIMAL},
+        process_usage = #{record.processUsage,jdbcType=DECIMAL},
         unit = #{record.unit,jdbcType=VARCHAR},
         remark = #{record.remark,jdbcType=VARCHAR},
         amount_per_car = #{record.amountPerCar,jdbcType=DECIMAL},
@@ -265,55 +265,55 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         update jsh_material_bom
         <set>
-            <if test="record.barCode != null">
-                bar_code = #{record.barCode,jdbcType=VARCHAR},
+            <if test="barCode != null">
+                bar_code = #{barCode,jdbcType=VARCHAR},
             </if>
-            <if test="record.process != null">
-                process = #{record.process,jdbcType=VARCHAR},
+            <if test="process != null">
+                process = #{process,jdbcType=VARCHAR},
             </if>
-            <if test="record.project != null">
-                project = #{record.project,jdbcType=VARCHAR},
+            <if test="project != null">
+                project = #{project,jdbcType=VARCHAR},
             </if>
-            <if test="record.partNo != null">
-                part_no = #{record.partNo,jdbcType=VARCHAR},
+            <if test="partNo != null">
+                part_no = #{partNo,jdbcType=VARCHAR},
             </if>
-            <if test="record.department != null">
-                department = #{record.department,jdbcType=VARCHAR},
+            <if test="department != null">
+                department = #{department,jdbcType=VARCHAR},
             </if>
-            <if test="record.usage != null">
-                usage = #{record.usage,jdbcType=DECIMAL},
+            <if test="processUsage != null">
+                process_usage = #{processUsage,jdbcType=DECIMAL},
             </if>
-            <if test="record.unit != null">
-                unit = #{record.unit,jdbcType=VARCHAR},
+            <if test="unit != null">
+                unit = #{unit,jdbcType=VARCHAR},
             </if>
-            <if test="record.remark != null">
-                remark = #{record.remark,jdbcType=VARCHAR},
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
             </if>
-            <if test="record.amountPerCar != null">
-                amount_per_car = #{record.amountPerCar,jdbcType=DECIMAL},
+            <if test="amountPerCar != null">
+                amount_per_car = #{amountPerCar,jdbcType=DECIMAL},
             </if>
-            <if test="record.tenantId != null">
-                tenant_id = #{record.tenantId,jdbcType=BIGINT},
+            <if test="tenantId != null">
+                tenant_id = #{tenantId,jdbcType=BIGINT},
             </if>
-            <if test="record.deleteFlag != null">
-                delete_flag = #{record.deleteFlag,jdbcType=VARCHAR},
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         update jsh_material_bom
-        set bar_code = #{record.barCode,jdbcType=VARCHAR},
-        process = #{record.process,jdbcType=VARCHAR},
-        project = #{record.project,jdbcType=VARCHAR},
-        part_no = #{record.partNo,jdbcType=VARCHAR},
-        department = #{record.department,jdbcType=VARCHAR},
-        usage = #{record.usage,jdbcType=DECIMAL},
-        unit = #{record.unit,jdbcType=VARCHAR},
-        remark = #{record.remark,jdbcType=VARCHAR},
-        amount_per_car = #{record.amountPerCar,jdbcType=DECIMAL},
-        tenant_id = #{record.tenantId,jdbcType=BIGINT},
-        delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
+        set bar_code = #{barCode,jdbcType=VARCHAR},
+        process = #{process,jdbcType=VARCHAR},
+        project = #{project,jdbcType=VARCHAR},
+        part_no = #{partNo,jdbcType=VARCHAR},
+        department = #{department,jdbcType=VARCHAR},
+        process_usage = #{processUsage,jdbcType=DECIMAL},
+        unit = #{unit,jdbcType=VARCHAR},
+        remark = #{remark,jdbcType=VARCHAR},
+        amount_per_car = #{amountPerCar,jdbcType=DECIMAL},
+        tenant_id = #{tenantId,jdbcType=BIGINT},
+        delete_flag = #{deleteFlag,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
 </mapper>
