@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.MaterialBomMapperEx">
 
-    <select id="selectByVagueMaterialBom" resultType="com.jsh.erp.datasource.entities.MaterialBom">
+    <select id="selectMaterialBom" resultType="com.jsh.erp.datasource.entities.MaterialBom">
         select * from jsh_material_bom mb
         where 1=1
         <if test="process != null">
@@ -18,6 +18,21 @@
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
+    </select>
+
+    <select id="selectMaterialBomByPrefix" resultType="com.jsh.erp.datasource.entities.MaterialBom">
+        select * from jsh_material_bom mb
+        where 1=1
+        <if test="process != null">
+            <bind name="bindProcess" value="process+'.%'"/>
+            and mb.process like #{bindProcess}
+        </if>
+        <if test="project != null">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and mb.project like #{bindProject}
+        </if>
+        and ifnull(mb.delete_flag,'0') !='1'
+        order by mb.id desc
     </select>
 
     <select id="countsByBom" resultType="java.lang.Long">

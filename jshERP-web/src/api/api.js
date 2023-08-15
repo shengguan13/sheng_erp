@@ -67,6 +67,7 @@ const getMaterialAttributeValueListById = (params)=>getAction("/materialAttribut
 //产品BOM
 const addMaterialBom = (params)=>postAction("/materialBom/add",params);
 const editMaterialBom = (params)=>putAction("/materialBom/update",params);
+const findComposite = (params)=>putAction("/materialBom/findComposite",params);
 //功能管理
 const addFunction = (params)=>postAction("/function/add",params);
 const editFunction = (params)=>putAction("/function/update",params);

@@ -43,7 +43,8 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import {addMaterialBom,editMaterialBom,checkMaterialAttribute } from '@/api/api'
+  import {addMaterialBom,editMaterialBom} from '@/api/api'
+  import { getAction, httpAction } from '@/api/manage'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import {mixinDevice} from '@/utils/mixin'
@@ -71,19 +72,17 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
-              validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
+            { title: '工艺流程', key: 'process', width: '10%', type: FormTypes.normal },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
             { title: '内部零件号', key: 'internalId', width: '9%', type: FormTypes.normal },
             { title: '客户零件号', key: 'model', width: '9%', type: FormTypes.normal },
             { title: '颜色编码', key: 'color', width: '7%', type: FormTypes.normal },
-            { title: 'meId', key: 'meId', width: '5%', type: FormTypes.hidden },
-            { title: '数量', key: 'operNumber', width: '8%', type: FormTypes.inputNumber, statistics: true,
-              validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
+            { title: '数量', key: 'operNumber', width: '8%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal }
           ]
+        },
+        url: {
+          findComposite: '/materialBom/findComposite',
         },
         confirmLoading: false,
         form: this.$form.createForm(this)
@@ -98,6 +97,7 @@
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
+        this.requestCompositeTableData(this.url.findComposite, record.process, record.project, this.compositeTable);
         this.visible = true;
         this.$nextTick(() => {
         });
@@ -105,6 +105,18 @@
       close () {
         this.$emit('close');
         this.visible = false;
+      },
+      requestCompositeTableData(url, process, project, tab) {
+        tab.loading = true
+        let params = {
+          process: process,
+          project: project,
+        }
+        getAction(url, params).then(res => {
+          tab.dataSource = res.data || []
+        }).finally(() => {
+          tab.loading = false
+        })
       },
       handleOk () {
       },

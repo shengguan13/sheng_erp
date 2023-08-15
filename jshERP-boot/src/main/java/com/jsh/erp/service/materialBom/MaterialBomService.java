@@ -55,11 +55,20 @@ public class MaterialBomService {
         return list;
     }
 
-    public List<MaterialBom> select(String process, String project, int offset, int rows)
-            throws Exception{
+    public List<MaterialBom> select(String process, String project, int offset, int rows) throws Exception{
         List<MaterialBom> list = new ArrayList<>();
         try{
-            list = materialBomMapperEx.selectByVagueMaterialBom(process, project, offset, rows);
+            list = materialBomMapperEx.selectMaterialBom(process, project, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public List<MaterialBom> selectByPrefix(String process, String project) throws Exception{
+        List<MaterialBom> list = new ArrayList<>();
+        try{
+            list = materialBomMapperEx.selectMaterialBomByPrefix(process, project);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
