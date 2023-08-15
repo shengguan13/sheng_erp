@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="800"
+      :width="1300"
       :visible="visible"
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
@@ -14,7 +14,7 @@
       :ok-button-props="{ style: { display: 'none' } }"
       @cancel="handleCancel"
       cancelText="关闭"
-      style="top:100px;height: 50%;">
+      style="top:20px;height: 95%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -22,19 +22,20 @@
       </template>
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="项目">
-            <a-input placeholder="请输入项目" v-decorator.trim="[ 'project' ]" />
-          </a-form-item>
-        </a-form>
-        <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="工艺流程">
-            <a-input placeholder="请输入工艺流程" v-decorator.trim="[ 'process' ]" />
-          </a-form-item>
-        </a-form>
-        <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
-            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode' ]" />
-          </a-form-item>
+          <j-editable-table
+            ref="materialCompositeTable"
+            :loading="compositeTable.loading"
+            :columns="compositeTable.columns"
+            :dataSource="compositeTable.dataSource"
+            :minWidth="1100"
+            :maxHeight="300"
+            :rowNumber="false"
+            :rowSelection="false"
+            :actionButton="false"
+            @added="onAddedMaterialComposite"
+            @deleted="onDeletedMaterialComposite"
+            @valueChange="onValueChangeMaterialComposite">
+          </j-editable-table>
         </a-form>
       </a-spin>
     </a-modal>
@@ -43,9 +44,14 @@
 <script>
   import pick from 'lodash.pick'
   import {addMaterialBom,editMaterialBom,checkMaterialAttribute } from '@/api/api'
+  import JEditableTable from '@/components/jeecg/JEditableTable'
+  import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "MaterialBomViewModal",
+    components: {
+      JEditableTable
+    },
     mixins: [mixinDevice],
     data () {
       return {
@@ -60,6 +66,24 @@
         wrapperCol: {
           xs: { span: 24 },
           sm: { span: 16 },
+        },
+        compositeTable: {
+          loading: false,
+          dataSource: [],
+          columns: [
+            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
+            { title: '内部零件号', key: 'internalId', width: '9%', type: FormTypes.normal },
+            { title: '客户零件号', key: 'model', width: '9%', type: FormTypes.normal },
+            { title: '颜色编码', key: 'color', width: '7%', type: FormTypes.normal },
+            { title: 'meId', key: 'meId', width: '5%', type: FormTypes.hidden },
+            { title: '数量', key: 'operNumber', width: '8%', type: FormTypes.inputNumber, statistics: true,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal }
+          ]
         },
         confirmLoading: false,
         form: this.$form.createForm(this)
@@ -76,7 +100,6 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model, 'project', 'process', 'barCode'))
         });
       },
       close () {
