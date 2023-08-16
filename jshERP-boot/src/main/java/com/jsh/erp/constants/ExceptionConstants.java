@@ -284,9 +284,9 @@ public class ExceptionConstants {
     //产品-单位匹配不上
     public static final int MATERIAL_UNIT_MATE_CODE = 8000006;
     public static final String MATERIAL_UNIT_MATE_MSG = "抱歉，产品条码:%s的单位匹配不上，请完善计量单位信息！";
-    //产品条码长度应该为4到40位
+    //产品编号格式错误
     public static final int MATERIAL_BARCODE_ERROR_CODE = 8000007;
-    public static final String MATERIAL_BARCODE_ERROR_MSG = "产品条码格式错误";
+    public static final String MATERIAL_BARCODE_ERROR_MSG = "产品编号%s格式错误";
     //序列号和批号只能有一项
     public static final int MATERIAL_ENABLE_MUST_ONE_CODE = 8000008;
     public static final String MATERIAL_ENABLE_MUST_ONE_MSG = "抱歉，产品条码:%s的序列号和批号不能同时填1";

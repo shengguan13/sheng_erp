@@ -318,22 +318,15 @@ public class StringUtil {
     }
 
     /**
-     * 校验条码长度为4到40位
+     * 校验编号的格式
      * @param value
      * @return
      */
     public static boolean checkBarCode(Object value) {
         if(value!=null) {
             String str = value.toString();
-            if(isNotEmpty(str)) {
-                if(str.length()>=4 && str.length()<=40 ) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
+            Pattern pattern = Pattern.compile( "^[A-Z]+\\.[a-z]+\\.(0\\d*|\\d+)\\.(0\\d*|\\d+)$");
+            return pattern.matcher(str).matches();
         } else {
             return false;
         }
