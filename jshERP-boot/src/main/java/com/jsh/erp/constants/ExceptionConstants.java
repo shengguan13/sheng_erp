@@ -190,18 +190,18 @@ public class ExceptionConstants {
     public static final int SYSTEM_CONFIG_EDIT_FAILED_CODE = 5500002;
     public static final String SYSTEM_CONFIG_EDIT_FAILED_MSG = "修改系统参数信息失败";
     /**
-     * 商品扩展信息
+     * 产品扩展信息
      * type = 60
      * */
-    //添加商品扩展信息失败
+    //添加产品扩展信息失败
     public static final int MATERIAL_PROPERTY_ADD_FAILED_CODE = 6000000;
-    public static final String MATERIAL_PROPERTY_ADD_FAILED_MSG = "添加商品扩展信息失败";
-    //删除商品扩展信息失败
+    public static final String MATERIAL_PROPERTY_ADD_FAILED_MSG = "添加产品扩展信息失败";
+    //删除产品扩展信息失败
     public static final int MATERIAL_PROPERTY_DELETE_FAILED_CODE = 6000001;
-    public static final String MATERIAL_PROPERTY_DELETE_FAILED_MSG = "删除商品扩展信息失败";
-    //修改商品扩展信息失败
+    public static final String MATERIAL_PROPERTY_DELETE_FAILED_MSG = "删除产品扩展信息失败";
+    //修改产品扩展信息失败
     public static final int MATERIAL_PROPERTY_EDIT_FAILED_CODE = 6000002;
-    public static final String MATERIAL_PROPERTY_EDIT_FAILED_MSG = "修改商品扩展信息失败";
+    public static final String MATERIAL_PROPERTY_EDIT_FAILED_MSG = "修改产品扩展信息失败";
     /**
      *  账户信息
      * type = 65
@@ -229,21 +229,21 @@ public class ExceptionConstants {
     public static final int SUPPLIER_EDIT_FAILED_CODE = 7000002;
     public static final String SUPPLIER_EDIT_FAILED_MSG = "修改供应商信息失败";
     /**
-     * 商品类别信息
+     * 产品类别信息
      * type = 75
      * */
-    //添加商品类别信息失败
+    //添加产品类别信息失败
     public static final int MATERIAL_CATEGORY_ADD_FAILED_CODE = 7500000;
-    public static final String MATERIAL_CATEGORY_ADD_FAILED_MSG = "添加商品类别信息失败";
-    //删除商品类别信息失败
+    public static final String MATERIAL_CATEGORY_ADD_FAILED_MSG = "添加产品类别信息失败";
+    //删除产品类别信息失败
     public static final int MATERIAL_CATEGORY_DELETE_FAILED_CODE = 7500001;
-    public static final String MATERIAL_CATEGORY_DELETE_FAILED_MSG = "删除商品类别信息失败";
-    //修改商品类别信息失败
+    public static final String MATERIAL_CATEGORY_DELETE_FAILED_MSG = "删除产品类别信息失败";
+    //修改产品类别信息失败
     public static final int MATERIAL_CATEGORY_EDIT_FAILED_CODE = 7500002;
-    public static final String MATERIAL_CATEGORY_EDIT_FAILED_MSG = "修改商品类别信息失败";
-    //商品类别编号已存在
+    public static final String MATERIAL_CATEGORY_EDIT_FAILED_MSG = "修改产品类别信息失败";
+    //产品类别编号已存在
     public static final int MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE = 7500003;
-    public static final String MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG = "商品类别编号已存在";
+    public static final String MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG = "产品类别编号已存在";
     //根类别不支持修改
     public static final int MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_CODE = 7500004;
     public static final String MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_MSG = "根类别不支持修改";
@@ -254,42 +254,42 @@ public class ExceptionConstants {
     public static final int MATERIAL_CATEGORY_CHILD_NOT_SUPPORT_DELETE_CODE = 7500006;
     public static final String MATERIAL_CATEGORY_CHILD_NOT_SUPPORT_DELETE_MSG = "该类别存在下级不允许删除";
     /**
-     * 商品信息
+     * 产品信息
      * type = 80
      * */
-    //添加商品信息信息失败
+    //添加产品信息信息失败
     public static final int MATERIAL_ADD_FAILED_CODE = 7500000;
-    public static final String MATERIAL_ADD_FAILED_MSG = "添加商品信息失败";
-    //删除商品信息失败
+    public static final String MATERIAL_ADD_FAILED_MSG = "添加产品信息失败";
+    //删除产品信息失败
     public static final int MATERIAL_DELETE_FAILED_CODE = 7500001;
-    public static final String MATERIAL_DELETE_FAILED_MSG = "删除商品信息失败";
-    //修改商品信息失败
+    public static final String MATERIAL_DELETE_FAILED_MSG = "删除产品信息失败";
+    //修改产品信息失败
     public static final int MATERIAL_EDIT_FAILED_CODE = 7500002;
-    public static final String MATERIAL_EDIT_FAILED_MSG = "修改商品信息失败";
-    //商品信息不存在
+    public static final String MATERIAL_EDIT_FAILED_MSG = "修改产品信息失败";
+    //产品信息不存在
     public static final int MATERIAL_NOT_EXISTS_CODE = 8000000;
-    public static final String MATERIAL_NOT_EXISTS_MSG = "商品信息不存在";
-    //商品信息不唯一
+    public static final String MATERIAL_NOT_EXISTS_MSG = "产品信息不存在";
+    //产品信息不唯一
     public static final int MATERIAL_NOT_ONLY_CODE = 8000001;
-    public static final String MATERIAL_NOT_ONLY_MSG = "商品信息不唯一";
-    //商品的序列号不能为空
+    public static final String MATERIAL_NOT_ONLY_MSG = "产品信息不唯一";
+    //产品的序列号不能为空
     public static final int MATERIAL_SERIAL_NUMBERE_EMPTY_CODE = 8000003;
-    public static final String MATERIAL_SERIAL_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的序列号不能为空";
-    //商品库存不足
+    public static final String MATERIAL_SERIAL_NUMBERE_EMPTY_MSG = "抱歉，产品条码:%s的序列号不能为空";
+    //产品库存不足
     public static final int MATERIAL_STOCK_NOT_ENOUGH_CODE = 8000004;
-    public static final String MATERIAL_STOCK_NOT_ENOUGH_MSG = "商品:%s库存不足";
-    //商品条码重复
+    public static final String MATERIAL_STOCK_NOT_ENOUGH_MSG = "产品:%s库存不足";
+    //产品条码重复
     public static final int MATERIAL_BARCODE_EXISTS_CODE = 8000005;
-    public static final String MATERIAL_BARCODE_EXISTS_MSG = "商品条码:%s重复";
-    //商品-单位匹配不上
+    public static final String MATERIAL_BARCODE_EXISTS_MSG = "产品条码:%s重复";
+    //产品-单位匹配不上
     public static final int MATERIAL_UNIT_MATE_CODE = 8000006;
-    public static final String MATERIAL_UNIT_MATE_MSG = "抱歉，商品条码:%s的单位匹配不上，请完善计量单位信息！";
-    //商品条码长度应该为4到40位
+    public static final String MATERIAL_UNIT_MATE_MSG = "抱歉，产品条码:%s的单位匹配不上，请完善计量单位信息！";
+    //产品条码长度应该为4到40位
     public static final int MATERIAL_BARCODE_ERROR_CODE = 8000007;
-    public static final String MATERIAL_BARCODE_ERROR_MSG = "商品条码格式错误";
+    public static final String MATERIAL_BARCODE_ERROR_MSG = "产品条码格式错误";
     //序列号和批号只能有一项
     public static final int MATERIAL_ENABLE_MUST_ONE_CODE = 8000008;
-    public static final String MATERIAL_ENABLE_MUST_ONE_MSG = "抱歉，商品条码:%s的序列号和批号不能同时填1";
+    public static final String MATERIAL_ENABLE_MUST_ONE_MSG = "抱歉，产品条码:%s的序列号和批号不能同时填1";
     //抱歉，文件扩展名必须为xls
     public static final int MATERIAL_EXTENSION_ERROR_CODE = 8000009;
     public static final String MATERIAL_EXTENSION_ERROR_MSG = "抱歉，文件扩展名必须为xls";
@@ -314,18 +314,18 @@ public class ExceptionConstants {
     //比例格式错误
     public static final int MATERIAL_RATIO_NOT_INTEGER_CODE = 8000016;
     public static final String MATERIAL_RATIO_NOT_INTEGER_MSG = "第%s行比例格式错误";
-    //组装拆卸单不能选择批号或序列号商品
+    //组装拆卸单不能选择批号或序列号产品
     public static final int MATERIAL_ASSEMBLE_SELECT_ERROR_CODE = 80000017;
-    public static final String MATERIAL_ASSEMBLE_SELECT_ERROR_MSG = "抱歉，组装拆卸单不能选择批号或序列号商品:%s";
-    //调拨单不能选择批号或序列号商品
+    public static final String MATERIAL_ASSEMBLE_SELECT_ERROR_MSG = "抱歉，组装拆卸单不能选择批号或序列号产品:%s";
+    //调拨单不能选择批号或序列号产品
     public static final int MATERIAL_TRANSFER_SELECT_ERROR_CODE = 80000018;
-    public static final String MATERIAL_TRANSFER_SELECT_ERROR_MSG = "抱歉，调拨单不能选择批号或序列号商品:%s，建议走其它入库和出库单";
-    //盘点业务不能选择批号或序列号商品
+    public static final String MATERIAL_TRANSFER_SELECT_ERROR_MSG = "抱歉，调拨单不能选择批号或序列号产品:%s，建议走其它入库和出库单";
+    //盘点业务不能选择批号或序列号产品
     public static final int MATERIAL_STOCK_CHECK_ERROR_CODE = 80000019;
-    public static final String MATERIAL_STOCK_CHECK_ERROR_MSG = "抱歉，盘点业务不能选择批号或序列号商品:%s，建议走其它入库和出库单";
-    //EXCEL中存在重复的商品
+    public static final String MATERIAL_STOCK_CHECK_ERROR_MSG = "抱歉，盘点业务不能选择批号或序列号产品:%s，建议走其它入库和出库单";
+    //EXCEL中存在重复的产品
     public static final int MATERIAL_EXCEL_IMPORT_EXIST_CODE = 80000020;
-    public static final String MATERIAL_EXCEL_IMPORT_EXIST_MSG = "抱歉，EXCEL中存在重复的商品，具体信息为：%s";
+    public static final String MATERIAL_EXCEL_IMPORT_EXIST_MSG = "抱歉，EXCEL中存在重复的产品，具体信息为：%s";
     //EXCEL中存在重复的条码
     public static final int MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE = 80000021;
     public static final String MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG = "抱歉，EXCEL中存在重复的条码，具体条码为：%s";
@@ -341,6 +341,9 @@ public class ExceptionConstants {
     //批号库存不足
     public static final int BATCH_STOCK_NOT_ENOUGH_CODE = 80000025;
     public static final String BATCH_STOCK_NOT_ENOUGH_MSG = "批号%s的库存不足";
+    //用量不为数字
+    public static final int BOM_USAGE_ERROR_CODE = 8000026;
+    public static final String BOM_USAGE_ERROR_MSG = "第%s行用量格式错误";
 
     /**
      *  单据信息
@@ -382,28 +385,28 @@ public class ExceptionConstants {
     //单据反审核-只有已审核的单据才能反审核
     public static final int DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE = 8500013;
     public static final String DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG = "抱歉，只有已审核的单据才能反审核";
-    //单据录入-商品条码XXX的数量需要修改下
+    //单据录入-产品条码XXX的数量需要修改下
     public static final int DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE = 85000014;
-    public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG = "商品条码%s的数量需要修改下";
-    public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG_2 = "商品条码%s的生产单总量不能超过生产计划";
-    //单据录入-商品的批号不能为空
+    public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG = "产品条码%s的数量需要修改下";
+    public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG_2 = "产品条码%s的生产单总量不能超过生产计划";
+    //单据录入-产品的批号不能为空
     public static final int DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE = 8000015;
-    public static final String DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的批号不能为空";
+    public static final String DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG = "抱歉，产品条码:%s的批号不能为空";
     //单据录入-会员预付款余额不足
     public static final int DEPOT_HEAD_MEMBER_PAY_LACK_CODE = 8000016;
     public static final String DEPOT_HEAD_MEMBER_PAY_LACK_MSG = "抱歉，会员预付款余额不足";
     //单据录入-累计订金超出原订单中的订金
     public static final int DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE = 8000017;
     public static final String DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG = "抱歉，累计订金超出原订单中的订金";
-    //单据录入-商品条码XXX的单价低于最低售价
+    //单据录入-产品条码XXX的单价低于最低售价
     public static final int DEPOT_HEAD_UNIT_PRICE_LOW_CODE = 8000018;
-    public static final String DEPOT_HEAD_UNIT_PRICE_LOW_MSG = "商品条码%s的单价低于最低售价";
+    public static final String DEPOT_HEAD_UNIT_PRICE_LOW_MSG = "产品条码%s的单价低于最低售价";
     //单据录入-单据明细中必须要有组合件和普通子件
     public static final int DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE = 8000020;
     public static final String DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG = "抱歉，单据明细中必须要有组合件和普通子件";
-    //单据录入-商品条码XXX的数量与序列号不一致
+    //单据录入-产品条码XXX的数量与序列号不一致
     public static final int DEPOT_HEAD_SN_NUMBERE_FAILED_CODE = 8000021;
-    public static final String DEPOT_HEAD_SN_NUMBERE_FAILED_MSG = "抱歉，商品条码:%s的数量与序列号不一致";
+    public static final String DEPOT_HEAD_SN_NUMBERE_FAILED_MSG = "抱歉，产品条码:%s的数量与序列号不一致";
     //生产计划-开始日期要早于或等于完成日期
     public static final int DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE = 8000022;
     public static final String DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG = "抱歉，生产计划开始日期要早于或等于完成日期";
@@ -481,9 +484,9 @@ public class ExceptionConstants {
     /**序列号不能为为空*/
     public static final int SERIAL_NUMBERE_NOT_BE_EMPTY_CODE = 10500001;
     public static final String SERIAL_NUMBERE_NOT_BE_EMPTY_MSG = "序列号不能为为空";
-    /**商品%s下序列号不充足，请补充后重试*/
+    /**产品%s下序列号不充足，请补充后重试*/
     public static final int MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE = 10500002;
-    public static final String MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG = "商品:%s下序列号不充足，请补充后重试";
+    public static final String MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG = "产品:%s下序列号不充足，请补充后重试";
     /**删序列号信息失败*/
     public static final int SERIAL_NUMBERE_DELETE_FAILED_CODE = 10500003;
     public static final String SERIAL_NUMBERE_DELETE_FAILED_MSG = "删序列号信息失败";

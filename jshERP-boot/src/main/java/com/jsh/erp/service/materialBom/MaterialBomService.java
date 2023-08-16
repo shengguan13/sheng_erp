@@ -1,23 +1,36 @@
 package com.jsh.erp.service.materialBom;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.MaterialBom;
-import com.jsh.erp.datasource.entities.MaterialBomExample;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.MaterialBomMapper;
 import com.jsh.erp.datasource.mappers.MaterialBomMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ExcelUtils;
+import com.jsh.erp.utils.StringUtil;
+import jxl.Sheet;
+import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MaterialBomService {
@@ -31,6 +44,9 @@ public class MaterialBomService {
 
     @Resource
     private MaterialBomMapperEx materialBomMapperEx;
+
+    @Resource
+    private UserService userService;
 
     public MaterialBom getMaterialBom(long id)throws Exception {
         MaterialBom result=null;
@@ -142,6 +158,119 @@ public class MaterialBomService {
         }
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BaseResponseInfo importExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        try {
+            Long beginTime = System.currentTimeMillis();
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                }
+            }
+            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+            Sheet src = workbook.getSheet(0);
+            //获取真实的行数，剔除掉空白行
+            int rightRows = ExcelUtils.getRightRows(src);
+            User user = userService.getCurrentUser();
+            //单次导入超出1000条
+            if(rightRows > 1002) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
+                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
+            }
+            List<MaterialBom> bomList = new ArrayList<>();
+            for (int i = 1; i < rightRows; i++) {
+                String process = ExcelUtils.getContent(src, i, 0); //工艺流程
+                String partNo = ExcelUtils.getContent(src, i, 1); //客户零件号
+                String barCode = ExcelUtils.getContent(src, i, 2); //物料编码
+
+                String project = ExcelUtils.getContent(src, i, 7); //项目
+                String department = ExcelUtils.getContent(src, i, 8); //部门
+                String processUsage = ExcelUtils.getContent(src, i, 10); //用量
+                String unit = ExcelUtils.getContent(src, i, 11); //单位
+                String weight = ExcelUtils.getContent(src, i, 15); //重量（kg）
+                String remark = ExcelUtils.getContent(src, i, 17); //备注
+                String amountPerCar = ExcelUtils.getContent(src, i, 22); //每车用量
+                // 没有物料编码的直接跳过
+                if (StringUtil.isEmpty(barCode)) {
+                    continue;
+                }
+                // 批量校验excel中有无重复BOM
+                batchCheckExistMaterialBomByParam(bomList, process, project);
+                MaterialBom bom = new MaterialBom();
+                bom.setProcess(process);
+                bom.setPartNo(partNo);
+                bom.setBarCode(barCode);
+                bom.setProject(project);
+                bom.setDepartment(department);
+                //单位为空
+                if(StringUtil.isEmpty(unit)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
+                            String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
+                }
+                bom.setUnit(unit);
+                if(StringUtil.isNotEmpty(processUsage)) {
+                    //校验用量是否为数字
+                    if(!StringUtil.isPositiveBigDecimal(processUsage)) {
+                        throw new BusinessRunTimeException(ExceptionConstants.BOM_USAGE_ERROR_CODE,
+                                String.format(ExceptionConstants.BOM_USAGE_ERROR_MSG, i+1));
+                    }
+                    bom.setProcessUsage(BigDecimal.valueOf(Double.valueOf(processUsage)));
+                }
+                bom.setRemark(remark);
+                if(StringUtil.isNotEmpty(amountPerCar)) {
+                    //校验每车用量是否为数字
+                    if(!StringUtil.isPositiveBigDecimal(amountPerCar)) {
+                        throw new BusinessRunTimeException(ExceptionConstants.BOM_USAGE_ERROR_CODE,
+                                String.format(ExceptionConstants.BOM_USAGE_ERROR_MSG, i+1));
+                    }
+                    bom.setAmountPerCar(BigDecimal.valueOf(Double.valueOf(amountPerCar)));
+                }
+                //校验产品编码
+                if(!StringUtil.checkBarCode(barCode)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
+                            String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
+                }
+                bomList.add(bom);
+            }
+            for (MaterialBom bom : bomList) {
+                materialBomMapper.insertSelective(bom);
+            }
+            logService.insertLog("产品BOM",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(bomList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            Long endTime = System.currentTimeMillis();
+            logger.info("导入耗时：{}", endTime-beginTime);
+            info.code = 200;
+            info.data = "导入成功";
+        } catch (BusinessRunTimeException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info(e.getMessage());
+            info.code = 500;
+            info.data = "导入失败";
+        }
+        return info;
+    }
+
+    /**
+     * 批量校验excel中有无重复BOM
+     */
+    public void batchCheckExistMaterialBomByParam(List<MaterialBom> bomList, String process, String project) {
+        for(MaterialBom bom: bomList){
+            if(process.equals(bom.getProcess()) && project.equals(bom.getProject())){
+                String info = process + "-" + project;
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_CODE,
+                        String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_MSG, info));
+            }
+        }
+    }
+
     public int checkIsProcessExist(Long id, String process, String project)throws Exception {
         MaterialBomExample example = new MaterialBomExample();
         example.createCriteria().andIdNotEqualTo(id)
@@ -158,11 +287,7 @@ public class MaterialBomService {
     }
 
     /**
-     * 因为interface里面有，实际上用不到这个method
-     * @param id
-     * @param name
-     * @return
-     * @throws Exception
+     * 实际上用不到这个method，只是interface里面有
      */
     public int checkIsNameExist(Long id, String name)throws Exception {
         MaterialBomExample example = new MaterialBomExample();

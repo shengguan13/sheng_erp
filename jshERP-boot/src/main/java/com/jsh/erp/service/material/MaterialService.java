@@ -493,7 +493,7 @@ public class MaterialService {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
-            for (int i = 2; i < rightRows; i++) {
+            for (int i = 1; i < rightRows; i++) {
                 String other1 = ExcelUtils.getContent(src, i, 0); //客户/供应商
                 String other2 = ExcelUtils.getContent(src, i, 1); //客户or供应商
                 String mfrs = ExcelUtils.getContent(src, i, 2); //制造商
@@ -542,6 +542,7 @@ public class MaterialService {
                 m.setMfrs(mfrs);
                 m.setOtherField1(other1);
                 m.setOtherField2(other2);
+                m.setOtherField3(other3);
                 m.setOtherField4(other4);
                 m.setOtherField5(other5);
                 m.setOtherField6(other6);

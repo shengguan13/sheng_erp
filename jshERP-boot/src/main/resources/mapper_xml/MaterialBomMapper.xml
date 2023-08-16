@@ -110,10 +110,9 @@
         insert into jsh_material_bom (id, bar_code, process, project, part_no, department,
         process_usage, unit, remark, amount_per_car, tenant_id, delete_flag)
         values (#{id,jdbcType=BIGINT}, #{barCode,jdbcType=VARCHAR}, #{process,jdbcType=VARCHAR},
-        #{project,jdbcType=VARCHAR},
-        #{partNo,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{processUsage,jdbcType=DECIMAL},
-        #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{amountPerCar,jdbcType=DECIMAL},
-        #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+        #{project,jdbcType=VARCHAR}, #{partNo,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR},
+        #{processUsage,jdbcType=DECIMAL}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+        #{amountPerCar,jdbcType=DECIMAL}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         insert into jsh_material_bom

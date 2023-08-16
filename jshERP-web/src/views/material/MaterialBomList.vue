@@ -113,12 +113,6 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <template slot="customBarCode" slot-scope="text, record">
-              {{record.mBarCode}}
-            </template>
-            <template slot="customName" slot-scope="text, record">
-              {{record.name}}
-            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -197,25 +191,25 @@
             width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '项目', dataIndex: 'project', width: 100},
-          {title: '条码', dataIndex: 'barCode', width: 160, scopedSlots: { customRender: 'customBarCode' }},
+          {title: '项目', dataIndex: 'project', width: 60},
+          {title: '条码', dataIndex: 'barCode', width: 160},
           {title: '工艺流程', dataIndex: 'process', width: 120},
-          {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
+          {title: '名称', dataIndex: 'name', width: 160},
           {title: '客户零件号', dataIndex: 'partNo', width: 120},
           {title: '内部零件号', dataIndex: 'internalId', width: 120},
           {title: '规格', dataIndex: 'model', width: 120},
           {title: '颜色编码', dataIndex: 'color', width: 100},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
-          {title: '用量', dataIndex: 'processUsage', width: 100},
-          {title: '单位', dataIndex: 'bomUnit', width: 100},
+          {title: '用量', dataIndex: 'processUsage', width: 60},
+          {title: '单位', dataIndex: 'bomUnit', width: 60},
           {title: '备注', dataIndex: 'remark', width: 80}
         ],
         url: {
           list: "/materialBom/list",
           delete: "/materialBom/delete",
           deleteBatch: "/materialBom/deleteBatch",
-          importExcelUrl: "/material/importExcel",
-          exportXlsUrl: "/material/exportExcel"
+          importExcelUrl: "/materialBom/importExcel",
+          exportXlsUrl: "/materialBom/exportExcel"
         }
       }
     },
@@ -287,7 +281,7 @@
       handleImportXls() {
         let importExcelUrl = this.url.importExcelUrl
         let templateUrl = '/doc/goods_template.xls'
-        let templateName = '商品Excel模板[下载]'
+        let templateName = '产品BOM模板[下载]'
         this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
         this.$refs.modalImportForm.title = "商品导入";
       },

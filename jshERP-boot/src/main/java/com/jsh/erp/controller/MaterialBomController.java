@@ -1,17 +1,17 @@
 package com.jsh.erp.controller;
 
 import com.jsh.erp.datasource.entities.MaterialBom;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.materialBom.MaterialBomService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -35,6 +35,39 @@ public class MaterialBomController {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/exportExcel")
+    @ApiOperation(value = "生成excel表格")
+    public void exportExcel(@RequestParam(value = "categoryId", required = false) String categoryId,
+                            @RequestParam(value = "materialParam", required = false) String materialParam,
+                            @RequestParam(value = "color", required = false) String color,
+                            @RequestParam(value = "project", required = false) String project,
+                            @RequestParam(value = "weight", required = false) String weight,
+                            @RequestParam(value = "expiryNum", required = false) String expiryNum,
+                            @RequestParam(value = "enabled", required = false) String enabled,
+                            @RequestParam(value = "remark", required = false) String remark,
+                            @RequestParam(value = "mpList", required = false) String mpList,
+                            HttpServletRequest request, HttpServletResponse response) {
+
+    }
+
+    @PostMapping(value = "/importExcel")
+    @ApiOperation(value = "excel表格导入产品")
+    public BaseResponseInfo importExcel(MultipartFile file,
+                                        HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = materialBomService.importExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return res;
     }
