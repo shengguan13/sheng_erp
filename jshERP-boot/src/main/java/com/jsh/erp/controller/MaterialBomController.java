@@ -1,6 +1,7 @@
 package com.jsh.erp.controller;
 
 import com.jsh.erp.datasource.entities.MaterialBom;
+import com.jsh.erp.datasource.entities.MaterialBomVo4Info;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.materialBom.MaterialBomService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -28,7 +29,7 @@ public class MaterialBomController {
                                           HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            List<MaterialBom> list = materialBomService.selectByPrefix(process, project);
+            List<MaterialBomVo4Info> list = materialBomService.selectByPrefix(process, project);
             res.code = 200;
             res.data = list;
         } catch(Exception e){

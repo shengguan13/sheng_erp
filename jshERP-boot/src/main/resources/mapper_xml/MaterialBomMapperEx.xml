@@ -2,8 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.MaterialBomMapperEx">
 
-    <select id="selectMaterialBom" resultType="com.jsh.erp.datasource.entities.MaterialBom">
-        select * from jsh_material_bom mb
+    <resultMap extends="com.jsh.erp.datasource.mappers.MaterialBomMapper.BaseResultMap" id="ResultAndInfoMap" type="com.jsh.erp.datasource.entities.MaterialBomVo4Info">
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="internal_id" jdbcType="VARCHAR" property="internalId" />
+        <result column="model" jdbcType="VARCHAR" property="model" />
+        <result column="category" jdbcType="VARCHAR" property="category" />
+        <result column="color" jdbcType="VARCHAR" property="color" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+    </resultMap>
+
+    <select id="selectMaterialBom"  resultMap="ResultAndInfoMap">
+        select mb.*, m.name, m.internal_id, m.model, m.color, mc.name category from jsh_material_bom mb
+        left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         <if test="process != null">
             <bind name="bindProcess" value="'%'+process+'%'"/>

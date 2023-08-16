@@ -71,8 +71,8 @@ public class MaterialBomService {
         return list;
     }
 
-    public List<MaterialBom> select(String process, String project, int offset, int rows) throws Exception{
-        List<MaterialBom> list = new ArrayList<>();
+    public List<MaterialBomVo4Info> select(String process, String project, int offset, int rows) throws Exception{
+        List<MaterialBomVo4Info> list = new ArrayList<>();
         try{
             list = materialBomMapperEx.selectMaterialBom(process, project, offset, rows);
         }catch(Exception e){
@@ -81,8 +81,8 @@ public class MaterialBomService {
         return list;
     }
 
-    public List<MaterialBom> selectByPrefix(String process, String project) throws Exception{
-        List<MaterialBom> list = new ArrayList<>();
+    public List<MaterialBomVo4Info> selectByPrefix(String process, String project) throws Exception{
+        List<MaterialBomVo4Info> list = new ArrayList<>();
         try{
             list = materialBomMapperEx.selectMaterialBomByPrefix(process, project);
         }catch(Exception e){

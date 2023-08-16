@@ -1,18 +1,18 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.jsh.erp.datasource.entities.MaterialBom;
+import com.jsh.erp.datasource.entities.MaterialBomVo4Info;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface MaterialBomMapperEx {
-    List<MaterialBom> selectMaterialBom(
+    List<MaterialBomVo4Info> selectMaterialBom(
             @Param("process") String process,
             @Param("project") String project,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    List<MaterialBom> selectMaterialBomByPrefix(
+    List<MaterialBomVo4Info> selectMaterialBomByPrefix(
             @Param("process") String process,
             @Param("project") String project);
 
