@@ -221,23 +221,7 @@
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane key="3" tab="零件组成" forceRender>
-            <j-editable-table
-              ref="materialCompositeTable"
-              :loading="compositeTable.loading"
-              :columns="compositeTable.columns"
-              :dataSource="compositeTable.dataSource"
-              :minWidth="1100"
-              :maxHeight="300"
-              :rowNumber="false"
-              :rowSelection="true"
-              :actionButton="true"
-              @added="onAddedMaterialComposite"
-              @deleted="onDeletedMaterialComposite"
-              @valueChange="onValueChangeMaterialComposite">
-            </j-editable-table>
-          </a-tab-pane>
-          <a-tab-pane key="4" tab="库存数量" forceRender>
+          <a-tab-pane key="3" tab="库存数量" forceRender>
             <j-editable-table
               ref="editableDepotTable"
               :loading="depotTable.loading"
@@ -257,7 +241,7 @@
             <!-- 表单区域 -->
             <batch-set-stock-modal ref="stockModalForm" @ok="batchSetStockModalFormOk"></batch-set-stock-modal>
           </a-tab-pane>
-          <a-tab-pane key="5" tab="图片信息" forceRender>
+          <a-tab-pane key="4" tab="图片信息" forceRender>
             <a-row class="form-row" :gutter="24">
               <a-col :lg="18" :md="18" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片信息">
@@ -288,7 +272,7 @@
   import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode, getMaterialByCompositePrefix,
+  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode,
     getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
   import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
@@ -370,24 +354,6 @@
             }
           ]
         },
-        compositeTable: {
-          loading: false,
-          dataSource: [],
-          columns: [
-            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
-              validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
-            { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
-            { title: '内部零件号', key: 'internalId', width: '9%', type: FormTypes.normal },
-            { title: '客户零件号', key: 'model', width: '9%', type: FormTypes.normal },
-            { title: '颜色编码', key: 'color', width: '7%', type: FormTypes.normal },
-            { title: 'meId', key: 'meId', width: '5%', type: FormTypes.hidden },
-            { title: '数量', key: 'operNumber', width: '8%', type: FormTypes.inputNumber, statistics: true,
-              validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal }
-          ]
-        },
         depotTable: {
           loading: false,
           dataSource: [],
@@ -450,61 +416,6 @@
       this.width = realScreenWidth<1500?'1200px':'1400px'
     },
     methods: {
-
-      onAddedMaterialComposite(event) {
-        const { row, target } = event
-        target.setValues([{rowKey: row.id, values: {operNumber:0}}])
-      },
-
-      onDeletedMaterialComposite(ids, target) {
-      },
-
-      onValueChangeMaterialComposite(event) {
-        let that = this
-        const { type, row, column, value, target } = event
-        let param,operNumber
-        switch(column.key) {
-          case "barCode":
-            param = {
-              barCode: value,
-              mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
-            }
-            getMaterialByBarCode(param).then((res) => {
-              if (res && res.code === 200) {
-                let mList = res.data
-                if (value.indexOf(',') > -1) {
-                  //多个条码
-                  this.$refs.materialCompositeTable.getValues((error, values) => {
-                    values.pop()  //移除最后一行数据
-                    let mArr = values
-                    for (let i = 0; i < mList.length; i++) {
-                      let mInfo = mList[i]
-                      let mObj = this.parseInfoToObj(mInfo)
-                      mArr.push(mObj)
-                    }
-                    this.compositeTable.dataSource = mArr
-                  })
-                } else {
-                  let mArr = []
-                  let mInfo = mList[0]
-                  let mInfoEx = this.parseInfoToObj(mInfo)
-                  let mObj = {
-                    rowKey: row.id,
-                    values: mInfoEx
-                  }
-                  mArr.push(mObj)
-                  target.setValues(mArr)
-                  target.recalcAllStatisticsColumns()
-                  target.autoSelectBySpecialKey('operNumber', row.orderNum)
-                }
-              }
-            });
-            break;
-          case "operNumber":
-            operNumber = value-0
-            break;
-        }
-      },
       //转为商品对象
       parseInfoToObj(mInfo) {
         return {
@@ -518,26 +429,11 @@
           operNumber: 1,
         }
       },
-
-      parseInfoToObjWithOperNum(mInfo, operNum) {
-        return {
-          meId: mInfo.meId,
-          barCode: mInfo.mBarCode,
-          name: mInfo.name,
-          internalId: mInfo.internalId,
-          model: mInfo.model,
-          color: mInfo.color,
-          unit: mInfo.commodityUnit,
-          operNumber: operNum,
-        }
-      },
-
       // 获取所有的editableTable实例
       getAllTable() {
         return Promise.all([
           getRefPromise(this, 'editableMeTable'),
-          getRefPromise(this, 'editableDepotTable'),
-          getRefPromise(this, 'materialCompositeTable')
+          getRefPromise(this, 'editableDepotTable')
         ])
       },
       add () {
@@ -591,10 +487,6 @@
             this.manyUnitStatus = false
           }
           let params = { materialId: this.model.id }
-          //手动添加了composite信息到otherField
-          if (this.model.otherField10) {
-            this.requestCompositeTableData(this.model.otherField10, this.compositeTable)
-          }
           this.requestMeTableData(this.url.materialsExtendList, params, this.meTable)
           this.requestDepotTableData(this.url.depotWithStock, { mId: this.model.id }, this.depotTable)
         } else {
@@ -620,32 +512,6 @@
           tab.loading = false
         })
       },
-
-      requestCompositeTableData(compositeStr, tab) {
-        tab.loading = true
-        // e.g. 25.1[amount]
-        let strArr = compositeStr.split(',')
-        let split = strArr[0].split('[')
-
-        let param = {
-          prefixList: split[0] + "[1]",
-          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
-        }
-        getMaterialByCompositePrefix(param).then((res) => {
-          if (res && res.code === 200) {
-            let mList = res.data
-            let mArr = []
-            for (let i = 0; i < mList.length; i++) {
-              let mInfo = mList[i]
-              let mObj = this.parseInfoToObjWithOperNum(mInfo, Number(mInfo.otherField10))
-              mArr.push(mObj)
-            }
-            this.compositeTable.dataSource = mArr
-          }
-        })
-        tab.loading = false
-      },
-
       close () {
         this.$emit('close')
         this.visible = false
@@ -672,8 +538,6 @@
           return validateFormAndTables(this.form, tables)
         }).then(allValues => {
           let formData = this.classifyIntoFormData(allValues)
-          let compositeStr = this.getCompositeStr(formData)
-          formData.otherField10 = compositeStr
           formData.sortList = [];
           if(formData.unit === undefined) {formData.unit = ''}
           if(formData.unitId === undefined) {formData.unitId = ''}
@@ -696,7 +560,6 @@
           ...materialMain, // 展开
           meList: allValues.tablesValue[0].values,
           stock: allValues.tablesValue[1].values,
-          composite: allValues.tablesValue[2].values,
         }
       },
       /** 发起新增或修改的请求 */
@@ -891,16 +754,6 @@
           }
         }
         return num
-      },
-      getCompositeStr(formData) {
-        let str = ""
-        for(let i=0; i<formData.composite.length; i++) {
-          str = str + "[" + formData.composite[i].meId + "]*" + formData.composite[i].operNumber + "+"
-        }
-        if (formData.composite.length>0){
-          str = str.slice(0, -1)
-        }
-        return str
       },
       onAdded(event) {
         const { row, target } = event

@@ -322,7 +322,7 @@ public class StringUtil {
      * @param value
      * @return
      */
-    public static boolean checkBarCodeLength(Object value) {
+    public static boolean checkBarCode(Object value) {
         if(value!=null) {
             String str = value.toString();
             if(isNotEmpty(str)) {
