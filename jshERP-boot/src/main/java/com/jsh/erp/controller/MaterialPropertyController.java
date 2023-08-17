@@ -21,14 +21,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/materialProperty")
-@Api(tags = {"商品扩展字段"})
+@Api(tags = {"产品扩展字段"})
 public class MaterialPropertyController {
 
     @Resource
     private MaterialPropertyService materialPropertyService;
 
     @GetMapping(value = "/getAllList")
-    @ApiOperation(value = "查询全部商品扩展字段信息")
+    @ApiOperation(value = "查询全部产品扩展字段信息")
     public BaseResponseInfo getAllList(HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {

@@ -68,7 +68,7 @@ public interface MaterialMapperEx {
             @Param("remark") String remark,
             @Param("idList") List<Long> idList);
     /**
-     * 通过商品名称查询商品信息
+     * 通过产品名称查询产品信息
      * */
     List<Material> findByMaterialName(@Param("name") String name);
 

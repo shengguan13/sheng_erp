@@ -111,7 +111,7 @@ public class BusinessConstants {
     //单据编号
     public static final String DEPOT_NUMBER_SEQ = "depot_number_seq";
     /**
-     * 商品类别根目录id
+     * 产品类别根目录id
      * */
     /**
      * create by: qiankunpingtai
@@ -122,7 +122,7 @@ public class BusinessConstants {
      */
     public static final Long MATERIAL_CATEGORY_ROOT_PARENT_ID = -1L;
     /**
-     * 商品类别状态
+     * 产品类别状态
      * 0系统默认，1启用，2删除
      * */
     public static final String MATERIAL_CATEGORY_STATUS_DEFAULT = "0";

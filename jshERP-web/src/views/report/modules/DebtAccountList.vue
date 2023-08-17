@@ -26,8 +26,8 @@
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="8">
-              <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                <a-input placeholder="请输入名称、内部零件号、客户零件号" v-model="queryParam.materialParam"></a-input>
+              <a-form-item label="产品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-input placeholder="请输入名称、型号、规格" v-model="queryParam.materialParam"></a-input>
               </a-form-item>
             </a-col>
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -121,7 +121,7 @@
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           { title: '', dataIndex: 'organName',width:120},
-          { title: '商品信息', dataIndex: 'materialsList',width:200, ellipsis:true,
+          { title: '产品信息', dataIndex: 'materialsList',width:200, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
@@ -187,7 +187,7 @@
         console.log(value);
       },
       exportExcel() {
-        let aoa = [['单据编号', this.columns[2].title, '商品信息', '单据日期', '操作员', '本单欠款', '已收欠款', '待收欠款']]
+        let aoa = [['单据编号', this.columns[2].title, '产品信息', '单据日期', '操作员', '本单欠款', '已收欠款', '待收欠款']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.number, ds.organName, ds.materialsList, ds.operTimeStr, ds.userName, ds.needDebt, ds.finishDebt, ds.debt]

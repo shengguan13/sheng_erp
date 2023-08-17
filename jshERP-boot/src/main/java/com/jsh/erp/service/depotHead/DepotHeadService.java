@@ -178,11 +178,11 @@ public class DepotHeadService {
                     if(dh.getPlanFinishTime() != null) {
                         dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
-                    //商品信息简述
+                    //产品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));
                     }
-                    //商品总数量
+                    //产品总数量
                     if(materialCountListMap!=null) {
                         dh.setMaterialCount(materialCountListMap.get(dh.getId()));
                     }
@@ -478,7 +478,7 @@ public class DepotHeadService {
                     if(BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
                             BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
                         DepotHead dh = new DepotHead();
-                        //获取分批操作后单据的商品和商品数量（汇总）
+                        //获取分批操作后单据的产品和产品数量（汇总）
                         List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), depotHead.getType());
                         if(batchList.size()>0) {
                             dh.setPurchaseStatus(BusinessConstants.PURCHASE_STATUS_SKIPING);
@@ -776,7 +776,7 @@ public class DepotHeadService {
                     if(dh.getPlanFinishTime() != null) {
                         dh.setPlanFinishTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanFinishTime()));
                     }
-                    //商品信息简述
+                    //产品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));
                     }
@@ -1146,7 +1146,7 @@ public class DepotHeadService {
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
-                    //商品信息简述
+                    //产品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));
                     }
@@ -1229,7 +1229,7 @@ public class DepotHeadService {
                     if(dh.getOtherMoney() == null) {        // 已支付定金 、 已收到定金
                         dh.setOtherMoney(BigDecimal.ZERO);
                     }
-                    //商品信息简述
+                    //产品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));
                     }

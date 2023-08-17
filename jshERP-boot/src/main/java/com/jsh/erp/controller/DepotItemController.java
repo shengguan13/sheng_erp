@@ -67,13 +67,13 @@ public class DepotItemController {
     private RoleService roleService;
 
     /**
-     * 根据仓库和商品查询单据列表
+     * 根据仓库和产品查询单据列表
      * @param mId
      * @param request
      * @return
      */
     @GetMapping(value = "/findDetailByDepotIdsAndMaterialId")
-    @ApiOperation(value = "根据仓库和商品查询单据列表")
+    @ApiOperation(value = "根据仓库和产品查询单据列表")
     public String findDetailByDepotIdsAndMaterialId(
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
@@ -126,13 +126,13 @@ public class DepotItemController {
     }
 
     /**
-     * 根据仓库、商品、生产单号查询生产入库列表
+     * 根据仓库、产品、生产单号查询生产入库列表
      * @param mId
      * @param request
      * @return
      */
     @GetMapping(value = "/findProductionInByDepotIdsAndMaterialId")
-    @ApiOperation(value = "根据仓库、商品、生产单号查询生产入库列表")
+    @ApiOperation(value = "根据仓库、产品、生产单号查询生产入库列表")
     public String findProductionInByDepotIdsAndMaterialId(
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
@@ -232,7 +232,7 @@ public class DepotItemController {
     }
 
     /**
-     * 根据商品编码和仓库id查询库存数量
+     * 根据产品编码和仓库id查询库存数量
      * @param depotId
      * @param barCode
      * @param request
@@ -240,7 +240,7 @@ public class DepotItemController {
      * @throws Exception
      */
     @GetMapping(value = "/findStockByDepotAndBarCode")
-    @ApiOperation(value = "根据商品编码和仓库id查询库存数量")
+    @ApiOperation(value = "根据产品编码和仓库id查询库存数量")
     public BaseResponseInfo findStockByDepotAndBarCode(
             @RequestParam(value = "depotId",required = false) Long depotId,
             @RequestParam("barCode") String barCode,
@@ -1057,12 +1057,12 @@ public class DepotItemController {
     }
 
     /**
-     * 获取批次商品列表信息
+     * 获取批次产品列表信息
      * @param request
      * @return
      */
     @GetMapping(value = "/getBatchNumberList")
-    @ApiOperation(value = "获取批次商品列表信息")
+    @ApiOperation(value = "获取批次产品列表信息")
     public BaseResponseInfo getBatchNumberList(@RequestParam("name") String name,
                                                @RequestParam("depotItemId") Long depotItemId,
                                                @RequestParam("depotId") Long depotId,

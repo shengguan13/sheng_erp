@@ -21,29 +21,29 @@
       </template>
       <a-spin :spinning="confirmLoading">
         <a-form :form="form" id="unitModal">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基本单位">
-            <a-input placeholder="请输入基本单位(小单位)" v-decorator.trim="[ 'basicUnit', validatorRules.basicUnit]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
+            <a-input placeholder="请输入单位(小单位)" v-decorator.trim="[ 'basicUnit', validatorRules.basicUnit]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="副单位">
             <a-input placeholder="请输入副单位(大单位)" style="width:48%" v-decorator.trim="[ 'otherUnit' ]" />
             =
-            <a-input suffix="基本单位" placeholder="请输入比例" style="width:48%" v-decorator.trim="[ 'ratio' ]" />
+            <a-input suffix="单位" placeholder="请输入比例" style="width:48%" v-decorator.trim="[ 'ratio' ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="副单位2">
             <a-input placeholder="请输入副单位2(大单位)" style="width:48%" v-decorator.trim="[ 'otherUnitTwo' ]" />
             =
-            <a-input suffix="基本单位" placeholder="请输入比例2" style="width:48%" v-decorator.trim="[ 'ratioTwo' ]" />
+            <a-input suffix="单位" placeholder="请输入比例2" style="width:48%" v-decorator.trim="[ 'ratioTwo' ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="副单位3">
             <a-input placeholder="请输入副单位3(大单位)" style="width:48%" v-decorator.trim="[ 'otherUnitThree' ]" />
             =
-            <a-input suffix="基本单位" placeholder="请输入比例3" style="width:48%" v-decorator.trim="[ 'ratioThree' ]" />
+            <a-input suffix="单位" placeholder="请输入比例3" style="width:48%" v-decorator.trim="[ 'ratioThree' ]" />
           </a-form-item>
         </a-form>
       </a-spin>
@@ -78,7 +78,7 @@
         validatorRules:{
           basicUnit:{
             rules: [
-              { required: true, message: '请输入基本单位!' },
+              { required: true, message: '请输入单位!' },
               { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
             ]},
           otherUnit:{
@@ -167,17 +167,17 @@
               return;
             }
             if(formData.basicUnit === formData.otherUnit) {
-              that.$message.warning('抱歉，基本单位与副单位不能相同！');
+              that.$message.warning('抱歉，单位与副单位不能相同！');
               that.confirmLoading = false;
               return;
             }
             if(formData.basicUnit === formData.otherUnitTwo) {
-              that.$message.warning('抱歉，基本单位与副单位2不能相同！');
+              that.$message.warning('抱歉，单位与副单位2不能相同！');
               that.confirmLoading = false;
               return;
             }
             if(formData.basicUnit === formData.otherUnitThree) {
-              that.$message.warning('抱歉，基本单位与副单位3不能相同！');
+              that.$message.warning('抱歉，单位与副单位3不能相同！');
               that.confirmLoading = false;
               return;
             }

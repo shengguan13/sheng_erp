@@ -24,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/materialCategory")
-@Api(tags = {"商品类别"})
+@Api(tags = {"产品类别"})
 public class MaterialCategoryController {
     private Logger logger = LoggerFactory.getLogger(MaterialCategoryController.class);
 
@@ -32,14 +32,14 @@ public class MaterialCategoryController {
     private MaterialCategoryService materialCategoryService;
 
     /**
-     * 获取全部商品类别
+     * 获取全部产品类别
      * @param parentId
      * @param request
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/getAllList")
-    @ApiOperation(value = "获取全部商品类别")
+    @ApiOperation(value = "获取全部产品类别")
     public BaseResponseInfo getAllList(@RequestParam("parentId") Long parentId, HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -55,13 +55,13 @@ public class MaterialCategoryController {
     }
 
     /**
-     * 根据id来查询商品名称
+     * 根据id来查询产品名称
      * @param id
      * @param request
      * @return
      */
     @GetMapping(value = "/findById")
-    @ApiOperation(value = "根据id来查询商品名称")
+    @ApiOperation(value = "根据id来查询产品名称")
     public BaseResponseInfo findById(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -93,13 +93,13 @@ public class MaterialCategoryController {
     /**
      * create by: cjl
      * description:
-     * 获取商品类别树数据
+     * 获取产品类别树数据
      * create time: 2019/2/19 11:49
      * @Param:
      * @return com.alibaba.fastjson.JSONArray
      */
     @RequestMapping(value = "/getMaterialCategoryTree")
-    @ApiOperation(value = "获取商品类别树数据")
+    @ApiOperation(value = "获取产品类别树数据")
     public JSONArray getMaterialCategoryTree(@RequestParam("id") Long id) throws Exception{
        JSONArray arr=new JSONArray();
        List<TreeNode> materialCategoryTree = materialCategoryService.getMaterialCategoryTree(id);
@@ -115,13 +115,13 @@ public class MaterialCategoryController {
     /**
      * create by: cjl
      * description:
-     *  新增商品类别数据
+     *  新增产品类别数据
      * create time: 2019/2/19 17:17
      * @Param: beanJson
      * @return java.lang.Object
      */
     @RequestMapping(value = "/addMaterialCategory")
-    @ApiOperation(value = "新增商品类别数据")
+    @ApiOperation(value = "新增产品类别数据")
     public Object addMaterialCategory(@RequestParam("info") String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);
@@ -135,13 +135,13 @@ public class MaterialCategoryController {
     /**
      * create by: cjl
      * description:
-     *  修改商品类别数据
+     *  修改产品类别数据
      * create time: 2019/2/20 9:30
      * @Param: beanJson
      * @return java.lang.Object
      */
     @RequestMapping(value = "/editMaterialCategory")
-    @ApiOperation(value = "修改商品类别数据")
+    @ApiOperation(value = "修改产品类别数据")
     public Object editMaterialCategory(@RequestParam("info") String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);

@@ -182,8 +182,8 @@ public class MaterialBomService {
             List<MaterialBom> bomList = new ArrayList<>();
             for (int i = 1; i < rightRows; i++) {
                 String process = ExcelUtils.getContent(src, i, 0); //工艺流程
-                String partNo = ExcelUtils.getContent(src, i, 1); //客户零件号
-                String barCode = ExcelUtils.getContent(src, i, 2); //物料编码
+                String partNo = ExcelUtils.getContent(src, i, 1); //规格
+                String barCode = ExcelUtils.getContent(src, i, 2); //编码
 
                 String project = ExcelUtils.getContent(src, i, 7); //项目
                 String department = ExcelUtils.getContent(src, i, 8); //部门
@@ -192,12 +192,12 @@ public class MaterialBomService {
                 String weight = ExcelUtils.getContent(src, i, 15); //重量（kg）
                 String remark = ExcelUtils.getContent(src, i, 17); //备注
                 String amountPerCar = ExcelUtils.getContent(src, i, 22); //每车用量
-                // 没有物料编码的直接跳过
+                // 没有编码的直接跳过
                 if (StringUtil.isEmpty(barCode)) {
                     continue;
                 }
                 // 批量校验excel中有无重复BOM
-                batchCheckExistMaterialBomByParam(bomList, process, project);
+                batchCheckExistMaterialBomByParam(bomList, process, project, barCode);
                 MaterialBom bom = new MaterialBom();
                 bom.setProcess(process);
                 bom.setPartNo(partNo);
@@ -212,7 +212,7 @@ public class MaterialBomService {
                 bom.setUnit(unit);
                 if(StringUtil.isNotEmpty(processUsage)) {
                     //校验用量是否为数字
-                    if(!StringUtil.isPositiveBigDecimal(processUsage)) {
+                    if(!StringUtil.isBigDecimal(processUsage)) {
                         throw new BusinessRunTimeException(ExceptionConstants.BOM_USAGE_ERROR_CODE,
                                 String.format(ExceptionConstants.BOM_USAGE_ERROR_MSG, i+1));
                     }
@@ -258,10 +258,10 @@ public class MaterialBomService {
     /**
      * 批量校验excel中有无重复BOM
      */
-    public void batchCheckExistMaterialBomByParam(List<MaterialBom> bomList, String process, String project) {
+    public void batchCheckExistMaterialBomByParam(List<MaterialBom> bomList, String process, String project, String barCode) {
         for(MaterialBom bom: bomList){
-            if(process.equals(bom.getProcess()) && project.equals(bom.getProject())){
-                String info = process + "-" + project;
+            if(process.equals(bom.getProcess()) && project.equals(bom.getProject()) && barCode.equals(bom.getBarCode())){
+                String info = process + "-" + project + "-" + barCode;
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_CODE,
                         String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_MSG, info));
             }

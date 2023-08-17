@@ -113,7 +113,7 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '计量单位', align:"left", dataIndex: 'name', width:200 },
-          { title: '基本单位', align:"left", dataIndex: 'basicUnit', width:80 },
+          { title: '单位', align:"left", dataIndex: 'basicUnit', width:80 },
           { title: '副单位', align:"left", dataIndex: 'otherUnit', width:100,
             customRender:function (t,r,index) {
               if (r) {

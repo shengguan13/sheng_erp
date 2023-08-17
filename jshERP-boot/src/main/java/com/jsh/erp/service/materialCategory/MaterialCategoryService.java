@@ -134,7 +134,7 @@ public class MaterialCategoryService {
         int result=0;
         try{
             result=materialCategoryMapper.insertSelective(materialCategory);
-            logService.insertLog("商品类型",
+            logService.insertLog("产品类型",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialCategory.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -150,7 +150,7 @@ public class MaterialCategoryService {
         int result=0;
         try{
             result=materialCategoryMapper.updateByPrimaryKeySelective(materialCategory);
-            logService.insertLog("商品类型",
+            logService.insertLog("产品类型",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialCategory.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -191,7 +191,7 @@ public class MaterialCategoryService {
         for(MaterialCategory materialCategory: list){
             sb.append("[").append(materialCategory.getName()).append("]");
         }
-        logService.insertLog("商品类型", sb.toString(),
+        logService.insertLog("产品类型", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //更新时间
         Date updateDate =new Date();
@@ -242,7 +242,7 @@ public class MaterialCategoryService {
     /**
      * create by: cjl
      * description:
-     *获取商品类别树数据
+     *获取产品类别树数据
      * create time: 2019/2/19 14:30
      * @Param:
      * @return java.util.List<com.jsh.erp.datasource.vo.TreeNode>
@@ -259,14 +259,14 @@ public class MaterialCategoryService {
     /**
      * create by: cjl
      * description:
-     *  新增商品类别信息
+     *  新增产品类别信息
      * create time: 2019/2/19 16:30
      * @Param: mc
      * @return void
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addMaterialCategory(MaterialCategory mc) throws Exception {
-        logService.insertLog("商品类型",
+        logService.insertLog("产品类型",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(mc.getName()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(mc==null){
@@ -276,7 +276,7 @@ public class MaterialCategoryService {
             //没有给定父级目录的id，默认设置父级目录为根目录的父目录
             mc.setParentId(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
         }
-        //检查商品类型编号是否已存在
+        //检查产品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
         //数据状态新增时默认设置为启用
         Date date=new Date();
@@ -296,14 +296,14 @@ public class MaterialCategoryService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editMaterialCategory(MaterialCategory mc) throws Exception{
-        logService.insertLog("商品类型",
+        logService.insertLog("产品类型",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(mc.getName()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(mc.getParentId()==null){
             //没有给定父级目录的id，默认设置父级目录为根目录的父目录
             mc.setParentId(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
         }
-        //检查商品类型编号是否已存在
+        //检查产品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
         //更新时间
         mc.setUpdateTime(new Date());
@@ -318,7 +318,7 @@ public class MaterialCategoryService {
         return result;
     }
     /**
-     * 根据商品类别编号判断商品类别是否已存在
+     * 根据产品类别编号判断产品类别是否已存在
      * */
     public void  checkMaterialCategorySerialNo(MaterialCategory mc)throws Exception {
         if(mc==null){
@@ -327,7 +327,7 @@ public class MaterialCategoryService {
         if(StringUtil.isEmpty(mc.getSerialNo())){
             return;
         }
-        //根据商品类别编号查询商品类别
+        //根据产品类别编号查询产品类别
         List<MaterialCategory> mList=null;
         try{
             mList= materialCategoryMapperEx.getMaterialCategoryBySerialNo(mc.getSerialNo(), mc.getId());

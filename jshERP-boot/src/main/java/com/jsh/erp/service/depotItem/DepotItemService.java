@@ -315,7 +315,7 @@ public class DepotItemService {
     }
 
     /**
-     * 查询当前单据中指定商品的明细信息
+     * 查询当前单据中指定产品的明细信息
      * @param headerId
      * @param meId
      * @return
@@ -337,7 +337,7 @@ public class DepotItemService {
     }
 
     /**
-     * 查询被关联订单中指定商品的明细信息
+     * 查询被关联订单中指定产品的明细信息
      * @param linkNumber
      * @param meId
      * @return
@@ -609,8 +609,8 @@ public class DepotItemService {
                     String unit = rowObj.get("unit").toString();
                     BigDecimal oNumber = rowObj.getBigDecimal("operNumber");
                     if (StringUtil.isNotEmpty(unitInfo.getName())) {
-                        String basicUnit = unitInfo.getBasicUnit(); //基本单位
-                        if (unit.equals(basicUnit)) { //如果等于基本单位
+                        String basicUnit = unitInfo.getBasicUnit(); //单位
+                        if (unit.equals(basicUnit)) { //如果等于单位
                             depotItem.setBasicNumber(oNumber); //数量一致
                         } else if (unit.equals(unitInfo.getOtherUnit())) { //如果等于副单位
                             depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(unitInfo.getRatio())) ); //数量乘以比例
@@ -673,7 +673,7 @@ public class DepotItemService {
                         }
                     }
                 }
-                //如果是销售出库、销售退货、零售出库、零售退货则给采购单价字段赋值（如果是批次商品，则要根据批号去找之前的入库价）
+                //如果是销售出库、销售退货、零售出库、零售退货则给采购单价字段赋值（如果是批次产品，则要根据批号去找之前的入库价）
                 if(BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()) ||
                     BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType()) ||
                     BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType()) ||
@@ -743,7 +743,7 @@ public class DepotItemService {
                     }
                     BigDecimal stock = getStockByParam(depotItem.getDepotId(),depotItem.getMaterialId(),null,null);
                     if(StringUtil.isNotEmpty(depotItem.getSku())) {
-                        //对于sku商品要换个方式计算库存
+                        //对于sku产品要换个方式计算库存
                         stock = getSkuStockByParam(depotItem.getDepotId(),depotItem.getMaterialExtendId(),null,null);
                     }
                     BigDecimal thisBasicNumber = depotItem.getBasicNumber()==null?BigDecimal.ZERO:depotItem.getBasicNumber();
@@ -755,7 +755,7 @@ public class DepotItemService {
                 this.insertDepotItemWithObj(depotItem);
                 //更新当前库存
                 updateCurrentStock(depotItem);
-                //更新商品的价格
+                //更新产品的价格
                 updateMaterialExtendPrice(materialExtend.getId(), depotHead.getSubType(), rowObj);
             }
             //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产单（决定生产计划的状态）、生产入库（决定生产单的状态）、退料入库（决定领料出库的状态）
@@ -785,7 +785,7 @@ public class DepotItemService {
     }
     /**
      * 判断单据的状态
-     * 通过数组对比：原单据的商品和商品数量（汇总） 与 分批操作后单据的商品和商品数量（汇总）
+     * 通过数组对比：原单据的产品和产品数量（汇总） 与 分批操作后单据的产品和产品数量（汇总）
      * TODO: 对于领料出库，不需要三个状态，只需要两个 - 有退料或者无退料
      * @param depotHead
      * @return
@@ -793,18 +793,18 @@ public class DepotItemService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String getBillStatusByParam(DepotHead depotHead) {
         String res = BusinessConstants.BILLS_STATUS_SKIPED;
-        //获取原单据的商品和商品数量（汇总）
+        //获取原单据的产品和产品数量（汇总）
         List<DepotItemVo4MaterialAndSum> linkList = depotItemMapperEx.getLinkBillDetailMaterialSum(depotHead.getLinkNumber());
-        //获取分批操作后单据的商品和商品数量（汇总）
+        //获取分批操作后单据的产品和产品数量（汇总）
         List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), depotHead.getType());
-        //将分批操作后的单据的商品和商品数据构造成Map
+        //将分批操作后的单据的产品和产品数据构造成Map
         Map<Long, BigDecimal> materialSumMap = new HashMap<>();
         for(DepotItemVo4MaterialAndSum materialAndSum : batchList) {
             materialSumMap.put(materialAndSum.getMaterialExtendId(), materialAndSum.getOperNumber());
         }
         boolean hasPositiveFinishNumber = false;
         for(DepotItemVo4MaterialAndSum materialAndSum : linkList) {
-            //过滤掉原单里面有数量为0的商品
+            //过滤掉原单里面有数量为0的产品
             if(materialAndSum.getOperNumber().compareTo(BigDecimal.ZERO) != 0) {
                 BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
                 if (materialSum != null) {
@@ -894,7 +894,7 @@ public class DepotItemService {
             DepotItemExample example = new DepotItemExample();
             example.createCriteria().andHeaderIdEqualTo(headerId);
             depotItemMapper.deleteByExample(example);
-            //3、计算删除之后单据明细中商品的库存
+            //3、计算删除之后单据明细中产品的库存
             for(DepotItem depotItem : depotItemList){
                 updateCurrentStock(depotItem);
             }
@@ -928,7 +928,7 @@ public class DepotItemService {
     }
 
     /**
-     * 更新商品的价格
+     * 更新产品的价格
      * @param meId
      * @param subType
      * @param rowObj
@@ -1094,7 +1094,7 @@ public class DepotItemService {
     }
 
     /**
-     * 根据商品和仓库来更新当前库存
+     * 根据产品和仓库来更新当前库存
      * @param mId
      * @param dId
      */

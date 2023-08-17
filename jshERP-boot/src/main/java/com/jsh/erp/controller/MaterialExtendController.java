@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/materialsExtend")
-@Api(tags = {"商品价格扩展"})
+@Api(tags = {"产品价格扩展"})
 public class MaterialExtendController {
     private Logger logger = LoggerFactory.getLogger(MaterialExtendController.class);
     @Resource
@@ -74,14 +74,14 @@ public class MaterialExtendController {
     }
 
     /**
-     * 根据条码查询商品信息
+     * 根据编码查询产品信息
      * @param barCode
      * @param request
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/getInfoByBarCode")
-    @ApiOperation(value = "根据条码查询商品信息")
+    @ApiOperation(value = "根据编码查询产品信息")
     public BaseResponseInfo getInfoByBarCode(@RequestParam("barCode") String barCode,
                                           HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -99,7 +99,7 @@ public class MaterialExtendController {
     }
 
     /**
-     * 校验条码是否存在
+     * 校验编码是否存在
      * @param id
      * @param barCode
      * @param request
@@ -107,7 +107,7 @@ public class MaterialExtendController {
      * @throws Exception
      */
     @GetMapping(value = "/checkIsBarCodeExist")
-    @ApiOperation(value = "校验条码是否存在")
+    @ApiOperation(value = "校验编码是否存在")
     public BaseResponseInfo checkIsBarCodeExist(@RequestParam("id") Long id,
                                                 @RequestParam("barCode") String barCode,
                                              HttpServletRequest request)throws Exception {

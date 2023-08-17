@@ -24,7 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/materialAttribute")
-@Api(tags = {"商品属性"})
+@Api(tags = {"产品属性"})
 public class MaterialAttributeController {
     private Logger logger = LoggerFactory.getLogger(MaterialAttributeController.class);
 
@@ -32,12 +32,12 @@ public class MaterialAttributeController {
     private MaterialAttributeService materialAttributeService;
 
     /**
-     * 获取商品属性的名称列表
+     * 获取产品属性的名称列表
      * @param request
      * @return
      */
     @GetMapping(value = "/getNameList")
-    @ApiOperation(value = "获取商品属性的名称列表")
+    @ApiOperation(value = "获取产品属性的名称列表")
     public JSONArray getNameList(HttpServletRequest request)throws Exception {
         JSONArray dataArray = new JSONArray();
         try {

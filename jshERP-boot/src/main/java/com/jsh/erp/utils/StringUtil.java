@@ -350,6 +350,20 @@ public class StringUtil {
         }
     }
 
+    public static boolean isBigDecimal(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        String absolute = str.indexOf("-") == 0 ? str.substring(1) : str;
+        if (absolute.indexOf(".") > 0) {//判断是否有小数点
+            if (absolute.indexOf(".") == absolute.lastIndexOf(".") && absolute.split("\\.").length == 2) { //判断是否只有一个小数点
+                return pattern.matcher(absolute.replace(".", "")).matches();
+            } else {
+                return false;
+            }
+        } else {
+            return pattern.matcher(absolute).matches();
+        }
+    }
+
     /**
      * sql注入过滤，保障sql的安全执行
      * @param originStr

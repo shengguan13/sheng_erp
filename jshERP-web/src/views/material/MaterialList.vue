@@ -17,7 +17,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="关键词" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、内部零件号、客户零件号查询" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="请输入编码、名称、型号、规格查询" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -62,7 +62,7 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
-          <a-button type="primary" icon="download" @click="handleExportXls('商品信息')">导出</a-button>
+          <a-button type="primary" icon="download" @click="handleExportXls('产品信息')">导出</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -365,9 +365,9 @@
       handleImportXls() {
         let importExcelUrl = this.url.importExcelUrl
         let templateUrl = '/doc/goods_template.xls'
-        let templateName = '商品Excel模板[下载]'
+        let templateName = '产品Excel模板[下载]'
         this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
-        this.$refs.modalImportForm.title = "商品导入";
+        this.$refs.modalImportForm.title = "产品导入";
       },
       searchReset() {
         this.queryParam = {

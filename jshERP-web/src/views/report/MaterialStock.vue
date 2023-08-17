@@ -29,8 +29,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
-                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/内部零件号/客户零件号/颜色编码" v-model="queryParam.materialParam"></a-input>
+                <a-form-item label="产品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="编码/名称/型号/规格/颜色" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="3" :sm="24">
@@ -242,7 +242,7 @@
           depotIds = this.depotSelected.join()
         }
         this.$refs.materialInOutList.show(record, depotIds);
-        this.$refs.materialInOutList.title = "查看商品库存流水";
+        this.$refs.materialInOutList.title = "查看产品库存流水";
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
@@ -253,7 +253,7 @@
           ds.unitName, ds.initialStock, ds.currentStock]
           aoa.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '商品库存')
+        openDownloadDialog(sheet2blob(aoa), '产品库存')
       }
     }
   }

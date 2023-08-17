@@ -8,11 +8,11 @@ package com.jsh.erp.datasource.entities;
  */
 public class SerialNumberEx extends SerialNumber{
     /**
-     * 商品条码
+     * 产品编码
      * */
     private String materialCode;
     /**
-     * 商品名称
+     * 产品名称
      * */
     private String materialName;
     /**

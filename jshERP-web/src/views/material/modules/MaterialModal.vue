@@ -72,13 +72,13 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期/月" data-step="7" data-title="保质期/月"
-                  data-intro="保质期指的是商品的保质期(月)，主要针对带生产日期的，此类商品一般有批号">
+                  data-intro="保质期指的是产品的保质期(月)，主要针对带生产日期的，此类产品一般有批号">
                   <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="类别"
-                  data-step="8" data-title="类别" data-intro="类别需要在【商品类别】页面进行录入，录入之后在此处进行调用">
+                  data-step="8" data-title="类别" data-intro="类别需要在【产品类别】页面进行录入，录入之后在此处进行调用">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                                  :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
                   </a-tree-select>
@@ -300,8 +300,8 @@
         manyUnitStatus: true,
         unitChecked: false,
         switchDisabled: false, //开关的启用状态
-        barCodeSwitch: false, //生成条码开关
-        meDeleteIdList: [], //删除条码信息的id数组
+        barCodeSwitch: false, //生成编码开关
+        meDeleteIdList: [], //删除编码信息的id数组
         prefixNo: 'material',
         materialAttributeList: [],
         model: {},
@@ -407,7 +407,7 @@
       this.width = realScreenWidth<1500?'1200px':'1400px'
     },
     methods: {
-      //转为商品对象
+      //转为产品对象
       parseInfoToObj(mInfo) {
         return {
           meId: mInfo.meId,
@@ -484,7 +484,7 @@
           this.requestDepotTableData(this.url.depotWithStock, { mId: 0 }, this.depotTable)
         }
       },
-      /** 查询条码tab的数据 */
+      /** 查询编码tab的数据 */
       requestMeTableData(url, params, tab) {
         tab.loading = true
         getAction(url, params).then(res => {
@@ -512,7 +512,6 @@
         this.getAllTable().then(editableTables => {
           editableTables[0].initialize()
           editableTables[1].initialize()
-          editableTables[2].initialize()
         })
       },
       handleOk () {
@@ -555,10 +554,10 @@
       /** 发起新增或修改的请求 */
       requestAddOrEdit(formData) {
         if(formData.meList.length === 0) {
-          this.$message.warning('抱歉，请输入条码信息！');
+          this.$message.warning('抱歉，请输入编码信息！');
           return;
         }
-        //校验商品是否存在，通过校验商品的名称、客户零件号、内部零件号、颜色编码、单位、制造商等
+        //校验产品是否存在，通过校验产品的名称、规格、型号、颜色、单位、制造商等
         let param = {
           id: this.model.id?this.model.id:0,
           name: this.model.name,
@@ -585,7 +584,7 @@
         checkMaterial(param).then((res)=>{
           if(res && res.code===200) {
             if(res.data.status){
-              this.$message.warning('抱歉，该商品已存在！');
+              this.$message.warning('抱歉，该产品已存在！');
               return;
             } else {
               //进一步校验单位
@@ -608,16 +607,16 @@
               if(!formData.unit) {
                 //此时为多单位
                 if (formData.meList.length<2){
-                  this.$message.warning('多单位的商品条码行数至少要有两行，请再新增一行条码信息！');
+                  this.$message.warning('多单位的产品编码行数至少要有两行，请再新增一行编码信息！');
                   return;
                 }
                 if(formData.meList[0].commodityUnit != basicUnit) {
-                  this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[0].commodityUnit
+                  this.$message.warning('编码之后的单位填写有误，单位【' + formData.meList[0].commodityUnit
                     + '】请修改为【' + basicUnit + '】！');
                   return;
                 }
                 if(formData.meList[1].commodityUnit != otherUnit) {
-                  this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[1].commodityUnit
+                  this.$message.warning('编码之后的单位填写有误，单位【' + formData.meList[1].commodityUnit
                     + '】请修改为【' + otherUnit + '】！');
                   return;
                 }
@@ -626,13 +625,13 @@
                 let commodityUnit = formData.meList[i].commodityUnit;
                 if(formData.unit) {
                   if(commodityUnit != formData.unit) {
-                    this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
+                    this.$message.warning('编码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
                       + formData.unit + '】！');
                     return;
                   }
                 } else if(formData.unitId) {
                   if(commodityUnit != basicUnit && commodityUnit != otherUnit && commodityUnit != otherUnitTwo && commodityUnit != otherUnitThree) {
-                    let warnInfo = '条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【' + basicUnit+ '】或【' + otherUnit+ '】'
+                    let warnInfo = '编码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【' + basicUnit+ '】或【' + otherUnit+ '】'
                     if(otherUnitTwo) {
                       warnInfo += '或【' + otherUnitTwo+ '】'
                     }
@@ -660,7 +659,7 @@
                 formData.imgName = this.fileList
                 let fileArr = this.fileList.split(',')
                 if(fileArr.length > 4) {
-                  this.$message.warning('抱歉，商品图片不能超过4张！');
+                  this.$message.warning('抱歉，产品图片不能超过4张！');
                   return
                 }
               } else {
@@ -703,7 +702,7 @@
             if(!res.data.status){
               callback(true);
             } else {
-              callback(false, '该条码已经存在');
+              callback(false, '该编码已经存在');
             }
           } else {
             callback(false, res.data);
@@ -768,7 +767,7 @@
             break;
         }
       },
-      //修改商品明细中的价格触发计算
+      //修改产品明细中的价格触发计算
       changeDecimalByValue(row) {
         let unitArr = this.unitList
         let basicUnit = '', otherUnit = '', ratio = 1, otherUnitTwo = '', ratioTwo = 1, otherUnitThree = '', ratioThree = 1
@@ -831,7 +830,7 @@
       batchSetPriceModalFormOk(price, batchType) {
         let arr = this.meTable.dataSource
         if(arr.length === 0) {
-          this.$message.warning('请先录入条码、单位等信息！');
+          this.$message.warning('请先录入编码、单位等信息！');
         } else {
           let meTableData = []
           for (let i = 0; i < arr.length; i++) {

@@ -479,7 +479,7 @@ export const BillModalMixin = {
         taxLastMoney: 0
       }
     },
-    //使得型号、颜色编码、扩展信息、sku等为隐藏
+    //使得型号、颜色、扩展信息、sku等为隐藏
     changeColumnHide() {
       this.changeFormTypes(this.materialTable.columns, 'model', 0)
       this.changeFormTypes(this.materialTable.columns, 'color', 0)

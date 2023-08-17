@@ -273,7 +273,7 @@
           this.encryptedString = encryptedString;
         }
       },
-      //加载商品属性
+      //加载产品属性
       initMPropertyShort(){
         getAction('/materialProperty/getAllList').then((res) => {
           if(res && res.code === 200){

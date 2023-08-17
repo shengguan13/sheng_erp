@@ -13,8 +13,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、内部零件号、客户零件号、颜色编码、扩展信息" v-model="queryParam.materialParam"></a-input>
+                <a-form-item label="产品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入编码、名称、型号、规格、颜色、扩展信息" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -88,7 +88,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="用于两个仓库之间的商品调拨，调拨单会影响库存。" slot="action">
+          <a-tooltip placement="left" title="用于两个仓库之间的产品调拨，调拨单会影响库存。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
@@ -180,7 +180,7 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '单据编号', dataIndex: 'number',width:160},
-          { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
+          { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");

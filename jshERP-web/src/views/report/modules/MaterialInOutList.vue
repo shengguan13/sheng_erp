@@ -187,7 +187,7 @@
           let item = [ds.number, ds.type, ds.barCode, ds.materialName, ds.depotName, ds.basicNumber, ds.operTime]
           aoa.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '商品库存流水')
+        openDownloadDialog(sheet2blob(aoa), '产品库存流水')
       }
     }
   }

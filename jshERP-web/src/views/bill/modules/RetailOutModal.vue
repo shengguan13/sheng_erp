@@ -76,12 +76,12 @@
               @added="onAdded"
               @deleted="onDeleted">
               <template #buttonAfter>
-                <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
+                <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描产品编码进行录入">
                   <a-col v-if="scanStatus" :md="6" :sm="24">
                     <a-button @click="scanEnter">扫码录入</a-button>
                   </a-col>
                   <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
-                    <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
+                    <a-input placeholder="请扫码产品编码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
                   </a-col>
                   <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px 18px 0 0">
                     <a-button @click="stopScan">收起扫码</a-button>
@@ -122,7 +122,7 @@
                 <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="5" data-title="单据金额"
-                               data-intro="单据金额等于左侧商品的总金额">
+                               data-intro="单据金额等于左侧产品的总金额">
                     <span slot="label" style="font-size: 20px;line-height:20px">单据金额</span>
                     <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
                   </a-form-item>

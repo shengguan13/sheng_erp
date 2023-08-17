@@ -13,8 +13,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、内部零件号、客户零件号、颜色编码、扩展信息" v-model="queryParam.materialParam"></a-input>
+                <a-form-item label="产品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入编码、名称、型号、规格、颜色、扩展信息" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -88,7 +88,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="用于将多种商品合并成一个商品，被合并的商品库存减少，合并后的商品库存增加。" slot="action">
+          <a-tooltip placement="left" title="用于将多种产品合并成一个产品，被合并的产品库存减少，合并后的产品库存增加。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
@@ -180,7 +180,7 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '单据编号', dataIndex: 'number',width:160},
-          { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
+          { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");

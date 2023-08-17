@@ -1487,7 +1487,7 @@
           { title: '备注', dataIndex: 'remark'}
         ],
         assembleColumns: [
-          { title: '商品类型', dataIndex: 'mType'},
+          { title: '产品类型', dataIndex: 'mType'},
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
@@ -1503,7 +1503,7 @@
           { title: '备注', dataIndex: 'remark'}
         ],
         disassembleColumns: [
-          { title: '商品类型', dataIndex: 'mType'},
+          { title: '产品类型', dataIndex: 'mType'},
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
@@ -1988,7 +1988,7 @@
       assembleExportExcel() {
         let aoa = []
         aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['商品类型', '仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '数量', '单价', '金额', '备注']
+        let title = ['产品类型', '仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]

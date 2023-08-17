@@ -13,8 +13,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、内部零件号、客户零件号、颜色编码、扩展信息" v-model="queryParam.materialParam"></a-input>
+                <a-form-item label="产品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入编码、名称、型号、规格、颜色、扩展信息" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -197,7 +197,7 @@
             }
           },
           { title: '对应生产单', dataIndex: 'linkNumber',width:120},
-          { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
+          { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");

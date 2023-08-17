@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-input-search v-if="kind === 'material'" v-model="names" placeholder="条码|名称并回车" @pressEnter="onPressEnter" @search="onSearch"></a-input-search>
+    <a-input-search v-if="kind === 'material'" v-model="names" placeholder="编码|名称并回车" @pressEnter="onPressEnter" @search="onSearch"></a-input-search>
     <a-input-search v-if="kind === 'batch'||kind === 'sn'||kind === 'snAdd'" v-model="names" placeholder="请点开弹窗" readOnly @search="onSearch"></a-input-search>
     <j-select-material-modal v-if="kind === 'material'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-batch-modal v-if="kind === 'batch'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
@@ -76,7 +76,7 @@
             if (res && res.code === 200) {
               let mList = res.data
               if(mList && mList.length === 1) {
-                //如果条码可以查到商品，则直接加载，不用弹窗再选择
+                //如果编码可以查到产品，则直接加载，不用弹窗再选择
                 this.$emit("change", this.names)
               } else {
                 //匹配不到进行弹窗

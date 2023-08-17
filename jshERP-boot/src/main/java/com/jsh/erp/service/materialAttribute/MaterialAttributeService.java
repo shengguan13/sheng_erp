@@ -84,7 +84,7 @@ public class MaterialAttributeService {
         MaterialAttribute m = JSONObject.parseObject(obj.toJSONString(), MaterialAttribute.class);
         try{
             materialAttributeMapper.insertSelective(m);
-            logService.insertLog("商品属性",
+            logService.insertLog("产品属性",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(m.getAttributeName()).toString(), request);
             return 1;
         }
@@ -102,7 +102,7 @@ public class MaterialAttributeService {
         MaterialAttribute materialAttribute = JSONObject.parseObject(obj.toJSONString(), MaterialAttribute.class);
         try{
             materialAttributeMapper.updateByPrimaryKeySelective(materialAttribute);
-            logService.insertLog("商品属性",
+            logService.insertLog("产品属性",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialAttribute.getAttributeName()).toString(), request);
             return 1;
         }catch(Exception e){

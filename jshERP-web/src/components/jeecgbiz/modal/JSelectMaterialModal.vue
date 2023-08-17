@@ -17,8 +17,8 @@
           <a-form layout="inline" @keyup.enter.native="onSearch">
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
-                <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input ref="material" placeholder="条码、名称、内部零件号、客户零件号、颜色编码" v-model="queryParam.q"></a-input>
+                <a-form-item label="产品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input ref="material" placeholder="编码/名称/型号/规格/颜色" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
@@ -42,7 +42,7 @@
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="loadMaterialData(1)">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
-                  <a-tooltip title="没查询到，决定新增商品！">
+                  <a-tooltip title="没查询到，决定新增产品！">
                     <a-button style="margin-left: 8px" @click="addMaterial">新增</a-button>
                   </a-tooltip>
                   <a @click="handleToggleSearch" style="margin-left: 8px">
@@ -133,7 +133,7 @@
         selectedRowKeys: [],
         selectMaterialRows: [],
         selectMaterialIds: [],
-        title: '选择商品',
+        title: '选择产品',
         ipagination: {
           current: 1,
           pageSize: 10,
@@ -201,13 +201,13 @@
                 this.queryParam.q === this.dataSource[0].internalId||
                 this.queryParam.q === this.dataSource[0].model||
                 this.queryParam.q === this.dataSource[0].color) {
-                this.title = '选择商品【再次回车可以直接选中】'
+                this.title = '选择产品【再次回车可以直接选中】'
                 this.$nextTick(() => this.$refs.material.focus());
               } else {
-                this.title = '选择商品'
+                this.title = '选择产品'
               }
             } else {
-              this.title = '选择商品'
+              this.title = '选择产品'
             }
           }
         }).finally(() => {
@@ -241,7 +241,7 @@
       },
       showModal(barCode) {
         this.visible = true;
-        this.title = '选择商品'
+        this.title = '选择产品'
         this.queryParam.q = barCode
         this.$nextTick(() => this.$refs.material.focus());
         this.loadTreeData()
@@ -275,7 +275,7 @@
       },
       addMaterial() {
         this.$refs.modalForm.add()
-        this.$refs.modalForm.title = '新增商品'
+        this.$refs.modalForm.title = '新增产品'
       },
       getImgUrl(imgName) {
         if(imgName && imgName.split(',')) {

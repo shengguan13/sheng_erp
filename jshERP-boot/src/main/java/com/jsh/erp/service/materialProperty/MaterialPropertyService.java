@@ -92,7 +92,7 @@ public class MaterialPropertyService {
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
                 result = materialPropertyMapper.insertSelective(materialProperty);
-                logService.insertLog("商品属性",
+                logService.insertLog("产品属性",
                         new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialProperty.getNativeName()).toString(), request);
             }
         }catch(Exception e){
@@ -108,7 +108,7 @@ public class MaterialPropertyService {
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
                 result = materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
-                logService.insertLog("商品属性",
+                logService.insertLog("产品属性",
                         new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialProperty.getNativeName()).toString(), request);
             }
         }catch(Exception e){
@@ -135,7 +135,7 @@ public class MaterialPropertyService {
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
                 result = materialPropertyMapperEx.batchDeleteMaterialPropertyByIds(new Date(), userInfo == null ? null : userInfo.getId(), idArray);
-                logService.insertLog("商品属性",
+                logService.insertLog("产品属性",
                         new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                         ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             }
