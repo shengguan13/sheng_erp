@@ -72,7 +72,7 @@
               return parseInt(index)+1;
             }
           },
-          { title: '条码', dataIndex: 'barCode', width: 70},
+          { title: '编码', dataIndex: 'barCode', width: 70},
           { title: '名称', dataIndex: 'materialName', width: 200},
           { title: '用料（领-退）', dataIndex: 'useNum', width: 70},
           { title: '单位', dataIndex: 'materialUnit', width:50 },
@@ -117,7 +117,7 @@
         this.close()
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '数量']]
+        let aoa = [['编码', '名称', '数量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.materialName, ds.basicNumber]

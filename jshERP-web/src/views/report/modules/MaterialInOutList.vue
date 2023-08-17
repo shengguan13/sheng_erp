@@ -117,7 +117,7 @@
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           { title: '类型', dataIndex: 'type', width: 100},
-          { title: '条码', dataIndex: 'barCode', width: 100},
+          { title: '编码', dataIndex: 'barCode', width: 100},
           { title: '名称', dataIndex: 'materialName', width: 200},
           { title: '仓库名称', dataIndex: 'depotName', width: 80},
           { title: '数量', dataIndex: 'basicNumber', width: 70},
@@ -181,7 +181,7 @@
         })
       },
       exportExcel() {
-        let aoa = [['单据编号', '类型', '条码', '名称', '仓库名称', '数量', '日期']]
+        let aoa = [['单据编号', '类型', '编码', '名称', '仓库名称', '数量', '日期']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.number, ds.type, ds.barCode, ds.materialName, ds.depotName, ds.basicNumber, ds.operTime]

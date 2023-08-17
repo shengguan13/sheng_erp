@@ -76,10 +76,10 @@
         categoryTree:[],
         columns: [
           {dataIndex: 'batchNumber', title: '批号', width: 100, align: 'left', ellipsis:true},
-          {dataIndex: 'barCode', title: '条码', width: 100, ellipsis:true},
+          {dataIndex: 'barCode', title: '编码', width: 100, ellipsis:true},
           {dataIndex: 'name', title: '名称', width: 100, ellipsis:true},
-          {dataIndex: 'internalId', title: '内部零件号', width: 80, ellipsis:true},
-          {dataIndex: 'model', title: '客户零件号', width: 80, ellipsis:true},
+          {dataIndex: 'internalId', title: '型号', width: 80, ellipsis:true},
+          {dataIndex: 'model', title: '规格', width: 80, ellipsis:true},
           {dataIndex: 'commodityUnit', title: '单位', width: 60, ellipsis:true},
           {dataIndex: 'expirationDateStr', title: '有效期至', width: 80},
           {dataIndex: 'totalNum', title: '库存', width: 80}

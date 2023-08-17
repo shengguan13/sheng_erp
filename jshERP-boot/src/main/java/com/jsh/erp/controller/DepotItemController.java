@@ -99,7 +99,7 @@ public class DepotItemController {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
                 JSONObject item = new JSONObject();
                 item.put("number", d.getNumber()); //编号
-                item.put("barCode", d.getBarCode()); //条码
+                item.put("barCode", d.getBarCode()); //编码
                 item.put("materialName", d.getMaterialName()); //名称
                 String type = d.getType();
                 String subType = d.getSubType();
@@ -160,7 +160,7 @@ public class DepotItemController {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
                 JSONObject item = new JSONObject();
                 item.put("number", d.getNumber()); //编号
-                item.put("barCode", d.getBarCode()); //条码
+                item.put("barCode", d.getBarCode()); //编码
                 item.put("materialName", d.getMaterialName()); //名称
                 item.put("depotName", d.getDepotName()); //仓库名称
                 item.put("basicNumber", d.getBnum()); //数量
@@ -200,7 +200,7 @@ public class DepotItemController {
         if (list != null) {
             for (DepotItemVo4MaterialUsageDetail d: list) {
                 JSONObject item = new JSONObject();
-                item.put("barCode", d.getBarCode()); //条码
+                item.put("barCode", d.getBarCode()); //编码
                 item.put("materialName", d.getMaterialName()); //名称
                 item.put("useNum", d.getUseNum()); //领料数量 - 退料数量
                 item.put("materialUnit", d.getMaterialUnit()); //单位
@@ -232,7 +232,7 @@ public class DepotItemController {
     }
 
     /**
-     * 根据商品条码和仓库id查询库存数量
+     * 根据商品编码和仓库id查询库存数量
      * @param depotId
      * @param barCode
      * @param request
@@ -240,7 +240,7 @@ public class DepotItemController {
      * @throws Exception
      */
     @GetMapping(value = "/findStockByDepotAndBarCode")
-    @ApiOperation(value = "根据商品条码和仓库id查询库存数量")
+    @ApiOperation(value = "根据商品编码和仓库id查询库存数量")
     public BaseResponseInfo findStockByDepotAndBarCode(
             @RequestParam(value = "depotId",required = false) Long depotId,
             @RequestParam("barCode") String barCode,
@@ -515,42 +515,42 @@ public class DepotItemController {
             if (mpArr[i].equals("制造商")) {
                 materialOther = materialOther + ((diEx.getMMfrs() == null || diEx.getMMfrs().equals("")) ? "" : "(" + diEx.getMMfrs() + ")");
             }
-            if (mpArr[i].equals("工艺类别")) {
+            if (mpArr[i].equals("客户/供应商")) {
                 materialOther = materialOther + ((diEx.getMOtherField1() == null || diEx.getMOtherField1().equals("")) ? "" : "(" + diEx.getMOtherField1() + ")");
             }
-            if (mpArr[i].equals("配置")) {
+            if (mpArr[i].equals("客户OR供应商")) {
                 materialOther = materialOther + ((diEx.getMOtherField2() == null || diEx.getMOtherField2().equals("")) ? "" : "(" + diEx.getMOtherField2() + ")");
             }
-            if (mpArr[i].equals("自定义1")) {
+            if (mpArr[i].equals("材质")) {
                 materialOther = materialOther + ((diEx.getMOtherField3() == null || diEx.getMOtherField3().equals("")) ? "" : "(" + diEx.getMOtherField3() + ")");
             }
-            if (mpArr[i].equals("材料牌号")) {
+            if (mpArr[i].equals("颜色代码")) {
                 materialOther = materialOther + ((diEx.getMOtherField4() == null || diEx.getMOtherField4().equals("")) ? "" : "(" + diEx.getMOtherField4() + ")");
             }
-            if (mpArr[i].equals("材料类型/标准")) {
+            if (mpArr[i].equals("模腔数")) {
                 materialOther = materialOther + ((diEx.getMOtherField5() == null || diEx.getMOtherField5().equals("")) ? "" : "(" + diEx.getMOtherField5() + ")");
             }
-            if (mpArr[i].equals("原材料厂家")) {
+            if (mpArr[i].equals("模具重量")) {
                 materialOther = materialOther + ((diEx.getMOtherField6() == null || diEx.getMOtherField6().equals("")) ? "" : "(" + diEx.getMOtherField6() + ")");
             }
-            if (mpArr[i].equals("外协件厂家")) {
+            if (mpArr[i].equals("浇口重量")) {
                 materialOther = materialOther + ((diEx.getMOtherField7() == null || diEx.getMOtherField7().equals("")) ? "" : "(" + diEx.getMOtherField7() + ")");
             }
-            if (mpArr[i].equals("尺寸")) {
+            if (mpArr[i].equals("可装设备")) {
                 materialOther = materialOther + ((diEx.getMOtherField8() == null || diEx.getMOtherField8().equals("")) ? "" : "(" + diEx.getMOtherField8() + ")");
             }
-            if (mpArr[i].equals("检具")) {
+            if (mpArr[i].equals("标包")) {
                 materialOther = materialOther + ((diEx.getMOtherField9() == null || diEx.getMOtherField9().equals("")) ? "" : "(" + diEx.getMOtherField9() + ")");
             }
-            if (mpArr[i].equals("用量/车（件）")) {
-                materialOther = materialOther + ((diEx.getMOtherField10() == null || diEx.getMOtherField10().equals("")) ? "" : "(" + diEx.getMOtherField10() + ")");
-            }
-            if (mpArr[i].equals("料道（kg）")) {
-                materialOther = materialOther + ((diEx.getMOtherField11() == null || diEx.getMOtherField11().equals("")) ? "" : "(" + diEx.getMOtherField11() + ")");
-            }
-            if (mpArr[i].equals("表面处理纹理")) {
-                materialOther = materialOther + ((diEx.getMOtherField12() == null || diEx.getMOtherField12().equals("")) ? "" : "(" + diEx.getMOtherField12() + ")");
-            }
+//            if (mpArr[i].equals("保留1")) {
+//                materialOther = materialOther + ((diEx.getMOtherField10() == null || diEx.getMOtherField10().equals("")) ? "" : "(" + diEx.getMOtherField10() + ")");
+//            }
+//            if (mpArr[i].equals("保留2")) {
+//                materialOther = materialOther + ((diEx.getMOtherField11() == null || diEx.getMOtherField11().equals("")) ? "" : "(" + diEx.getMOtherField11() + ")");
+//            }
+//            if (mpArr[i].equals("保留3")) {
+//                materialOther = materialOther + ((diEx.getMOtherField12() == null || diEx.getMOtherField12().equals("")) ? "" : "(" + diEx.getMOtherField12() + ")");
+//            }
         }
         return materialOther;
     }

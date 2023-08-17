@@ -114,10 +114,10 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
+          {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
-          {title: '内部零件号', dataIndex: 'materialInternalId'},
-          {title: '客户零件号', dataIndex: 'materialModel'},
+          {title: '型号', dataIndex: 'materialInternalId'},
+          {title: '规格', dataIndex: 'materialModel'},
           {title: '扩展信息', dataIndex: 'materialOther', ellipsis:true},
           {title: '单位', dataIndex: 'materialUnit', ellipsis:true},
           {title: '采购数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum},
@@ -160,7 +160,7 @@
         }
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '进货数量', '退货数量']]
+        let aoa = [['编码', '名称', '型号', '规格', '扩展信息', '单位', '进货数量', '退货数量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.materialUnit,

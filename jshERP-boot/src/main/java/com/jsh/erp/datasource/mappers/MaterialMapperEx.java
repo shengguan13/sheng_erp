@@ -80,8 +80,6 @@ public interface MaterialMapperEx {
 
     List<Material> getMaterialListByUnitIds(@Param("unitIds") String[] unitIds);
 
-    String getMaxBarCode();
-
     List<MaterialVo4Unit> getMaterialByMeIdList(@Param("meIdList") List<Long> meIdList);
 
     List<MaterialVo4Unit> getMaterialByCompositePrefix(@Param("prefixList") List<String> prefixList);

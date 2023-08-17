@@ -132,10 +132,10 @@
           {title: '用料详情', dataIndex: 'action2', align:"center", width: 100, fixed: 'left',
             scopedSlots: { customRender: 'action2' }
           },
-          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
+          {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
-          {title: '内部零件号', dataIndex: 'materialInternalId'},
-          {title: '客户零件号', dataIndex: 'materialModel'},
+          {title: '型号', dataIndex: 'materialInternalId'},
+          {title: '规格', dataIndex: 'materialModel'},
           {title: '扩展信息', dataIndex: 'materialOther', ellipsis:true},
           {title: '单位', dataIndex: 'materialUnit', ellipsis:true},
           {title: '生产入库数量', dataIndex: 'productionIn', sorter: (a, b) => a.productionIn - b.productionIn}
@@ -192,7 +192,7 @@
         this.$refs.materialUsageList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '扩展信息', '单位', '生产入库数量']]
+        let aoa = [['编码', '名称', '型号', '规格', '扩展信息', '单位', '生产入库数量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.materialUnit, ds.productionIn]

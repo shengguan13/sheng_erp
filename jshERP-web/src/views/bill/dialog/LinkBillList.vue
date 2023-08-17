@@ -174,10 +174,10 @@
           }
         ],
         columnsDetail: [
-          { title: '条码', dataIndex: 'barCode',width:120},
+          { title: '编码', dataIndex: 'barCode',width:120},
           { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
-          { title: '内部零件号', dataIndex: 'internalId',width:100, ellipsis:true},
-          { title: '客户零件号', dataIndex: 'model',width:150, ellipsis:true},
+          { title: '型号', dataIndex: 'internalId',width:100, ellipsis:true},
+          { title: '规格', dataIndex: 'model',width:150, ellipsis:true},
           { title: '单位', dataIndex: 'unit',width:50},
           { title: '数量', dataIndex: 'operNumber',width:80},
           { title: '备注', dataIndex: 'remark',width:100, ellipsis:true},

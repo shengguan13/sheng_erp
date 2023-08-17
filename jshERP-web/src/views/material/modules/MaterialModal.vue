@@ -28,59 +28,51 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="内部零件号" data-step="2" data-title="内部零件号" data-intro="内部零件号">
-                  <a-input placeholder="请输入内部零件号" v-decorator.trim="[ 'internalId', validatorRules.internalId ]"/>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号" data-step="2" data-title="型号" data-intro="型号">
+                  <a-input placeholder="请输入型号" v-decorator.trim="[ 'internalId', validatorRules.internalId ]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户零件号" data-step="3" data-title="客户零件号" data-intro="客户零件号">
-                  <a-input placeholder="请输入客户零件号" v-decorator.trim="[ 'model', validatorRules.model ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="3" data-title="规格" data-intro="规格">
+                  <a-input placeholder="请输入规格" v-decorator.trim="[ 'model', validatorRules.model ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="单位"
-                  data-step="4" data-title="单位" data-intro="此处支持单个单位和多单位，勾选多单位就可以切换到多单位的下拉框，多单位需要先在【计量单位】页面进行录入。
-                  比如牛奶有瓶和箱两种单位，12瓶=1箱，这就构成了多单位，多单位中有个换算比例">
-                  <a-row class="form-row" :gutter="24">
-                    <a-col :lg="15" :md="15" :sm="24" style="padding:0px 0px 0px 12px;">
-                      <a-input placeholder="输入单位" v-if="!unitChecked" v-decorator.trim="[ 'unit', validatorRules.unit ]" @change="onlyUnitOnChange" />
-                      <a-select :value="unitList" placeholder="选择多单位" v-decorator="[ 'unitId', validatorRules.unitId ]" @change="manyUnitOnChange"
-                        showSearch optionFilterProp="children" v-if="unitChecked" :dropdownMatchSelectWidth="false">
-                        <div slot="dropdownRender" slot-scope="menu">
-                          <v-nodes :vnodes="menu" />
-                          <a-divider style="margin: 4px 0;" />
-                          <div style="padding: 4px 8px; cursor: pointer;"
-                               @mousedown="e => e.preventDefault()" @click="addUnit"><a-icon type="plus" /> 新增计量单位</div>
-                        </div>
-                        <a-select-option v-for="(item,index) in unitList"
-                          :key="index" :value="item.id">
-                          {{ item.name }}
-                        </a-select-option>
-                      </a-select>
-                    </a-col>
-                    <a-col :lg="9" :md="9" :sm="24" style="padding:0px; text-align:center">
-                      <a-checkbox :checked="unitChecked" @change="unitOnChange">多单位</a-checkbox>
-                    </a-col>
-                  </a-row>
+                  data-step="4" data-title="单位" data-intro="请输入单位">
+                  <a-input placeholder="输入单位" v-if="!unitChecked" v-decorator.trim="[ 'unit', validatorRules.unit ]" @change="onlyUnitOnChange" />
+                  <a-select :value="unitList" placeholder="选择多单位" v-decorator="[ 'unitId', validatorRules.unitId ]" @change="manyUnitOnChange"
+                    showSearch optionFilterProp="children" v-if="unitChecked" :dropdownMatchSelectWidth="false">
+                    <div slot="dropdownRender" slot-scope="menu">
+                      <v-nodes :vnodes="menu" />
+                      <a-divider style="margin: 4px 0;" />
+                      <div style="padding: 4px 8px; cursor: pointer;"
+                           @mousedown="e => e.preventDefault()" @click="addUnit"><a-icon type="plus" /> 新增计量单位</div>
+                    </div>
+                    <a-select-option v-for="(item,index) in unitList"
+                      :key="index" :value="item.id">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色编码" data-step="5" data-title="颜色编码"
-                             data-intro="请填写零件的颜色编码">
-                  <a-input placeholder="请输入颜色编码" v-decorator.trim="[ 'color' ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色" data-step="5" data-title="颜色"
+                             data-intro="请填写零件的颜色">
+                  <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="净重量" data-step="6" data-title="净重量"
-                  data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">
-                  <a-input-number style="width: 100%" placeholder="请输入净重量(kg)" v-decorator.trim="[ 'weight' ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="重量" data-step="6" data-title="重量"
+                  data-intro="请填写重量">
+                  <a-input-number style="width: 100%" placeholder="请输入重量(kg)" v-decorator.trim="[ 'weight' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="7" data-title="保质期"
-                  data-intro="保质期指的是商品的保质期(天)，主要针对带生产日期的，此类商品一般有批号">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期/月" data-step="7" data-title="保质期/月"
+                  data-intro="保质期指的是商品的保质期(月)，主要针对带生产日期的，此类商品一般有批号">
                   <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
               </a-col>
@@ -273,7 +265,7 @@
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode,
-    getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
+    queryMaterialCategoryTreeList } from '@/api/api'
   import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
@@ -309,7 +301,6 @@
         unitChecked: false,
         switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
-        maxBarCodeInfo: '', //最大条码
         meDeleteIdList: [], //删除条码信息的id数组
         prefixNo: 'material',
         materialAttributeList: [],
@@ -343,9 +334,9 @@
           dataSource: [],
           columns: [
             {
-              title: '条码', key: 'barCode', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
+              title: '编码', key: 'barCode', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' },
-                { pattern: /^.{4,40}$/, message: '长度为4到40位' },
+                { pattern: /^[A-Z]+\.[a-z]+\.(0\d*|\d+)\.(0\d*|\d+)$/, message: '参考格式ZC.jj.01.007' },
                 { handler: this.validateBarCode}]
             },
             {
@@ -451,7 +442,6 @@
         this.model = Object.assign({}, record);
         this.activeKey = '1'
         this.barCodeSwitch = false
-        this.maxBarCodeInfo = ''
         this.visible = true
         this.modalStyle = 'top:20px;height: 95%;'
         if(JSON.stringify(record) === '{}') {
@@ -761,18 +751,7 @@
         if(this.unitStatus == false) {
           unit = this.form.getFieldValue('unit')
         }
-        if(this.maxBarCodeInfo === '') {
-          getMaxBarCode({}).then((res)=> {
-            if (res && res.code === 200) {
-              this.maxBarCodeInfo = res.data.barCode - 0
-              this.maxBarCodeInfo = this.maxBarCodeInfo + 1
-              target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
-            }
-          })
-        } else {
-          this.maxBarCodeInfo = this.maxBarCodeInfo + 1
-          target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
-        }
+        target.setValues([{rowKey: row.id, values: {commodityUnit: unit?unit:''}}])
       },
       onDeleted(value) {
         this.meDeleteIdList = (value)
@@ -910,51 +889,51 @@
             this.mpShort.mfrs.name = mpList[i].anotherName
             this.mpShort.mfrs.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "工艺类别") {
+          if (mpList[i].nativeName === "客户/供应商") {
             this.mpShort.otherField1.name = mpList[i].anotherName
             this.mpShort.otherField1.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "配置") {
+          if (mpList[i].nativeName === "客户OR供应商") {
             this.mpShort.otherField2.name = mpList[i].anotherName
             this.mpShort.otherField2.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "自定义1") {
+          if (mpList[i].nativeName === "材质") {
             this.mpShort.otherField3.name = mpList[i].anotherName
             this.mpShort.otherField3.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "材料牌号") {
+          if (mpList[i].nativeName === "颜色代码") {
             this.mpShort.otherField4.name = mpList[i].anotherName
             this.mpShort.otherField4.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "材料类型/标准") {
+          if (mpList[i].nativeName === "模腔数") {
             this.mpShort.otherField5.name = mpList[i].anotherName
             this.mpShort.otherField5.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "原材料厂家") {
+          if (mpList[i].nativeName === "模具重量") {
             this.mpShort.otherField6.name = mpList[i].anotherName
             this.mpShort.otherField6.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "外协件厂家") {
+          if (mpList[i].nativeName === "浇口重量") {
             this.mpShort.otherField7.name = mpList[i].anotherName
             this.mpShort.otherField7.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "尺寸") {
+          if (mpList[i].nativeName === "可装设备") {
             this.mpShort.otherField8.name = mpList[i].anotherName
             this.mpShort.otherField8.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "检具") {
+          if (mpList[i].nativeName === "标包") {
             this.mpShort.otherField9.name = mpList[i].anotherName
             this.mpShort.otherField9.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "用量/车（件）") {
+          if (mpList[i].nativeName === "保留1") {
             this.mpShort.otherField10.name = mpList[i].anotherName
             this.mpShort.otherField10.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "料道（kg）") {
+          if (mpList[i].nativeName === "保留2") {
             this.mpShort.otherField11.name = mpList[i].anotherName
             this.mpShort.otherField11.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "表面处理纹理") {
+          if (mpList[i].nativeName === "保留3") {
             this.mpShort.otherField12.name = mpList[i].anotherName
             this.mpShort.otherField12.enabled = mpList[i].enabled
           }

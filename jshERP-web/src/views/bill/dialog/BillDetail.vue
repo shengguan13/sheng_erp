@@ -1210,17 +1210,16 @@
         defColumns: [],
         retailOutColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1229,12 +1228,12 @@
           { title: '备注', dataIndex: 'remark'}
         ],
         productionPlanColumns: [
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '库存', dataIndex: 'stock'},
           { title: '已下生产单', dataIndex: 'planOrderedNumber'},
@@ -1244,12 +1243,12 @@
           { title: '备注', dataIndex: 'remark'}
         ],
         productionOrderColumns: [
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '库存', dataIndex: 'stock'},
           { title: '已入库', dataIndex: 'finishNumber'},
@@ -1258,12 +1257,12 @@
           { title: '备注', dataIndex: 'remark'}
         ],
         materialPrepareColumns: [
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '备料数量', dataIndex: 'prepareNumber'},
           { title: '已领', dataIndex: 'materialPick'},
           { title: '已退', dataIndex: 'materialReturn'},
@@ -1271,12 +1270,12 @@
         ],
         materialPickColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '库存', dataIndex: 'stock'},
           { title: '领料数量', dataIndex: 'operNumber'},
           { title: '退料数量', dataIndex: 'finishNumber'},
@@ -1285,12 +1284,12 @@
         ],
         materialReturnColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '库存', dataIndex: 'stock'},
           { title: '退料数量', dataIndex: 'operNumber'},
           { title: '单位', dataIndex: 'unit'},
@@ -1298,12 +1297,12 @@
         ],
         productionInColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '库存', dataIndex: 'stock'},
           { title: '批号', dataIndex: 'batchNumber'},
@@ -1314,17 +1313,16 @@
         ],
         retailBackColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1333,12 +1331,12 @@
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseOrderColumns: [
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
@@ -1350,12 +1348,12 @@
         ],
         purchaseInColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
@@ -1369,12 +1367,12 @@
         ],
         purchaseBackColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
@@ -1386,12 +1384,12 @@
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOrderColumns: [
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
@@ -1403,17 +1401,16 @@
         ],
         saleOutColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1422,17 +1419,16 @@
         ],
         saleBackColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1440,17 +1436,16 @@
         ],
         otherInColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1458,17 +1453,16 @@
         ],
         otherOutColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1476,12 +1470,12 @@
         ],
         allocationOutColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
@@ -1495,12 +1489,12 @@
         assembleColumns: [
           { title: '商品类型', dataIndex: 'mType'},
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
@@ -1511,12 +1505,12 @@
         disassembleColumns: [
           { title: '商品类型', dataIndex: 'mType'},
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '颜色编码', dataIndex: 'color'},
+          { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
@@ -1526,10 +1520,10 @@
         ],
         stockCheckReplayColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
-          { title: '条码', dataIndex: 'barCode'},
+          { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '内部零件号', dataIndex: 'internalId'},
-          { title: '客户零件号', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
@@ -1816,7 +1810,7 @@
       retailExportExcel() {
         let aoa = []
         aoa = [['会员卡号：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1831,7 +1825,7 @@
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
         '', '开始生产时间（含）：', this.model.planStartTimeStr, '', '完成生产时间（含）：', this.model.planFinishTimeStr],[]]
-        let title = ['条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '当前库存', '已下生产单', '已入库', '计划生产数量', '单位', '备注']
+        let title = ['编码', '名称', '型号', '规格', '类别', '颜色', '项目', '当前库存', '已下生产单', '已入库', '计划生产数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1846,7 +1840,7 @@
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
         '', '开始日期：', this.model.planStartTimeStr, '', '生产工时：', this.model.workHour],[]]
-        let title = ['条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '当前库存', '已入库', '计划生产数量', '单位', '备注']
+        let title = ['编码', '名称', '型号', '规格', '类别', '颜色', '项目', '当前库存', '已入库', '计划生产数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1861,7 +1855,7 @@
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
         '', '开始日期：', this.model.planStartTimeStr, '', '生产工时：', this.model.workHour],[]]
-        let title = ['条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '备料数量', '已领', '已退', '单位']
+        let title = ['编码', '名称', '型号', '规格', '类别', '颜色', '项目', '备料数量', '已领', '已退', '单位']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1875,7 +1869,7 @@
       materialPickExportExcel() {
         let aoa = []
         aoa = [['领料人员：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '库存', '领料数量', '退料数量', '单位', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '库存', '领料数量', '退料数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1889,7 +1883,7 @@
       materialReturnExportExcel() {
         let aoa = []
         aoa = [['领料人员：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '库存', '退料数量', '单位', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '库存', '退料数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1903,7 +1897,7 @@
       productionInExportExcel() {
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '扩展信息', '库存', '批号', '有效期', '数量', '单位', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '批号', '有效期', '数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1926,7 +1920,7 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '扩展信息', '库存', '单位', '数量', finishType, '单价', '金额', '税率(%)', '税额', '价税合计', '备注']
+        let title = ['编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '数量', finishType, '单价', '金额', '税率(%)', '税额', '价税合计', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1946,7 +1940,7 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单号：', this.model.linkNumber],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '税率(%)', '税额', '价税合计', '重量', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '税率(%)', '税额', '价税合计', '重量', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1966,7 +1960,7 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1980,7 +1974,7 @@
       allocationOutExportExcel() {
         let aoa = []
         aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '扩展信息', '库存', '调入仓库', '单位', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '调入仓库', '单位', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -1994,7 +1988,7 @@
       assembleExportExcel() {
         let aoa = []
         aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['商品类型', '仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '颜色编码', '项目', '扩展信息', '库存', '单位', '数量', '单价', '金额', '备注']
+        let title = ['商品类型', '仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
@@ -2008,7 +2002,7 @@
       stockCheckReplayExportExcel() {
         let aoa = []
         aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单据：', this.model.linkNumber],[]]
-        let title = ['仓库名称', '条码', '名称', '内部零件号', '客户零件号', '类别', '扩展信息', '库存', '单位', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '扩展信息', '库存', '单位', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]

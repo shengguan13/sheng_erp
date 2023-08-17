@@ -153,11 +153,11 @@
           {title: '库存流水', dataIndex: 'action', align:"center", width: 100, fixed: 'left',
             scopedSlots: { customRender: 'action' }
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 100, fixed: 'left'},
+          {title: '编码', dataIndex: 'mBarCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'name', width: 150, fixed: 'left'},
-          {title: '内部零件号', dataIndex: 'internalId'},
-          {title: '客户零件号', dataIndex: 'model'},
-          {title: '颜色编码', dataIndex: 'color'},
+          {title: '型号', dataIndex: 'internalId'},
+          {title: '规格', dataIndex: 'model'},
+          {title: '颜色', dataIndex: 'color'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'unitName'},
           {title: '初始库存', dataIndex: 'initialStock', sorter: (a, b) => a.initialStock - b.initialStock},
@@ -246,7 +246,7 @@
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '颜色编码', '类别', '单位', '初始库存', '库存']]
+        let aoa = [['编码', '名称', '型号', '规格', '颜色', '类别', '单位', '初始库存', '库存']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.mBarCode, ds.name, ds.internalId, ds.model, ds.color, ds.categoryName,

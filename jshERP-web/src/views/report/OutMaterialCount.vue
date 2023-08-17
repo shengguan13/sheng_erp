@@ -150,10 +150,10 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 100, fixed: 'left'},
+          {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'mName', width: 200, fixed: 'left'},
-          {title: '内部零件号', dataIndex: 'internalId'},
-          {title: '客户零件号', dataIndex: 'model'},
+          {title: '型号', dataIndex: 'internalId'},
+          {title: '规格', dataIndex: 'model'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'materialUnit'},
           {title: '出库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum}
@@ -207,7 +207,7 @@
         }
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '内部零件号', '客户零件号', '类型', '单位', '出库数量', '出库金额']]
+        let aoa = [['编码', '名称', '型号', '规格', '类型', '单位', '出库数量', '出库金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.mName, ds.internalId, ds.model, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum]

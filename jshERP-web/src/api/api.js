@@ -55,7 +55,6 @@ const getMaterialBySelect = (params)=>getAction("/material/findBySelect",params)
 const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode",params);
 const getMaterialByMeIdList = (params)=>getAction("/material/getMaterialByMeIdList",params);
 const getMaterialByCompositePrefix = (params)=>getAction("/material/getMaterialByCompositePrefix",params);
-const getMaxBarCode = (params)=>getAction("/material/getMaxBarCode",params);
 const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCodeExist",params);
 const batchUpdateMaterial = (params)=>postAction("/material/batchUpdate",params);
 //多属性
@@ -151,7 +150,6 @@ export {
   getMaterialByBarCode,
   getMaterialByMeIdList,
   getMaterialByCompositePrefix,
-  getMaxBarCode,
   checkMaterialBarCode,
   batchUpdateMaterial,
   addMaterialBom,

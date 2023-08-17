@@ -495,15 +495,15 @@ public class MaterialService {
             }
             for (int i = 1; i < rightRows; i++) {
                 String other1 = ExcelUtils.getContent(src, i, 0); //客户/供应商
-                String other2 = ExcelUtils.getContent(src, i, 1); //客户or供应商
+                String other2 = ExcelUtils.getContent(src, i, 1); //客户OR供应商
                 String mfrs = ExcelUtils.getContent(src, i, 2); //制造商
 
                 String barCode = ExcelUtils.getContent(src, i, 3); //物料编码
                 String name = ExcelUtils.getContent(src, i, 4); //物料名称
                 String model = ExcelUtils.getContent(src, i, 5); //物料规格
 
-                String other3 = ExcelUtils.getContent(src, i, 6); //物料材质
-                String internalId = ExcelUtils.getContent(src, i, 7); //物料型号
+                String other3 = ExcelUtils.getContent(src, i, 6); //材质
+                String internalId = ExcelUtils.getContent(src, i, 7); //型号
                 String other4 = ExcelUtils.getContent(src, i, 8); //颜色代码
                 String color = ExcelUtils.getContent(src, i, 9); //颜色
                 String unit = ExcelUtils.getContent(src, i, 10); //单位
@@ -1128,15 +1128,6 @@ public class MaterialService {
         return 0.0;
     }
 
-    public String getMaxBarCode() {
-        String maxBarCodeOld = materialMapperEx.getMaxBarCode();
-        if(StringUtil.isNotEmpty(maxBarCodeOld)) {
-            return Long.parseLong(maxBarCodeOld)+"";
-        } else {
-            return "1000";
-        }
-    }
-
     public List<String> getMaterialNameList() {
         return materialMapperEx.getMaterialNameList();
     }
@@ -1209,42 +1200,42 @@ public class MaterialService {
             if (mpArr[i].equals("制造商")) {
                 materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
             }
-            if (mpArr[i].equals("工艺类别")) {
+            if (mpArr[i].equals("客户/供应商")) {
                 materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
             }
-            if (mpArr[i].equals("配置")) {
+            if (mpArr[i].equals("客户OR供应商")) {
                 materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
             }
-            // if (mpArr[i].equals("自定义1")) {
-            //     materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
-            // }
-            if (mpArr[i].equals("材料牌号")) {
+            if (mpArr[i].equals("材质")) {
+                materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
+            }
+            if (mpArr[i].equals("颜色代码")) {
                 materialOther = materialOther + ((m.getOtherField4() == null || m.getOtherField4().equals("")) ? "" : "(" + m.getOtherField4() + ")");
             }
-            if (mpArr[i].equals("材料类型/标准")) {
+            if (mpArr[i].equals("模腔数")) {
                 materialOther = materialOther + ((m.getOtherField5() == null || m.getOtherField5().equals("")) ? "" : "(" + m.getOtherField5() + ")");
             }
-            if (mpArr[i].equals("原材料厂家")) {
+            if (mpArr[i].equals("模具重量")) {
                 materialOther = materialOther + ((m.getOtherField6() == null || m.getOtherField6().equals("")) ? "" : "(" + m.getOtherField6() + ")");
             }
-            if (mpArr[i].equals("外协件厂家")) {
+            if (mpArr[i].equals("浇口重量")) {
                 materialOther = materialOther + ((m.getOtherField7() == null || m.getOtherField7().equals("")) ? "" : "(" + m.getOtherField7() + ")");
             }
-            if (mpArr[i].equals("尺寸")) {
+            if (mpArr[i].equals("可装设备")) {
                 materialOther = materialOther + ((m.getOtherField8() == null || m.getOtherField8().equals("")) ? "" : "(" + m.getOtherField8() + ")");
             }
-            if (mpArr[i].equals("检具")) {
+            if (mpArr[i].equals("标包")) {
                 materialOther = materialOther + ((m.getOtherField9() == null || m.getOtherField9().equals("")) ? "" : "(" + m.getOtherField9() + ")");
             }
-            if (mpArr[i].equals("用量/车（件）")) {
-                materialOther = materialOther + ((m.getOtherField10() == null || m.getOtherField10().equals("")) ? "" : "(" + m.getOtherField10() + ")");
-            }
-            if (mpArr[i].equals("料道（kg）")) {
-                materialOther = materialOther + ((m.getOtherField11() == null || m.getOtherField11().equals("")) ? "" : "(" + m.getOtherField11() + ")");
-            }
-            if (mpArr[i].equals("表面处理纹理")) {
-                materialOther = materialOther + ((m.getOtherField12() == null || m.getOtherField12().equals("")) ? "" : "(" + m.getOtherField12() + ")");
-            }
+//            if (mpArr[i].equals("保留1")) {
+//                materialOther = materialOther + ((m.getOtherField10() == null || m.getOtherField10().equals("")) ? "" : "(" + m.getOtherField10() + ")");
+//            }
+//            if (mpArr[i].equals("保留2")) {
+//                materialOther = materialOther + ((m.getOtherField11() == null || m.getOtherField11().equals("")) ? "" : "(" + m.getOtherField11() + ")");
+//            }
+//            if (mpArr[i].equals("保留3")) {
+//                materialOther = materialOther + ((m.getOtherField12() == null || m.getOtherField12().equals("")) ? "" : "(" + m.getOtherField12() + ")");
+//            }
         }
         return materialOther;
     }
