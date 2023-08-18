@@ -82,7 +82,6 @@
             <span slot="action" slot-scope="text, record">
               <a @click="handleDetail(record)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                 <a>删除</a>
               </a-popconfirm>
@@ -136,13 +135,7 @@
         queryParam: {
           categoryId:'',
           materialParam:'',
-          color:'',
           project:'',
-          materialOther:'',
-          weight:'',
-          expiryNum:'',
-          enabled: '',
-          remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
@@ -152,27 +145,28 @@
         columns:[],
         // 初始化设置的表头
         settingColumns:['action','project','barCode','process','name','partNo','internalId','model','color',
-          'category','processUsage','unit','remark'],
+          'category','processUsage','unit','department','remark'],
         // 默认的列
         defColumns: [
           {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: 120,
+            width: 80,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '项目', dataIndex: 'project', width: 60},
-          {title: '编码', dataIndex: 'barCode', width: 160},
-          {title: '工艺流程', dataIndex: 'process', width: 120},
+          {title: '项目', dataIndex: 'project', width: 70},
+          {title: '编码', dataIndex: 'barCode', width: 90},
+          {title: '工艺流程', dataIndex: 'process', width: 60},
           {title: '名称', dataIndex: 'name', width: 160},
-          {title: '零件号', dataIndex: 'partNo', width: 120},
+          {title: '零件号', dataIndex: 'partNo', width: 100},
           {title: '型号', dataIndex: 'internalId', width: 120},
           {title: '规格', dataIndex: 'model', width: 120},
-          {title: '颜色', dataIndex: 'color', width: 100},
+          {title: '颜色', dataIndex: 'color', width: 80},
           {title: '类别', dataIndex: 'category', width: 60},
           {title: '用量', dataIndex: 'processUsage', width: 60},
           {title: '单位', dataIndex: 'unit', width: 60},
+          {title: '负责部门', dataIndex: 'department', width: 70},
           {title: '备注', dataIndex: 'remark', width: 80}
         ],
         url: {

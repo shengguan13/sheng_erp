@@ -81,7 +81,8 @@
             { title: '颜色', key: 'color', width: '7%', type: FormTypes.normal },
             { title: '类别', key: 'category', width: '7%', type: FormTypes.normal },
             { title: '用量', key: 'processUsage', width: '8%', type: FormTypes.normal },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal }
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '负责部门', key: 'department', width: '6%', type: FormTypes.normal }
           ]
         },
         url: {
