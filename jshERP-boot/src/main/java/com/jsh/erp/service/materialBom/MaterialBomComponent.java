@@ -27,17 +27,22 @@ public class MaterialBomComponent implements ICommonQuery {
     @Override
     public List<?> select(Map<String, String> parameterMap) throws Exception {
         String search = parameterMap.get(Constants.SEARCH);
+        String categoryId = StringUtil.getInfo(search, "categoryId");
         String process = StringUtil.getInfo(search, "process");
         String project = StringUtil.getInfo(search, "project");
-        return materialBomService.select(process, project, QueryUtils.offset(parameterMap), QueryUtils.rows(parameterMap));
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        return materialBomService.select(categoryId, process, project, materialParam,
+                QueryUtils.offset(parameterMap), QueryUtils.rows(parameterMap));
     }
 
     @Override
     public Long counts(Map<String, String> parameterMap) throws Exception {
         String search = parameterMap.get(Constants.SEARCH);
+        String categoryId = StringUtil.getInfo(search, "categoryId");
         String process = StringUtil.getInfo(search, "process");
         String project = StringUtil.getInfo(search, "project");
-        return materialBomService.countMaterialBom(process, project);
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        return materialBomService.countMaterialBom(categoryId, process, project, materialParam);
     }
 
     @Override

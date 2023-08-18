@@ -9,6 +9,8 @@ public interface MaterialBomMapperEx {
     List<MaterialBomVo4Info> selectMaterialBom(
             @Param("process") String process,
             @Param("project") String project,
+            @Param("materialParam") String materialParam,
+            @Param("idList") List<Long> idList,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -18,7 +20,9 @@ public interface MaterialBomMapperEx {
 
     Long countsByBom(
             @Param("process") String process,
-            @Param("project") String project);
+            @Param("project") String project,
+            @Param("materialParam") String materialParam,
+            @Param("idList") List<Long> idList);
 
     int batchDeleteMaterialBomByIds(
             @Param("ids") String ids[]);

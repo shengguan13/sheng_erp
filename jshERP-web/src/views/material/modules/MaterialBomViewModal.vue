@@ -73,11 +73,13 @@
           dataSource: [],
           columns: [
             { title: '工艺流程', key: 'process', width: '8%', type: FormTypes.normal },
-            { title: '产品编码', key: 'barCode', width: '10%', type: FormTypes.normal },
+            { title: '编码', key: 'barCode', width: '10%', type: FormTypes.normal },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
+            { title: '零件号', key: 'partNo', width: '8%', type: FormTypes.normal },
             { title: '型号', key: 'internalId', width: '9%', type: FormTypes.normal },
             { title: '规格', key: 'model', width: '9%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '7%', type: FormTypes.normal },
+            { title: '类别', key: 'category', width: '7%', type: FormTypes.normal },
             { title: '用量', key: 'processUsage', width: '8%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal }
           ]

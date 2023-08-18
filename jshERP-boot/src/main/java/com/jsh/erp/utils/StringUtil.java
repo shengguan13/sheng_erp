@@ -333,6 +333,24 @@ public class StringUtil {
     }
 
     /**
+     * 校验编号的格式，且可以为空
+     * @param value
+     * @return
+     */
+    public static boolean checkBarCodeEmptyAllowed(Object value) {
+        if(value!=null) {
+            if ("".equals(value)) {
+                return true;
+            }
+            String str = value.toString();
+            Pattern pattern = Pattern.compile( "^[A-Z]+\\.[a-z]+\\.(0\\d*|\\d+)\\.(0\\d*|\\d+)$");
+            return pattern.matcher(str).matches();
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 判断对象是否为数字（含小数）
      * @param str
      * @return

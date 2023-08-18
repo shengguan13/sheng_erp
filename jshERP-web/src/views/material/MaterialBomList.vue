@@ -29,38 +29,13 @@
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-                  <a @click="handleToggleSearch" style="margin-left: 8px">
-                    {{ toggleSearchStatus ? '收起' : '展开' }}
-                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-                  </a>
                 </a-col>
               </span>
-              <template v-if="toggleSearchStatus">
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="扩展信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input style="width: 100%" placeholder="请输入扩展信息查询" v-model="queryParam.materialOther"></a-input>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="请选择状态" v-model="queryParam.enabled">
-                      <a-select-option value="1">启用</a-select-option>
-                      <a-select-option value="0">禁用</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入备注查询" v-model="queryParam.remark"></a-input>
-                  </a-form-item>
-                </a-col>
-              </template>
             </a-row>
           </a-form>
         </div>
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
-          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
           <a-button type="primary" icon="download" @click="handleExportXls('产品信息')">导出</a-button>
           <a-dropdown>
@@ -107,7 +82,6 @@
             <span slot="action" slot-scope="text, record">
               <a @click="handleDetail(record)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a v-if="btnEnableList.indexOf(1)>-1" @click="handleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                 <a>删除</a>
@@ -117,7 +91,6 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <material-bom-modal ref="modalForm" @ok="modalFormOk"></material-bom-modal>
         <material-bom-view-modal ref="bomViewModalForm"></material-bom-view-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
@@ -126,7 +99,6 @@
   </a-row>
 </template>
 <script>
-  import MaterialBomModal from './modules/MaterialBomModal'
   import MaterialBomViewModal from './modules/MaterialBomViewModal'
   import ImportFileModal from '@/components/tools/ImportFileModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
@@ -142,7 +114,6 @@
     name: "MaterialBomList",
     mixins:[JeecgListMixin],
     components: {
-      MaterialBomModal,
       MaterialBomViewModal,
       ImportFileModal,
       BatchSetInfoModal,
@@ -181,7 +152,7 @@
         columns:[],
         // 初始化设置的表头
         settingColumns:['action','project','barCode','process','name','partNo','internalId','model','color',
-          'categoryName','processUsage','bomUnit','remark'],
+          'category','processUsage','unit','remark'],
         // 默认的列
         defColumns: [
           {
@@ -195,13 +166,13 @@
           {title: '编码', dataIndex: 'barCode', width: 160},
           {title: '工艺流程', dataIndex: 'process', width: 120},
           {title: '名称', dataIndex: 'name', width: 160},
-          {title: '规格', dataIndex: 'partNo', width: 120},
+          {title: '零件号', dataIndex: 'partNo', width: 120},
           {title: '型号', dataIndex: 'internalId', width: 120},
           {title: '规格', dataIndex: 'model', width: 120},
           {title: '颜色', dataIndex: 'color', width: 100},
-          {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
+          {title: '类别', dataIndex: 'category', width: 60},
           {title: '用量', dataIndex: 'processUsage', width: 60},
-          {title: '单位', dataIndex: 'bomUnit', width: 60},
+          {title: '单位', dataIndex: 'unit', width: 60},
           {title: '备注', dataIndex: 'remark', width: 80}
         ],
         url: {
@@ -261,14 +232,6 @@
             }
           }
         })
-      },
-      handleEdit: function (record) {
-        this.$refs.modalForm.edit(record);
-        this.$refs.modalForm.title = "编辑";
-        this.$refs.modalForm.disableSubmit = false;
-        if(this.btnEnableList.indexOf(1)===-1) {
-          this.$refs.modalForm.isReadOnly = true
-        }
       },
       handleDetail: function (record) {
         this.$refs.bomViewModalForm.edit(record);

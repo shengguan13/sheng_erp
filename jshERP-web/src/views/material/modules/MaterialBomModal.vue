@@ -13,7 +13,7 @@
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      style="top:100px;height: 50%;">
+      style="top:100px;height: 90%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -28,6 +28,26 @@
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="工艺流程">
             <a-input placeholder="请输入工艺流程" v-decorator.trim="[ 'process', validatorRules.process]" />
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
+            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
+            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
+            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
+            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
@@ -65,20 +85,17 @@
         validatorRules:{
           project:{
             rules: [
-              { required: true, message: '请输入项目!' },
-              { validator: this.validateProject}
+              { required: true, message: '请输入项目!' }
             ]
           },
           process:{
             rules: [
-              { required: true, message: '请输入工艺流程!' },
-              { validator: this.validateProcess}
+              { required: true, message: '请输入工艺流程!' }
             ]
           },
           barCode:{
             rules: [
-              { required: true, message: '请输入产品编号!' },
-              { validator: this.validateBarCode}
+              { required: true, message: '请输入产品编号!' }
             ]
           }
         }
@@ -130,57 +147,6 @@
       },
       handleCancel () {
         this.close()
-      },
-      validateProject(rule, value, callback){
-        let params = {
-          name: value,
-          id: this.model.id?this.model.id:0
-        };
-        checkMaterialAttribute(params).then((res)=>{
-          if(res && res.code===200) {
-            if(!res.data.status){
-              callback();
-            } else {
-              callback("名称已经存在");
-            }
-          } else {
-            callback(res.data);
-          }
-        });
-      },
-      validateProcess(rule, value, callback){
-        let params = {
-          name: value,
-          id: this.model.id?this.model.id:0
-        };
-        checkMaterialAttribute(params).then((res)=>{
-          if(res && res.code===200) {
-            if(!res.data.status){
-              callback();
-            } else {
-              callback("名称已经存在");
-            }
-          } else {
-            callback(res.data);
-          }
-        });
-      },
-      validateBarCode(rule, value, callback){
-        let params = {
-          name: value,
-          id: this.model.id?this.model.id:0
-        };
-        checkMaterialAttribute(params).then((res)=>{
-          if(res && res.code===200) {
-            if(!res.data.status){
-              callback();
-            } else {
-              callback("名称已经存在");
-            }
-          } else {
-            callback(res.data);
-          }
-        });
       }
     }
   }

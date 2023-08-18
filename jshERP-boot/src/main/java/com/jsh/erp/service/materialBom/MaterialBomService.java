@@ -6,6 +6,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.MaterialBomMapper;
 import com.jsh.erp.datasource.mappers.MaterialBomMapperEx;
+import com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
@@ -43,6 +44,9 @@ public class MaterialBomService {
     private MaterialBomMapperEx materialBomMapperEx;
 
     @Resource
+    private MaterialCategoryMapperEx materialCategoryMapperEx;
+
+    @Resource
     private UserService userService;
 
     public MaterialBom getMaterialBom(long id)throws Exception {
@@ -68,10 +72,15 @@ public class MaterialBomService {
         return list;
     }
 
-    public List<MaterialBomVo4Info> select(String process, String project, int offset, int rows) throws Exception{
+    public List<MaterialBomVo4Info> select(
+            String categoryId, String process, String project, String materialParam, int offset, int rows) throws Exception{
         List<MaterialBomVo4Info> list = new ArrayList<>();
         try{
-            list = materialBomMapperEx.selectMaterialBom(process, project, offset, rows);
+            List<Long> idList = new ArrayList<>();
+            if(StringUtil.isNotEmpty(categoryId)){
+                idList = getListByParentId(Long.parseLong(categoryId));
+            }
+            list = materialBomMapperEx.selectMaterialBom(process, project, materialParam, idList, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -88,14 +97,39 @@ public class MaterialBomService {
         return list;
     }
 
-    public Long countMaterialBom(String process, String project)throws Exception {
-        Long result =null;
+    public Long countMaterialBom(String categoryId, String process, String project, String materialParam) throws Exception{
+        Long result = null;
         try{
-            result=materialBomMapperEx.countsByBom(process, project);
+            List<Long> idList = new ArrayList<>();
+            if(StringUtil.isNotEmpty(categoryId)){
+                idList = getListByParentId(Long.parseLong(categoryId));
+            }
+            result = materialBomMapperEx.countsByBom(process, project, materialParam, idList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<Long> getListByParentId(Long parentId) {
+        List<Long> idList = new ArrayList<Long>();
+        List<MaterialCategory> list = materialCategoryMapperEx.getListByParentId(parentId);
+        idList.add(parentId);
+        if(list!=null && list.size()>0) {
+            getIdListByParentId(idList, parentId);
+        }
+        return idList;
+    }
+
+    public List<Long> getIdListByParentId(List<Long> idList, Long parentId){
+        List<MaterialCategory> list = materialCategoryMapperEx.getListByParentId(parentId);
+        if(list!=null && list.size()>0) {
+            for(MaterialCategory mc : list){
+                idList.add(mc.getId());
+                getIdListByParentId(idList, mc.getId());
+            }
+        }
+        return idList;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -192,10 +226,7 @@ public class MaterialBomService {
                 String weight = ExcelUtils.getContent(src, i, 15); //重量（kg）
                 String remark = ExcelUtils.getContent(src, i, 17); //备注
                 String amountPerCar = ExcelUtils.getContent(src, i, 22); //每车用量
-                // 没有编码的直接跳过
-                if (StringUtil.isEmpty(barCode)) {
-                    continue;
-                }
+
                 // 批量校验excel中有无重复BOM
                 batchCheckExistMaterialBomByParam(bomList, process, project, barCode);
                 MaterialBom bom = new MaterialBom();
@@ -228,7 +259,7 @@ public class MaterialBomService {
                     bom.setAmountPerCar(BigDecimal.valueOf(Double.valueOf(amountPerCar)));
                 }
                 //校验产品编码
-                if(!StringUtil.checkBarCode(barCode)) {
+                if(!StringUtil.checkBarCodeEmptyAllowed(barCode)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
                             String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
                 }
