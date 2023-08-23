@@ -1058,10 +1058,6 @@ public class MaterialService {
         return result;
     }
 
-    /**
-     * @param prefixList 25.1[amount1],25.2[amount2]
-     * @return
-     */
     public List<MaterialBomVo4Info> getMaterialByProcessPrefix(List<String> prefixList,
                                                                List<String> projectList,
                                                                List<Double> amountList) {
@@ -1095,59 +1091,6 @@ public class MaterialService {
             JshException.readFail(logger, e);
         }
         return result;
-    }
-
-    /**
-     * @param prefixList 25.1[amount1],25.2[amount2]
-     * @param compositeList m1(25.1.2.3[],25.2.1[]),此时只有25.2.1符合条件
-     * @return nextLevelComposite 但是他们的otherField10已经被改成了所需要的amount
-     */
-    private List<MaterialVo4Unit> filterOnlyNextLevel(List<String> prefixList, List<MaterialVo4Unit> compositeList) {
-        List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
-        Map<String, Double> compositeAmountMap = new HashMap<>();
-        for (String prefix : prefixList) {
-            String[] split = prefix.split("\\[");
-            for (MaterialVo4Unit m : compositeList) {
-                double amount = getDirectCompositeAmount(split[0], m);
-                if (amount > 0) {
-                    compositeAmountMap.merge(m.getmBarCode(),
-                            Double.valueOf(split[1].substring(0, split[1].length() - 1)) * amount,
-                            (a, b) -> a + b);
-                }
-            }
-        }
-        for (MaterialVo4Unit m : compositeList) {
-            if (compositeAmountMap.containsKey(m.getmBarCode())) {
-                m.setOtherField10(String.valueOf(compositeAmountMap.getOrDefault(m.getmBarCode(), 0.0)));
-                result.add(m);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * @param prefix 25.1
-     * @param m 25.1.2[0.8],26.3.2.5[1.2]
-     * @return
-     */
-    private double getDirectCompositeAmount(String prefix, MaterialVo4Unit m) {
-        if (m == null || m.getOtherField10() == null || m.getOtherField10().equals("") || !m.getOtherField10().contains(prefix)) {
-            return 0.0;
-        }
-        // e.g. 25.1.2[0.8],26.3.2.5[1.2]
-        String[] split = m.getOtherField10().split(",");
-        for (String s : split) {
-            if (s.startsWith(prefix + ".")) {
-                // e.g. 25.1.2[0.8]
-                String[] split2 = s.split("\\[");
-                if (split2.length > 1) {
-                    if (!split2[0].substring(prefix.length() + 1).contains(".")) {
-                        return Double.valueOf(split2[1].substring(0, split2[1].length() - 1));
-                    }
-                }
-            }
-        }
-        return 0.0;
     }
 
     public List<String> getMaterialNameList() {

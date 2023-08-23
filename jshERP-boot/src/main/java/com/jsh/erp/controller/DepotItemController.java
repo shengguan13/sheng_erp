@@ -295,7 +295,6 @@ public class DepotItemController {
             if(headerId != 0) {
                 dataList = depotItemService.getDetailList(headerId);
             }
-            String[] mpArr = mpList.split(",");
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
@@ -333,13 +332,11 @@ public class DepotItemController {
                         }
                     }
                 }
-                Map<String, Double> materialPrepare = new HashMap<>();
                 List<String> prefixList = new ArrayList<>();
                 List<String> projectList = new ArrayList<>();
                 List<Double> amountList = new ArrayList<>();
                 // 找出所有根据计划要领的料
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    String prefix = "";
                     double toProduce = diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue();
                     if (diEx.getMProcess() != null && !"".equals(diEx.getMProcess()) && toProduce > 0) {
                         prefixList.add(diEx.getMProcess());
