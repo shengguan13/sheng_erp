@@ -46,6 +46,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String MOtherField12;
 
+    private String MProcess;
+
     private String DepotName;
 
     private String AnotherDepotName;
@@ -234,6 +236,14 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setMOtherField12(String MOtherField12) {
         this.MOtherField12 = MOtherField12;
+    }
+
+    public String getMProcess() {
+        return MProcess;
+    }
+
+    public void setMProcess(String MProcess) {
+        this.MProcess = MProcess;
     }
 
     public String getDepotName() {

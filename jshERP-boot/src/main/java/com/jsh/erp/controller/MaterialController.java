@@ -546,38 +546,6 @@ public class MaterialController {
     }
 
     /**
-     * @param prefixList 25.1[amount1],25.2[amount2]
-     * @param mpList
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/getMaterialByCompositePrefix")
-    @ApiOperation(value = "根据产品组成前缀查找子产品")
-    public BaseResponseInfo getMaterialByCompositePrefix(@RequestParam("prefixList") String prefixList,
-                                                         @RequestParam("mpList") String mpList,
-                                                         HttpServletRequest request) throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            String[] prefixArr = prefixList.split(",");
-            String[] mpArr = mpList.split(",");
-            List<MaterialVo4Unit> result = materialService.getMaterialByCompositePrefix(Arrays.asList(prefixArr));
-            if(result != null && result.size()>0) {
-                for(MaterialVo4Unit mvo: result) {
-                    mvo.setMaterialOther(materialService.getMaterialOtherByParam(mpArr, mvo));
-                }
-            }
-            res.code = 200;
-            res.data = result;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 根据产品信息获取库存，进行赋值
      * @param mvo
      * @throws Exception

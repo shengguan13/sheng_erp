@@ -82,8 +82,6 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> getMaterialByMeIdList(@Param("meIdList") List<Long> meIdList);
 
-    List<MaterialVo4Unit> getMaterialByCompositePrefix(@Param("prefixList") List<String> prefixList);
-
     List<MaterialVo4Unit> getMaterialByMeId(
             @Param("meId") Long meId);
 

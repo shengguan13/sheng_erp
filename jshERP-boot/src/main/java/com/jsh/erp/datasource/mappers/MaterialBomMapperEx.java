@@ -18,6 +18,10 @@ public interface MaterialBomMapperEx {
             @Param("process") String process,
             @Param("project") String project);
 
+    List<MaterialBomVo4Info> selectNextLevelBomByPrefix(
+            @Param("process") String process,
+            @Param("project") String project);
+
     Long countsByBom(
             @Param("process") String process,
             @Param("project") String project,

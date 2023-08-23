@@ -51,6 +51,8 @@ public class MaterialService {
     @Resource
     private MaterialMapperEx materialMapperEx;
     @Resource
+    private MaterialBomMapperEx materialBomMapperEx;
+    @Resource
     private MaterialCategoryMapperEx materialCategoryMapperEx;
     @Resource
     private MaterialExtendMapperEx materialExtendMapperEx;
@@ -1060,18 +1062,35 @@ public class MaterialService {
      * @param prefixList 25.1[amount1],25.2[amount2]
      * @return
      */
-    public List<MaterialVo4Unit> getMaterialByCompositePrefix(List<String> prefixList) {
-        List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
+    public List<MaterialBomVo4Info> getMaterialByProcessPrefix(List<String> prefixList,
+                                                               List<String> projectList,
+                                                               List<Double> amountList) {
+        List<MaterialBomVo4Info> result = new ArrayList<MaterialBomVo4Info>();
+        Map<String, MaterialBomVo4Info> barCodeToAmountMap = new HashMap<>();
         try{
-            if(prefixList != null) {
-                List<String> prefixListWithoutAmount = prefixList.stream().map(s -> {
-                    String[] split = s.split("\\[");
-                    return split[0] + ".";
-                }).collect(Collectors.toList());
-                List<MaterialVo4Unit> queryResult= materialMapperEx.getMaterialByCompositePrefix(prefixListWithoutAmount);
-                // 可能是更底层的子零件，还需要筛选一下
-                result = filterOnlyNextLevel(prefixList, queryResult);
+            int length = prefixList.size();
+            if (length == 0 || projectList.size() != length || amountList.size() != length) {
+                throw new Exception();
             }
+            for (int i = 0; i < length; i++) {
+                List<MaterialBomVo4Info> list = materialBomMapperEx.selectNextLevelBomByPrefix(prefixList.get(i), projectList.get(i));
+                for (MaterialBomVo4Info mb : list) {
+                    if (barCodeToAmountMap.containsKey(mb.getBarCode())) {
+                        BigDecimal usage = barCodeToAmountMap.get(mb.getBarCode()).getProcessUsage() == null ?
+                                BigDecimal.ZERO : barCodeToAmountMap.get(mb.getBarCode()).getProcessUsage();
+                        barCodeToAmountMap.get(mb.getBarCode()).setProcessUsage(
+                                usage.add(mb.getProcessUsage() == null ?
+                                        BigDecimal.ZERO :
+                                        mb.getProcessUsage().multiply(BigDecimal.valueOf(amountList.get(i)))));
+                    } else {
+                        mb.setProcessUsage(mb.getProcessUsage() == null ?
+                                BigDecimal.ZERO :
+                                mb.getProcessUsage().multiply(BigDecimal.valueOf(amountList.get(i))));
+                        barCodeToAmountMap.put(mb.getBarCode(), mb);
+                    }
+                }
+            }
+            result.addAll(barCodeToAmountMap.values());
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

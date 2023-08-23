@@ -9,6 +9,7 @@
         <result column="category" jdbcType="VARCHAR" property="category" />
         <result column="color" jdbcType="VARCHAR" property="color" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="meId" jdbcType="BIGINT" property="meId" />
     </resultMap>
 
     <select id="selectMaterialBom"  resultMap="ResultAndInfoMap">
@@ -43,7 +44,7 @@
     </select>
 
     <select id="selectMaterialBomByPrefix" resultMap="ResultAndInfoMap">
-        select mb.*, m.name, m.internal_id, m.model, m.color, mc.name category from jsh_material_bom mb
+        select mb.*, m.name, m.internal_id, m.model, m.color, me.id meId, mc.name category from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
@@ -51,6 +52,24 @@
         <if test="process != null">
             <bind name="bindProcess" value="process+'.%'"/>
             and mb.process like #{bindProcess}
+        </if>
+        <if test="project != null">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and mb.project like #{bindProject}
+        </if>
+        and ifnull(mb.delete_flag,'0') !='1'
+        order by mb.process asc
+    </select>
+
+    <select id="selectNextLevelBomByPrefix" resultMap="ResultAndInfoMap">
+        select mb.*, m.name, m.internal_id, m.model, m.color, me.id meId, mc.name category from jsh_material_bom mb
+        left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="process != null">
+            <bind name="bindProcess" value="process+'.%'"/>
+            and mb.process like #{bindProcess} and length(mb.process) - length(replace(mb.process, '.', '')) = length(#{process}) - length(replace(#{process}, '.', '')) + 1
         </if>
         <if test="project != null">
             <bind name="bindProject" value="'%'+project+'%'"/>

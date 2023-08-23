@@ -11,6 +11,8 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     private String color;
 
+    private Long meId;
+
     public String getName() {
         return name;
     }
@@ -49,5 +51,13 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public Long getMeId() {
+        return meId;
+    }
+
+    public void setMeId(Long meId) {
+        this.meId = meId;
     }
 }

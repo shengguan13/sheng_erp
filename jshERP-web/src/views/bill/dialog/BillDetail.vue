@@ -1258,6 +1258,7 @@
         ],
         materialPrepareColumns: [
           { title: '编码', dataIndex: 'barCode'},
+          { title: '工艺流程', dataIndex: 'process'},
           { title: '名称', dataIndex: 'name'},
           { title: '型号', dataIndex: 'internalId'},
           { title: '规格', dataIndex: 'model'},

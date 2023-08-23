@@ -335,42 +335,36 @@ public class DepotItemController {
                 }
                 Map<String, Double> materialPrepare = new HashMap<>();
                 List<String> prefixList = new ArrayList<>();
+                List<String> projectList = new ArrayList<>();
+                List<Double> amountList = new ArrayList<>();
                 // 找出所有根据计划要领的料
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    String composite = "";
-                    for (int i = 0; i < mpArr.length; i++) {
-                        if (mpArr[i].equals("组装等级关系")) {
-                            composite = (diEx.getMOtherField10() == null || diEx.getMOtherField10().equals("")) ? "" :  diEx.getMOtherField10();
-                        }
-                    }
+                    String prefix = "";
                     double toProduce = diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue();
-                    // 25.1[],25.2[]
-                    if (!"".equals(composite)) {
-                        String[] strArr = composite.split(",");
-                        // 可能一个零件属于多个工艺流程，默认选择第一个，e.g. 25.1
-                        String code = strArr[0].split("\\[")[0];
-                        if (toProduce > 0) {
-                            prefixList.add(code + "[" + toProduce + "]");
-                        }
+                    if (diEx.getMProcess() != null && !"".equals(diEx.getMProcess()) && toProduce > 0) {
+                        prefixList.add(diEx.getMProcess());
+                        projectList.add(diEx.getMProject());
+                        amountList.add(toProduce);
                     }
                 }
-                List<MaterialVo4Unit> toBePrepared = materialService.getMaterialByCompositePrefix(prefixList);
+                List<MaterialBomVo4Info> toBePrepared = materialService.getMaterialByProcessPrefix(prefixList, projectList, amountList);
                 // 整合备料和已领料，然后返回
-                for (MaterialVo4Unit m : toBePrepared) {
+                for (MaterialBomVo4Info m : toBePrepared) {
                     JSONObject item = new JSONObject();
-                    item.put("materialExtendId", m.getMeId() == null ? "" : m.getMeId());
-                    item.put("barCode", m.getmBarCode());
-                    item.put("name", m.getName());
-                    item.put("internalId", m.getInternalId());
-                    item.put("categoryName", m.getCategoryName());
-                    item.put("model", m.getModel());
-                    item.put("color", m.getColor());
-                    item.put("project", m.getProject());
-                    item.put("unit", m.getUnitName());
+                    String meId = m.getMeId() == null ? "" : String.valueOf(m.getMeId());
+                    item.put("materialExtendId", meId);
+                    item.put("barCode", m.getBarCode() == null ? "" : m.getBarCode());
+                    item.put("name", m.getName() == null ? "" : m.getName());
+                    item.put("internalId", m.getInternalId() == null ? "" : m.getInternalId());
+                    item.put("categoryName", m.getCategory() == null ? "" : m.getCategory());
+                    item.put("model", m.getModel() == null ? "" : m.getModel());
+                    item.put("color", m.getColor() == null ? "" : m.getColor());
+                    item.put("unit", m.getUnit() == null ? "" : m.getUnit());
+                    item.put("process", m.getProcess() == null ? "" : m.getProcess());
 
-                    item.put("prepareNumber", Double.valueOf(m.getOtherField10()));
-                    item.put("materialPick", materialPicked.containsKey(String.valueOf(m.getMeId())) ? materialPicked.get(String.valueOf(m.getMeId())) : 0);
-                    item.put("materialReturn", materialReturned.containsKey(String.valueOf(m.getMeId())) ? materialReturned.get(String.valueOf(m.getMeId())) : 0);
+                    item.put("prepareNumber", m.getProcessUsage() == null ? 0.0 : m.getProcessUsage().doubleValue());
+                    item.put("materialPick", materialPicked.getOrDefault(meId, 0.0));
+                    item.put("materialReturn", materialReturned.getOrDefault(meId, 0.0));
                     dataArray.add(item);
                 }
             }
