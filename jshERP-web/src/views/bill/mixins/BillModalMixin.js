@@ -194,6 +194,11 @@ export const BillModalMixin = {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if(res.code === 200){
           let arr = res.data
+          for (let i = 0; i < arr.length; i++) {
+            if(arr[i].isDefault){
+              that.defaultDepotId = arr[i].id
+            }
+          }
           for(let item of that.materialTable.columns){
             if(item.key == 'depotId' || item.key == 'anotherDepotId') {
               item.options = []
@@ -433,24 +438,6 @@ export const BillModalMixin = {
             target.recalcAllStatisticsColumns()
             that.autoChangePrice(target)
           }
-          break;
-        case "batchNumber":
-          batchNumber = value
-          let depotItemId = ''
-          let rowId = row.id
-          if(rowId.length<=19) {
-            depotItemId = rowId-0
-          }
-          getBatchNumberList({name:'', depotItemId: depotItemId, depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
-            if (res && res.code === 200) {
-              if(res.data && res.data.rows) {
-                let info = res.data.rows[0]
-                target.setValues([{rowKey: row.id, values: {expirationDate: info.expirationDateStr}}])
-                target.recalcAllStatisticsColumns()
-                that.autoChangePrice(target)
-              }
-            }
-          })
           break;
         case "operNumber":
           target.recalcAllStatisticsColumns()
