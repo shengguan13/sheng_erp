@@ -119,6 +119,7 @@
         visible: false,
         operTimeStr: '',
         prefixNo: 'DBCK',
+        defaultDepotId: '',
         fileList:[],
         model: {},
         labelCol: {

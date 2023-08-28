@@ -120,6 +120,7 @@
         operTimeStr: '',
         prefixNo: 'ZZD',
         fileList:[],
+        defaultDepotId: '',
         model: {},
         labelCol: {
           xs: { span: 24 },

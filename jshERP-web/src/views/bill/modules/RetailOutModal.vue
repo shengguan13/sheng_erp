@@ -211,6 +211,7 @@
         operTimeStr: '',
         prefixNo: 'LSCK',
         fileList:[],
+        defaultDepotId: '',
         payTypeList: [],
         minWidth: 1100,
         model: {},

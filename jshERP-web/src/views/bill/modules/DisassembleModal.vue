@@ -118,6 +118,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
+        defaultDepotId: '',
         prefixNo: 'CXD',
         fileList:[],
         model: {},

@@ -141,6 +141,7 @@
         visible: false,
         operTimeStr: '',
         prefixNo: 'QTRK',
+        defaultDepotId: '',
         fileList:[],
         model: {},
         labelCol: {

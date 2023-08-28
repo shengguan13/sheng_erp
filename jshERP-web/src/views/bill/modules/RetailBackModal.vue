@@ -199,6 +199,7 @@
         operTimeStr: '',
         prefixNo: 'LSTH',
         fileList:[],
+        defaultDepotId: '',
         minWidth: 1100,
         rowCanEdit: true,
         model: {},
@@ -386,6 +387,7 @@
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
             info.linkId = info.id
+            info.depotId = this.defaultDepotId
             allTaxLastMoney += info.allPrice
             listEx.push(info)
             this.changeColumnShow(info)

@@ -142,6 +142,7 @@
         operTimeStr: '',
         prefixNo: 'QTCK',
         fileList:[],
+        defaultDepotId: '',
         model: {},
         labelCol: {
           xs: { span: 24 },

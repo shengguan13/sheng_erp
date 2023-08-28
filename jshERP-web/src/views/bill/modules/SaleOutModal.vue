@@ -190,6 +190,7 @@
         prefixNo: 'XSCK',
         depositStatus: false,
         fileList:[],
+        defaultDepotId: '',
         rowCanEdit: true,
         model: {},
         labelCol: {
@@ -396,6 +397,7 @@
               info.taxLastMoney = (info.allPrice + info.taxMoney).toFixed(2)-0
             }
             info.linkId = info.id
+            info.depotId = this.defaultDepotId
             allTaxLastMoney += info.taxLastMoney
             listEx.push(info)
             this.changeColumnShow(info)

@@ -367,9 +367,10 @@ public class DepotItemService {
     }
 
     public List<DepotItemVo4WithInfoEx> getDetailListForBOM(Long headerId)throws Exception {
-        List<DepotItemVo4WithInfoEx> filtered =null;
+        List<DepotItemVo4WithInfoEx> filtered = null;
         try{
             List<DepotItemVo4WithInfoEx> list = depotItemMapperEx.getDetailListForBOM(headerId);
+            filtered = new ArrayList<>();
             Set<String> seen = new HashSet<>();
             for (DepotItemVo4WithInfoEx di : list) {
                 if (!seen.contains(di.getBarCode())) {

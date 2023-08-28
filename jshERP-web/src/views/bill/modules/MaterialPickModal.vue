@@ -183,6 +183,7 @@
         prefixNo: 'LLCK',
         depositStatus: false,
         fileList:[],
+        defaultDepotId: '',
         model: {},
         labelCol: {
           xs: { span: 24 },

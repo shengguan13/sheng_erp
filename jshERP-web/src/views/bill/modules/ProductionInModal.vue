@@ -156,6 +156,7 @@
         prefixNo: 'SCRK',
         depositStatus: false,
         fileList:[],
+        defaultDepotId: '',
         rowCanEdit: true,
         model: {},
         labelCol: {
@@ -318,6 +319,7 @@
               info.operNumber = info.preNumber - info.finishNumber
             }
             info.linkId = info.id
+            info.depotId = this.defaultDepotId
             listEx.push(info)
             this.changeColumnShow(info)
           }

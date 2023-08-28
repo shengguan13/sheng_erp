@@ -176,6 +176,7 @@
         prefixNo: 'TLRK',
         depositStatus: false,
         fileList:[],
+        defaultDepotId: '',
         rowCanEdit: true,
         model: {},
         labelCol: {
@@ -353,6 +354,7 @@
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
             info.linkId = info.id
+            info.depotId = this.defaultDepotId
             listEx.push(info)
             this.changeColumnShow(info)
           }
