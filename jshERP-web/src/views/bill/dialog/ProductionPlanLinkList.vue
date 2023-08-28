@@ -301,6 +301,10 @@
                 }
               }
               this.dataSourceDetail = listEx
+              for (let i = 0, len = this.dataSourceDetail.length; i < len; i++) {
+                this.selectedDetailRowKeys.push(this.dataSourceDetail[i].id);
+                this.selectBillDetailRows.push(this.dataSourceDetail[i]);
+              }
               this.ipagination.total = res.data.total;
             }
             if(res.code===510){

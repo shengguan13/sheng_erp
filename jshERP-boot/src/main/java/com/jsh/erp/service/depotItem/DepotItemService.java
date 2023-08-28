@@ -29,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DepotItemService {
@@ -367,6 +364,23 @@ public class DepotItemService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    public List<DepotItemVo4WithInfoEx> getDetailListForBOM(Long headerId)throws Exception {
+        List<DepotItemVo4WithInfoEx> filtered =null;
+        try{
+            List<DepotItemVo4WithInfoEx> list = depotItemMapperEx.getDetailListForBOM(headerId);
+            Set<String> seen = new HashSet<>();
+            for (DepotItemVo4WithInfoEx di : list) {
+                if (!seen.contains(di.getBarCode())) {
+                    filtered.add(di);
+                }
+                seen.add(di.getBarCode());
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return filtered;
     }
 
     public List<DepotItemVo4WithInfoEx> findByAll(String materialParam, String endTime, Integer offset, Integer rows)throws Exception {

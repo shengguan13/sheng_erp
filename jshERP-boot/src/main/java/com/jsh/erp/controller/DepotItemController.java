@@ -293,7 +293,7 @@ public class DepotItemController {
         try {
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
             if(headerId != 0) {
-                dataList = depotItemService.getDetailList(headerId);
+                dataList = depotItemService.getDetailListForBOM(headerId);
             }
             //存放数据json数组
             JSONArray dataArray = new JSONArray();

@@ -1086,7 +1086,11 @@ public class MaterialService {
                     }
                 }
             }
-            result.addAll(barCodeToAmountMap.values());
+            for (MaterialBomVo4Info mb : barCodeToAmountMap.values()) {
+                if (mb.getBarCode() != null && !"".equals(mb.getBarCode())) {
+                    result.addAll(barCodeToAmountMap.values());
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
