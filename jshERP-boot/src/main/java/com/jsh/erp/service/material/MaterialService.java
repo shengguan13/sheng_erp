@@ -1088,7 +1088,7 @@ public class MaterialService {
             }
             for (MaterialBomVo4Info mb : barCodeToAmountMap.values()) {
                 if (mb.getBarCode() != null && !"".equals(mb.getBarCode())) {
-                    result.addAll(barCodeToAmountMap.values());
+                    result.add(mb);
                 }
             }
         }catch(Exception e){
