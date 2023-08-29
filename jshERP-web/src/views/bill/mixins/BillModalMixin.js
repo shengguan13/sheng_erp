@@ -113,16 +113,12 @@ export const BillModalMixin = {
       for(let i=0; i<columns.length; i++){
         if(columns[i].key === key) {
           if(type){
-            if(key === 'snList' || key === 'batchNumber') {
+            if(key === 'batchNumber') {
               if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK'
                   || this.prefixNo === 'QTCK' || this.prefixNo === 'DBCK' || this.prefixNo === 'LLCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
-                if(key === 'snList') {
-                  columns[i].type = FormTypes.popupJsh //显示
-                } else {
-                  columns[i].type = FormTypes.input //显示
-                }
+                columns[i].type = FormTypes.input //显示
               }
             } else if(key === 'expirationDate') {
               if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK'
@@ -351,6 +347,17 @@ export const BillModalMixin = {
               }
             }
           }
+          let today = new Date();
+          let year = today.getFullYear();
+          let month = today.getMonth() + 1;
+          let day = today.getDate();
+          if (month < 10) {
+            month = "0" + month;
+          }
+          if (day < 10) {
+            day = "0" + day;
+          }
+          target.setValues([{rowKey: row.id, values: {batchNumber: '' + year + month + day}}])
         }
       })
     },

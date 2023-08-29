@@ -1359,7 +1359,6 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1378,7 +1377,6 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1592,9 +1590,6 @@
         //判断序列号、批号、有效期是否有值
         let needAddkeywords = []
         for (let i = 0; i < ds.length; i++) {
-          if(ds[i].snList) {
-            needAddkeywords.push('snList')
-          }
           if(ds[i].batchNumber) {
             needAddkeywords.push('batchNumber')
           }
@@ -1626,7 +1621,7 @@
           let currentCol = []
           for(let i=0; i<this.defColumns.length; i++){
             //移除列
-            let needRemoveKeywords = ['snList','batchNumber','expirationDate','weight']
+            let needRemoveKeywords = ['batchNumber','expirationDate','weight']
             if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
               let info = {}
               info.title = this.defColumns[i].title

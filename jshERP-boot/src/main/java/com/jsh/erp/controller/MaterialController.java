@@ -519,7 +519,7 @@ public class MaterialController {
     }
 
     @GetMapping(value = "/getMaterialPickByBarCodeAndAmount")
-    @ApiOperation(value = "根据编码查询产品信息")
+    @ApiOperation(value = "根据编码查询领料信息")
     public BaseResponseInfo getMaterialPickByBarCodeAndAmount(@RequestParam("barCode") String barCode,
                                                               @RequestParam("amount") String amount,
                                                               HttpServletRequest request) throws Exception {

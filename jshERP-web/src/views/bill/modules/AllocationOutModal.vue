@@ -186,7 +186,6 @@
       editAfter() {
         this.billStatus = '0'
         this.changeColumnHide()
-        this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
         if (this.action === 'add') {
