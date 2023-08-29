@@ -132,6 +132,11 @@ public class MaterialBomService {
         return idList;
     }
 
+    public List<MaterialBomVo4Info> getMaterialBomByBarCode(String barCode) {
+        String [] barCodeArray = barCode.split(",");
+        return materialBomMapperEx.getMaterialBomByBarCode(barCodeArray);
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertMaterialBom(JSONObject obj, HttpServletRequest request)throws Exception {
         MaterialBom m = JSONObject.parseObject(obj.toJSONString(), MaterialBom.class);

@@ -53,6 +53,7 @@ const editMaterial = (params)=>putAction("/material/update",params);
 const checkMaterial = (params)=>getAction("/material/checkIsExist",params);
 const getMaterialBySelect = (params)=>getAction("/material/findBySelect",params);
 const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode",params);
+const getMaterialPickByBarCodeAndAmount = (params)=>getAction("/material/getMaterialPickByBarCodeAndAmount",params);
 const getMaterialByMeIdList = (params)=>getAction("/material/getMaterialByMeIdList",params);
 const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCodeExist",params);
 const batchUpdateMaterial = (params)=>postAction("/material/batchUpdate",params);
@@ -147,6 +148,7 @@ export {
   checkMaterial,
   getMaterialBySelect,
   getMaterialByBarCode,
+  getMaterialPickByBarCodeAndAmount,
   getMaterialByMeIdList,
   checkMaterialBarCode,
   batchUpdateMaterial,

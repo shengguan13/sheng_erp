@@ -2,13 +2,12 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.datasource.entities.MaterialInitialStockWithMaterial;
-import com.jsh.erp.datasource.entities.MaterialVo4Unit;
-import com.jsh.erp.datasource.entities.Unit;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.service.materialBom.MaterialBomService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
@@ -40,6 +39,9 @@ public class MaterialController {
 
     @Resource
     private MaterialService materialService;
+
+    @Resource
+    private MaterialBomService materialBomService;
 
     @Resource
     private DepotItemService depotItemService;
@@ -508,6 +510,68 @@ public class MaterialController {
             }
             res.code = 200;
             res.data = list;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/getMaterialPickByBarCodeAndAmount")
+    @ApiOperation(value = "根据编码查询产品信息")
+    public BaseResponseInfo getMaterialPickByBarCodeAndAmount(@RequestParam("barCode") String barCode,
+                                                              @RequestParam("amount") String amount,
+                                                              HttpServletRequest request) throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            JSONArray dataArray = new JSONArray();
+
+            List<MaterialBomVo4Info> materialBomList = materialBomService.getMaterialBomByBarCode(barCode);
+            Map<String, MaterialBomVo4Info> barCodeMap = new HashMap<>();
+            Map<String, Double> amountMap = new HashMap<>();
+
+            String[] barcodeArray = barCode.split(",");
+            String[] amountArray = amount.split(",");
+            for (MaterialBomVo4Info mb : materialBomList) {
+                barCodeMap.put(mb.getBarCode(), mb);
+            }
+            for (int i = 0; i < barcodeArray.length; i++) {
+                amountMap.put(barcodeArray[i], Double.valueOf(amountArray[i]));
+            }
+
+            List<Double> amountList = Arrays.stream(amountArray)
+                    .map(e -> Double.valueOf(e))
+                    .collect(Collectors.toList());
+            List<String> processList = new ArrayList<>();
+            List<String> projectList = new ArrayList<>();
+            for (String bc : barcodeArray) {
+                processList.add(barCodeMap.get(bc).getProcess());
+                projectList.add(barCodeMap.get(bc).getProject());
+            }
+            List<MaterialBomVo4Info> materialPickList = materialService.getMaterialByProcessPrefix(processList, projectList, amountList);
+            Map<Long, BigDecimal> stockMap = materialService.getCurrentStockMapByMaterialId(
+                    materialPickList.stream().map(e -> e.getMaterialId()).collect(Collectors.toList()));
+
+            for (MaterialBomVo4Info mb : materialPickList) {
+                JSONObject item = new JSONObject();
+                item.put("barCode", mb.getBarCode() == null ? "" : mb.getBarCode());
+                item.put("name", mb.getName() == null ? "" : mb.getName());
+                item.put("internalId", mb.getInternalId() == null ? "" : mb.getInternalId());
+                item.put("model", mb.getModel() == null ? "" : mb.getModel());
+                item.put("categoryName", mb.getCategory() == null ? "" : mb.getCategory());
+                item.put("color", mb.getColor() == null ? "" : mb.getColor());
+                item.put("stock", stockMap.getOrDefault(mb.getMaterialId(), BigDecimal.ZERO).doubleValue());
+                item.put("unit", mb.getUnit() == null ? "" : mb.getUnit());
+                item.put("operNumber", Math.min(
+                        mb.getProcessUsage() == null ? 0.0 : mb.getProcessUsage().doubleValue(),
+                        stockMap.getOrDefault(mb.getMaterialId(), BigDecimal.ZERO).doubleValue()
+                ));
+                item.put("remark", mb.getRemark());
+                dataArray.add(item);
+            }
+            res.code = 200;
+            res.data = dataArray;
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;

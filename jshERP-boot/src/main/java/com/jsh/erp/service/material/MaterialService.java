@@ -1016,6 +1016,15 @@ public class MaterialService {
         return map;
     }
 
+    public Map<Long,BigDecimal> getCurrentStockMapByMaterialId(List<Long> idList) {
+        Map<Long,BigDecimal> map = new HashMap<>();
+        List<MaterialCurrentStock> mcsList = materialCurrentStockMapperEx.getCurrentStockMapByIdList(idList);
+        for(MaterialCurrentStock materialCurrentStock: mcsList) {
+            map.put(materialCurrentStock.getMaterialId(), materialCurrentStock.getCurrentNumber());
+        }
+        return map;
+    }
+
     /**
      * 根据产品和仓库获取安全库存信息
      * @param materialId

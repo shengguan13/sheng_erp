@@ -146,7 +146,7 @@
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort,handleIntroJs } from "@/utils/util"
   import { getAction } from '@/api/manage'
-  import { getMaterialByBarCode, getMaterialByCompositePrefix } from '@/api/api'
+  import { getMaterialPickByBarCodeAndAmount, getMaterialByCompositePrefix } from '@/api/api'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -356,55 +356,34 @@
             productionMap.set(info.barCode, toDoNumber)
           }
           // 读取所有生产单的零件barCode
-          let queryArr = []
+          let barCodeArr = []
+          let amountArr = []
           for (let [key, value] of productionMap) {
-            queryArr.push(key)
+            barCodeArr.push(key)
+            amountArr.push(value)
           }
           let param = {
-            barCode: queryArr.toString(),
-            mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+            barCode: barCodeArr.toString(),
+            amount: amountArr.toString(),
           }
           // 读取所有生产单零件的composite
-          let res = getMaterialByBarCode(param).then((res) => {
+          let res = getMaterialPickByBarCodeAndAmount(param).then((res) => {
             if (res && res.code === 200) {
-              let mList = res.data
-              for (let i = 0; i < mList.length; i++) {
-                let mInfo = mList[i]
-                let compositeStr = mInfo.otherField10
-                let amount = Number(productionMap.get(mInfo.mBarCode))
-                // e.g. 25.1[0.98],26.3[2]
-                if (compositeStr && compositeStr != "") {
-                  let strArr = compositeStr.split(',')
-                  // 一个零件可能出现在多个工艺流程中，此处默认选取第一个工艺流程
-                  let split = strArr[0].split('[')
-                  // e.g. 25.1[amount]
-                  materialQueryArr.push(split[0] + "[" + String(amount) + "]")
-                }
+              let listEx = []
+              let list = res.data
+              for (let i = 0; i < list.length; i++) {
+                let info = list[i]
+                info.depotId = this.defaultDepotId
+                listEx.push(info)
+                this.changeColumnShow(info)
               }
-              let materialParam = {
-                prefixList: materialQueryArr.toString(),
-                mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
-              }
-              // 读取所有生产单零件的composite
-              getMaterialByCompositePrefix(materialParam).then((newRes) => {
-                if (newRes && newRes.code === 200) {
-                  let newList = newRes.data
-                  for (let i = 0; i < newList.length; i++) {
-                    if (i > 0) {
-                      this.recommendationStr = this.recommendationStr + "，"
-                    }
-                    let mInfo = newList[i]
-                    // 具体的数量在后端部分已经计算好并且放在了otherField10里面
-                    this.recommendationStr = this.recommendationStr + "[" + mInfo.name + "]" + mInfo.otherField10 + mInfo.commodityUnit
-                  }
-                }
-                this.$nextTick(() => {
-                  this.form.setFieldsValue({
-                    'linkNumber': linkNumber,
-                    'remark': remark,
-                    'orderStatus': this.orderStatusStr,
-                    'recommendation': this.recommendationStr,
-                  })
+              this.materialTable.dataSource = listEx
+              this.$nextTick(() => {
+                this.form.setFieldsValue({
+                  'linkNumber': linkNumber,
+                  'remark': remark,
+                  'orderStatus': this.orderStatusStr,
+                  'recommendation': this.recommendationStr,
                 })
               })
             }

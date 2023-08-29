@@ -22,6 +22,9 @@ public interface MaterialBomMapperEx {
             @Param("process") String process,
             @Param("project") String project);
 
+    List<MaterialBomVo4Info> getMaterialBomByBarCode(
+            @Param("barCodeArray") String barCodeArray[]);
+
     Long countsByBom(
             @Param("process") String process,
             @Param("project") String project,
