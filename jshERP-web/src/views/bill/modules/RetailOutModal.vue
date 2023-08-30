@@ -229,10 +229,10 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+            { title: '仓库名称', key: 'depotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '编码', key: 'barCode', width: '14%', type: FormTypes.popupJsh, kind: 'material', multi: true,
+            { title: '编码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '名称', key: 'name', width: '10%', type: FormTypes.normal },
@@ -242,9 +242,9 @@
             { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '5%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '8%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
-            { title: '有效期', key: 'expirationDate',width: '9%', type: FormTypes.input, readonly: true },
-            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
+            { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '有效期', key: 'expirationDate',width: '6%', type: FormTypes.input, readonly: true },
+            { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '单价', key: 'unitPrice', width: '6%', type: FormTypes.inputNumber},

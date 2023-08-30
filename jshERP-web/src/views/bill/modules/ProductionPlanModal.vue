@@ -181,14 +181,14 @@
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
             { title: '型号', key: 'internalId', width: '7%', type: FormTypes.normal },
             { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
-            { title: '类别', key: 'categoryName', width: '7%', type: FormTypes.normal },
+            { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
-            { title: '当前库存', key: 'stock', width: '5%', type: FormTypes.normal },
-            { title: '计划生产数量', key: 'operNumber', width: '8%', type: FormTypes.inputNumber, statistics: true,
+            { title: '项目', key: 'project', width: '5%', type: FormTypes.normal },
+            { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '计划数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input }
           ]
         },

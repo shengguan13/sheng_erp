@@ -21,6 +21,13 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联生产计划" data-step="3" data-title="关联生产计划"
+              data-intro="生产单可以关联生产计划，选择之后会自动加载生产计划的内容，然后继续录入生产日期、数量等信息完成单据的提交，
+              提交之后原来的生产计划会对应的改变计划状态。">
+              <a-input-search placeholder="请选择生产计划" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户" data-step="1" data-title="客户"
               data-intro="客户必须选择，如果发现需要选择的客户尚未录入，可以在下拉框中点击新增客户进行录入。
                           特别注意，客户如果录入之后在下拉框中不显示，请检查是否给当前用户分配对应的客户权限">
@@ -47,13 +54,6 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="2" data-title="单据编号"
               data-intro="单据编号自动生成、自动累加、开头是单据类型的首字母缩写，累加的规则是每次打开页面会自动占用一个新的编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联生产计划" data-step="3" data-title="关联生产计划"
-              data-intro="生产单可以关联生产计划，选择之后会自动加载生产计划的内容，然后继续录入生产日期、数量等信息完成单据的提交，
-              提交之后原来的生产计划会对应的改变计划状态。">
-              <a-input-search placeholder="请选择生产计划" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -194,17 +194,17 @@
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
             { title: '型号', key: 'internalId', width: '7%', type: FormTypes.normal },
             { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
-            { title: '类别', key: 'categoryName', width: '7%', type: FormTypes.normal },
+            { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
-            { title: '当前库存', key: 'stock', width: '5%', type: FormTypes.normal },
-            { title: '总计划数量', key: 'preNumber', width: '6%', type: FormTypes.normal },
-            { title: '已下生产单', key: 'planOrderedNumber', width: '6%', type: FormTypes.normal },
-            { title: '已生产入库', key: 'finishNumber', width: '6%', type: FormTypes.normal },
-            { title: '生产数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
+            { title: '项目', key: 'project', width: '5%', type: FormTypes.normal },
+            { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
+            { title: '计划数量', key: 'preNumber', width: '5%', type: FormTypes.normal },
+            { title: '已下产单', key: 'planOrderedNumber', width: '5%', type: FormTypes.normal },
+            { title: '已入库', key: 'finishNumber', width: '5%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '生产数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
             { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
           ]

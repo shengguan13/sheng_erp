@@ -21,6 +21,12 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联生产单" data-step="2" data-title="关联生产单"
+              data-intro="生产入库单必须关联生产单">
+              <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
               <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
             </a-form-item>
@@ -29,12 +35,6 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="1" data-title="单据编号"
               data-intro="单据编号自动生成、自动累加、开头是单据类型的首字母缩写，累加的规则是每次打开页面会自动占用一个新的编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联生产单" data-step="2" data-title="关联生产单"
-              data-intro="生产入库单必须关联生产单">
-              <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -173,7 +173,7 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+            { title: '仓库名称', key: 'depotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '编码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
@@ -182,18 +182,18 @@
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
             { title: '型号', key: 'internalId', width: '7%', type: FormTypes.normal },
             { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
-            { title: '类别', key: 'categoryName', width: '7%', type: FormTypes.normal },
+            { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
+            { title: '项目', key: 'project', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
-            { title: '原计划', key: 'preNumber', width: '6%', type: FormTypes.normal },
-            { title: '已入库', key: 'finishNumber', width: '6%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.input },
-            { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.date },
-            { title: '入库数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
+            { title: '生产数量', key: 'preNumber', width: '5%', type: FormTypes.normal },
+            { title: '已入库', key: 'finishNumber', width: '5%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.input },
+            { title: '有效期', key: 'expirationDate',width: '6%', type: FormTypes.date },
+            { title: '入库数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
             { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
           ]

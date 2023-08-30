@@ -21,6 +21,12 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联生产单" data-step="3" data-title="关联生产单"
+              data-intro="领料出库必须关联生产单">
+              <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员">
               <a-select placeholder="选择领料人员" v-decorator="[ 'salesMan', validatorRules.salesMan ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
@@ -41,26 +47,12 @@
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联生产单" data-step="3" data-title="关联生产单"
-              data-intro="领料出库必须关联生产单">
-              <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="18" :md="24" :sm="48">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生产单详细" data-step="4" data-title="生产单详细"
                          data-intro="生产单详细：产品名称，计划生产数量，已生产数量">
               <a-input placeholder="生产单详细" v-decorator.trim="[ 'orderStatus' ]" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="18" :md="24" :sm="48">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料推荐" data-step="5" data-title="领料推荐"
-                         data-intro="领料推荐根据关联生产单生成，会根据材料型号、生产数量推荐需要领取的物料的数量。">
-              <a-input placeholder="领料推荐" v-decorator.trim="[ 'recommendation' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -179,7 +171,6 @@
         visible: false,
         operTimeStr: '',
         orderStatusStr: '',
-        recommendationStr: '',
         prefixNo: 'LLCK',
         depositStatus: false,
         fileList:[],
@@ -200,7 +191,7 @@
           dataSource: [],
           // TODO: 批号不要手动输入，但是下完领料出库之后自动选择批号并且显示出来
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+            { title: '仓库名称', key: 'depotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '编码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
@@ -209,14 +200,13 @@
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
             { title: '型号', key: 'internalId', width: '7%', type: FormTypes.normal },
             { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
-            { title: '类别', key: 'categoryName', width: '7%', type: FormTypes.normal },
+            { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
-            { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input, readonly: true },
-            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
+            { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '有效期', key: 'expirationDate',width: '6%', type: FormTypes.input, readonly: true },
+            { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
@@ -333,7 +323,6 @@
         this.$refs.productionOrderLinkList.title = "选择生产单（已审核的单据才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
-        this.recommendationStr = ''
         this.orderStatusStr = ''
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
@@ -382,7 +371,6 @@
                   'linkNumber': linkNumber,
                   'remark': remark,
                   'orderStatus': this.orderStatusStr,
-                  'recommendation': this.recommendationStr,
                 })
               })
             }
