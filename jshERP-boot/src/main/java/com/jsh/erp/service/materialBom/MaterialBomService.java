@@ -213,8 +213,8 @@ public class MaterialBomService {
             //获取真实的行数，剔除掉空白行
             int rightRows = ExcelUtils.getRightRows(src);
             User user = userService.getCurrentUser();
-            //单次导入超出1000条
-            if(rightRows > 1002) {
+            //单次导入超出3000条
+            if(rightRows > 3001) {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }

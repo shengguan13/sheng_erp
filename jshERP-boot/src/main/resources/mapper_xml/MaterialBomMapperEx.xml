@@ -25,7 +25,7 @@
         </if>
         <if test="project != null">
             <bind name="bindProject" value="'%'+project+'%'"/>
-            and mb.project like #{bindProject}
+            and lower(mb.project) like lower(#{bindProject})
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -57,7 +57,7 @@
         </if>
         <if test="project != null">
             <bind name="bindProject" value="'%'+project+'%'"/>
-            and mb.project like #{bindProject}
+            and lower(mb.project) like lower(#{bindProject})
         </if>
         and ifnull(mb.delete_flag,'0') !='1'
         order by mb.process asc
@@ -93,7 +93,7 @@
         </if>
         <if test="project != null">
             <bind name="bindProject" value="'%'+project+'%'"/>
-            and mb.project like #{bindProject}
+            and lower(mb.project) like lower(#{bindProject})
         </if>
         and ifnull(mb.delete_flag,'0') !='1'
         order by mb.process asc
@@ -111,7 +111,7 @@
         </if>
         <if test="project != null">
             <bind name="bindProject" value="'%'+project+'%'"/>
-            and mb.project like #{bindProject}
+            and lower(mb.project) like lower(#{bindProject})
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>

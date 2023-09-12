@@ -406,7 +406,8 @@ public class MaterialService {
         return idList;
     }
 
-    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, Integer offset, Integer rows)throws Exception{
+    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String project,
+                                                         Integer offset, Integer rows)throws Exception{
         List<MaterialVo4Unit> list =null;
         try{
             List<Long> idList = new ArrayList<>();
@@ -418,14 +419,14 @@ public class MaterialService {
                 q = q.replace("'", "");
                 q = q.trim();
             }
-            list=  materialMapperEx.findBySelectWithBarCode(idList, q, offset, rows);
+            list=  materialMapperEx.findBySelectWithBarCode(idList, q, project, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findBySelectWithBarCodeCount(Long categoryId, String q)throws Exception{
+    public int findBySelectWithBarCodeCount(Long categoryId, String q, String project)throws Exception{
         int result=0;
         try{
             List<Long> idList = new ArrayList<>();
@@ -436,7 +437,7 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
             }
-            result = materialMapperEx.findBySelectWithBarCodeCount(idList, q);
+            result = materialMapperEx.findBySelectWithBarCodeCount(idList, q, project);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -490,8 +491,8 @@ public class MaterialService {
             Map<String, Long> depotMap = parseDepotToMap(depotList);
             User user = userService.getCurrentUser();
             List<MaterialWithInitStock> mList = new ArrayList<>();
-            //单次导入超出1000条
-            if(rightRows > 1002) {
+            //单次导入超出3000条
+            if(rightRows > 3001) {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
@@ -569,7 +570,7 @@ public class MaterialService {
                             String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
                 }
                 // 批量校验excel中有无重复产品，是指名称、型号、规格、颜色、单位
-                batchCheckExistMaterialListByParam(mList, name, internalId, model, color, project, unit, categoryId);
+                batchCheckExistMaterialListByParam(mList, name, internalId, model, color, other4, project, unit, categoryId);
 
                 //批量校验excel中有无重复编码
                 batchCheckExistBarCodeByParam(mList, barCode);
@@ -593,8 +594,8 @@ public class MaterialService {
                 Long mId = 0L;
                 //判断该产品是否存在，如果不存在就新增，如果存在就更新
                 String barCode = getBarCode(m);
-                List<Material> materials = getMaterialListByParam(m.getName(),m.getInternalId(),
-                        m.getModel(), m.getColor(),m.getProject(),m.getUnit(),m.getUnitId(), barCode);
+                List<Material> materials = getMaterialListByParam(m.getName(), m.getInternalId(),
+                        m.getModel(), m.getColor(), m.getProject(), m.getUnit(), m.getUnitId(), barCode);
                 if(materials.size() == 0) {
                     materialMapperEx.insertSelectiveEx(m);
                     mId = m.getId();
@@ -744,12 +745,14 @@ public class MaterialService {
      * @param mList
      */
     public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String internalId,
-                                                   String model, String color, String project, String unit, Long categoryId) {
+                                                   String model, String color, String colorCode,
+                                                   String project, String unit, Long categoryId) {
         for(MaterialWithInitStock material: mList){
             if(name.equals(material.getName()) &&
                     internalId.equals(material.getInternalId()) &&
                     model.equals(material.getModel()) &&
                     color.equals(material.getColor()) &&
+                    colorCode.equals(material.getOtherField4()) &&
                     project.equals(material.getProject()) &&
                     unit.equals(material.getUnit()) &&
                     categoryId.equals(material.getCategoryId())){

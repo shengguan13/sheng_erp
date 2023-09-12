@@ -304,7 +304,7 @@ public class ExceptionConstants {
     public static final String MATERIAL_ENABLED_ERROR_MSG = "第%s行状态格式错误";
     //单次导入超出1000条
     public static final int MATERIAL_IMPORT_OVER_LIMIT_CODE = 8000013;
-    public static final String MATERIAL_IMPORT_OVER_LIMIT_MSG = "抱歉，单次导入不能超出1000条";
+    public static final String MATERIAL_IMPORT_OVER_LIMIT_MSG = "抱歉，单次导入不能超出3000条";
     //净重量格式错误
     public static final int MATERIAL_WEIGHT_NOT_DECIMAL_CODE = 8000014;
     public static final String MATERIAL_WEIGHT_NOT_DECIMAL_MSG = "第%s行净重量格式错误";

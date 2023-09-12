@@ -52,11 +52,13 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("idList") List<Long> idList,
                                                   @Param("q") String q,
+                                                  @Param("project") String project,
                                                   @Param("offset") Integer offset,
                                                   @Param("rows") Integer rows);
 
     int findBySelectWithBarCodeCount(@Param("idList") List<Long> idList,
-                                     @Param("q") String q);
+                                     @Param("q") String q,
+                                     @Param("project") String project);
 
     List<MaterialVo4Unit> exportExcel(
             @Param("materialParam") String materialParam,

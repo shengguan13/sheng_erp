@@ -197,6 +197,7 @@ public class MaterialController {
     public JSONObject findBySelect(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                    @RequestParam(value = "q", required = false) String q,
                                    @RequestParam(value = "mpList", required = false) String mpList,
+                                   @RequestParam(value = "project", required = false) String project,
                                    @RequestParam(value = "depotId", required = false) Long depotId,
                                    @RequestParam("page") Integer currentPage,
                                    @RequestParam("rows") Integer pageSize,
@@ -207,8 +208,9 @@ public class MaterialController {
             if(StringUtil.isNotEmpty(mpList)){
                 mpArr= mpList.split(",");
             }
-            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q,(currentPage-1)*pageSize, pageSize);
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
+            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(
+                    categoryId, q, project,(currentPage-1)*pageSize, pageSize);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, project);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组

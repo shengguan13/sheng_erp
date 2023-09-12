@@ -53,7 +53,7 @@
         </if>
         <if test="project != null and project !=''">
             <bind name="bindProject" value="'%'+project+'%'"/>
-            and m.project like #{bindProject}
+            and lower(m.project) like lower(#{bindProject})
         </if>
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
@@ -111,7 +111,7 @@
         </if>
         <if test="project != null and project !=''">
             <bind name="bindProject" value="'%'+project+'%'"/>
-            and m.project like #{bindProject}
+            and lower(m.project) like lower(#{bindProject})
         </if>
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
@@ -360,13 +360,17 @@
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey}
-                or m.model like #{bindKey} or m.color like #{bindKey} or m.project like #{bindKey})
+                or m.model like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
+        </if>
+        <if test="project != null and project !=''">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and lower(m.project) like lower(#{bindProject})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         ORDER BY m.id desc, me.default_flag desc, me.id asc
@@ -382,13 +386,18 @@
         where m.enabled=1 and me.id is not null
         <if test="q != null">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
+        </if>
+        <if test="project != null and project !=''">
+            <bind name="bindProject" value="'%'+project+'%'"/>
+            and lower(m.project) like lower(#{bindProject})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>
@@ -412,7 +421,7 @@
         </if>
         <if test="project != null and project !=''">
             <bind name="bindProject" value="'%'+project+'%'"/>
-            and m.project like #{bindProject}
+            and lower(m.project) like lower(#{bindProject})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
