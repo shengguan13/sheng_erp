@@ -45,6 +45,8 @@ public class MaterialService {
     @Resource
     private MaterialMapper materialMapper;
     @Resource
+    private SupplierMapper supplierMapper;
+    @Resource
     private MaterialBomService materialBomService;
     @Resource
     private MaterialExtendMapper materialExtendMapper;
@@ -491,43 +493,46 @@ public class MaterialService {
             Map<String, Long> depotMap = parseDepotToMap(depotList);
             User user = userService.getCurrentUser();
             List<MaterialWithInitStock> mList = new ArrayList<>();
-            //单次导入超出3000条
-            if(rightRows > 3001) {
+            Set<String> suppliers = new HashSet<>();
+            Set<String> customers = new HashSet<>();
+            //单次导入超出5000条
+            if(rightRows > 5001) {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
             for (int i = 1; i < rightRows; i++) {
-                String other1 = ExcelUtils.getContent(src, i, 0); //客户/供应商
-                String other2 = ExcelUtils.getContent(src, i, 1); //客户OR供应商
-                String mfrs = ExcelUtils.getContent(src, i, 2); //制造商
+                String other1 = ExcelUtils.getContent(src, i, 1); //客户/供应商
+                String other2 = ExcelUtils.getContent(src, i, 2); //客户OR供应商
+                String mfrs = ExcelUtils.getContent(src, i, 3); //制造商
 
-                String barCode = ExcelUtils.getContent(src, i, 3); //编码
-                String name = ExcelUtils.getContent(src, i, 4); //名称
-                String model = ExcelUtils.getContent(src, i, 5); //规格
+                String barCode = ExcelUtils.getContent(src, i, 0); //编码
+                String name = ExcelUtils.getContent(src, i, 5); //名称
+                String model = ExcelUtils.getContent(src, i, 6); //规格
 
-                String other3 = ExcelUtils.getContent(src, i, 6); //材质
-                String internalId = ExcelUtils.getContent(src, i, 7); //型号
-                String other4 = ExcelUtils.getContent(src, i, 8); //颜色代码
-                String color = ExcelUtils.getContent(src, i, 9); //颜色
-                String unit = ExcelUtils.getContent(src, i, 10); //单位
-                String categoryName = ExcelUtils.getContent(src, i, 11); //分类
-                String expiryNum = ExcelUtils.getContent(src, i, 12); //保质期/月
+                String other3 = ExcelUtils.getContent(src, i, 8); //材质
 
-                String other5 = ExcelUtils.getContent(src, i, 34); //模腔数
+                String internalId = ExcelUtils.getContent(src, i, 14); //型号
+                String other4 = ExcelUtils.getContent(src, i, 10); //颜色代码
+                String color = ExcelUtils.getContent(src, i, 11); //颜色
+                String unit = ExcelUtils.getContent(src, i, 12); //单位
+                String categoryName = ExcelUtils.getContent(src, i, 13); //分类
+                String expiryNum = ExcelUtils.getContent(src, i, 15); //保质期/月
+
+                String other5 = ExcelUtils.getContent(src, i, 35); //模腔数
                 String other6 = ExcelUtils.getContent(src, i, 35); //模具重量
                 String other7 = ExcelUtils.getContent(src, i, 36); //浇口重量
                 String other8 = ExcelUtils.getContent(src, i, 37); //可装设备
-                String other9 = ExcelUtils.getContent(src, i, 38); //标包
-                String project = ExcelUtils.getContent(src, i, 39); //项目
+                String other9 = ExcelUtils.getContent(src, i, 37); //标包
+                String project = ExcelUtils.getContent(src, i, 38); //项目
 
                 String enabled = "1"; //状态
                 String remark = ""; //备注
 
                 //名称为空
-                if(StringUtil.isEmpty(name)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
-                            String.format(ExceptionConstants.MATERIAL_NAME_EMPTY_MSG, i+1));
-                }
+//                if(StringUtil.isEmpty(name)) {
+//                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
+//                            String.format(ExceptionConstants.MATERIAL_NAME_EMPTY_MSG, i+1));
+//                }
                 //单位为空
                 if(StringUtil.isEmpty(unit)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
@@ -570,7 +575,8 @@ public class MaterialService {
                             String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
                 }
                 // 批量校验excel中有无重复产品，是指名称、型号、规格、颜色、单位
-                batchCheckExistMaterialListByParam(mList, name, internalId, model, color, other4, project, unit, categoryId);
+//                batchCheckExistMaterialListByParam(mList, name, other1, other2, mfrs, internalId,
+//                        model, color, other4, project, unit, categoryId, other9);
 
                 //批量校验excel中有无重复编码
                 batchCheckExistBarCodeByParam(mList, barCode);
@@ -585,6 +591,17 @@ public class MaterialService {
                 m.setStockMap(new HashMap<>());
                 //m.setStockMap(getStockMapCache(src, depotCount, depotMap, i));
                 mList.add(m);
+                String[] split = other1.split("，|,");
+                if (other2.contains("供应商")) {
+                    for (int j = 0; j < split.length; j++) {
+                        suppliers.add(split[j].trim());
+                    }
+                }
+                if (other2.contains("客户")) {
+                    for (int j = 0; j < split.length; j++) {
+                        customers.add(split[j].trim());
+                    }
+                }
             }
             List<Long> deleteInitialStockMaterialIdList = new ArrayList<>();
             List<Long> deleteCurrentStockMaterialIdList = new ArrayList<>();
@@ -648,6 +665,32 @@ public class MaterialService {
                         insertCurrentStockMaterialList.add(materialCurrentStock);
                         deleteCurrentStockMaterialIdList.add(mId);
                     }
+                }
+            }
+
+            for (String supplier : suppliers) {
+                String type = "供应商";
+                Supplier s = new Supplier();
+                s.setSupplier(supplier);
+                s.setType(type);
+                SupplierExample example = new SupplierExample();
+                example.createCriteria().andSupplierEqualTo(s.getSupplier()).andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                List<Supplier> list= supplierMapper.selectByExample(example);
+                if(list.size() <= 0) {
+                    supplierMapper.insertSelective(s);
+                }
+            }
+
+            for (String customer : customers) {
+                String type = "客户";
+                Supplier s = new Supplier();
+                s.setSupplier(customer);
+                s.setType(type);
+                SupplierExample example = new SupplierExample();
+                example.createCriteria().andSupplierEqualTo(s.getSupplier()).andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                List<Supplier> list= supplierMapper.selectByExample(example);
+                if(list.size() <= 0) {
+                    supplierMapper.insertSelective(s);
                 }
             }
 
@@ -741,22 +784,27 @@ public class MaterialService {
     }
 
     /**
-     * 批量校验excel中有无重复产品，是指名称、型号、规格、颜色、单位
+     * 批量校验excel中有无重复产品，是指名称、型号、规格、颜色、单位、标包、制造商等
      * @param mList
      */
-    public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String internalId,
+    public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String customer,
+                                                   String customerType, String mfrs, String internalId,
                                                    String model, String color, String colorCode,
-                                                   String project, String unit, Long categoryId) {
+                                                   String project, String unit, Long categoryId, String other9) {
         for(MaterialWithInitStock material: mList){
             if(name.equals(material.getName()) &&
+                    customer.equals(material.getOtherField1()) &&
+                    customerType.equals(material.getOtherField2()) &&
+                    mfrs.equals(material.getMfrs()) &&
                     internalId.equals(material.getInternalId()) &&
                     model.equals(material.getModel()) &&
                     color.equals(material.getColor()) &&
                     colorCode.equals(material.getOtherField4()) &&
                     project.equals(material.getProject()) &&
                     unit.equals(material.getUnit()) &&
-                    categoryId.equals(material.getCategoryId())){
-                String info = name + "-" + internalId + "-" + model + "-" + color + "-" + project + "-" + unit;
+                    categoryId.equals(material.getCategoryId()) &&
+                    other9.equals(material.getOtherField9())){
+                String info = name + "-" + customer + "-" + customerType + "-" + mfrs + "-" + internalId + "-" + model + "-" + color + "-" + project + "-" + unit;
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_CODE,
                         String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_MSG, info));
             }

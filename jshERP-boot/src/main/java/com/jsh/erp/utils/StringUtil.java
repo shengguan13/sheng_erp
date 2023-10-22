@@ -325,7 +325,7 @@ public class StringUtil {
     public static boolean checkBarCode(Object value) {
         if(value!=null) {
             String str = value.toString();
-            Pattern pattern = Pattern.compile( "^[A-Z]+\\.[a-z]+\\.(0\\d*|\\d+)\\.(0\\d*|\\d+)$");
+            Pattern pattern = Pattern.compile( "^[A-Z]+\\.[a-z]+\\.(0\\d*|\\d+)$");
             return pattern.matcher(str).matches();
         } else {
             return false;
@@ -343,7 +343,7 @@ public class StringUtil {
                 return true;
             }
             String str = value.toString();
-            Pattern pattern = Pattern.compile( "^[A-Z]+\\.[a-z]+\\.(0\\d*|\\d+)\\.(0\\d*|\\d+)$");
+            Pattern pattern = Pattern.compile( "^[A-Z]+\\.[a-z]+\\.(0\\d*|\\d+)$");
             return pattern.matcher(str).matches();
         } else {
             return false;
