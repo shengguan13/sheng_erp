@@ -673,6 +673,7 @@ public class MaterialService {
                 Supplier s = new Supplier();
                 s.setSupplier(supplier);
                 s.setType(type);
+                s.setEnabled(true);
                 SupplierExample example = new SupplierExample();
                 example.createCriteria().andSupplierEqualTo(s.getSupplier()).andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 List<Supplier> list= supplierMapper.selectByExample(example);
@@ -686,6 +687,7 @@ public class MaterialService {
                 Supplier s = new Supplier();
                 s.setSupplier(customer);
                 s.setType(type);
+                s.setEnabled(true);
                 SupplierExample example = new SupplierExample();
                 example.createCriteria().andSupplierEqualTo(s.getSupplier()).andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 List<Supplier> list= supplierMapper.selectByExample(example);
