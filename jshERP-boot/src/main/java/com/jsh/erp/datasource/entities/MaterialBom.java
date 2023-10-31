@@ -16,13 +16,13 @@ public class MaterialBom {
 
     private String department;
 
+    private String source;
+
     private BigDecimal processUsage;
 
     private String unit;
 
     private String remark;
-
-    private BigDecimal amountPerCar;
 
     private Long tenantId;
 
@@ -76,6 +76,14 @@ public class MaterialBom {
         this.department = department;
     }
 
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     public BigDecimal getProcessUsage() {
         return processUsage;
     }
@@ -98,14 +106,6 @@ public class MaterialBom {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public BigDecimal getAmountPerCar() {
-        return amountPerCar;
-    }
-
-    public void setAmountPerCar(BigDecimal amountPerCar) {
-        this.amountPerCar = amountPerCar;
     }
 
     public Long getTenantId() {

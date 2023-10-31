@@ -228,12 +228,12 @@ public class MaterialBomService {
                 String barCode = ExcelUtils.getContent(src, i, 2); //编码
 
                 String project = ExcelUtils.getContent(src, i, 16); //项目
-                String department = ExcelUtils.getContent(src, i, 14); //部门
+                String department = ExcelUtils.getContent(src, i, 19); //部门
+                String source = ExcelUtils.getContent(src, i, 14); //物料来源
                 String processUsage = ExcelUtils.getContent(src, i, 13); //用量
                 String unit = ExcelUtils.getContent(src, i, 8); //单位
                 String weight = ExcelUtils.getContent(src, i, 12); //重量（kg）
                 //String remark = ExcelUtils.getContent(src, i, 17); //备注
-                //String amountPerCar = ExcelUtils.getContent(src, i, 22); //每车用量
 
                 // 批量校验excel中有无重复BOM
                 batchCheckExistMaterialBomByParam(bomList, process, project, barCode);
@@ -243,6 +243,7 @@ public class MaterialBomService {
                 bom.setBarCode(barCode);
                 bom.setProject(project);
                 bom.setDepartment(department);
+                bom.setSource(source);
                 //单位为空
                 if(StringUtil.isEmpty(unit)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
@@ -257,15 +258,7 @@ public class MaterialBomService {
                     }
                     bom.setProcessUsage(BigDecimal.valueOf(Double.valueOf(processUsage)));
                 }
-//                bom.setRemark(remark);
-//                if(StringUtil.isNotEmpty(amountPerCar)) {
-//                    //校验每车用量是否为数字
-//                    if(!StringUtil.isPositiveBigDecimal(amountPerCar)) {
-//                        throw new BusinessRunTimeException(ExceptionConstants.BOM_USAGE_ERROR_CODE,
-//                                String.format(ExceptionConstants.BOM_USAGE_ERROR_MSG, i+1));
-//                    }
-//                    bom.setAmountPerCar(BigDecimal.valueOf(Double.valueOf(amountPerCar)));
-//                }
+                //bom.setRemark(remark);
                 //校验产品编码
                 if(!StringUtil.checkBarCodeEmptyAllowed(barCode)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,

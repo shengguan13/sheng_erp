@@ -31,28 +31,28 @@
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
-            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料编码">
+            <a-input placeholder="请输入物料编码" v-decorator.trim="[ 'barCode' ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
-            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用量">
+            <a-input placeholder="请输入用量" v-decorator.trim="[ 'processUsage' ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
-            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
+            <a-input placeholder="请输入单位" v-decorator.trim="[ 'unit' ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
-            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料来源">
+            <a-input placeholder="请输入物料来源" v-decorator.trim="[ 'source' ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产品编号">
-            <a-input placeholder="请输入产品编号" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="执行部门">
+            <a-input placeholder="请输入执行部门" v-decorator.trim="[ 'department' ]" />
           </a-form-item>
         </a-form>
       </a-spin>
@@ -92,11 +92,6 @@
             rules: [
               { required: true, message: '请输入工艺流程!' }
             ]
-          },
-          barCode:{
-            rules: [
-              { required: true, message: '请输入产品编号!' }
-            ]
           }
         }
       }
@@ -112,7 +107,8 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model, 'project', 'process', 'barCode'))
+          this.form.setFieldsValue(pick(this.model, 'project', 'process', 'barCode', 'processUsage',
+          'unit', 'source', 'department'))
         });
       },
       close () {

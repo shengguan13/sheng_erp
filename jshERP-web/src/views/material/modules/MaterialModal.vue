@@ -924,7 +924,7 @@
             this.mpShort.otherField9.name = mpList[i].anotherName
             this.mpShort.otherField9.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "保留1") {
+          if (mpList[i].nativeName === "主壁厚") {
             this.mpShort.otherField10.name = mpList[i].anotherName
             this.mpShort.otherField10.enabled = mpList[i].enabled
           }

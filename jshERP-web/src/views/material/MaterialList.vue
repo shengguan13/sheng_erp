@@ -365,9 +365,9 @@
       handleImportXls() {
         let importExcelUrl = this.url.importExcelUrl
         let templateUrl = '/doc/goods_template.xls'
-        let templateName = '产品Excel模板[下载]'
+        let templateName = '物料Excel模板[下载]'
         this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
-        this.$refs.modalImportForm.title = "产品导入";
+        this.$refs.modalImportForm.title = "物料导入";
       },
       searchReset() {
         this.queryParam = {

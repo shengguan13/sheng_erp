@@ -533,7 +533,7 @@ public class DepotItemController {
             if (mpArr[i].equals("标包")) {
                 materialOther = materialOther + ((diEx.getMOtherField9() == null || diEx.getMOtherField9().equals("")) ? "" : "(" + diEx.getMOtherField9() + ")");
             }
-//            if (mpArr[i].equals("保留1")) {
+//            if (mpArr[i].equals("主壁厚")) {
 //                materialOther = materialOther + ((diEx.getMOtherField10() == null || diEx.getMOtherField10().equals("")) ? "" : "(" + diEx.getMOtherField10() + ")");
 //            }
 //            if (mpArr[i].equals("保留2")) {

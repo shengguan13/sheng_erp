@@ -29,7 +29,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (mb.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -53,7 +53,7 @@
         where 1=1
         <if test="process != null">
             <bind name="bindProcess" value="process+'.%'"/>
-            and mb.process like #{bindProcess}
+            and (mb.process like #{bindProcess} or mb.process=#{process})
         </if>
         <if test="project != null">
             <bind name="bindProject" value="'%'+project+'%'"/>

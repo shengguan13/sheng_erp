@@ -57,14 +57,14 @@
           :minWidth="minWidth"
           :maxHeight="300"
           :rowNumber="false"
-          :rowSelection="true"
-          :actionButton="true"
-          :dragSort="true"
+          :rowSelection="rowCanEdit"
+          :actionButton="rowCanEdit"
+          :dragSort="rowCanEdit"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描产品编码进行录入">
+            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描产品编码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
@@ -159,6 +159,7 @@
         prefixNo: 'CGDD',
         fileList:[],
         model: {},
+        rowCanEdit: true,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
@@ -224,9 +225,14 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
-        this.billStatus = '0'
-        this.materialTable.columns[0].type = FormTypes.popupJsh
-        this.changeColumnHide()
+        if (this.billStatus === '-1') {
+          this.rowCanEdit = true
+          this.materialTable.columns[0].type = FormTypes.popupJsh
+          this.changeColumnHide()
+        } else {
+          this.rowCanEdit = false
+        }
+
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []

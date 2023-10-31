@@ -8,10 +8,10 @@
         <result column="project" jdbcType="VARCHAR" property="project" />
         <result column="part_no" jdbcType="VARCHAR" property="partNo" />
         <result column="department" jdbcType="VARCHAR" property="department" />
+        <result column="source" jdbcType="VARCHAR" property="source" />
         <result column="process_usage" jdbcType="DECIMAL" property="processUsage" />
         <result column="unit" jdbcType="VARCHAR" property="unit" />
         <result column="remark" jdbcType="VARCHAR" property="remark" />
-        <result column="amount_per_car" jdbcType="DECIMAL" property="amountPerCar" />
         <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
         <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
     </resultMap>
@@ -74,7 +74,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        id, process, project, part_no, department, process_usage, unit, remark, amount_per_car, tenant_id, delete_flag
+        id, process, project, part_no, department, source, process_usage, unit, remark, tenant_id, delete_flag
     </sql>
     <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialBomExample" resultMap="BaseResultMap">
         select
@@ -108,11 +108,11 @@
     </delete>
     <insert id="insert" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         insert into jsh_material_bom (id, bar_code, process, project, part_no, department,
-        process_usage, unit, remark, amount_per_car, tenant_id, delete_flag)
+        source, process_usage, unit, remark, tenant_id, delete_flag)
         values (#{id,jdbcType=BIGINT}, #{barCode,jdbcType=VARCHAR}, #{process,jdbcType=VARCHAR},
         #{project,jdbcType=VARCHAR}, #{partNo,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR},
-        #{processUsage,jdbcType=DECIMAL}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
-        #{amountPerCar,jdbcType=DECIMAL}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+        #{source,jdbcType=VARCHAR}, #{processUsage,jdbcType=DECIMAL}, #{unit,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         insert into jsh_material_bom
@@ -135,6 +135,9 @@
             <if test="department != null">
                 department,
             </if>
+            <if test="source != null">
+                source,
+            </if>
             <if test="processUsage != null">
                 process_usage,
             </if>
@@ -143,9 +146,6 @@
             </if>
             <if test="remark != null">
                 remark,
-            </if>
-            <if test="amountPerCar != null">
-                amount_per_car,
             </if>
             <if test="tenantId != null">
                 tenant_id,
@@ -173,6 +173,9 @@
             <if test="department != null">
                 #{department,jdbcType=VARCHAR},
             </if>
+            <if test="source != null">
+                #{source,jdbcType=VARCHAR},
+            </if>
             <if test="processUsage != null">
                 #{processUsage,jdbcType=DECIMAL},
             </if>
@@ -181,9 +184,6 @@
             </if>
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
-            </if>
-            <if test="amountPerCar != null">
-                #{amountPerCar,jdbcType=DECIMAL},
             </if>
             <if test="tenantId != null">
                 #{tenantId,jdbcType=BIGINT},
@@ -220,6 +220,9 @@
             <if test="record.department != null">
                 department = #{record.department,jdbcType=VARCHAR},
             </if>
+            <if test="record.source != null">
+                source = #{record.source,jdbcType=VARCHAR},
+            </if>
             <if test="record.processUsage != null">
                 process_usage = #{record.processUsage,jdbcType=DECIMAL},
             </if>
@@ -228,9 +231,6 @@
             </if>
             <if test="record.remark != null">
                 remark = #{record.remark,jdbcType=VARCHAR},
-            </if>
-            <if test="record.amountPerCar != null">
-                amount_per_car = #{record.amountPerCar,jdbcType=DECIMAL},
             </if>
             <if test="record.tenantId != null">
                 tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -251,10 +251,10 @@
         project = #{record.project,jdbcType=VARCHAR},
         part_no = #{record.partNo,jdbcType=VARCHAR},
         department = #{record.department,jdbcType=VARCHAR},
+        source = #{record.source,jdbcType=VARCHAR},
         process_usage = #{record.processUsage,jdbcType=DECIMAL},
         unit = #{record.unit,jdbcType=VARCHAR},
         remark = #{record.remark,jdbcType=VARCHAR},
-        amount_per_car = #{record.amountPerCar,jdbcType=DECIMAL},
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
         delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
         <if test="_parameter != null">
@@ -279,6 +279,9 @@
             <if test="department != null">
                 department = #{department,jdbcType=VARCHAR},
             </if>
+            <if test="source != null">
+                source = #{source,jdbcType=VARCHAR},
+            </if>
             <if test="processUsage != null">
                 process_usage = #{processUsage,jdbcType=DECIMAL},
             </if>
@@ -287,9 +290,6 @@
             </if>
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
-            </if>
-            <if test="amountPerCar != null">
-                amount_per_car = #{amountPerCar,jdbcType=DECIMAL},
             </if>
             <if test="tenantId != null">
                 tenant_id = #{tenantId,jdbcType=BIGINT},
@@ -307,10 +307,10 @@
         project = #{project,jdbcType=VARCHAR},
         part_no = #{partNo,jdbcType=VARCHAR},
         department = #{department,jdbcType=VARCHAR},
+        source = #{source,jdbcType=VARCHAR},
         process_usage = #{processUsage,jdbcType=DECIMAL},
         unit = #{unit,jdbcType=VARCHAR},
         remark = #{remark,jdbcType=VARCHAR},
-        amount_per_car = #{amountPerCar,jdbcType=DECIMAL},
         tenant_id = #{tenantId,jdbcType=BIGINT},
         delete_flag = #{deleteFlag,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
