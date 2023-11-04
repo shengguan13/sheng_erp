@@ -710,8 +710,9 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("depotId"))) {
                     depotItem.setDepotId(rowObj.getLong("depotId"));
                 } else {
-                    // 只有[采购订单、销售订单、生产计划、生产单]可以没有仓库号
+                    // 只有[采购订单、采购申请、销售订单、生产计划、生产单]可以没有仓库号
                     if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
+                            && !BusinessConstants.SUB_TYPE_PURCHASE_APPLICATION.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {

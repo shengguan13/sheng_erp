@@ -232,17 +232,6 @@
             rules: [
               { required: true, message: '请选择采购订单！' }
             ]
-          },
-          accountId:{
-            rules: [
-              { required: true, message: '请选择结算账户！' }
-            ]
-          },
-          changeAmount:{
-            rules: [
-              { required: true, message: '请输入金额，如果为空请填0！' },
-              { pattern: /^(([0-9][0-9]*)|([0]\.\d{0,4}|[0-9][0-9]*\.\d{0,4}))$/, message: '金额格式不正确!' }
-            ]
           }
         },
         url: {

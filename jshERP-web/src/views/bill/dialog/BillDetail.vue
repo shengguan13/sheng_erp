@@ -14,6 +14,7 @@
       <!--此处为解决缓存问题-->
       <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
+      <a-button v-if="billType === '采购申请'" v-print="'#purchaseApplicationPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购退货出库'" v-print="'#purchaseBackPrint'">普通打印</a-button>
@@ -34,6 +35,7 @@
       <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
       <!--导出Excel-->
       <a-button v-if="billType === '零售出库'||billType === '零售退货入库'" @click="retailExportExcel()">导出</a-button>
+      <a-button v-if="billType === '采购申请'" @click="applicationExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购订单'||billType === '销售订单'" @click="orderExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购入库'||billType === '采购退货出库'||billType === '销售出库'||billType === '销售退货入库'"
                 @click="purchaseSaleExportExcel()">导出</a-button>
@@ -521,6 +523,41 @@
           </a-row>
         </section>
       </template>
+      <!--采购申请-->
+      <template v-else-if="billType === '采购申请'">
+        <section ref="print" id="purchaseApplicationPrint">
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                {{model.operTimeStr}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                {{model.number}}
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <div :style="tableWidth">
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="columns"
+              :dataSource="dataSource">
+            </a-table>
+          </div>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="24" :md="24" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                {{model.remark}}
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </section>
+      </template>
       <!--采购订单-->
       <template v-else-if="billType === '采购订单'">
         <section ref="print" id="purchaseOrderPrint">
@@ -542,8 +579,8 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item v-if="purchaseBySaleFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
-                {{model.linkNumber}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
           </a-row>
@@ -1331,6 +1368,20 @@
           { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
         ],
+        purchaseApplicationColumns: [
+          { title: '编码', dataIndex: 'barCode'},
+          { title: '名称', dataIndex: 'name'},
+          { title: '型号', dataIndex: 'internalId'},
+          { title: '规格', dataIndex: 'model'},
+          { title: '类别', dataIndex: 'categoryName'},
+          { title: '颜色', dataIndex: 'color'},
+          { title: '项目', dataIndex: 'project'},
+          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '库存', dataIndex: 'stock'},
+          { title: '单位', dataIndex: 'unit'},
+          { title: '数量', dataIndex: 'operNumber'},
+          { title: '备注', dataIndex: 'remark'}
+        ],
         purchaseOrderColumns: [
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
@@ -1562,6 +1613,8 @@
           this.defColumns = this.materialReturnColumns
         } else if (type === '生产入库') {
           this.defColumns = this.productionInColumns
+        } else if (type === '采购申请') {
+          this.defColumns = this.purchaseApplicationColumns
         } else if (type === '采购订单') {
           this.defColumns = this.purchaseOrderColumns
         } else if (type === '采购入库') {
@@ -1902,6 +1955,9 @@
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+      },
+      //采购申请
+      applicationExportExcel() {
       },
       //采购订单|销售订单
       orderExportExcel() {

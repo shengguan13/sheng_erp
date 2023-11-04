@@ -107,8 +107,30 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
-           String beginTime, String endTime, String salesMan, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
+    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String hasDebt, String status,
+                                         String purchaseStatus, String number, String linkNumber, String beginTime,
+                                         String endTime, String salesMan, String materialParam, Long organId,
+                                         Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
+        logger.info("XXXXX type: " + type);
+        logger.info("XXXXX subType: " + subType);
+        logger.info("XXXXX roleType: " + roleType);
+        logger.info("XXXXX hasDebt: " + hasDebt);
+        logger.info("XXXXX status: " + status);
+        logger.info("XXXXX purchaseStatus: " + purchaseStatus);
+        logger.info("XXXXX number: " + number);
+        logger.info("XXXXX linkNumber: " + linkNumber);
+        logger.info("XXXXX beginTime: " + beginTime);
+        logger.info("XXXXX endTime: " + endTime);
+        logger.info("XXXXX salesMan: " + salesMan);
+        logger.info("XXXXX materialParam: " + materialParam);
+        logger.info("XXXXX organId: " + organId);
+        logger.info("XXXXX creator: " + creator);
+        logger.info("XXXXX depotId: " + depotId);
+        logger.info("XXXXX accountId: " + accountId);
+        logger.info("XXXXX remark: " + remark);
+        logger.info("XXXXX offset: " + offset);
+        logger.info("XXXXX rows: " + rows);
+
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
             String [] depotArray = getDepotArray(subType);
@@ -120,8 +142,11 @@ public class DepotHeadService {
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray,
-                    number, linkNumber, beginTime, endTime, salesMan, materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
+            List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray,
+                    hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime, salesMan,
+                    materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
+            logger.info("XXXXX query size: " + list.size());
+
             if (null != list) {
                 List<Long> idList = new ArrayList<>();
                 List<String> numberList = new ArrayList<>();
@@ -221,15 +246,18 @@ public class DepotHeadService {
     }
 
     /**
-     * 根据单据类型获取仓库数组：只有[采购订单、销售订单、生产计划、生产单]不涉及仓库
+     * 根据单据类型获取仓库数组：只有[采购订单、采购申请、销售订单、生产计划、生产单]不涉及仓库
      * @param subType
      * @return
      * @throws Exception
      */
     public String[] getDepotArray(String subType) throws Exception {
         String [] depotArray = null;
-        if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType) && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)
-                && !BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(subType) && !BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
+        if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType)
+                && !BusinessConstants.SUB_TYPE_PURCHASE_APPLICATION.equals(subType)
+                && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)
+                && !BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(subType)
+                && !BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
             String depotIds = depotService.findDepotStrByCurrentUser();
             depotArray = StringUtil.isNotEmpty(depotIds) ? depotIds.split(",") : null;
         }

@@ -153,6 +153,7 @@
           { 'key': 'LSCK', 'value': '零售出库' },
           { 'key': 'LSTH', 'value': '零售退货' },
           { 'key': 'CGDD', 'value': '采购订单' },
+          { 'key': 'CGSQ', 'value': '采购申请' },
           { 'key': 'CGRK', 'value': '采购入库' },
           { 'key': 'SCJH', 'value': '生产计划' },
           { 'key': 'SCD', 'value': '生产单' },

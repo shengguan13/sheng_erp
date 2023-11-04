@@ -496,7 +496,7 @@ public class MaterialController {
                                 Boolean isDefault = depotObj.getBoolean("isDefault");
                                 if (isDefault) {
                                     Long id = depotObj.getLong("id");
-                                    if (!"CGDD".equals(prefixNo) && !"XSDD".equals(prefixNo)) {
+                                    if (!"CGDD".equals(prefixNo) && !"CGSQ".equals(prefixNo) && !"XSDD".equals(prefixNo)) {
                                         //除订单之外的单据才有仓库
                                         mvo.setDepotId(id);
                                     }

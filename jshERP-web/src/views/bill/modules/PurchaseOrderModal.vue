@@ -21,6 +21,13 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单" data-step="3" data-title="关联订单"
+              data-intro="采购入库单据可以通过关联订单来选择已录入的订单，选择之后会自动加载订单的内容，然后继续录入仓库等信息完成单据的提交，
+              提交之后原来的采购订单会对应的改变单据状态。另外本系统支持订单多次入库，只需选择订单之后修改对应的产品数量即可">
+              <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商" data-step="1" data-title="供应商"
               data-intro="供应商必须选择，如果发现需要选择的供应商尚未录入，可以在下拉框中点击新增供应商进行录入">
               <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
@@ -57,14 +64,14 @@
           :minWidth="minWidth"
           :maxHeight="300"
           :rowNumber="false"
-          :rowSelection="rowCanEdit"
-          :actionButton="rowCanEdit"
-          :dragSort="rowCanEdit"
+          :rowSelection="true"
+          :actionButton="true"
+          :dragSort="true"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描产品编码进行录入">
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描产品编码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
@@ -111,6 +118,7 @@
       </a-form>
     </a-spin>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
+    <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
@@ -120,6 +128,7 @@
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
   import VendorModal from '../../system/modules/VendorModal'
+  import LinkBillList from '../dialog/LinkBillList'
   import AccountModal from '../../system/modules/AccountModal'
   import HistoryBillList from '../dialog/HistoryBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
@@ -135,6 +144,7 @@
     mixins: [JEditableTableMixin,BillModalMixin],
     components: {
       ManyAccountModal,
+      LinkBillList,
       VendorModal,
       AccountModal,
       HistoryBillList,
@@ -159,7 +169,6 @@
         prefixNo: 'CGDD',
         fileList:[],
         model: {},
-        rowCanEdit: true,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
@@ -193,6 +202,7 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input},
+            { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
           ]
         },
         confirmLoading: false,
@@ -207,11 +217,11 @@
               { required: true, message: '请选择供应商!' }
             ]
           },
-          accountId:{
+          linkNumber:{
             rules: [
-              { required: true, message: '请选择结算账户！' }
+              { required: true, message: '请选择采购订单！' }
             ]
-          },
+          }
         },
         url: {
           add: '/depotHead/addDepotHeadAndDetail',
@@ -225,14 +235,9 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
-        if (this.billStatus === '-1') {
-          this.rowCanEdit = true
-          this.materialTable.columns[0].type = FormTypes.popupJsh
-          this.changeColumnHide()
-        } else {
-          this.rowCanEdit = false
-        }
-
+        this.billStatus = '0'
+        this.materialTable.columns[0].type = FormTypes.popupJsh
+        this.changeColumnHide()
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
@@ -310,6 +315,29 @@
         let organId = this.form.getFieldValue('organId')
         this.$refs.historyBillListModalForm.show('其它', '采购订单', '供应商', organId);
         this.$refs.historyBillListModalForm.disableSubmit = false;
+      },
+      onSearchLinkNumber() {
+        this.$refs.linkBillList.show('其它', '采购申请', '供应商', "1")
+        this.$refs.linkBillList.title = "选择采购申请（已审批的采购申请才能关联）"
+      },
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+        this.materialTable.columns[1].type = FormTypes.normal
+        if(selectBillDetailRows && selectBillDetailRows.length>0) {
+          let listEx = []
+          for(let j=0; j<selectBillDetailRows.length; j++) {
+            let info = selectBillDetailRows[j];
+            info.linkId = info.id
+            listEx.push(info)
+            this.changeColumnShow(info)
+          }
+          this.materialTable.dataSource = listEx
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'linkNumber': linkNumber,
+              'remark': remark
+            })
+          })
+        }
       },
     }
   }

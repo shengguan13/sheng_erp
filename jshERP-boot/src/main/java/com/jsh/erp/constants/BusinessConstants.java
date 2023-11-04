@@ -73,6 +73,7 @@ public class BusinessConstants {
      *采购、采购退货、其它、零售、销售、调拨、盘点复盘等
      * */
     public static final String SUB_TYPE_PURCHASE_ORDER = "采购订单";
+    public static final String SUB_TYPE_PURCHASE_APPLICATION = "采购申请";
     public static final String SUB_TYPE_PURCHASE = "采购";
     public static final String SUB_TYPE_PURCHASE_RETURN = "采购退货";
     public static final String SUB_TYPE_OTHER = "其它";
