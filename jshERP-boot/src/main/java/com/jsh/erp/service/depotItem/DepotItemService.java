@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -597,13 +598,16 @@ public class DepotItemService {
                 // 记录批号以及保质期，且批号不能为空
                 if (StringUtil.isExist(rowObj.get("batchNumber"))) {
                     depotItem.setBatchNumber(rowObj.getString("batchNumber"));
-                } else {
-                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())
-                            || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) && BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType()))) {
-                        //入库批号不能为空，调拨批号不能为空，出库的批号按照先进先出自动填充
-                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
-                                String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
-                    }
+                } else if (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())) {
+                    //入库批号若没有提供，自动填充日期
+                    Date date = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                    String formattedDate = sdf.format(date);
+                    depotItem.setBatchNumber(formattedDate);
+                } else if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) && BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
+                    //调拨批号不能为空，出库的批号按照先进先出自动填充
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
                 }
                 // 记录货位，货位不能为空
                 if (StringUtil.isExist(rowObj.get("snList"))) {

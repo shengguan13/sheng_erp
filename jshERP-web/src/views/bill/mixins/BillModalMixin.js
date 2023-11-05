@@ -127,6 +127,13 @@ export const BillModalMixin = {
               } else {
                 columns[i].type = FormTypes.input //显示
               }
+            } else if(key === 'snList') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK'
+                   || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
+                columns[i].type = FormTypes.select //显示
+              } else {
+                columns[i].type = FormTypes.hidden //隐藏
+              }
             } else {
               columns[i].type = FormTypes.normal //显示
             }
@@ -367,17 +374,6 @@ export const BillModalMixin = {
               }
             }
           }
-          let today = new Date();
-          let year = today.getFullYear();
-          let month = today.getMonth() + 1;
-          let day = today.getDate();
-          if (month < 10) {
-            month = "0" + month;
-          }
-          if (day < 10) {
-            day = "0" + day;
-          }
-          target.setValues([{rowKey: row.id, values: {batchNumber: '' + year + month + day}}])
         }
       })
     },
@@ -504,6 +500,7 @@ export const BillModalMixin = {
       if(info.sku) {
         this.changeFormTypes(this.materialTable.columns, 'sku', 1)
       }
+      this.changeFormTypes(this.materialTable.columns, 'snList', 1)
       this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
       this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
     },

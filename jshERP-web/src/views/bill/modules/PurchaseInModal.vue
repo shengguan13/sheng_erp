@@ -207,6 +207,9 @@
             { title: '订单数量', key: 'preNumber', width: '5%', type: FormTypes.normal },
             { title: '已入库', key: 'finishNumber', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.input },
             { title: '有效期', key: 'expirationDate',width: '6%', type: FormTypes.date },
             { title: '入库数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
@@ -251,6 +254,7 @@
         this.materialTable.columns[1].type = FormTypes.popupJsh
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
+        this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
@@ -306,6 +310,7 @@
         this.initSupplier()
         this.initDepot()
         this.initAccount()
+        this.initAllocation()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
@@ -369,17 +374,6 @@
             info.linkId = info.id
             info.depotId = this.defaultDepotId
             allTaxLastMoney += info.taxLastMoney
-            let today = new Date();
-            let year = today.getFullYear();
-            let month = today.getMonth() + 1;
-            let day = today.getDate();
-            if (month < 10) {
-              month = "0" + month;
-            }
-            if (day < 10) {
-              day = "0" + day;
-            }
-            info.batchNumber = '' + year + month + day
             listEx.push(info)
             this.changeColumnShow(info)
           }
