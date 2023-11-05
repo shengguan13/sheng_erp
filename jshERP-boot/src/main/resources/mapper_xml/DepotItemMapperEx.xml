@@ -128,6 +128,8 @@
         <result column="unit_id" jdbcType="BIGINT" property="unitId" />
         <result column="commodity_unit" jdbcType="VARCHAR" property="commodityUnit" />
         <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
+        <result column="oper_time" jdbcType="TIMESTAMP" property="operTime" />
+        <result column="sn_list" jdbcType="VARCHAR" property="snList" />
         <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
         <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
     </resultMap>
@@ -1193,10 +1195,10 @@
     </select>
 
     <select id="getBatchNumberList" resultMap="batchNumberListMap">
-        select id, bar_code, name, internal_id, model, unit_id,
+        select id, bar_code, name, internal_id, model, unit_id, oper_time, sn_list,
         commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
         (select di.batch_number id, me.bar_code, m.name, m.internal_id, m.model, m.unit_id,
-         me.commodity_unit, di.batch_number,di.expiration_date,
+         me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time, di.sn_list,
          di.basic_number*(case
             <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
             when (dh.type='入库'

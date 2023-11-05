@@ -205,7 +205,11 @@
         this.queryParam.subType = subType
         this.queryParam.roleType = Vue.ls.get('roleType')
         this.queryParam.status = status
-        this.columns[0].title = organType
+        if(subType === '采购申请') {
+          this.columns[0].width = 0
+        } else {
+          this.columns[0].title = organType
+        }
         this.model = Object.assign({}, {});
         this.visible = true;
         this.loadData(1)
@@ -218,7 +222,11 @@
         this.queryParam.roleType = '全部数据'
         this.queryParam.status = status
         this.queryParam.purchaseStatus = purchaseStatus
-        this.columns[0].title = organType
+        if(subType === '采购申请') {
+          this.columns[0].width = 0
+        } else {
+          this.columns[0].title = organType
+        }
         this.model = Object.assign({}, {});
         this.visible = true;
         this.loadData(1)

@@ -349,15 +349,6 @@ public class ExceptionConstants {
      *  单据信息
      * type = 85
      * */
-    //添加单据信息失败
-    public static final int DEPOT_HEAD_ADD_FAILED_CODE = 8500000;
-    public static final String DEPOT_HEAD_ADD_FAILED_MSG = "添加单据信息失败";
-    //删除单据信息失败
-    public static final int DEPOT_HEAD_DELETE_FAILED_CODE = 8500001;
-    public static final String DEPOT_HEAD_DELETE_FAILED_MSG = "删除单据信息失败";
-    //修改单据信息失败
-    public static final int DEPOT_HEAD_EDIT_FAILED_CODE = 8500002;
-    public static final String DEPOT_HEAD_EDIT_FAILED_MSG = "修改单据信息失败";
     //单据录入-仓库不能为空
     public static final int DEPOT_HEAD_DEPOT_FAILED_CODE = 8500004;
     public static final String DEPOT_HEAD_DEPOT_FAILED_MSG = "仓库不能为空";
@@ -367,9 +358,6 @@ public class ExceptionConstants {
     //单据录入-明细不能为空
     public static final int DEPOT_HEAD_ROW_FAILED_CODE = 8500006;
     public static final String DEPOT_HEAD_ROW_FAILED_MSG = "单据明细不能为空";
-    //单据录入-账户不能为空
-    public static final int DEPOT_HEAD_ACCOUNT_FAILED_CODE = 8500007;
-    public static final String DEPOT_HEAD_ACCOUNT_FAILED_MSG = "结算账户不能为空";
     //单据录入-请修改多账户的结算金额
     public static final int DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE = 8500008;
     public static final String DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG = "请修改多账户的结算金额";
@@ -392,21 +380,12 @@ public class ExceptionConstants {
     //单据录入-产品的批号不能为空
     public static final int DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE = 8000015;
     public static final String DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG = "抱歉，产品编码:%s的批号不能为空";
-    //单据录入-会员预付款余额不足
-    public static final int DEPOT_HEAD_MEMBER_PAY_LACK_CODE = 8000016;
-    public static final String DEPOT_HEAD_MEMBER_PAY_LACK_MSG = "抱歉，会员预付款余额不足";
-    //单据录入-累计订金超出原订单中的订金
-    public static final int DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE = 8000017;
-    public static final String DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG = "抱歉，累计订金超出原订单中的订金";
     //单据录入-产品编码XXX的单价低于最低售价
     public static final int DEPOT_HEAD_UNIT_PRICE_LOW_CODE = 8000018;
     public static final String DEPOT_HEAD_UNIT_PRICE_LOW_MSG = "产品编码%s的单价低于最低售价";
     //单据录入-单据明细中必须要有组合件和普通子件
     public static final int DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE = 8000020;
     public static final String DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG = "抱歉，单据明细中必须要有组合件和普通子件";
-    //单据录入-产品编码XXX的数量与序列号不一致
-    public static final int DEPOT_HEAD_SN_NUMBERE_FAILED_CODE = 8000021;
-    public static final String DEPOT_HEAD_SN_NUMBERE_FAILED_MSG = "抱歉，产品编码:%s的数量与序列号不一致";
     //生产计划-开始日期要早于或等于完成日期
     public static final int DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE = 8000022;
     public static final String DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG = "抱歉，生产计划开始日期要早于或等于完成日期";
@@ -422,6 +401,9 @@ public class ExceptionConstants {
     //单据录入-单据编号已经存在
     public static final int DEPOT_ITEM_NUMBER_MUST_BE_POSITIVE_CODE = 8000028;
     public static final String DEPOT_ITEM_NUMBER_MUST_BE_POSITIVE_MSG = "抱歉，数量必须大于0";
+    //单据录入-产品的货位不能为空
+    public static final int DEPOT_HEAD_ALLOCATION_EMPTY_CODE = 8000030;
+    public static final String DEPOT_HEAD_ALLOCATION_EMPTY_MSG = "抱歉，产品编码:%s的货位不能为空";
 
     /**
      *  单据明细信息

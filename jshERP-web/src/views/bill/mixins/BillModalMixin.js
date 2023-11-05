@@ -210,6 +210,26 @@ export const BillModalMixin = {
         }
       })
     },
+    initAllocation() {
+      let that = this;
+      getAction('/depot/findAllocation').then((res) => {
+        if(res.code === 200){
+          let arr = res.data
+          for(let item of that.materialTable.columns){
+            if(item.key == 'snList') {
+              item.options = []
+              for(let i=0; i<arr.length; i++) {
+                let allocationInfo = {};
+                allocationInfo.value = arr[i].allocation + ''
+                allocationInfo.text = arr[i].allocation + '-' + arr[i].type
+                allocationInfo.title = arr[i].allocation + '-' + arr[i].type
+                item.options.push(allocationInfo)
+              }
+            }
+          }
+        }
+      })
+    },
     initAccount(){
       let that = this;
       getAccount({}).then((res)=>{
@@ -434,20 +454,6 @@ export const BillModalMixin = {
               }
             }
           });
-          break;
-        case "snList":
-          snList = value
-          if(snList) {
-            snList = snList.replaceAll('，',',')
-            let snArr = snList.split(',')
-            operNumber = snArr.length
-            target.setValues([{rowKey: row.id, values: {operNumber: operNumber}}])
-            target.recalcAllStatisticsColumns()
-            that.autoChangePrice(target)
-          }
-          break;
-        case "operNumber":
-          target.recalcAllStatisticsColumns()
           break;
         case "allPrice":
           target.recalcAllStatisticsColumns()

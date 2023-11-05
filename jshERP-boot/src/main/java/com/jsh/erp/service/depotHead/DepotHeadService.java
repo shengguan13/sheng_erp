@@ -111,26 +111,6 @@ public class DepotHeadService {
                                          String purchaseStatus, String number, String linkNumber, String beginTime,
                                          String endTime, String salesMan, String materialParam, Long organId,
                                          Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
-        logger.info("XXXXX type: " + type);
-        logger.info("XXXXX subType: " + subType);
-        logger.info("XXXXX roleType: " + roleType);
-        logger.info("XXXXX hasDebt: " + hasDebt);
-        logger.info("XXXXX status: " + status);
-        logger.info("XXXXX purchaseStatus: " + purchaseStatus);
-        logger.info("XXXXX number: " + number);
-        logger.info("XXXXX linkNumber: " + linkNumber);
-        logger.info("XXXXX beginTime: " + beginTime);
-        logger.info("XXXXX endTime: " + endTime);
-        logger.info("XXXXX salesMan: " + salesMan);
-        logger.info("XXXXX materialParam: " + materialParam);
-        logger.info("XXXXX organId: " + organId);
-        logger.info("XXXXX creator: " + creator);
-        logger.info("XXXXX depotId: " + depotId);
-        logger.info("XXXXX accountId: " + accountId);
-        logger.info("XXXXX remark: " + remark);
-        logger.info("XXXXX offset: " + offset);
-        logger.info("XXXXX rows: " + rows);
-
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
             String [] depotArray = getDepotArray(subType);
@@ -145,8 +125,6 @@ public class DepotHeadService {
             List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray,
                     hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime, salesMan,
                     materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
-            logger.info("XXXXX query size: " + list.size());
-
             if (null != list) {
                 List<Long> idList = new ArrayList<>();
                 List<String> numberList = new ArrayList<>();

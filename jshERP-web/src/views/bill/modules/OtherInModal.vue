@@ -169,9 +169,11 @@
             { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
             { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.input },
             { title: '有效期', key: 'expirationDate',width: '6%', type: FormTypes.date },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
@@ -237,6 +239,7 @@
         this.initSystemConfig()
         this.initSupplier()
         this.initDepot()
+        this.initAllocation()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

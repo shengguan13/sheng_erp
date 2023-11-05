@@ -599,11 +599,21 @@ public class DepotItemService {
                     depotItem.setBatchNumber(rowObj.getString("batchNumber"));
                 } else {
                     if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())
-                            || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                            && BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType()))) {
+                            || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) && BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType()))) {
                         //入库批号不能为空，调拨批号不能为空，出库的批号按照先进先出自动填充
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
+                    }
+                }
+                // 记录货位，货位不能为空
+                if (StringUtil.isExist(rowObj.get("snList"))) {
+                    depotItem.setSnList(rowObj.getString("snList"));
+                } else {
+                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())
+                            || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) && BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType()))) {
+                        // 入库和调拨货位不能为空，出库自动填充
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ALLOCATION_EMPTY_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_ALLOCATION_EMPTY_MSG, barCode));
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("expirationDate"))) {
@@ -815,7 +825,7 @@ public class DepotItemService {
                         item.setTaxLastMoney(depotItem.getTaxLastMoney());
                         item.setMaterialType(depotItem.getMaterialType());
                         item.setRemark(depotItem.getRemark());
-
+                        item.setSnList(di.getSnList());
                         item.setBatchNumber(di.getBatchNumber());
                         item.setExpirationDate(di.getExpirationDate());
                         if(left.subtract(di.getTotalNum()).compareTo(BigDecimal.valueOf(0.000001)) < 0) {
