@@ -329,15 +329,6 @@ public class ExceptionConstants {
     //EXCEL中存在重复的编码
     public static final int MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE = 80000021;
     public static final String MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG = "抱歉，EXCEL中存在重复的编码，具体编码为：%s";
-    //零件组成存在循环依赖
-    public static final int MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_CODE = 80000022;
-    public static final String MATERIAL_COMPOSITE_CIRCULAR_DEPENDENCY_MSG = "抱歉，编辑后零件组成存在循环依赖（例如A由B组成，B由C组成，C又由A组成）";
-    //零件组成不合法
-    public static final int MATERIAL_COMPOSITE_INVALID_CODE = 80000023;
-    public static final String MATERIAL_COMPOSITE_INVALID_MSG = "存在不合规的零件组装关系：%s";
-    //零件组成有不存在的编码
-    public static final int MATERIAL_COMPOSITE_NOT_EXIST_CODE = 80000024;
-    public static final String MATERIAL_COMPOSITE_NOT_EXIST_MSG = "零件组装关系中有不存在的编码：%s, %s不存在";
     //批号库存不足
     public static final int BATCH_STOCK_NOT_ENOUGH_CODE = 80000025;
     public static final String BATCH_STOCK_NOT_ENOUGH_MSG = "批号%s的库存不足";
@@ -404,6 +395,9 @@ public class ExceptionConstants {
     //单据录入-产品的货位不能为空
     public static final int DEPOT_HEAD_ALLOCATION_EMPTY_CODE = 8000030;
     public static final String DEPOT_HEAD_ALLOCATION_EMPTY_MSG = "抱歉，产品编码:%s的货位不能为空";
+    //采购订单-到货日期要晚于当前时间
+    public static final int DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_CODE = 8000031;
+    public static final String DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_MSG = "抱歉，到货日期不能早于当前日期";
 
     /**
      *  单据明细信息

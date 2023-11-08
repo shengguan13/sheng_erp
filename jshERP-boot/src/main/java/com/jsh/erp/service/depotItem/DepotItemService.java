@@ -30,6 +30,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -621,6 +623,12 @@ public class DepotItemService {
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("expirationDate"))) {
+                    if (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType())
+                            && BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
+                            && rowObj.getDate("expirationDate").toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS).compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_MSG));
+                    }
                     depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
                 }
                 if (StringUtil.isExist(rowObj.get("sku"))) {

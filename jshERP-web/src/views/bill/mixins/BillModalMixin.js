@@ -121,11 +121,10 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.input //显示
               }
             } else if(key === 'expirationDate') {
-              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK'
-                  || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
+              if(this.prefixNo === 'CGDD') {
                 columns[i].type = FormTypes.date //显示
               } else {
-                columns[i].type = FormTypes.input //显示
+                columns[i].type = FormTypes.hidden //显示
               }
             } else if(key === 'snList') {
               if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK'
