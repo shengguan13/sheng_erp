@@ -211,7 +211,6 @@
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.input },
-            { title: '有效期', key: 'expirationDate',width: '6%', type: FormTypes.date },
             { title: '入库数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -255,7 +254,6 @@
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
-        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         if (this.action === 'add') {

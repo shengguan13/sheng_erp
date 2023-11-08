@@ -1306,7 +1306,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
@@ -1393,7 +1392,6 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单位', dataIndex: 'unit'},
           { title: '备注', dataIndex: 'remark'}
@@ -1412,7 +1410,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
@@ -1462,7 +1459,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '退货', dataIndex: 'finishNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1481,7 +1477,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
@@ -1515,7 +1510,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '退货', dataIndex: 'finishNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1534,7 +1528,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
@@ -1552,7 +1545,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
@@ -1570,7 +1562,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
@@ -1588,7 +1579,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
@@ -1607,7 +1597,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
           { title: '批号', dataIndex: 'batchNumber'},
-          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
@@ -1717,14 +1706,14 @@
         } else if (type === '盘点复盘') {
           this.defColumns = this.stockCheckReplayColumns
         }
-        //判断序列号、批号、有效期是否有值
+        //判断货位、批号、货位是否有值
         let needAddkeywords = []
         for (let i = 0; i < ds.length; i++) {
           if(ds[i].batchNumber) {
             needAddkeywords.push('batchNumber')
           }
-          if(ds[i].expirationDate) {
-            needAddkeywords.push('expirationDate')
+          if(ds[i].snList) {
+            needAddkeywords.push('snList')
           }
           if(ds[i].weight) {
             needAddkeywords.push('weight')
@@ -1751,7 +1740,7 @@
           let currentCol = []
           for(let i=0; i<this.defColumns.length; i++){
             //移除列
-            let needRemoveKeywords = ['batchNumber','expirationDate','weight']
+            let needRemoveKeywords = ['batchNumber','snList','weight']
             if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
               let info = {}
               info.title = this.defColumns[i].title
@@ -1936,12 +1925,12 @@
       retailExportExcel() {
         let aoa = []
         aoa = [['会员卡号：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '货位', '批号', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.expirationDate,  ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
+            ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2023,12 +2012,12 @@
       productionInExportExcel() {
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '批号', '有效期', '数量', '单位', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '批号', '数量', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.stock,
-            ds.batchNumber, ds.expirationDate,  ds.operNumber, ds.unit, ds.remark]
+            ds.batchNumber, ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2069,12 +2058,12 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单号：', this.model.linkNumber],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '税率(%)', '税额', '价税合计', '重量', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '货位', '批号', '数量', '单价', '金额', '税率(%)', '税额', '价税合计', '重量', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.expirationDate,  ds.operNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.weight, ds.remark]
+            ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.weight, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2089,12 +2078,12 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '数量', '单价', '金额', '备注']
+        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '货位', '批号', '数量', '单价', '金额', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.expirationDate,  ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
+            ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
