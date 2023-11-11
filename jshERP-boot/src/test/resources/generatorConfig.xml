@@ -45,6 +45,7 @@
         <table tableName="jsh_account_head" domainObjectName="AccountHead"></table>
         <table tableName="jsh_account_item" domainObjectName="AccountItem"></table>
         <table tableName="jsh_depot" domainObjectName="Depot"></table>
+        <table tableName="jsh_depot_allocation" domainObjectName="DepotAllocation"></table>
         <table tableName="jsh_depot_head" domainObjectName="DepotHead"></table>
         <table tableName="jsh_depot_item" domainObjectName="DepotItem"></table>
         <table tableName="jsh_function" domainObjectName="Function"></table>

@@ -110,6 +110,15 @@ public class ExceptionConstants {
     //修改仓库信息失败
     public static final int DEPOT_EDIT_FAILED_CODE = 2000002;
     public static final String DEPOT_EDIT_FAILED_MSG = "修改仓库信息失败";
+    //库位信息缺失
+    public static final int DEPOT_ALLOCATION_INFO_MISSING_CODE = 2000003;
+    public static final String DEPOT_ALLOCATION_INFO_MISSING_MSG = "第%s行信息缺失";
+    //EXCEL中存在重复的库位
+    public static final int ALLOCATION_EXCEL_IMPORT_EXIST_CODE = 2000004;
+    public static final String ALLOCATION_EXCEL_IMPORT_EXIST_MSG = "抱歉，EXCEL中存在重复的库位，具体信息为：%s";
+    //不存在的仓库
+    public static final int DEPOT_NAME_NOT_EXIST_CODE = 2000005;
+    public static final String DEPOT_NAME_NOT_EXIST_MSG = "名为%s的仓库不存在";
 
     /**
      * 功能模块信息
