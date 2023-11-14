@@ -3,6 +3,7 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Person;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.person.PersonService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
@@ -11,9 +12,11 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +106,33 @@ public class PersonController {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/exportExcel")
+    @ApiOperation(value = "生成excel表格")
+    public void exportExcel(@RequestParam(value = "depotName", required = false) String depotName,
+                            @RequestParam(value = "allocation", required = false) String allocation,
+                            @RequestParam(value = "type", required = false) String type,
+                            HttpServletRequest request, HttpServletResponse response) {
+
+    }
+
+    @PostMapping(value = "/importExcel")
+    @ApiOperation(value = "excel表格导入")
+    public BaseResponseInfo importExcel(MultipartFile file,
+                                        HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = personService.importExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return res;
     }

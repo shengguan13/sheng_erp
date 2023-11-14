@@ -12,16 +12,6 @@
                   <a-input placeholder="请输入姓名查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item label="类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select v-model="queryParam.type" placeholder="请选择类型">
-                    <a-select-option value="">请选择</a-select-option>
-                    <a-select-option value="业务员">业务员</a-select-option>
-                    <a-select-option value="仓管员">仓管员</a-select-option>
-                    <a-select-option value="财务员">财务员</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
@@ -34,6 +24,8 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
+          <a-button type="primary" icon="download" @click="handleExportXls('人员')">导出</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -76,6 +68,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <person-modal ref="modalForm" @ok="modalFormOk"></person-modal>
+        <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
       </a-card>
     </a-col>
   </a-row>
@@ -84,12 +77,15 @@
 <script>
   import PersonModal from './modules/PersonModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import ImportFileModal from '@/components/tools/ImportFileModal'
+  import { getFileAccessHttpUrl } from '@api/manage'
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "PersonList",
     mixins:[JeecgListMixin],
     components: {
       PersonModal,
+      ImportFileModal,
       JDate
     },
     data () {
@@ -133,7 +129,9 @@
           list: "/person/list",
           delete: "/person/delete",
           deleteBatch: "/person/deleteBatch",
-          batchSetStatusUrl: "/person/batchSetStatus"
+          batchSetStatusUrl: "/person/batchSetStatus",
+          importExcelUrl: "/person/importExcel",
+          exportXlsUrl: "/person/exportExcel"
         }
       }
     },
@@ -141,6 +139,13 @@
 
     },
     methods: {
+      handleImportXls() {
+        let importExcelUrl = this.url.importExcelUrl
+        let templateUrl = '/doc/person_template.xls'
+        let templateName = '人员模板[下载]'
+        this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
+        this.$refs.modalImportForm.title = "人员导入";
+      },
       handleEdit: function (record) {
         this.$refs.modalForm.edit(record);
         this.$refs.modalForm.title = "编辑";

@@ -172,6 +172,12 @@ public class ExceptionConstants {
     //修改经手人信息失败
     public static final int PERSON_EDIT_FAILED_CODE = 4500002;
     public static final String PERSON_EDIT_FAILED_MSG = "修改经手人信息失败";
+    //修改经手人信息失败
+    public static final int PERSON_INFO_MISSING_CODE = 4500003;
+    public static final String PERSON_INFO_MISSING_MSG = "第%s行人员姓名或者职位缺失";
+    //EXCEL中存在重复的人员
+    public static final int PERSON_EXCEL_IMPORT_EXIST_CODE = 4500004;
+    public static final String PERSON_EXCEL_IMPORT_EXIST_MSG = "抱歉，EXCEL中存在重复的人员，具体信息为：%s";
     /**
      * 用户角色模块关系信息
      * type = 50

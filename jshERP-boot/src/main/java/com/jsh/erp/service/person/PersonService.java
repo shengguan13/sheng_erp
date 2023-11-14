@@ -3,10 +3,7 @@ package com.jsh.erp.service.person;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.AccountHead;
-import com.jsh.erp.datasource.entities.DepotHead;
-import com.jsh.erp.datasource.entities.Person;
-import com.jsh.erp.datasource.entities.PersonExample;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
 import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
 import com.jsh.erp.datasource.mappers.PersonMapper;
@@ -15,13 +12,18 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.StringUtil;
+import jxl.Sheet;
+import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -101,6 +103,82 @@ public class PersonService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BaseResponseInfo importExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        try {
+            Long beginTime = System.currentTimeMillis();
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                }
+            }
+            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+            Sheet src = workbook.getSheet(0);
+            //获取真实的行数，剔除掉空白行
+            int rightRows = ExcelUtils.getRightRows(src);
+            User user = userService.getCurrentUser();
+            //单次导入超出5000条
+            if(rightRows > 5001) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
+                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
+            }
+            List<Person> personList = new ArrayList<>();
+            for (int i = 1; i < rightRows; i++) {
+                String name = ExcelUtils.getContent(src, i, 0);
+                String type = ExcelUtils.getContent(src, i, 1);
+                //不允许为空
+                if(StringUtil.isEmpty(name) || StringUtil.isEmpty(type)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.PERSON_INFO_MISSING_CODE,
+                            String.format(ExceptionConstants.PERSON_INFO_MISSING_MSG, i+1));
+                }
+                batchCheckExistPersonByParam(personList, name, type);
+                Person person = new Person();
+                person.setName(name);
+                person.setType(type);
+                person.setEnabled(true);
+                personList.add(person);
+            }
+            for (Person person : personList) {
+                personMapper.insertSelective(person);
+            }
+            logService.insertLog("人员",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT)
+                            .append(personList.size())
+                            .append(BusinessConstants.LOG_DATA_UNIT).toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            Long endTime = System.currentTimeMillis();
+            logger.info("导入耗时：{}", endTime-beginTime);
+            info.code = 200;
+            info.data = "导入成功";
+        } catch (BusinessRunTimeException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info(e.getMessage());
+            info.code = 500;
+            info.data = "导入失败";
+        }
+        return info;
+    }
+
+    /**
+     * 批量校验excel中有无重复人员
+     */
+    public void batchCheckExistPersonByParam(List<Person> personList, String name, String type) {
+        for(Person person: personList){
+            if(name.equals(person.getName()) && type.equals(person.getType())){
+                String info = name + "-" + type;
+                throw new BusinessRunTimeException(ExceptionConstants.PERSON_EXCEL_IMPORT_EXIST_CODE,
+                        String.format(ExceptionConstants.PERSON_EXCEL_IMPORT_EXIST_MSG, info));
+            }
+        }
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
