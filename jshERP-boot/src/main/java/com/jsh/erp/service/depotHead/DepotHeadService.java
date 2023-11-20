@@ -46,6 +46,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.jsh.erp.constants.BusinessConstants.*;
 import static com.jsh.erp.utils.Tools.getCenternTime;
 import static com.jsh.erp.utils.Tools.getNow3;
 
@@ -233,10 +234,10 @@ public class DepotHeadService {
     public String[] getDepotArray(String subType) throws Exception {
         String [] depotArray = null;
         if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType)
-                && !BusinessConstants.SUB_TYPE_PURCHASE_APPLICATION.equals(subType)
+                && !SUB_TYPE_PURCHASE_APPLICATION.equals(subType)
                 && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)
-                && !BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(subType)
-                && !BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
+                && !SUB_TYPE_PRODUCTION_PLAN.equals(subType)
+                && !SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
             String depotIds = depotService.findDepotStrByCurrentUser();
             depotArray = StringUtil.isNotEmpty(depotIds) ? depotIds.split(",") : null;
         }
@@ -472,7 +473,7 @@ public class DepotHeadService {
                     || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&       // 生产单（关联生产计划）
-                        BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType()))
+                        SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&          // 生产入库（关联生产单）
                         BusinessConstants.SUB_TYPE_PRODUCTION.equals(depotHead.getSubType()))) {
 
@@ -860,7 +861,7 @@ public class DepotHeadService {
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
         }
         String subType = depotHead.getSubType();
-        if("生产计划".equals(subType)) {
+        if(SUB_TYPE_PRODUCTION_PLAN.equals(subType)) {
             // 计划开始时间要<=计划完成时间
             if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
                     .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
@@ -874,7 +875,7 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
             }
         }
-        if("生产单".equals(subType)) {
+        if(SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
             // 生产单开工时间要>=今天
             if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
                     .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
@@ -887,7 +888,11 @@ public class DepotHeadService {
         depotHead.setCreator(userInfo==null?null:userInfo.getId());
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         if(StringUtil.isEmpty(depotHead.getStatus())) {
-            depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+            if (SUB_TYPE_PURCHASE_APPLICATION.equals(subType)) {
+                depotHead.setStatus(BusinessConstants.APPLICATION_STATUS_UN_AUDIT);
+            } else {
+                depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+            }
         }
         depotHead.setPurchaseStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         depotHead.setPayType(depotHead.getPayType()==null?"现付":depotHead.getPayType());

@@ -21,6 +21,16 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请人">
+              <a-select placeholder="选择申请人" v-decorator="[ 'salesMan' ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
+                  {{ item.text }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
               <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
             </a-form-item>
@@ -187,17 +197,19 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
-        this.billStatus = '0'
+        this.billStatus = '-2'
         this.materialTable.columns[0].type = FormTypes.popupJsh
         this.changeColumnHide()
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
+          this.salesMan = ''
           this.$nextTick(() => {
             handleIntroJs(this.prefixNo, 1)
           })
         } else {
           this.model.operTime = this.model.operTimeStr
+          this.salesMan = this.model.salesMan
           if(this.model.accountId == null && this.model.accountIdList) {
             this.model.accountId = 0
             this.manyAccountBtnStatus = true
@@ -209,7 +221,7 @@
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
-            'discountLastMoney','accountId'))
+            'discountLastMoney','accountId','salesMan'))
           });
           // 加载子表数据
           let params = {

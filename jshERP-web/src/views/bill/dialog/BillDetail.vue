@@ -1364,6 +1364,8 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '领料数量', dataIndex: 'operNumber'},
           { title: '退料数量', dataIndex: 'finishNumber'},
+          { title: '领料批号', dataIndex: 'batchNumber'},
+          { title: '领料货位', dataIndex: 'snList'},
           { title: '单位', dataIndex: 'unit'},
           { title: '备注', dataIndex: 'remark'}
         ],
