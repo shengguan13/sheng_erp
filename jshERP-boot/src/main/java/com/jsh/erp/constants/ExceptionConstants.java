@@ -376,6 +376,18 @@ public class ExceptionConstants {
     //单据审核-只有未审核的单据才能审核
     public static final int DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_CODE = 8500012;
     public static final String DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_MSG = "抱歉，只有未审核的单据才能审核";
+    //单据审核-只有未审核的单据才能审核
+    public static final int APPLICATION_FIRST_LEVEL_AUDIT_FAILED_CODE = 8500112;
+    public static final String APPLICATION_FIRST_LEVEL_AUDIT_FAILED_MSG = "抱歉，只有未审核的申请才能进行部门审核";
+    //单据审核-只有未审核的单据才能审核
+    public static final int APPLICATION_SECOND_LEVEL_AUDIT_FAILED_CODE = 8500113;
+    public static final String APPLICATION_SECOND_LEVEL_AUDIT_FAILED_MSG = "抱歉，只有通过部门审核的申请才能进行商务审核";
+    //单据审核-只有未审核的单据才能审核
+    public static final int APPLICATION_THIRD_LEVEL_AUDIT_FAILED_CODE = 8500114;
+    public static final String APPLICATION_THIRD_LEVEL_AUDIT_FAILED_MSG = "抱歉，只有未审核的申请才能进行最终审核";
+    //单据反审核-只有已审核的单据才能反审核
+    public static final int APPLICATION_UN_AUDIT_FAILED_CODE = 8500115;
+    public static final String APPLICATION_UN_AUDIT_FAILED_MSG = "抱歉，只有已审核的申请才能反审核";
     //单据反审核-只有已审核的单据才能反审核
     public static final int DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE = 8500013;
     public static final String DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG = "抱歉，只有已审核的单据才能反审核";

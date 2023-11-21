@@ -69,11 +69,11 @@ public class BusinessConstants {
     public static final String PURCHASE_STATUS_SKIPED = "2";
     public static final String PURCHASE_STATUS_SKIPING = "3";
     /**
-     * 单据-采购申请状态 applicationStatus '-2'未审核，'-1'部门已审核，'0'采购已审核，'1'已审核
+     * 单据-采购申请状态 applicationStatus '10'未审核，'11'部门已审核，'12'采购已审核，'1'总经理已审核
      * */
-    public static final String APPLICATION_STATUS_UN_AUDIT = "-2";
-    public static final String APPLICATION_STATUS_FIRST_LEVEL_AUDIT = "-1";
-    public static final String APPLICATION_STATUS_SECOND_LEVEL_AUDIT = "0";
+    public static final String APPLICATION_STATUS_UN_AUDIT = "10";
+    public static final String APPLICATION_STATUS_FIRST_LEVEL_AUDIT = "11";
+    public static final String APPLICATION_STATUS_SECOND_LEVEL_AUDIT = "12";
     public static final String APPLICATION_STATUS_AUDIT = "1";
     /**
      * 出入库分类

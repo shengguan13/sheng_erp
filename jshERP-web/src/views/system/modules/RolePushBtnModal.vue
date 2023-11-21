@@ -52,6 +52,9 @@
             <span slot="action" slot-scope="text, record">
               <a-checkbox v-if="record.pushBtn.indexOf(1)>-1" value="1" :checked="record.btnStr?record.btnStr.indexOf(1)>-1:false" @change="onChange(record,'1')">编辑</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(2)>-1" value="2" :checked="record.btnStr?record.btnStr.indexOf(2)>-1:false" @change="onChange(record,'2')">审核</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf('a')>-1" value="a" :checked="record.btnStr?record.btnStr.indexOf('a')>-1:false" @change="onChange(record,'a')">部门审核</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf('b')>-1" value="b" :checked="record.btnStr?record.btnStr.indexOf('b')>-1:false" @change="onChange(record,'b')">商务审核</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf('c')>-1" value="c" :checked="record.btnStr?record.btnStr.indexOf('c')>-1:false" @change="onChange(record,'c')">最终审核</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(7)>-1" value="7" :checked="record.btnStr?record.btnStr.indexOf(7)>-1:false" @change="onChange(record,'7')">反审核</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(3)>-1" value="3" :checked="record.btnStr?record.btnStr.indexOf(3)>-1:false" @change="onChange(record,'3')">导入导出</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(4)>-1" value="4" :checked="record.btnStr?record.btnStr.indexOf(4)>-1:false" @change="onChange(record,'4')">启用禁用</a-checkbox>

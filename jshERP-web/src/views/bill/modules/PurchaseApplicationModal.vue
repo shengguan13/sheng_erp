@@ -14,7 +14,6 @@
     style="top:20px;height: 95%;">
     <template slot="footer">
       <a-button @click="handleCancel">取消</a-button>
-      <a-button v-if="checkFlag && isCanCheck" @click="handleOkAndCheck">保存并审核</a-button>
       <a-button type="primary" @click="handleOk">保存</a-button>
     </template>
     <a-spin :spinning="confirmLoading">
@@ -197,7 +196,7 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
-        this.billStatus = '-2'
+        this.billStatus = '10'
         this.materialTable.columns[0].type = FormTypes.popupJsh
         this.changeColumnHide()
         if (this.action === 'add') {

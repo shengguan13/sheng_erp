@@ -73,8 +73,10 @@
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-              <a-menu-item key="2" v-if="checkFlag && btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
-              <a-menu-item key="3" v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
+              <a-menu-item key="2" v-if="checkFlag && btnEnableList.indexOf('a')>-1" @click="batchSetStatus(11)"><a-icon type="check"/>部门审核</a-menu-item>
+              <a-menu-item key="3" v-if="checkFlag && btnEnableList.indexOf('b')>-1" @click="batchSetStatus(12)"><a-icon type="check"/>商务审核</a-menu-item>
+              <a-menu-item key="4" v-if="checkFlag && btnEnableList.indexOf('c')>-1" @click="batchSetStatus(1)"><a-icon type="check"/>最终审核</a-menu-item>
+              <a-menu-item key="5" v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetStatus(10)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
             <a-button>
               批量操作 <a-icon type="down" />
@@ -111,7 +113,9 @@
               </a-popconfirm>
             </span>
             <template slot="customRenderStatus" slot-scope="status, record">
-              <a-tag v-if="status == '0'" color="red">未审批</a-tag>
+              <a-tag v-if="status == '10'" color="red">等待部门审批</a-tag>
+              <a-tag v-if="status == '11'" color="yellow">等待商务审批</a-tag>
+              <a-tag v-if="status == '12'" color="orange">等待最终审批</a-tag>
               <a-tag v-if="status == '1'" color="green">已审批</a-tag>
               <a-tag v-if="status == '2'" color="cyan">已下单</a-tag>
             </template>

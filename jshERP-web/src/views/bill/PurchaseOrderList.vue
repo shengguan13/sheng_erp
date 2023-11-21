@@ -122,9 +122,7 @@
               </a-popconfirm>
             </span>
             <template slot="customRenderStatus" slot-scope="status, record">
-              <a-tag v-if="status == '-2'" color="red">未审核</a-tag>
-              <a-tag v-if="status == '-1'" color="orange">部门已审核</a-tag>
-              <a-tag v-if="status == '0'" color="yellow">采购已审核</a-tag>
+              <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
               <a-tag v-if="status == '2'" color="cyan">完成采购</a-tag>
               <a-tag v-if="status == '3'" color="blue">部分采购</a-tag>
@@ -216,8 +214,6 @@
       this.initSystemConfig()
       this.initSupplier()
       this.initUser()
-      this.queryParam.status = '-2'
-      this.loadData()
     },
     computed: {
     },

@@ -578,11 +578,41 @@ public class DepotHeadService {
                             String.format(ExceptionConstants.DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG));
                 }
             } else if("1".equals(status)){
-                if("0".equals(depotHead.getStatus())) {
+                if (SUB_TYPE_PURCHASE_APPLICATION.equals(depotHead.getSubType())) {
+                    if (!"1".equals(depotHead.getStatus())) {
+                        dhIds.add(id);
+                    } else {
+                        throw new BusinessRunTimeException(ExceptionConstants.APPLICATION_THIRD_LEVEL_AUDIT_FAILED_CODE,
+                                String.format(ExceptionConstants.APPLICATION_THIRD_LEVEL_AUDIT_FAILED_MSG));
+                    }
+                } else {
+                    if ("0".equals(depotHead.getStatus())) {
+                        dhIds.add(id);
+                    } else {
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_MSG));
+                    }
+                }
+            } else if("11".equals(status)) {
+                if("10".equals(depotHead.getStatus())) {
                     dhIds.add(id);
                 } else {
-                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_CODE,
-                            String.format(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_MSG));
+                    throw new BusinessRunTimeException(ExceptionConstants.APPLICATION_FIRST_LEVEL_AUDIT_FAILED_CODE,
+                            String.format(ExceptionConstants.APPLICATION_FIRST_LEVEL_AUDIT_FAILED_MSG));
+                }
+            } else if("12".equals(status)) {
+                if("11".equals(depotHead.getStatus())) {
+                    dhIds.add(id);
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.APPLICATION_SECOND_LEVEL_AUDIT_FAILED_CODE,
+                            String.format(ExceptionConstants.APPLICATION_SECOND_LEVEL_AUDIT_FAILED_MSG));
+                }
+            } else if("10".equals(status)) {
+                if("11".equals(depotHead.getStatus()) || "12".equals(depotHead.getStatus()) || "1".equals(depotHead.getStatus())) {
+                    dhIds.add(id);
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.APPLICATION_UN_AUDIT_FAILED_CODE,
+                            String.format(ExceptionConstants.APPLICATION_UN_AUDIT_FAILED_MSG));
                 }
             }
         }

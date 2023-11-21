@@ -255,18 +255,5 @@ export const PaymentApplicationModalMixin = {
       this.billStatus = '1'
       this.handleOk()
     },
-    //保存并审核
-    handleFirstLevelCheck() {
-      this.billStatus = '-1'
-      this.handleOk()
-    },
-    handleSecondLevelCheck() {
-      this.billStatus = '0'
-      this.handleOk()
-    },
-    handleThirdLevelCheck() {
-      this.billStatus = '1'
-      this.handleOk()
-    },
   }
 }
