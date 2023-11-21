@@ -17,10 +17,8 @@ import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
-import com.jsh.erp.service.mail.MailUtil;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.person.PersonService;
-import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
@@ -39,7 +37,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -475,7 +472,9 @@ public class DepotHeadService {
                     || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&       // 生产单（关联生产计划）
                         SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&          // 生产入库（关联生产单）
-                        BusinessConstants.SUB_TYPE_PRODUCTION.equals(depotHead.getSubType()))) {
+                        BusinessConstants.SUB_TYPE_PRODUCTION.equals(depotHead.getSubType()))
+                    || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&       // 采购订单（关联采购申请）
+                        SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType()))) {
 
                         String billStatus = depotItemService.getBillStatusByParam(depotHead);
                         depotItemService.changeBillStatus(depotHead, billStatus);
@@ -571,7 +570,7 @@ public class DepotHeadService {
         for(Long id: ids) {
             DepotHead depotHead = getDepotHead(id);
             if("0".equals(status)){
-                if("1".equals(depotHead.getStatus())) {
+                if("11".equals(depotHead.getStatus()) || "12".equals(depotHead.getStatus()) || "1".equals(depotHead.getStatus())) {
                     dhIds.add(id);
                 } else {
                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE,
@@ -594,7 +593,7 @@ public class DepotHeadService {
                     }
                 }
             } else if("11".equals(status)) {
-                if("10".equals(depotHead.getStatus())) {
+                if("0".equals(depotHead.getStatus())) {
                     dhIds.add(id);
                 } else {
                     throw new BusinessRunTimeException(ExceptionConstants.APPLICATION_FIRST_LEVEL_AUDIT_FAILED_CODE,
@@ -606,13 +605,6 @@ public class DepotHeadService {
                 } else {
                     throw new BusinessRunTimeException(ExceptionConstants.APPLICATION_SECOND_LEVEL_AUDIT_FAILED_CODE,
                             String.format(ExceptionConstants.APPLICATION_SECOND_LEVEL_AUDIT_FAILED_MSG));
-                }
-            } else if("10".equals(status)) {
-                if("11".equals(depotHead.getStatus()) || "12".equals(depotHead.getStatus()) || "1".equals(depotHead.getStatus())) {
-                    dhIds.add(id);
-                } else {
-                    throw new BusinessRunTimeException(ExceptionConstants.APPLICATION_UN_AUDIT_FAILED_CODE,
-                            String.format(ExceptionConstants.APPLICATION_UN_AUDIT_FAILED_MSG));
                 }
             }
         }
@@ -918,11 +910,7 @@ public class DepotHeadService {
         depotHead.setCreator(userInfo==null?null:userInfo.getId());
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         if(StringUtil.isEmpty(depotHead.getStatus())) {
-            if (SUB_TYPE_PURCHASE_APPLICATION.equals(subType)) {
-                depotHead.setStatus(BusinessConstants.APPLICATION_STATUS_UN_AUDIT);
-            } else {
-                depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
-            }
+            depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         }
         depotHead.setPurchaseStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         depotHead.setPayType(depotHead.getPayType()==null?"现付":depotHead.getPayType());

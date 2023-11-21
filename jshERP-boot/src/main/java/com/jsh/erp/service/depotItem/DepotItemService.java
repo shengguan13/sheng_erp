@@ -861,6 +861,7 @@ public class DepotItemService {
             }
             //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产单（决定生产计划的状态）、生产入库（决定生产单的状态）、退料入库（决定领料出库的状态）
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
+                    || BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())
