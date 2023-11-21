@@ -63,11 +63,10 @@ public class BusinessConstants {
     public static final String BILLS_STATUS_SKIPED = "2";
     public static final String BILLS_STATUS_SKIPING = "3";
     /**
-     * 单据-采购状态 purchaseStatus '0'未采购、'2'完成采购、'3'部分采购
+     * 单据-采购状态 purchaseStatus '0'未收到发票，'1'收到发票
      * */
-    public static final String PURCHASE_STATUS_UN_AUDIT = "0";
-    public static final String PURCHASE_STATUS_SKIPED = "2";
-    public static final String PURCHASE_STATUS_SKIPING = "3";
+    public static final String PURCHASE_STATUS_NO_RECEIPT = "0";
+    public static final String PURCHASE_STATUS_RECEIPT = "1";
     /**
      * 单据-采购申请状态 applicationStatus '0'未审核，'11'部门已审核，'12'商务已审核，'1'总经理已审核
      * */

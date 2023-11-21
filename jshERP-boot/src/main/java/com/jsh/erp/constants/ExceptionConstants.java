@@ -388,6 +388,12 @@ public class ExceptionConstants {
     //单据反审核-只有已审核的单据才能反审核
     public static final int APPLICATION_UN_AUDIT_FAILED_CODE = 8500115;
     public static final String APPLICATION_UN_AUDIT_FAILED_MSG = "抱歉，只有已审核的申请才能反审核";
+    //票据签收
+    public static final int PURCHASE_RECEIPT_CHECK_FAILED_CODE = 8500116;
+    public static final String PURCHASE_RECEIPT_CHECK_FAILED_MSG = "抱歉，只有未收到发票的订单才可签收发票";
+    //票据反签收
+    public static final int PURCHASE_RECEIPT_UN_CHECK_FAILED_CODE = 8500117;
+    public static final String PURCHASE_RECEIPT_UN_CHECK_FAILED_MSG = "抱歉，只有已签收发票的订单才可以反签收";
     //单据反审核-只有已审核的单据才能反审核
     public static final int DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE = 8500013;
     public static final String DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG = "抱歉，只有已审核的单据才能反审核";

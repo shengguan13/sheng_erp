@@ -480,23 +480,6 @@ public class DepotHeadService {
                         depotItemService.changeBillStatus(depotHead, billStatus);
                     }
                 }
-                //将关联的销售订单单据置为未采购状态-针对销售订单转采购订单的情况（目前没有这种情况）
-                if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
-                    if(BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
-                            BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
-                        DepotHead dh = new DepotHead();
-                        //获取分批操作后单据的产品和产品数量（汇总）
-                        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), depotHead.getType());
-                        if(batchList.size()>0) {
-                            dh.setPurchaseStatus(BusinessConstants.PURCHASE_STATUS_SKIPING);
-                        } else {
-                            dh.setPurchaseStatus(BusinessConstants.PURCHASE_STATUS_UN_AUDIT);
-                        }
-                        DepotHeadExample example = new DepotHeadExample();
-                        example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber());
-                        depotHeadMapper.updateByExampleSelective(dh, example);
-                    }
-                }
                 //更新当前库存
                 for (DepotItem depotItem : list) {
                     depotItemService.updateCurrentStock(depotItem);
@@ -611,6 +594,39 @@ public class DepotHeadService {
         if(dhIds.size()>0) {
             DepotHead depotHead = new DepotHead();
             depotHead.setStatus(status);
+            DepotHeadExample example = new DepotHeadExample();
+            example.createCriteria().andIdIn(dhIds);
+            result = depotHeadMapper.updateByExampleSelective(depotHead, example);
+        }
+        return result;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetPurchaseStatus(String status, String depotHeadIDs)throws Exception {
+        int result = 0;
+        List<Long> dhIds = new ArrayList<>();
+        List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
+        for(Long id: ids) {
+            DepotHead depotHead = getDepotHead(id);
+            if("0".equals(status)){
+                if(PURCHASE_STATUS_RECEIPT.equals(depotHead.getPurchaseStatus())) {
+                    dhIds.add(id);
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.PURCHASE_RECEIPT_CHECK_FAILED_CODE,
+                            String.format(ExceptionConstants.PURCHASE_RECEIPT_CHECK_FAILED_MSG));
+                }
+            } else if("1".equals(status)) {
+                if (PURCHASE_STATUS_NO_RECEIPT.equals(depotHead.getPurchaseStatus())) {
+                    dhIds.add(id);
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.PURCHASE_RECEIPT_UN_CHECK_FAILED_CODE,
+                            String.format(ExceptionConstants.PURCHASE_RECEIPT_UN_CHECK_FAILED_MSG));
+                }
+            }
+        }
+        if(dhIds.size()>0) {
+            DepotHead depotHead = new DepotHead();
+            depotHead.setPurchaseStatus(status);
             DepotHeadExample example = new DepotHeadExample();
             example.createCriteria().andIdIn(dhIds);
             result = depotHeadMapper.updateByExampleSelective(depotHead, example);

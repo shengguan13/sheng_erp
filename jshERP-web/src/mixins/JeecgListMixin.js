@@ -195,6 +195,39 @@ export const JeecgListMixin = {
         });
       }
     },
+    batchSetPurchaseStatus: function (status) {
+      if(!this.url.batchSetPurchaseStatusUrl){
+        this.$message.error("请设置url.batchSetPurchaseStatusUrl!")
+        return
+      }
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warning('请选择一条记录！');
+        return;
+      } else {
+        var ids = "";
+        for (var a = 0; a < this.selectedRowKeys.length; a++) {
+          ids += this.selectedRowKeys[a] + ",";
+        }
+        var that = this;
+        this.$confirm({
+          title: "确认操作",
+          content: "是否操作选中数据?",
+          onOk: function () {
+            that.loading = true;
+            postAction(that.url.batchSetPurchaseStatusUrl, {status: status, ids: ids}).then((res) => {
+              if(res.code === 200){
+                that.loadData();
+                that.onClearSelected();
+              } else {
+                that.$message.warning(res.data.message);
+              }
+            }).finally(() => {
+              that.loading = false;
+            });
+          }
+        });
+      }
+    },
     batchDel: function () {
       if(!this.url.deleteBatch){
         this.$message.error("请设置url.deleteBatch属性!")

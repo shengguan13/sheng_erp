@@ -90,6 +90,8 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" @click="batchSetPurchaseStatus(1)" type="check">签收发票</a-button>
+          <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetPurchaseStatus(0)" type="stop">取消签收发票</a-button>
           <a-tooltip placement="left" title="采购订单不涉及付款金额，采购订单可以转采购入库单，但需要先对采购订单进行审核。
           勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
@@ -128,6 +130,10 @@
               <a-tag v-if="status == '3'" color="blue">部分采购</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
               <a-tag v-if="record.hasFinancialFlag" color="red">有退货</a-tag>
+            </template>
+            <template slot="customRenderReceiptStatus" slot-scope="purchaseStatus, record">
+              <a-tag v-if="purchaseStatus == '0'" color="red">未开票</a-tag>
+              <a-tag v-if="purchaseStatus == '1'" color="green">已开票</a-tag>
             </template>
           </a-table>
         </div>
@@ -183,11 +189,11 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 180,
+            align:"center", width: 140,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:140 },
+          { title: '供应商', dataIndex: 'organName',width:140, ellipsis:true},
+          { title: '单据编号', dataIndex: 'number',width:120 },
           { title: '产品信息', dataIndex: 'materialsList',width:180, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -195,18 +201,22 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:100},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
+          },
+          { title: '发票', dataIndex: 'purchaseStatus', width: 80, align: "center",
+            scopedSlots: { customRender: 'customRenderReceiptStatus' }
           }
         ],
         url: {
           list: "/depotHead/list",
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
-          batchSetStatusUrl: "/depotHead/batchSetStatus"
+          batchSetStatusUrl: "/depotHead/batchSetStatus",
+          batchSetPurchaseStatusUrl: "/depotHead/batchSetPurchaseStatus"
         }
       }
     },
