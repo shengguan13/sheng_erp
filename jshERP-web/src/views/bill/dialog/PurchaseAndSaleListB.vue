@@ -126,7 +126,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
-          { title: '操作员', dataIndex: 'userName',width:70, ellipsis:true},
+          { title: '制单人', dataIndex: 'userName',width:70, ellipsis:true},
           { title: '已提交定金', dataIndex: 'changeAmount',width:70, ellipsis:true},
           { title: '已收到定金', dataIndex: 'backAmount',width:70, ellipsis:true},
           { title: '已提交收款', dataIndex: 'discount',width:70, ellipsis:true},

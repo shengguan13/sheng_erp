@@ -129,7 +129,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
-          { title: '操作员', dataIndex: 'userName',width:60, ellipsis:true},
+          { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
           { title: '本单欠款', dataIndex: 'needDebt',width:70},
           { title: '已收欠款', dataIndex: 'finishDebt',width:70},
           { title: '待收欠款', dataIndex: 'debt',width:70}
@@ -187,7 +187,7 @@
         console.log(value);
       },
       exportExcel() {
-        let aoa = [['单据编号', this.columns[2].title, '产品信息', '单据日期', '操作员', '本单欠款', '已收欠款', '待收欠款']]
+        let aoa = [['单据编号', this.columns[2].title, '产品信息', '单据日期', '制单人', '本单欠款', '已收欠款', '待收欠款']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.number, ds.organName, ds.materialsList, ds.operTimeStr, ds.userName, ds.needDebt, ds.finishDebt, ds.debt]

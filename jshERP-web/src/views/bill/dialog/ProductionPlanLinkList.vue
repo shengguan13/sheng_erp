@@ -168,7 +168,7 @@
           },
           { title: '计划开始时间', dataIndex: 'planStartTimeStr',width:110},
           { title: '计划完成时间', dataIndex: 'planFinishTimeStr',width:110},
-          { title: '操作员', dataIndex: 'userName',width:70},
+          { title: '制单人', dataIndex: 'userName',width:70},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }

@@ -50,8 +50,8 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                  <a-form-item label="制单人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择制单人" showSearch optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
                         {{ item.userName }}
                       </a-select-option>
@@ -192,9 +192,9 @@
             align:"center", width: 140,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '供应商', dataIndex: 'organName',width:140, ellipsis:true},
+          { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:120 },
-          { title: '产品信息', dataIndex: 'materialsList',width:180, ellipsis:true,
+          { title: '产品信息', dataIndex: 'materialsList',width:200, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
@@ -202,7 +202,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:100},
-          { title: '操作员', dataIndex: 'userName',width:60, ellipsis:true},
+          { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }

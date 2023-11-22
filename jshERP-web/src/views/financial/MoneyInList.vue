@@ -55,8 +55,8 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                  <a-form-item label="制单人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择制单人" showSearch optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
                         {{ item.userName }}
                       </a-select-option>
@@ -207,7 +207,7 @@
           { title: '销售订单', dataIndex: 'xsdd',width:70,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
+          { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '申请金额', dataIndex: 'totalPrice',width:80},
           { title: '实际金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},

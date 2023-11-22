@@ -126,7 +126,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
-          { title: '操作员', dataIndex: 'userName',width:70, ellipsis:true},
+          { title: '制单人', dataIndex: 'userName',width:70, ellipsis:true},
           { title: '本单欠款', dataIndex: 'needDebt',width:70 },
           { title: '已收欠款', dataIndex: 'finishDebt',width:70 },
           { title: '待收欠款', dataIndex: 'debt',width:70 }

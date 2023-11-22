@@ -151,7 +151,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '操作员', dataIndex: 'userName',width:70},
+          { title: '制单人', dataIndex: 'userName',width:70},
           { title: '金额合计', dataIndex: 'totalPrice',width:70},
           { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:70,
             customRender:function (text,record,index) {

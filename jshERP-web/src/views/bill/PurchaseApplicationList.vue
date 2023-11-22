@@ -41,8 +41,8 @@
               </span>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                  <a-form-item label="制单人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择制单人" showSearch optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
                         {{ item.userName }}
                       </a-select-option>
@@ -193,7 +193,7 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:120},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:100},
           { title: '申请人', dataIndex: 'salesManStr',width:60, ellipsis:true},
           { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
