@@ -18,6 +18,8 @@ public interface PersonMapper {
 
     List<Person> selectByExample(PersonExample example);
 
+    List<String> getDepartment();
+
     Person selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") Person record, @Param("example") PersonExample example);

@@ -85,20 +85,20 @@ public class PersonService {
         return list;
     }
 
-    public List<Person> select(String name, String type, int offset, int rows)throws Exception {
+    public List<Person> select(String name, String type, String department, int offset, int rows)throws Exception {
         List<Person> list=null;
         try{
-            list=personMapperEx.selectByConditionPerson(name, type, offset, rows);
+            list=personMapperEx.selectByConditionPerson(name, type, department, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long countPerson(String name, String type)throws Exception {
+    public Long countPerson(String name, String type, String department)throws Exception {
         Long result=null;
         try{
-            result=personMapperEx.countsByPerson(name, type);
+            result=personMapperEx.countsByPerson(name, type, department);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -131,15 +131,17 @@ public class PersonService {
             }
             List<Person> personList = new ArrayList<>();
             for (int i = 1; i < rightRows; i++) {
-                String name = ExcelUtils.getContent(src, i, 0);
-                String type = ExcelUtils.getContent(src, i, 1);
+                String department = ExcelUtils.getContent(src, i, 0);
+                String name = ExcelUtils.getContent(src, i, 1);
+                String type = ExcelUtils.getContent(src, i, 2);
                 //不允许为空
-                if(StringUtil.isEmpty(name) || StringUtil.isEmpty(type)) {
+                if(StringUtil.isEmpty(department) || StringUtil.isEmpty(name) || StringUtil.isEmpty(type)) {
                     throw new BusinessRunTimeException(ExceptionConstants.PERSON_INFO_MISSING_CODE,
                             String.format(ExceptionConstants.PERSON_INFO_MISSING_MSG, i+1));
                 }
-                batchCheckExistPersonByParam(personList, name, type);
+                batchCheckExistPersonByParam(personList, department, name, type);
                 Person person = new Person();
+                person.setDepartment(department);
                 person.setName(name);
                 person.setType(type);
                 person.setEnabled(true);
@@ -171,10 +173,10 @@ public class PersonService {
     /**
      * 批量校验excel中有无重复人员
      */
-    public void batchCheckExistPersonByParam(List<Person> personList, String name, String type) {
+    public void batchCheckExistPersonByParam(List<Person> personList, String department, String name, String type) {
         for(Person person: personList){
-            if(name.equals(person.getName()) && type.equals(person.getType())){
-                String info = name + "-" + type;
+            if(department.equals(person.getDepartment()) && name.equals(person.getName()) && type.equals(person.getType())){
+                String info = department + "-" + name + "-" + type;
                 throw new BusinessRunTimeException(ExceptionConstants.PERSON_EXCEL_IMPORT_EXIST_CODE,
                         String.format(ExceptionConstants.PERSON_EXCEL_IMPORT_EXIST_MSG, info));
             }
@@ -301,6 +303,44 @@ public class PersonService {
     public List<Person> getPersonByType(String type)throws Exception {
         PersonExample example = new PersonExample();
         example.createCriteria().andTypeEqualTo(type).andEnabledEqualTo(true)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.setOrderByClause("sort asc, id desc");
+        List<Person> list =null;
+        try{
+            list=personMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public List<Person> getAllPerson()throws Exception {
+        PersonExample example = new PersonExample();
+        example.createCriteria().andEnabledEqualTo(true)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.setOrderByClause("sort asc, id desc");
+        List<Person> list =null;
+        try{
+            list=personMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public List<String> getDepartment()throws Exception {
+        List<String> list =null;
+        try{
+            list=personMapper.getDepartment();
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public List<Person> getPersonByDepartment(String department)throws Exception {
+        PersonExample example = new PersonExample();
+        example.createCriteria().andDepartmentEqualTo(department).andEnabledEqualTo(true)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("sort asc, id desc");
         List<Person> list =null;

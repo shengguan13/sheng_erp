@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
     <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="sort" jdbcType="VARCHAR" property="sort" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, type, name, enabled, sort, tenant_id, delete_flag
+    id, type, name, department, enabled, sort, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.PersonExample" resultMap="BaseResultMap">
     select
@@ -102,12 +103,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Person">
-    insert into jsh_person (id, type, name, 
-      enabled, sort, tenant_id, 
-      delete_flag)
-    values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{enabled,jdbcType=BIT}, #{sort,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
-      #{deleteFlag,jdbcType=VARCHAR})
+    insert into jsh_person (id, type, name, department, enabled, sort, tenant_id, delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{department,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{sort,jdbcType=VARCHAR},
+      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Person">
     insert into jsh_person
@@ -120,6 +119,9 @@
       </if>
       <if test="name != null">
         name,
+      </if>
+      <if test="department != null">
+        department,
       </if>
       <if test="enabled != null">
         enabled,
@@ -144,6 +146,9 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
       <if test="enabled != null">
         #{enabled,jdbcType=BIT},
       </if>
@@ -158,6 +163,12 @@
       </if>
     </trim>
   </insert>
+  <select id="getDepartment" resultType="java.lang.String">
+    SELECT DISTINCT department
+    FROM jsh_person
+    WHERE 1=1
+    and ifnull(delete_flag, '0') != '1'
+  </select>
   <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.PersonExample" resultType="java.lang.Long">
     select count(*) from jsh_person
     <if test="_parameter != null">
@@ -175,6 +186,9 @@
       </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.department != null">
+        department = #{record.department,jdbcType=VARCHAR},
       </if>
       <if test="record.enabled != null">
         enabled = #{record.enabled,jdbcType=BIT},
@@ -198,6 +212,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       type = #{record.type,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
+      department = #{record.department,jdbcType=VARCHAR},
       enabled = #{record.enabled,jdbcType=BIT},
       sort = #{record.sort,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -214,6 +229,9 @@
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
       </if>
       <if test="enabled != null">
         enabled = #{enabled,jdbcType=BIT},
@@ -234,6 +252,7 @@
     update jsh_person
     set type = #{type,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
       enabled = #{enabled,jdbcType=BIT},
       sort = #{sort,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},

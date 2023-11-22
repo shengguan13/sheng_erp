@@ -35,8 +35,9 @@ public class PersonComponent implements ICommonQuery {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         String type = StringUtil.getInfo(search, "type");
+        String department = StringUtil.getInfo(search, "department");
         String order = QueryUtils.order(map);
-        return personService.select(name, type, QueryUtils.offset(map), QueryUtils.rows(map));
+        return personService.select(name, type, department, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -44,7 +45,8 @@ public class PersonComponent implements ICommonQuery {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         String type = StringUtil.getInfo(search, "type");
-        return personService.countPerson(name, type);
+        String department = StringUtil.getInfo(search, "department");
+        return personService.countPerson(name, type, department);
     }
 
     @Override

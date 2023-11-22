@@ -9,6 +9,8 @@ public class Person {
 
     private Boolean enabled;
 
+    private String department;
+
     private String sort;
 
     private Long tenantId;
@@ -45,6 +47,14 @@ public class Person {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public String getSort() {

@@ -177,24 +177,25 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 180,
+            align:"center", width: 140,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '单据编号', dataIndex: 'number',width:140,
+          { title: '单据编号', dataIndex: 'number',width:120,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[转]":text
               return text
             }
           },
-          { title: '产品信息', dataIndex: 'materialsList',width:180, ellipsis:true,
+          { title: '产品信息', dataIndex: 'materialsList',width:200, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '操作员', dataIndex: 'userName',width:60, ellipsis:true},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:120},
+          { title: '申请人', dataIndex: 'salesManStr',width:60, ellipsis:true},
+          { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }

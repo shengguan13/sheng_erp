@@ -27,6 +27,8 @@ const editPerson = (params)=>putAction("/person/update",params);
 const checkPerson = (params)=>getAction("/person/checkIsNameExist",params);
 const getPersonByType = (params)=>getAction("/person/getPersonByType",params);
 const getPersonByNumType = (params)=>getAction("/person/getPersonByNumType",params);
+const getDepartment = (params)=>getAction("/person/getDepartment",params);
+const getAllPerson = (params)=>getAction("/person/getAllPerson",params);
 //账户管理
 const addAccount = (params)=>postAction("/account/add",params);
 const editAccount = (params)=>putAction("/account/update",params);
@@ -130,6 +132,8 @@ export {
   checkPerson,
   getPersonByType,
   getPersonByNumType,
+  getDepartment,
+  getAllPerson,
   addAccount,
   editAccount,
   checkAccount,

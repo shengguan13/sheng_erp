@@ -1429,6 +1429,7 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '申请人', dataIndex: 'salesManStr'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseOrderColumns: [

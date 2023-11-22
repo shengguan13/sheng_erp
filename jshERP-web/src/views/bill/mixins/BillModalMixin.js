@@ -1,6 +1,6 @@
 import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
-  getPersonByNumType, getBatchNumberList, getCurrentSystemConfig} from '@/api/api'
+  getPersonByNumType, getAllPerson, getDepartment, getBatchNumberList, getCurrentSystemConfig} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime, getCheckFlag } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
@@ -15,6 +15,10 @@ export const BillModalMixin = {
       cusList: [],
       retailList: [],
       personList: {
+        options: [],
+        value: ''
+      },
+      departmentList: {
         options: [],
         value: ''
       },
@@ -178,6 +182,22 @@ export const BillModalMixin = {
     initSalesman() {
       let that = this;
       getPersonByNumType({type:1}).then((res)=>{
+        if(res) {
+          that.personList.options = res;
+        }
+      });
+    },
+    initDepartment() {
+      let that = this;
+      getDepartment().then((res)=>{
+        if(res) {
+          that.departmentList.options = res;
+        }
+      });
+    },
+    initPerson() {
+      let that = this;
+      getAllPerson().then((res)=>{
         if(res) {
           that.personList.options = res;
         }

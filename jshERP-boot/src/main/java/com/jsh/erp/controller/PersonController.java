@@ -110,6 +110,56 @@ public class PersonController {
         return res;
     }
 
+    /**
+     * 获取所有的部门
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getDepartment")
+    @ApiOperation(value = "根据类型获取经手人信息")
+    public JSONArray getDepartment(HttpServletRequest request)throws Exception {
+        JSONArray dataArray = new JSONArray();
+        try {
+            List<String> departmentList = personService.getDepartment();
+            if (null != departmentList) {
+                for (String department : departmentList) {
+                    JSONObject item = new JSONObject();
+                    item.put("value", department);
+                    item.put("text", department);
+                    dataArray.add(item);
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return dataArray;
+    }
+
+    /**
+     * 根据部门获取经手人信息
+     * @param department
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getPersonByDepartment")
+    @ApiOperation(value = "根据部门获取经手人信息")
+    public BaseResponseInfo getPersonByDepartment(@RequestParam("department") String department,
+                                                  HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<Person> personList = personService.getPersonByDepartment(department);
+            map.put("personList", personList);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
     @GetMapping(value = "/exportExcel")
     @ApiOperation(value = "生成excel表格")
     public void exportExcel(@RequestParam(value = "depotName", required = false) String depotName,
@@ -138,6 +188,32 @@ public class PersonController {
     }
 
     /**
+     * 获取所有人员信息
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getAllPerson")
+    @ApiOperation(value = "获取所有人员信息")
+    public JSONArray getAllPerson(HttpServletRequest request)throws Exception {
+        JSONArray dataArray = new JSONArray();
+        try {
+            List<Person> personList = personService.getAllPerson();
+            if (null != personList) {
+                for (Person person : personList) {
+                    JSONObject item = new JSONObject();
+                    item.put("value", person.getId().toString());
+                    item.put("text", person.getName());
+                    item.put("department", person.getDepartment());
+                    dataArray.add(item);
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return dataArray;
+    }
+
+    /**
      * 根据类型获取经手人信息 1-业务员，2-仓管员，3-财务员
      * @param typeNum
      * @param request
@@ -163,6 +239,7 @@ public class PersonController {
                     JSONObject item = new JSONObject();
                     item.put("value", person.getId().toString());
                     item.put("text", person.getName());
+                    item.put("department", person.getDepartment());
                     dataArray.add(item);
                 }
             }
