@@ -800,7 +800,7 @@ public class DepotItemService {
                                     String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, depotItem.getBatchNumber()));
                         }
                         sortedByBatchNumber = batchNumberList.stream()
-                                .sorted(Comparator.comparing(DepotItemVoBatchNumberList::getBatchNumber))
+                                .sorted(Comparator.comparing(DepotItemVoBatchNumberList::getOperTime))
                                 .collect(Collectors.toList());
                     }
                     BigDecimal stock = getStockByParam(depotItem.getDepotId(), depotItem.getMaterialId(), null, null);

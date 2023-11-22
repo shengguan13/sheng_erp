@@ -1226,8 +1226,8 @@
             and dh.number!= #{number}
         </if>
         and di.delete_flag!=1) tb
-        group by batch_number
-        order by expiration_date asc
+        group by batch_number, sn_list
+        order by oper_time asc
     </select>
 
     <select id="getCountByMaterialAndDepot" resultType="java.lang.Long">
