@@ -22,17 +22,13 @@
       <a-spin :spinning="confirmLoading">
         <a-form :form="form" id="personModal">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部门">
-            <a-select placeholder="请选择部门" v-decorator="[ 'department', validatorRules.type]">
-              <a-select-option value="业务员">业务员</a-select-option>
-              <a-select-option value="仓管员">仓管员</a-select-option>
-              <a-select-option value="财务员">财务员</a-select-option>
-            </a-select>
+            <a-input placeholder="请输入部门" v-decorator.trim="[ 'department', validatorRules.department]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="姓名">
             <a-input placeholder="请输入姓名" v-decorator.trim="[ 'name', validatorRules.name]" />
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="岗位">
-            <a-input placeholder="请输入岗位" v-decorator.trim="[ 'type', validatorRules.type]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="职位">
+            <a-input placeholder="请输入职位" v-decorator.trim="[ 'type', validatorRules.type]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
             <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
@@ -75,7 +71,12 @@
             ]},
           type:{
             rules: [
-              { required: true, message: '请选择类型!' }
+              { required: true, message: '请输入职位!' }
+            ]
+          },
+          department:{
+            rules: [
+              { required: true, message: '请输入部门!' }
             ]
           }
         },

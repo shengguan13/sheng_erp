@@ -973,7 +973,7 @@
       </template>
       <!--其它入库-->
       <template v-else-if="billType === '其它入库'">
-        <section ref="print" id="otherInPrint">
+        <section ref="print" id="anotherInPrint">
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
@@ -1215,6 +1215,10 @@
           </a-row>
         </section>
       </template>
+      <div id="otherInPrint">
+        <!-- 这里放置你要打印的内容，比如图片 -->
+        <img src="../../../assets/checkcode.png" alt="打印图片">
+      </div>
       <template v-if="fileList && fileList.length>0">
         <a-row class="form-row" :gutter="24">
           <a-col :span="10">

@@ -319,7 +319,7 @@
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('其它', '采购申请', '供应商', "1")
+        this.$refs.linkBillList.show('其它', '采购申请', '供应商', "1,3")
         this.$refs.linkBillList.title = "选择采购申请（已审批的采购申请才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {

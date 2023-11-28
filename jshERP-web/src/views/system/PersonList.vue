@@ -120,7 +120,7 @@
           },
           { title: '部门', align:"left", dataIndex: 'department', width: 150, },
           { title: '姓名', align:"left", dataIndex: 'name', width: 150, },
-          { title: '岗位', align:"left", dataIndex: 'type', width: 200, },
+          { title: '职位', align:"left", dataIndex: 'type', width: 200, },
           { title: '排序', dataIndex: 'sort', width: 60},
           { title: '状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }

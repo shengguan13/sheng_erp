@@ -19,6 +19,7 @@ import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.person.PersonService;
+import com.jsh.erp.service.qrCode.QrCodeUtil;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
@@ -35,6 +36,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -962,6 +964,8 @@ public class DepotHeadService {
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(depotHead.getNumber()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //MailUtil.sendMail("jilinhongze@hornze.com", "ERP测试", "测试");
+        File file = new File("/opt/jshERP/upload" + File.separator + "bill" + File.separator);
+        QrCodeUtil.createCodeToFile(depotHead.getNumber(), file, depotHead.getNumber());
     }
 
     /**
