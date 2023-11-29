@@ -605,17 +605,17 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请定金">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请定金">
                 {{model.changeAmount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请付款">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请付款">
                 {{model.discount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交退款">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交退款">
                 {{model.otherMoney}}
               </a-form-item>
             </a-col>
@@ -623,17 +623,17 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已支付订金">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已支付定金">
                 {{model.backAmount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已付款">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已付款">
                 {{model.discountMoney}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已退款">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已退款">
                 {{model.deposit}}
               </a-form-item>
             </a-col>
@@ -788,17 +788,17 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交定金">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交定金">
                 {{model.changeAmount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交收款">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交收款">
                 {{model.discount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请退款">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请退款">
                 {{model.otherMoney}}
               </a-form-item>
             </a-col>
@@ -806,17 +806,17 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已收到定金">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已收到定金">
                 {{model.backAmount}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已收款">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已收款">
                 {{model.discountMoney}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="已退款">
+              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已退款">
                 {{model.deposit}}
               </a-form-item>
             </a-col>
@@ -1262,6 +1262,7 @@
         modalStyle: '',
         model: {},
         isCanBackCheck: true,
+        showPrice: false,
         billType: '',
         billPrintFlag: false,
         fileList: [],
@@ -1804,7 +1805,10 @@
           }
         })
       },
-      show(record, type, prefixNo) {
+      show(record, type, prefixNo, price) {
+        if (price) {
+          this.showPrice = true
+        }
         //查询单条单据信息
         findBillDetailByNumber({ number: record.number }).then((res) => {
           if (res && res.code === 200) {

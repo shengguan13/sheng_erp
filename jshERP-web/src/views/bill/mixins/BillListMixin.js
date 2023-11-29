@@ -82,11 +82,11 @@ export const BillListMixin = {
         this.$message.warning("抱歉，只有未审核的单据才能删除！")
       }
     },
-    myHandleDetail(record, type, prefixNo) {
+    myHandleDetail(record, type, prefixNo, showPrice) {
       if(this.btnEnableList.indexOf(7)===-1) {
         this.$refs.modalDetail.isCanBackCheck = false
       }
-      this.handleDetail(record, type, prefixNo);
+      this.handleDetail(record, type, prefixNo, showPrice);
     },
     handleApprove(record) {
       this.$refs.modalForm.action = "approve";
