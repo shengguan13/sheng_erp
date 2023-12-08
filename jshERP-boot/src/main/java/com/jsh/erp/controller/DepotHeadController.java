@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.exception.BusinessParamCheckingException;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
@@ -25,9 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.DecimalFormat;
@@ -294,6 +297,24 @@ public class DepotHeadController {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/importExcel")
+    @ApiOperation(value = "excel表格导入出入库")
+    public BaseResponseInfo importExcel(MultipartFile file,
+                                        HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = depotHeadService.importExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return res;
     }

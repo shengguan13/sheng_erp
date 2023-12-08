@@ -501,30 +501,30 @@ public class MaterialService {
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
             for (int i = 1; i < rightRows; i++) {
-                String barCode = ExcelUtils.getContent(src, i, 0); //物料编码
-                String other1 = ExcelUtils.getContent(src, i, 1); //客户/供应商
-                String other2 = ExcelUtils.getContent(src, i, 2); //客户OR供应商
-                String mfrs = ExcelUtils.getContent(src, i, 3); //制造商
+                String barCode = ExcelUtils.getContent(src, i, 1); //物料编码
+                String other1 = ExcelUtils.getContent(src, i, 5); //客户/供应商
+                String mfrs = ExcelUtils.getContent(src, i, 6); //制造商
+                String other2 = ExcelUtils.getContent(src, i, 7); //客户OR供应商
 
-                String name = ExcelUtils.getContent(src, i, 5); //名称
-                String model = ExcelUtils.getContent(src, i, 6); //规格
-                String other10 = ExcelUtils.getContent(src, i, 7); //主壁厚
-                String other3 = ExcelUtils.getContent(src, i, 8); //材质
+                String name = ExcelUtils.getContent(src, i, 8); //名称
+                String model = ExcelUtils.getContent(src, i, 9); //规格
+                String other10 = ExcelUtils.getContent(src, i, 10); //主壁厚
+                String other3 = ExcelUtils.getContent(src, i, 11); //材质
 
-                String other4 = ExcelUtils.getContent(src, i, 10); //颜色代码
-                String color = ExcelUtils.getContent(src, i, 11); //颜色
-                String unit = ExcelUtils.getContent(src, i, 12); //单位
-                String categoryName = ExcelUtils.getContent(src, i, 13); //分类
-                String internalId = ExcelUtils.getContent(src, i, 14); //型号
+                String other4 = ExcelUtils.getContent(src, i, 13); //颜色代码
+                String color = ExcelUtils.getContent(src, i, 14); //颜色
+                String unit = ExcelUtils.getContent(src, i, 15); //单位
+                String categoryName = ExcelUtils.getContent(src, i, 16); //分类
+                String internalId = ExcelUtils.getContent(src, i, 17); //型号
 
-                String expiryNum = ExcelUtils.getContent(src, i, 15); //保质期/月
+                String expiryNum = ExcelUtils.getContent(src, i, 18); //保质期/月
 
-                String other5 = ExcelUtils.getContent(src, i, 35); //模腔数
+                String other5 = ExcelUtils.getContent(src, i, 37); //模腔数
                 String other6 = ""; //模具重量
-                String other7 = ExcelUtils.getContent(src, i, 36); //浇口重量
+                String other7 = ExcelUtils.getContent(src, i, 39); //浇口重量
                 String other8 = ""; //可装设备
-                String other9 = ExcelUtils.getContent(src, i, 37); //标包
-                String project = ExcelUtils.getContent(src, i, 38); //项目
+                String other9 = ExcelUtils.getContent(src, i, 42); //标包
+                String project = ExcelUtils.getContent(src, i, 43); //项目
 
                 String enabled = "1"; //状态
                 String remark = ""; //备注

@@ -217,6 +217,7 @@
         }
         this.initSystemConfig()
         this.initDepot()
+        this.initAllocation()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

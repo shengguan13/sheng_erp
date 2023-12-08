@@ -131,8 +131,8 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.hidden //显示
               }
             } else if(key === 'snList') {
-              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK'
-                   || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK'
+                  || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK' || this.prefixNo === 'DBCK') {
                 columns[i].type = FormTypes.select //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
