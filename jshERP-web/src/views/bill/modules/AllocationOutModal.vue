@@ -149,14 +149,14 @@
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
-            { title: '调入仓库', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [], allowSearch:true},
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
             { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '调入仓库', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [], allowSearch:true},
+            { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]

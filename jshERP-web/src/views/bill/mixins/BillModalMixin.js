@@ -118,8 +118,8 @@ export const BillModalMixin = {
         if(columns[i].key === key) {
           if(type){
             if(key === 'batchNumber') {
-              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK'
-                  || this.prefixNo === 'QTCK' || this.prefixNo === 'DBCK' || this.prefixNo === 'LLCK') {
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'DBCK'
+                  || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK' || this.prefixNo === 'LLCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //显示
@@ -131,8 +131,8 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.hidden //显示
               }
             } else if(key === 'snList') {
-              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK'
-                  || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK' || this.prefixNo === 'DBCK') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH'
+                  || this.prefixNo === 'QTRK' || this.prefixNo === 'DBCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK') {
                 columns[i].type = FormTypes.select //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏

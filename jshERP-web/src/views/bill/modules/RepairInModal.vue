@@ -18,22 +18,6 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId' ]"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <div slot="dropdownRender" slot-scope="menu">
-                  <v-nodes :vnodes="menu" />
-                  <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
-                       @mousedown="e => e.preventDefault()" @click="addSupplier"><a-icon type="plus" /> 新增供应商</div>
-                </div>
-                <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                  {{ item.supplier }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
               <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
             </a-form-item>
@@ -43,6 +27,7 @@
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
+          <a-col :lg="6" :md="12" :sm="24"></a-col>
           <a-col :lg="6" :md="12" :sm="24"></a-col>
         </a-row>
         <j-editable-table id="billModal"
@@ -100,14 +85,12 @@
         </a-row>
       </a-form>
     </a-spin>
-    <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
-  import VendorModal from '../../system/modules/VendorModal'
   import DepotModal from '../../system/modules/DepotModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
   import { FormTypes } from '@/utils/JEditableTableUtil'
@@ -121,15 +104,10 @@
     name: "RepairInModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
-      VendorModal,
       DepotModal,
       BatchSetDepot,
       JUpload,
-      JDate,
-      VNodes: {
-        functional: true,
-        render: (h, ctx) => ctx.props.vnodes,
-      }
+      JDate
     },
     data () {
       return {
@@ -140,7 +118,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
-        prefixNo: 'QTRK',
+        prefixNo: 'FXRK',
         defaultDepotId: '',
         fileList:[],
         model: {},
@@ -169,14 +147,16 @@
             { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
             { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
+            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
-            { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.input },
+            { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '调入仓库', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [], allowSearch:true},
+            { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]
@@ -236,7 +216,6 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initSupplier()
         this.initDepot()
         this.initAllocation()
       },
@@ -245,13 +224,13 @@
         let totalPrice = 0
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '入库'
-        billMain.subType = '返修'
+        billMain.type = '出库'
+        billMain.subType = '返修入库'
         billMain.defaultNumber = billMain.number
         for(let item of detailArr){
           totalPrice += item.allPrice-0
         }
-        billMain.totalPrice = 0-totalPrice
+        billMain.totalPrice = totalPrice
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {

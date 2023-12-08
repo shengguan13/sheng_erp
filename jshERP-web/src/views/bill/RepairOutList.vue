@@ -127,7 +127,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <repair-in-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></repair-in-modal>
+        <repair-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></repair-out-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
@@ -135,17 +135,17 @@
 </template>
 <!--power by jishenghua-->
 <script>
-  import RepairInModal from './modules/RepairInModal'
+  import RepairOutModal from './modules/RepairOutModal'
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "RepairInList",
+    name: "RepairOutList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
-      RepairInModal,
+      RepairOutModal,
       BillDetail,
       JDate
     },
@@ -156,14 +156,14 @@
           number: "",
           materialParam: "",
           type: "出库",
-          subType: "返修入库",
+          subType: "返修出库",
           roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",
           status: "",
           remark: ""
         },
-        prefixNo: 'FXRK',
+        prefixNo: 'FXCK',
         labelCol: {
           span: 5
         },
