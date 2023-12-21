@@ -80,6 +80,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -140,6 +141,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <purchase-order-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></purchase-order-modal>
+        <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
@@ -149,6 +151,7 @@
 <script>
   import PurchaseOrderModal from './modules/PurchaseOrderModal'
   import BillDetail from './dialog/BillDetail'
+  import ImportFileModal from '@/components/tools/ImportFileModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
@@ -159,6 +162,7 @@
     components: {
       PurchaseOrderModal,
       BillDetail,
+      ImportFileModal,
       JDate
     },
     data () {
@@ -216,7 +220,8 @@
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
           batchSetStatusUrl: "/depotHead/batchSetStatus",
-          batchSetPurchaseStatusUrl: "/depotHead/batchSetPurchaseStatus"
+          batchSetPurchaseStatusUrl: "/depotHead/batchSetPurchaseStatus",
+          importExcelUrl: "/depotHead/importPurchaseOrderExcel"
         }
       }
     },
@@ -226,8 +231,18 @@
       this.initUser()
     },
     computed: {
+      importExcelUrl: function () {
+        return `${window._CONFIG['domianURL']}${this.url.importExcelUrl}`;
+      }
     },
     methods: {
+      handleImportXls() {
+        let importExcelUrl = this.url.importExcelUrl
+        let templateUrl = '/doc/goods_template.xls'
+        let templateName = '采购订单Excel模板[下载]'
+        this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
+        this.$refs.modalImportForm.title = "采购订单导入";
+      },
     }
   }
 </script>

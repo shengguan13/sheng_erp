@@ -984,7 +984,7 @@ public class DepotHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BaseResponseInfo importExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+    public BaseResponseInfo importOtherInExcel(MultipartFile file, HttpServletRequest request) throws Exception {
         BaseResponseInfo info = new BaseResponseInfo();
         try {
             Long beginTime = System.currentTimeMillis();
@@ -1011,6 +1011,9 @@ public class DepotHeadService {
             for (DepotAllocation depotAllocation : allocationList) {
                 allocationNameToId.put(depotAllocation.getType() + depotAllocation.getAllocation(), depotAllocation.getId().toString());
             }
+
+            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
+            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
             for (int i = 1; i < rightRows; i++) {
                 String date = ExcelUtils.getContent(src, i, 1); //日期
                 Date dateValue;
@@ -1040,11 +1043,12 @@ public class DepotHeadService {
                     continue;
                 }
 
+                String headNumber = "QTRK" + sequenceService.buildOnlyNumber();
                 DepotHead depotHead = new DepotHead();
                 depotHead.setType("入库");
                 depotHead.setSubType("其它");
-                depotHead.setNumber("QTRK" + sequenceService.buildOnlyNumber());
-                depotHead.setDefaultNumber("QTRK" + sequenceService.buildOnlyNumber());
+                depotHead.setNumber(headNumber);
+                depotHead.setDefaultNumber(headNumber);
                 depotHead.setCreateTime(dateValue);
                 depotHead.setOperTime(dateValue);
                 depotHead.setCreator(63L);
@@ -1055,11 +1059,20 @@ public class DepotHeadService {
 
                 DepotItem depotItem = new DepotItem();
                 depotItem.setSnList("23+" + allocationNameToId.getOrDefault(depotName + allocation,"564"));
+                depotItem.setDepotId(23L);
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
+                depotItem.setMaterialUnit(mList.get(0).getUnit());
 
-                importDepotHeadAndDetail(depotHead, depotItem, barCode);
+                if (orderNumberToDepotItems.containsKey(headNumber)) {
+                    orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+                } else {
+                    orderNumberToDepotItems.put(headNumber, new HashMap<>());
+                    orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+                }
+                orderNumberToDepotHead.put(headNumber, depotHead);
             }
+            importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
             Long endTime = System.currentTimeMillis();
             logger.info("导入耗时：{}", endTime-beginTime);
             info.code = 200;
@@ -1077,64 +1090,636 @@ public class DepotHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void importDepotHeadAndDetail(DepotHead depotHead, DepotItem depotItem, String barCode) throws Exception {
-
-        //校验单号是否重复
-        if(checkIsBillNumberExist(0L, depotHead.getNumber())>0) {
-            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
-                    String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
-        }
-        //判断用户是否已经登录过，登录过不再处理
-        User userInfo=userService.getCurrentUser();
-        depotHead.setCreator(userInfo==null?null:userInfo.getId());
-        depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        if(StringUtil.isEmpty(depotHead.getStatus())) {
-            depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
-        }
-        depotHead.setPurchaseStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
-        depotHead.setPayType(depotHead.getPayType()==null?"现付":depotHead.getPayType());
-        if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){
-            depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
-        }
-        if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
-            //校验多账户的结算金额
-            String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-            BigDecimal sum = StringUtil.getArrSum(accountMoneyList.split(","));
-            BigDecimal manyAccountSum = sum.abs();
-            if(manyAccountSum.compareTo(depotHead.getTotalPrice().abs())!=0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
+    public BaseResponseInfo importOtherOutExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        try {
+            Long beginTime = System.currentTimeMillis();
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                }
             }
-            depotHead.setAccountMoneyList(accountMoneyList);
+            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+            Sheet src = workbook.getSheet(0);
+            //获取真实的行数，剔除掉空白行
+            int rightRows = ExcelUtils.getRightRows(src);
+            //单次导入超出5000条
+            if(rightRows > 5001) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
+                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
+            }
+            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+            Map<String, String> allocationNameToId = new HashMap<>();
+            for (DepotAllocation depotAllocation : allocationList) {
+                allocationNameToId.put(depotAllocation.getType() + depotAllocation.getAllocation(), depotAllocation.getId().toString());
+            }
+
+            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
+            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
+            for (int i = 1; i < rightRows; i++) {
+                String date = ExcelUtils.getContent(src, i, 4); //日期
+                Date dateValue;
+                try {
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(date);
+                } catch (Exception e) {
+                    continue;
+                }
+
+                String barCode = ExcelUtils.getContent(src, i, 9); //物料编码
+                List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
+                if (mList.isEmpty()) {
+                    continue;
+                }
+
+                String batchNumber = ExcelUtils.getContent(src, i, 8); //批号
+                String depotName = ExcelUtils.getContent(src, i, 17); //仓库
+                String allocation = ExcelUtils.getContent(src, i, 18); //货位
+                String operNumber = ExcelUtils.getContent(src, i, 7); //数量
+                BigDecimal operNumberValue;
+                try {
+                    operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
+                } catch (Exception e) {
+                    continue;
+                }
+                if (operNumberValue.compareTo(BigDecimal.ZERO) <= 0) {
+                    continue;
+                }
+
+                String headNumber = "QTCK" + sequenceService.buildOnlyNumber();
+                DepotHead depotHead = new DepotHead();
+                depotHead.setType("出库");
+                depotHead.setSubType("其它");
+                depotHead.setNumber(headNumber);
+                depotHead.setDefaultNumber(headNumber);
+                depotHead.setCreateTime(dateValue);
+                depotHead.setOperTime(dateValue);
+                depotHead.setCreator(63L);
+                depotHead.setPayType("现付");
+                depotHead.setStatus("1");
+                depotHead.setPurchaseStatus("0");
+                depotHead.setDeleteFlag("0");
+
+                DepotItem depotItem = new DepotItem();
+                depotItem.setSnList("23+" + allocationNameToId.getOrDefault(depotName + allocation,"564"));
+                depotItem.setBatchNumber(batchNumber);
+                depotItem.setDepotId(23L);
+                depotItem.setOperNumber(operNumberValue);
+                depotItem.setMaterialUnit(mList.get(0).getUnit());
+
+                if (orderNumberToDepotItems.containsKey(headNumber)) {
+                    orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+                } else {
+                    orderNumberToDepotItems.put(headNumber, new HashMap<>());
+                    orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+                }
+                orderNumberToDepotHead.put(headNumber, depotHead);
+            }
+            importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+            Long endTime = System.currentTimeMillis();
+            logger.info("导入耗时：{}", endTime-beginTime);
+            info.code = 200;
+            info.data = "导入成功";
+        } catch (BusinessRunTimeException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("导入失败：{}", e.getMessage());
+            logger.info(e.toString());
+            info.code = 500;
+            info.data = "导入失败";
         }
-        try{
-            depotHeadMapper.insertSelective(depotHead);
-        } catch(Exception e) {
-            JshException.writeFail(logger, e);
+        return info;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BaseResponseInfo importPurchaseOrderExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        try {
+            Long beginTime = System.currentTimeMillis();
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                }
+            }
+            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+            Sheet src = workbook.getSheet(0);
+            //获取真实的行数，剔除掉空白行
+            int rightRows = ExcelUtils.getRightRows(src);
+            //单次导入超出5000条
+            if(rightRows > 5001) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
+                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
+            }
+            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+            Map<String, String> allocationNameToId = new HashMap<>();
+            for (DepotAllocation depotAllocation : allocationList) {
+                allocationNameToId.put(depotAllocation.getType() + depotAllocation.getAllocation(), depotAllocation.getId().toString());
+            }
+
+            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
+            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
+            List<Supplier> supplierList = supplierService.getSupplier();
+            for (int i = 1; i < rightRows; i++) {
+                String date = ExcelUtils.getContent(src, i, 3); //日期
+                Date dateValue;
+                try {
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(date);
+                } catch (Exception e) {
+                    continue;
+                }
+                String orderNumber = ExcelUtils.getContent(src, i, 0); //采购单号
+                String barCode = ExcelUtils.getContent(src, i, 6); //物料编码
+                String applicant = ExcelUtils.getContent(src, i, 4); //申请人
+                List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
+                if (mList.isEmpty()) {
+                    continue;
+                }
+                String supplierName = ExcelUtils.getContent(src, i, 8); //供应商
+                String operNumber = ExcelUtils.getContent(src, i, 5); //数量
+                BigDecimal operNumberValue;
+                try {
+                    operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
+                } catch (Exception e) {
+                    continue;
+                }
+                if (operNumberValue.compareTo(BigDecimal.ZERO) <= 0) {
+                    continue;
+                }
+
+                String headNumber = "CGDD" + sequenceService.buildOnlyNumber();
+                DepotHead depotHead = new DepotHead();
+                depotHead.setType("其它");
+                depotHead.setSubType("采购订单");
+                depotHead.setNumber(headNumber);
+                depotHead.setDefaultNumber(headNumber);
+                depotHead.setDiscountLastMoney(BigDecimal.ONE);
+                depotHead.setTotalPrice(BigDecimal.ZERO.subtract(BigDecimal.ONE));
+                depotHead.setRemark(orderNumber);
+
+                for (Supplier supplier : supplierList) {
+                    if ("供应商".equals(supplier.getType()) && supplierName.equals(supplier.getSupplier())) {
+                        depotHead.setOrganId(supplier.getId());
+                        break;
+                    }
+                }
+                depotHead.setSalesMan("295");
+                depotHead.setCreateTime(dateValue);
+                depotHead.setOperTime(dateValue);
+                depotHead.setCreator(63L);
+                depotHead.setPayType("现付");
+                depotHead.setStatus("1");
+                depotHead.setPurchaseStatus("0");
+                depotHead.setDeleteFlag("0");
+
+                DepotItem depotItem = new DepotItem();
+                depotItem.setOperNumber(operNumberValue);
+                depotItem.setMaterialUnit(mList.get(0).getUnit());
+
+                if (!orderNumberToDepotItems.containsKey(orderNumber)) {
+                    orderNumberToDepotItems.put(orderNumber, new HashMap<>());
+                }
+                orderNumberToDepotItems.get(orderNumber).put(barCode, depotItem);
+
+                if (!orderNumberToDepotHead.containsKey(orderNumber)) {
+                    orderNumberToDepotHead.put(orderNumber, depotHead);
+                }
+            }
+            importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+            Long endTime = System.currentTimeMillis();
+            logger.info("导入耗时：{}", endTime-beginTime);
+            info.code = 200;
+            info.data = "导入成功";
+        } catch (BusinessRunTimeException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("导入失败：{}", e.getMessage());
+            logger.info(e.toString());
+            info.code = 500;
+            info.data = "导入失败";
         }
-        //根据单据编号查询单据id
-        DepotHeadExample dhExample = new DepotHeadExample();
-        dhExample.createCriteria().andNumberEqualTo(depotHead.getNumber()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<DepotHead> list = depotHeadMapper.selectByExample(dhExample);
-        if(list!=null) {
-            Long headId = list.get(0).getId();
-            /**入库和出库处理单据子表信息*/
-            String rows = "[{\"unit\":\"" +
-                    "件" +
-                    "\",\"snList\":\"" +
-                    depotItem.getSnList() +
-                    "\",\"batchNumber\":\"" +
-                    depotItem.getBatchNumber() +
-                    "\",\"operNumber\":" +
-                    depotItem.getOperNumber() +
-                    ",\"orderNum\":" +
-                    depotItem.getOperNumber() +
-                    ",\"depotId\":\"" +
-                    "23" +
-                    "\",\"barCode\":\"" +
-                    barCode +
-                    "\"}]";
-            depotItemService.saveDetails(rows, headId, "add", null);
+        return info;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BaseResponseInfo importPurchaseInExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        try {
+            Long beginTime = System.currentTimeMillis();
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                }
+            }
+            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+            Sheet src = workbook.getSheet(0);
+            //获取真实的行数，剔除掉空白行
+            int rightRows = ExcelUtils.getRightRows(src);
+            //单次导入超出5000条
+            if(rightRows > 5001) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
+                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
+            }
+            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+            Map<String, String> allocationNameToId = new HashMap<>();
+            for (DepotAllocation depotAllocation : allocationList) {
+                allocationNameToId.put(depotAllocation.getType() + depotAllocation.getAllocation(), depotAllocation.getId().toString());
+            }
+
+            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
+            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
+
+            List<DepotHead> allDepotHeads = getDepotHead();
+            for (int i = 1; i < rightRows; i++) {
+                String purchaseOrderId = ExcelUtils.getContent(src, i, 0); //采购订单
+                String linkNumber = "";
+                for (DepotHead head : allDepotHeads) {
+                    if (purchaseOrderId.equals(head.getRemark())) {
+                        linkNumber = head.getNumber();
+                    }
+                }
+                if ("".equals(linkNumber)) {
+                    continue;
+                }
+
+                String date = ExcelUtils.getContent(src, i, 1); //日期
+                Date dateValue;
+                try {
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(date);
+                } catch (Exception e) {
+                    continue;
+                }
+
+                String barCode = ExcelUtils.getContent(src, i, 3); //物料编码
+                List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
+                if (mList.isEmpty()) {
+                    continue;
+                }
+
+                String batchNumber = ExcelUtils.getContent(src, i, 4); //批号
+                String depotName = ExcelUtils.getContent(src, i, 5); //仓库
+                String allocation = ExcelUtils.getContent(src, i, 6); //货位
+                String operNumber = ExcelUtils.getContent(src, i, 8); //数量
+                BigDecimal operNumberValue;
+                try {
+                    operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
+                } catch (Exception e) {
+                    continue;
+                }
+                if (operNumberValue.compareTo(BigDecimal.ZERO) <= 0) {
+                    continue;
+                }
+
+                String headNumber = "CGRK" + sequenceService.buildOnlyNumber();
+                DepotHead depotHead = new DepotHead();
+                depotHead.setType("入库");
+                depotHead.setSubType("采购");
+                depotHead.setNumber(headNumber);
+                depotHead.setDefaultNumber(headNumber);
+                depotHead.setCreateTime(dateValue);
+                depotHead.setOperTime(dateValue);
+                depotHead.setCreator(63L);
+                depotHead.setPayType("现付");
+                depotHead.setStatus("1");
+                depotHead.setPurchaseStatus("0");
+                depotHead.setDeleteFlag("0");
+                depotHead.setLinkNumber(linkNumber);
+
+                DepotItem depotItem = new DepotItem();
+                depotItem.setSnList("23+" + allocationNameToId.getOrDefault(depotName + allocation,"564"));
+                depotItem.setDepotId(23L);
+                depotItem.setBatchNumber(batchNumber);
+                depotItem.setOperNumber(operNumberValue);
+                depotItem.setMaterialUnit(mList.get(0).getUnit());
+
+                if (!orderNumberToDepotItems.containsKey(purchaseOrderId)) {
+                    orderNumberToDepotItems.put(purchaseOrderId, new HashMap<>());
+                }
+                orderNumberToDepotItems.get(purchaseOrderId).put(barCode, depotItem);
+
+                if (!orderNumberToDepotHead.containsKey(purchaseOrderId)) {
+                    orderNumberToDepotHead.put(purchaseOrderId, depotHead);
+                }
+            }
+            importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+            Long endTime = System.currentTimeMillis();
+            logger.info("导入耗时：{}", endTime-beginTime);
+            info.code = 200;
+            info.data = "导入成功";
+        } catch (BusinessRunTimeException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("导入失败：{}", e.getMessage());
+            logger.info(e.toString());
+            info.code = 500;
+            info.data = "导入失败";
+        }
+        return info;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BaseResponseInfo importRepairInExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        try {
+            Long beginTime = System.currentTimeMillis();
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                }
+            }
+            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+            Sheet src = workbook.getSheet(0);
+            //获取真实的行数，剔除掉空白行
+            int rightRows = ExcelUtils.getRightRows(src);
+            //单次导入超出5000条
+            if(rightRows > 5001) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
+                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
+            }
+            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+            Map<String, String> allocationNameToId = new HashMap<>();
+            for (DepotAllocation depotAllocation : allocationList) {
+                allocationNameToId.put(depotAllocation.getType() + depotAllocation.getAllocation(), depotAllocation.getId().toString());
+            }
+
+            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
+            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
+            for (int i = 1; i < rightRows; i++) {
+                String date = ExcelUtils.getContent(src, i, 1); //日期
+                Date dateValue;
+                try {
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(date);
+                } catch (Exception e) {
+                    continue;
+                }
+
+                String barCode = ExcelUtils.getContent(src, i, 5); //物料编码
+                List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
+                if (mList.isEmpty()) {
+                    continue;
+                }
+                String batchNumber = ExcelUtils.getContent(src, i, 0); //批号
+                String operNumber = ExcelUtils.getContent(src, i, 15); //数量
+                BigDecimal operNumberValue;
+                try {
+                    operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
+                } catch (Exception e) {
+                    continue;
+                }
+                if (operNumberValue.compareTo(BigDecimal.ZERO) <= 0) {
+                    continue;
+                }
+
+                String headNumber = "FXRK" + sequenceService.buildOnlyNumber();
+                DepotHead depotHead = new DepotHead();
+                depotHead.setType("出库");
+                depotHead.setSubType("返修入库");
+                depotHead.setNumber(headNumber);
+                depotHead.setDefaultNumber(headNumber);
+                depotHead.setCreateTime(dateValue);
+                depotHead.setOperTime(dateValue);
+
+                depotHead.setCreator(63L);
+                depotHead.setPayType("现付");
+                depotHead.setStatus("1");
+                depotHead.setPurchaseStatus("0");
+                depotHead.setDeleteFlag("0");
+
+                DepotItem depotItem = new DepotItem();
+                depotItem.setSnList("23+564");
+                depotItem.setBatchNumber(batchNumber);
+                depotItem.setOperNumber(operNumberValue);
+                depotItem.setMaterialUnit(mList.get(0).getUnit());
+                depotItem.setDepotId(24L);
+                depotItem.setAnotherDepotId(23L);
+
+                if (orderNumberToDepotItems.containsKey(headNumber)) {
+                    orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+                } else {
+                    orderNumberToDepotItems.put(headNumber, new HashMap<>());
+                    orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+                }
+                orderNumberToDepotHead.put(headNumber, depotHead);
+            }
+            importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+            Long endTime = System.currentTimeMillis();
+            logger.info("导入耗时：{}", endTime-beginTime);
+            info.code = 200;
+            info.data = "导入成功";
+        } catch (BusinessRunTimeException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("导入失败：{}", e.getMessage());
+            logger.info(e.toString());
+            info.code = 500;
+            info.data = "导入失败";
+        }
+        return info;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BaseResponseInfo importRepairOutExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        try {
+            Long beginTime = System.currentTimeMillis();
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                }
+            }
+            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+            Sheet src = workbook.getSheet(0);
+            //获取真实的行数，剔除掉空白行
+            int rightRows = ExcelUtils.getRightRows(src);
+            //单次导入超出5000条
+            if(rightRows > 5001) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
+                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
+            }
+            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+            Map<String, String> allocationNameToId = new HashMap<>();
+            for (DepotAllocation depotAllocation : allocationList) {
+                allocationNameToId.put(depotAllocation.getType() + depotAllocation.getAllocation(), depotAllocation.getId().toString());
+            }
+
+            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
+            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
+            for (int i = 1; i < rightRows; i++) {
+                String date = ExcelUtils.getContent(src, i, 1); //日期
+                Date dateValue;
+                try {
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(date);
+                } catch (Exception e) {
+                    continue;
+                }
+
+                String barCode = ExcelUtils.getContent(src, i, 5); //物料编码
+                List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
+                if (mList.isEmpty()) {
+                    continue;
+                }
+
+                String batchNumber = ExcelUtils.getContent(src, i, 0); //批号
+                String operNumber = ExcelUtils.getContent(src, i, 15); //数量
+                BigDecimal operNumberValue;
+                try {
+                    operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
+                } catch (Exception e) {
+                    continue;
+                }
+                if (operNumberValue.compareTo(BigDecimal.ZERO) <= 0) {
+                    continue;
+                }
+
+                String headNumber = "FXCK" + sequenceService.buildOnlyNumber();
+                DepotHead depotHead = new DepotHead();
+                depotHead.setType("出库");
+                depotHead.setSubType("返修出库");
+                depotHead.setNumber(headNumber);
+                depotHead.setDefaultNumber(headNumber);
+                depotHead.setCreateTime(dateValue);
+                depotHead.setOperTime(dateValue);
+                depotHead.setCreator(63L);
+                depotHead.setPayType("现付");
+                depotHead.setStatus("1");
+                depotHead.setPurchaseStatus("0");
+                depotHead.setDeleteFlag("0");
+
+                DepotItem depotItem = new DepotItem();
+                depotItem.setSnList("24+565");
+                depotItem.setBatchNumber(batchNumber);
+                depotItem.setOperNumber(operNumberValue);
+                depotItem.setMaterialUnit(mList.get(0).getUnit());
+                depotItem.setDepotId(23L);
+                depotItem.setAnotherDepotId(24L);
+
+                if (orderNumberToDepotItems.containsKey(headNumber)) {
+                    orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+                } else {
+                    orderNumberToDepotItems.put(headNumber, new HashMap<>());
+                    orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+                }
+                orderNumberToDepotHead.put(headNumber, depotHead);
+            }
+            importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+            Long endTime = System.currentTimeMillis();
+            logger.info("导入耗时：{}", endTime-beginTime);
+            info.code = 200;
+            info.data = "导入成功";
+        } catch (BusinessRunTimeException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("导入失败：{}", e.getMessage());
+            logger.info(e.toString());
+            info.code = 500;
+            info.data = "导入失败";
+        }
+        return info;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void importDepotHeadAndDetail(Map<String, Map<String, DepotItem>> orderNumberToDepotItems,
+                                         Map<String, DepotHead> orderNumberToDepotHead) throws Exception {
+        for (String depotHeadNumber : orderNumberToDepotHead.keySet()) {
+            if (!orderNumberToDepotItems.containsKey(depotHeadNumber)) {
+                continue;
+            }
+            DepotHead depotHead = orderNumberToDepotHead.get(depotHeadNumber);
+            Map<String, DepotItem> barCodeToDepotItem = orderNumberToDepotItems.get(depotHeadNumber);
+
+            //校验单号是否重复
+            if (checkIsBillNumberExist(0L, depotHead.getNumber()) > 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
+            }
+            //判断用户是否已经登录过，登录过不再处理
+            User userInfo = userService.getCurrentUser();
+            depotHead.setCreator(userInfo == null ? null : userInfo.getId());
+            depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
+            if (StringUtil.isEmpty(depotHead.getStatus())) {
+                depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+            }
+            depotHead.setPurchaseStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+            depotHead.setPayType(depotHead.getPayType() == null ? "现付" : depotHead.getPayType());
+            if (StringUtil.isNotEmpty(depotHead.getAccountIdList())) {
+                depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+            }
+            if (StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
+                //校验多账户的结算金额
+                String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                BigDecimal sum = StringUtil.getArrSum(accountMoneyList.split(","));
+                BigDecimal manyAccountSum = sum.abs();
+                if (manyAccountSum.compareTo(depotHead.getTotalPrice().abs()) != 0) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
+                }
+                depotHead.setAccountMoneyList(accountMoneyList);
+            }
+            try {
+                depotHeadMapper.insertSelective(depotHead);
+            } catch (Exception e) {
+                JshException.writeFail(logger, e);
+            }
+            //根据单据编号查询单据id
+            DepotHeadExample dhExample = new DepotHeadExample();
+            dhExample.createCriteria().andNumberEqualTo(depotHead.getNumber()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            List<DepotHead> list = depotHeadMapper.selectByExample(dhExample);
+            if (list != null) {
+                Long headId = list.get(0).getId();
+                /**入库和出库处理单据子表信息*/
+                String rows = "[";
+                for (String barCode : barCodeToDepotItem.keySet()) {
+                    if (!rows.equals("[")) {
+                        rows = rows + ",";
+                    }
+                    DepotItem depotItem = barCodeToDepotItem.get(barCode);
+                    rows = rows + "{";
+                    if (depotItem.getMaterialUnit() != null && !"".equals(depotItem.getMaterialUnit())) {
+                        rows = rows + "\"unit\":\"" + depotItem.getMaterialUnit() + "\"";
+                    } else {
+                        rows = rows + "\"unit\":\"" + "件" + "\"";
+                    }
+                    if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
+                        rows = rows + ",\"batchNumber\":\"" + depotItem.getBatchNumber() + "\"";
+                    }
+                    if (depotItem.getSnList() != null && !"".equals(depotItem.getSnList())) {
+                        rows = rows + ",\"snList\":\"" + depotItem.getSnList() + "\"";
+                    }
+                    rows = rows + ",\"operNumber\":\"" + depotItem.getOperNumber() + "\"";
+                    if (depotItem.getDepotId() != null) {
+                        rows = rows + ",\"depotId\":\"" + depotItem.getDepotId() + "\"";
+                    }
+                    if (depotItem.getAnotherDepotId() != null) {
+                        rows = rows + ",\"anotherDepotId\":\"" + depotItem.getAnotherDepotId() + "\"";
+                    }
+                    rows = rows + ",\"barCode\":\"" + barCode  + "\"}";
+                }
+                rows = rows + "]";
+                depotItemService.saveDetails(rows, headId, "add", null);
+            }
         }
     }
 

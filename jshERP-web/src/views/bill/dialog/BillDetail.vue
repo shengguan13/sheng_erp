@@ -538,6 +538,11 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请人">
+                {{model.salesManStr}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -1215,10 +1220,6 @@
           </a-row>
         </section>
       </template>
-      <div id="otherInPrint">
-        <!-- 这里放置你要打印的内容，比如图片 -->
-        <img src="../../../assets/checkcode.png" alt="打印图片">
-      </div>
       <template v-if="fileList && fileList.length>0">
         <a-row class="form-row" :gutter="24">
           <a-col :span="10">
@@ -1434,7 +1435,6 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '申请人', dataIndex: 'salesManStr'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseOrderColumns: [

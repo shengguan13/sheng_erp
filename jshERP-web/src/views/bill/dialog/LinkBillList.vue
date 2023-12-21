@@ -157,7 +157,7 @@
         // 表头
         columns: [
           { title: '', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:130,
+          { title: '单据编号', dataIndex: 'number',width:120,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           { title: '产品信息', dataIndex: 'materialsList',width:280, ellipsis:true,
@@ -167,8 +167,9 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '制单人', dataIndex: 'userName',width:70},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:120},
+          { title: '申请人', dataIndex: 'salesManStr',width:60},
+          { title: '制单人', dataIndex: 'userName',width:60},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }

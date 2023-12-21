@@ -301,13 +301,97 @@ public class DepotHeadController {
         return res;
     }
 
-    @PostMapping(value = "/importExcel")
-    @ApiOperation(value = "excel表格导入出入库")
-    public BaseResponseInfo importExcel(MultipartFile file,
-                                        HttpServletRequest request, HttpServletResponse response) throws Exception{
+    @PostMapping(value = "/importOtherInExcel")
+    @ApiOperation(value = "excel表格导入其它入库")
+    public BaseResponseInfo importOtherInExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            res = depotHeadService.importExcel(file, request);
+            res = depotHeadService.importOtherInExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/importOtherOutExcel")
+    @ApiOperation(value = "excel表格导入出入库")
+    public BaseResponseInfo importOtherOutExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = depotHeadService.importOtherOutExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/importPurchaseOrderExcel")
+    @ApiOperation(value = "excel表格导入出入库")
+    public BaseResponseInfo importPurchaseOrderExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = depotHeadService.importPurchaseOrderExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/importPurchaseInExcel")
+    @ApiOperation(value = "excel表格导入出入库")
+    public BaseResponseInfo importPurchaseInExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = depotHeadService.importPurchaseInExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/importRepairInExcel")
+    @ApiOperation(value = "excel表格导入出入库")
+    public BaseResponseInfo importRepairInExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = depotHeadService.importRepairInExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/importRepairOutExcel")
+    @ApiOperation(value = "excel表格导入出入库")
+    public BaseResponseInfo importRepairOutExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = depotHeadService.importRepairOutExcel(file, request);
         } catch (BusinessRunTimeException e) {
             BaseResponseInfo info = new BaseResponseInfo();
             info.code = e.getCode();

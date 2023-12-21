@@ -220,7 +220,7 @@
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
           batchSetStatusUrl: "/depotHead/batchSetStatus",
-          importExcelUrl: "/depotHead/importExcel"
+          importExcelUrl: "/depotHead/importOtherInExcel"
         }
       }
     },

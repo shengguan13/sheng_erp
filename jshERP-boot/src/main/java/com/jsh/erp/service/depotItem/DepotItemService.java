@@ -579,6 +579,7 @@ public class DepotItemService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetails(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
+        logger.info("XXXXX rows: " + rows);
         //查询单据主表信息
         DepotHead depotHead = depotHeadMapper.selectByPrimaryKey(headerId);
         //删除单据的明细
