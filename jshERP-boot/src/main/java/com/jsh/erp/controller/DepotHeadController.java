@@ -638,12 +638,12 @@ public class DepotHeadController {
         }
     }
 
-    @GetMapping(value = "/purchaseAndSaleList")
-    @ApiOperation(value = "查询采购订单和销售订单")
-    public String purchaseAndSaleList(@RequestParam(value = Constants.SEARCH, required = false) String search,
-                                      @RequestParam("currentPage") Integer currentPage,
-                                      @RequestParam("pageSize") Integer pageSize,
-                                      HttpServletRequest request)throws Exception {
+    @GetMapping(value = "/purchaseInList")
+    @ApiOperation(value = "查询采购入库")
+    public String purchaseInList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 @RequestParam("currentPage") Integer currentPage,
+                                 @RequestParam("pageSize") Integer pageSize,
+                                 HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
         String organIdStr = StringUtil.getInfo(search, "organId");
         Long organId = Long.parseLong(organIdStr);
@@ -653,9 +653,38 @@ public class DepotHeadController {
         String endTime = StringUtil.getInfo(search, "endTime");
         String roleType = StringUtil.getInfo(search, "roleType");
         String status = StringUtil.getInfo(search, "status");
-        List<DepotHeadVo4List> list = depotHeadService.purchaseAndSaleList(organId, materialParam, number, beginTime, endTime, roleType,
+        List<DepotHeadVo4List> list = depotHeadService.purchaseInList(organId, materialParam, number, beginTime, endTime, roleType,
                 status, (currentPage-1)*pageSize, pageSize);
-        int total = depotHeadService.purchaseAndSaleListCount(organId, materialParam, number, beginTime, endTime, roleType, status);
+        int total = depotHeadService.purchaseInListCount(organId, materialParam, number, beginTime, endTime, roleType, status);
+        if (list != null) {
+            objectMap.put("rows", list);
+            objectMap.put("total", total);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            objectMap.put("rows", new ArrayList<>());
+            objectMap.put("total", 0);
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
+    }
+
+    @GetMapping(value = "/saleOutList")
+    @ApiOperation(value = "查询采购订单和销售订单")
+    public String saleOutList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                              @RequestParam("currentPage") Integer currentPage,
+                              @RequestParam("pageSize") Integer pageSize,
+                              HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String organIdStr = StringUtil.getInfo(search, "organId");
+        Long organId = Long.parseLong(organIdStr);
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        String number = StringUtil.getInfo(search, "number");
+        String beginTime = StringUtil.getInfo(search, "beginTime");
+        String endTime = StringUtil.getInfo(search, "endTime");
+        String roleType = StringUtil.getInfo(search, "roleType");
+        String status = StringUtil.getInfo(search, "status");
+        List<DepotHeadVo4List> list = depotHeadService.saleOutList(organId, materialParam, number, beginTime, endTime, roleType,
+                status, (currentPage-1)*pageSize, pageSize);
+        int total = depotHeadService.saleOutListCount(organId, materialParam, number, beginTime, endTime, roleType, status);
         if (list != null) {
             objectMap.put("rows", list);
             objectMap.put("total", total);

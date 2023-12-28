@@ -431,13 +431,6 @@
                     {{model.accountName}}
                   </a-form-item>
                 </a-col>
-                <a-col v-if="model.hasBackFlag" :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退货单号">
-                    <template v-for="(item, index) in linkNumberList">
-                      <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
-                    </template>
-                  </a-form-item>
-                </a-col>
               </a-row>
             </a-col>
           </a-row>
@@ -556,6 +549,15 @@
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
+            <a-col v-if="model.hasBackFlag" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="采购单号">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
                 {{model.remark}}
@@ -602,47 +604,20 @@
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
+            <a-col v-if="model.hasBackFlag" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="入库单号">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
                 {{model.remark}}
               </a-form-item>
             </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请定金">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请付款">
-                {{model.discount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交退款">
-                {{model.otherMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6"></a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已支付定金">
-                {{model.backAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已付款">
-                {{model.discountMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已退款">
-                {{model.deposit}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6"></a-col>
           </a-row>
         </section>
       </template>
@@ -785,47 +760,20 @@
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
+            <a-col v-if="model.hasBackFlag" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="出库单号">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
                 {{model.remark}}
               </a-form-item>
             </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交定金">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已提交收款">
-                {{model.discount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已申请退款">
-                {{model.otherMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6"></a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已收到定金">
-                {{model.backAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已收款">
-                {{model.discountMoney}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item v-if="showPrice" :labelCol="labelCol" :wrapperCol="wrapperCol" label="已退款">
-                {{model.deposit}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6"></a-col>
           </a-row>
         </section>
       </template>
@@ -1307,7 +1255,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1413,7 +1360,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1445,7 +1391,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1462,7 +1407,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1480,7 +1424,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1496,7 +1439,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1513,7 +1455,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1531,7 +1472,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1548,7 +1488,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1565,7 +1504,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1582,7 +1520,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snList'},
@@ -1599,7 +1536,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '调入仓库', dataIndex: 'anotherDepotName'},
           { title: '单位', dataIndex: 'unit'},
@@ -1618,7 +1554,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1634,7 +1569,6 @@
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '项目', dataIndex: 'project'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1647,7 +1581,6 @@
           { title: '型号', dataIndex: 'internalId'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '数量', dataIndex: 'operNumber'},

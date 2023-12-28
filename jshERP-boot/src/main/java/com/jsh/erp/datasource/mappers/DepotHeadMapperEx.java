@@ -223,7 +223,7 @@ public interface DepotHeadMapperEx {
             @Param("materialParam") String materialParam,
             @Param("depotArray") String[] depotArray);
 
-    List<DepotHeadVo4List> purchaseAndSaleList(
+    List<DepotHeadVo4List> purchaseInList(
             @Param("organId") Long organId,
             @Param("creatorArray") String[] creatorArray,
             @Param("status") String status,
@@ -235,7 +235,29 @@ public interface DepotHeadMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int purchaseAndSaleListCount(
+    int purchaseInListCount(
+            @Param("organId") Long organId,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("status") String status,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("materialParam") String materialParam,
+            @Param("depotArray") String[] depotArray);
+
+    List<DepotHeadVo4List> saleOutList(
+            @Param("organId") Long organId,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("status") String status,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("materialParam") String materialParam,
+            @Param("depotArray") String[] depotArray,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    int saleOutListCount(
             @Param("organId") Long organId,
             @Param("creatorArray") String[] creatorArray,
             @Param("status") String status,

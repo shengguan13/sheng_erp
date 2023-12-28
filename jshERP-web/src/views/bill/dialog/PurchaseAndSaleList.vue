@@ -135,7 +135,7 @@
           { title: '已退款', dataIndex: 'deposit',width:70, ellipsis:true}
         ],
         url: {
-          list: "/depotHead/purchaseAndSaleList"
+          list: "/depotHead/purchaseInList"
         }
       }
     },

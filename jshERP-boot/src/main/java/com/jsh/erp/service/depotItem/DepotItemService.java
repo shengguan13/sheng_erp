@@ -579,7 +579,6 @@ public class DepotItemService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetails(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
-        logger.info("XXXXX rows: " + rows);
         //查询单据主表信息
         DepotHead depotHead = depotHeadMapper.selectByPrimaryKey(headerId);
         //删除单据的明细
@@ -1228,7 +1227,7 @@ public class DepotItemService {
             if(BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
             }
-            // TODO: 考虑领料出库要不要转退料入库？目前不需要
+            // TODO: 考虑领料出库要不要转退料入库
         }
         BigDecimal count;
 

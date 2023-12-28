@@ -1012,7 +1012,7 @@
         and ifnull(dh.delete_flag,'0') !='1' ) tb
     </select>
 
-    <select id="purchaseAndSaleList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
+    <select id="purchaseInList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
         select distinct dh.*, s.supplier OrganName, u.username userName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
@@ -1020,8 +1020,8 @@
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
-        and dh.type='其它'
-        and (dh.sub_type='采购订单' or dh.sub_type='销售订单')
+        and dh.type='入库'
+        and dh.sub_type='采购'
         <if test="organId != null">
             and dh.organ_id = #{organId}
         </if>
@@ -1054,7 +1054,7 @@
         </if>
     </select>
 
-    <select id="purchaseAndSaleListCount" resultType="java.lang.Integer">
+    <select id="purchaseInListCount" resultType="java.lang.Integer">
         select count(1) from (
         select distinct dh.*, s.supplier OrganName, u.username userName
         from jsh_depot_head dh
@@ -1063,8 +1063,89 @@
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
-        and dh.type='其它'
-        and (dh.sub_type='采购订单' or dh.sub_type='销售订单')
+        and dh.type='入库'
+        and dh.sub_type='采购'
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
+        </if>
+        and dh.status !='0'
+        <if test="number != null">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1' ) tb
+    </select>
+
+    <select id="saleOutList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
+        select distinct dh.*, s.supplier OrganName, u.username userName
+        from jsh_depot_head dh
+        left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
+        where 1=1
+        and dh.type='入库'
+        and dh.sub_type='采购'
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
+        </if>
+        and dh.status !='0'
+        <if test="number != null">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+        order by dh.oper_time desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="saleOutListCount" resultType="java.lang.Integer">
+        select count(1) from (
+        select distinct dh.*, s.supplier OrganName, u.username userName
+        from jsh_depot_head dh
+        left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
+        where 1=1
+        and dh.type='入库'
+        and dh.sub_type='采购'
         <if test="organId != null">
             and dh.organ_id = #{organId}
         </if>

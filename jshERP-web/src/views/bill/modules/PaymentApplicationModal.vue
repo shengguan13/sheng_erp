@@ -28,13 +28,8 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="款项种类">
-              <a-select placeholder="选择款项种类" v-decorator="[ 'type', validatorRules.type ]"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option value="采购定金">付定金</a-select-option>
-                <a-select-option value="采购付款">付款</a-select-option>
-                <a-select-option value="采购退款">退款</a-select-option>
-              </a-select>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据类型">
+              <a-input placeholder="供应商对账" v-decorator="['type', {initialValue:'供应商对账'}]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -52,7 +47,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <!-- 操作按钮 -->
             <div class="action-button">
-              <a-button type="primary" icon="plus" @click="handleClickAdd">选择单据</a-button>
+              <a-button type="primary" icon="plus" @click="handleClickAdd">选择采购入库</a-button>
               <span class="gap"></span>
               <a-button icon="minus" @click="handleClear">清空</a-button>
             </div>
@@ -157,6 +152,7 @@
             { title: '申请金额',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
+            { title: '入库单日期',key: 'operTimeStr',width: '20%', type: FormTypes.input, readonly: true },
             { title: '备注',key: 'remark', width: '20%', type: FormTypes.input, placeholder: '请输入${title}'}
           ]
         },
@@ -164,9 +160,6 @@
         validatorRules:{
           organId:{
             rules: [{ required: true, message: '请选择供应商!' }]
-          },
-          type:{
-            rules: [{ required: true, message: '请选择款项种类!' }]
           },
           billTime:{
             rules: [{ required: true, message: '请选择单据日期!' }]

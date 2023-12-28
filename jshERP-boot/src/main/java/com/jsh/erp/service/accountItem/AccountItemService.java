@@ -6,7 +6,6 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.AccountItemExample;
-import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.AccountItemMapper;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
@@ -17,6 +16,10 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,9 +28,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -216,11 +221,9 @@ public class AccountItemService {
         //删除单据的明细
         deleteAccountItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
-        if (null != rowArr && rowArr.size()>0) {
-            if(rowArr.size() > 1 && ("采购定金".equals(type) || "采购付款".equals(type) || "采购退款".equals(type)
-                    || "销售定金".equals(type) || "销售收款".equals(type) || "销售退款".equals(type))) {
-                throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_ROW_TOO_MANY_CODE,
-                        String.format(ExceptionConstants.ACCOUNT_HEAD_ROW_TOO_MANY_MSG));
+        if (null != rowArr && rowArr.size() > 0) {
+            if("供应商对账".equals(type) || "客户对账".equals(type)) {
+                generateStatement(rows, headerId);
             }
             for (int i = 0; i < rowArr.size(); i++) {
                 AccountItem accountItem = new AccountItem();
@@ -285,5 +288,27 @@ public class AccountItemService {
 
     public BigDecimal getEachAmountByBillId(Long billId) {
         return accountItemMapperEx.getEachAmountByBillId(billId).abs();
+    }
+
+    private void generateStatement(String rows, Long headerId) throws IOException {
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
+        XSSFSheet xssfSheet = xssfWorkbook.createSheet("对账单");
+        XSSFRow xssfRow; // 行
+        XSSFCell xssfCell; // 列
+        xssfRow = xssfSheet.getRow(0);
+        if (xssfRow == null) {
+            xssfRow = xssfSheet.createRow(0);
+        }
+        xssfCell = xssfRow.createCell(0);
+        xssfCell.setCellValue("测试");
+        File path = new File("/opt/jshERP/upload" + File.separator + "statement" + File.separator);
+        if (!path.exists()) {
+            path.mkdirs();
+        }
+        File statementFile = new File(path,  "a.txt");
+        FileOutputStream outputStream = new FileOutputStream(statementFile);
+        xssfWorkbook.write(outputStream);
+        outputStream.close();
+        xssfWorkbook.close();
     }
 }
