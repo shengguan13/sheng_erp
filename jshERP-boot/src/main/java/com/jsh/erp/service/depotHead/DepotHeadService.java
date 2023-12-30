@@ -1067,7 +1067,7 @@ public class DepotHeadService {
                 depotHead.setDeleteFlag("0");
 
                 DepotItem depotItem = new DepotItem();
-                depotItem.setSnList("23+" + allocationNameToId.getOrDefault(depotName + allocation, "564"));
+                depotItem.setSnList(allocationNameToId.getOrDefault(depotName + allocation, "564"));
                 depotItem.setDepotId(23L);
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
@@ -1173,7 +1173,7 @@ public class DepotHeadService {
                 depotHead.setDeleteFlag("0");
 
                 DepotItem depotItem = new DepotItem();
-                depotItem.setSnList("23+" + allocationNameToId.getOrDefault(depotName + allocation, "564"));
+                depotItem.setSnList(allocationNameToId.getOrDefault(depotName + allocation, "564"));
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setDepotId(23L);
                 depotItem.setOperNumber(operNumberValue);
@@ -1382,7 +1382,7 @@ public class DepotHeadService {
                 }
 
                 String batchNumber = ExcelUtils.getContent(src, i, 4); //批号
-                String depotName = ExcelUtils.getContent(src, i, 5); //仓库
+                String depotType = ExcelUtils.getContent(src, i, 5); //仓库
                 String allocation = ExcelUtils.getContent(src, i, 6); //货位
                 String operNumber = ExcelUtils.getContent(src, i, 8); //数量
                 BigDecimal operNumberValue;
@@ -1411,7 +1411,7 @@ public class DepotHeadService {
                 depotHead.setLinkNumber(linkNumber);
 
                 DepotItem depotItem = new DepotItem();
-                depotItem.setSnList("23+" + allocationNameToId.getOrDefault(depotName + allocation, "564"));
+                depotItem.setSnList(allocationNameToId.getOrDefault(depotType + allocation, "564"));
                 depotItem.setDepotId(23L);
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
@@ -1522,7 +1522,7 @@ public class DepotHeadService {
                 depotHead.setDeleteFlag("0");
 
                 DepotItem depotItem = new DepotItem();
-                depotItem.setSnList("23+564");
+                depotItem.setSnList("564");
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
@@ -1627,7 +1627,7 @@ public class DepotHeadService {
                 depotHead.setDeleteFlag("0");
 
                 DepotItem depotItem = new DepotItem();
-                depotItem.setSnList("24+565");
+                depotItem.setSnList("565");
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());

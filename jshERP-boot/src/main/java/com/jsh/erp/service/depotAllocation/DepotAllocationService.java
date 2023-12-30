@@ -197,6 +197,7 @@ public class DepotAllocationService {
                 depotAllocation.setDepotId(depotNameToId.get(depotName));
                 depotAllocation.setAllocation(allocation);
                 depotAllocation.setType(type);
+                depotAllocation.setDeleteFlag("0");
                 depotAllocationList.add(depotAllocation);
 
                 //不允许为空

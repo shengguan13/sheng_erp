@@ -247,7 +247,7 @@ export const BillModalMixin = {
               for(let i=0; i<arr.length; i++) {
                 let allocationInfo = {};
                 let text = arr[i].allocation + '-' + arr[i].type;
-                allocationInfo.value = arr[i].depotId + '+' + arr[i].id
+                allocationInfo.value = arr[i].id
                 allocationInfo.text = text
                 allocationInfo.title = text
                 item.options.push(allocationInfo)

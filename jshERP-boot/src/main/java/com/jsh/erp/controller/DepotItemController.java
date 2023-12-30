@@ -10,6 +10,7 @@ import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
+import com.jsh.erp.service.depotAllocation.DepotAllocationService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.depotItem.DepotItemService;
@@ -62,6 +63,9 @@ public class DepotItemController {
 
     @Resource
     private DepotService depotService;
+
+    @Resource
+    private DepotAllocationService depotAllocationService;
 
     @Resource
     private RoleService roleService;
@@ -404,6 +408,11 @@ public class DepotItemController {
             outer.put("total", dataList.size());
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
+            List<DepotAllocation> depotAllocationList = depotAllocationService.getDepotAllocation();
+            Map<String, String> allocationIdToName = new HashMap<>();
+            for (DepotAllocation allocation : depotAllocationList) {
+                allocationIdToName.put(allocation.getId().toString(), allocation.getAllocation() + '-' + allocation.getType());
+            }
             if (null != dataList) {
                 BigDecimal totalOperNumber = BigDecimal.ZERO;
                 BigDecimal totalAllPrice = BigDecimal.ZERO;
@@ -435,7 +444,7 @@ public class DepotItemController {
                     }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
-                    item.put("snList", diEx.getSnList());
+                    item.put("snList", allocationIdToName.getOrDefault(diEx.getSnList(), ""));
                     item.put("batchNumber", diEx.getBatchNumber());
                     item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
                     item.put("sku", diEx.getSku());

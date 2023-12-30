@@ -243,6 +243,15 @@ public class ExceptionConstants {
     //修改供应商信息失败
     public static final int SUPPLIER_EDIT_FAILED_CODE = 7000002;
     public static final String SUPPLIER_EDIT_FAILED_MSG = "修改供应商信息失败";
+    //新增客商档案失败
+    public static final int PRODUCT_SUPPLIER_EXIST_CODE = 7000003;
+    public static final String PRODUCT_SUPPLIER_EXIST_MSG = "客商记录%s已存在";
+    //不存在的客商
+    public static final int SUPPLIER_NAME_NOT_EXIST_CODE = 7000004;
+    public static final String SUPPLIER_NAME_NOT_EXIST_MSG = "名为%s的客商不存在";
+    //客商信息缺失
+    public static final int PRODUCT_SUPPLIER_INFO_MISSING_CODE = 7000005;
+    public static final String PRODUCT_SUPPLIER_INFO_MISSING_MSG = "第%s行信息缺失";
     /**
      * 产品类别信息
      * type = 75

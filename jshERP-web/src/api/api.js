@@ -103,6 +103,8 @@ const findBySelectSup = (params)=>postAction("/supplier/findBySelect_sup",params
 const findBySelectCus = (params)=>postAction("/supplier/findBySelect_cus",params);
 const findBySelectRetail = (params)=>postAction("/supplier/findBySelect_retail",params);
 const findBySelectOrgan = (params)=>postAction("/supplier/findBySelect_organ",params);
+const addProductSupplier = (params)=>postAction("/productSupplier/add",params);
+const editProductSupplier = (params)=>putAction("/productSupplier/update",params);
 //单据相关
 const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
@@ -147,6 +149,8 @@ export {
   checkDepot,
   addDepotAllocation,
   editDepotAllocation,
+  addProductSupplier,
+  editProductSupplier,
   editMaterialProperty,
   queryMaterialCategoryTreeList,
   queryMaterialCategoryById,

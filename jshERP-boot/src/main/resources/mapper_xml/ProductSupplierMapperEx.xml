@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.ProductSupplierMapperEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.ProductSupplierMapper.BaseResultMap" id="ResultAndInfoMap" type="com.jsh.erp.datasource.entities.ProductSupplierVo4Info">
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
+        <result column="material_name" jdbcType="VARCHAR" property="materialName" />
+        <result column="material_model" jdbcType="VARCHAR" property="materialModel" />
+    </resultMap>
+
+    <select id="selectProductSupplier"  resultMap="ResultAndInfoMap">
+        select ps.*, m.name material_name, m.model material_model, s.supplier supplier_name from jsh_product_supplier ps
+        left join jsh_supplier s on ps.supplier_id=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.bar_code=ps.bar_code and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="supplierId != null">
+            and s.id = #{supplierId}
+        </if>
+        <if test="keyword != null">
+            <bind name="bindKey" value="'%'+keyword+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or ps.model like #{bindKey})
+        </if>
+        and ifnull(ps.delete_flag,'0') !='1'
+        order by id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="countProductSupplier" resultType="java.lang.Long">
+        select count(ps.id) from jsh_product_supplier ps
+        left join jsh_supplier s on ps.supplier_id=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.bar_code=ps.bar_code and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="supplierId != null">
+            and s.id = #{supplierId}
+        </if>
+        <if test="keyword != null">
+            <bind name="bindKey" value="'%'+keyword+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or ps.model like #{bindKey})
+        </if>
+        and ifnull(ps.delete_flag,'0') !='1'
+    </select>
+
+    <update id="batchDeleteProductSupplierByIds">
+        update jsh_product_supplier
+        set delete_flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+</mapper>
