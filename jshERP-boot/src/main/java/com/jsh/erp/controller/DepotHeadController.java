@@ -470,7 +470,7 @@ public class DepotHeadController {
     @GetMapping(value = "/getDetailByNumber")
     @ApiOperation(value = "根据编号查询单据信息")
     public BaseResponseInfo getDetailByNumber(@RequestParam("number") String number,
-                                         HttpServletRequest request)throws Exception {
+                                              HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         DepotHeadVo4List dhl = new DepotHeadVo4List();
         try {

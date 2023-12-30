@@ -93,6 +93,16 @@ public class ProductSupplierService {
         return result;
     }
 
+    public List<ProductSupplierVo4Info> getProductSupplierList(String name, String barCode) throws Exception{
+        List<ProductSupplierVo4Info> result = null;
+        try{
+            result = productSupplierMapperEx.selectProductSupplierByBarCode(name, barCode);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertProductSupplier(JSONObject obj, HttpServletRequest request)throws Exception {
         ProductSupplier productSupplier = JSONObject.parseObject(obj.toJSONString(), ProductSupplier.class);
@@ -208,6 +218,7 @@ public class ProductSupplierService {
                 productSupplier.setModel(model);
                 productSupplier.setPack(pack);
                 productSupplier.setPurchaseCycle(purchaseCycle);
+                productSupplier.setDeleteFlag("0");
                 productSupplierList.add(productSupplier);
 
                 //不允许为空

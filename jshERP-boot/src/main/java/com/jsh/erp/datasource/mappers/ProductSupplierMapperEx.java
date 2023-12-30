@@ -11,6 +11,9 @@ public interface ProductSupplierMapperEx {
                                                        @Param("offset") int offset,
                                                        @Param("rows") int rows);
 
+    List<ProductSupplierVo4Info> selectProductSupplierByBarCode(@Param("name") String name,
+                                                                @Param("barCode") String barCode);
+
     Long countProductSupplier(@Param("supplierId") String supplierId,
                               @Param("keyword") String keyword);
 

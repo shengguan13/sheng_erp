@@ -122,13 +122,19 @@ export const BillModalMixin = {
                   || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK' || this.prefixNo === 'LLCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
-                columns[i].type = FormTypes.input //显示
+                columns[i].type = FormTypes.input //输入
+              }
+            } else if(key === 'sku') {
+              if(this.prefixNo === 'CGDD') {
+                columns[i].type = FormTypes.popupJsh //显示
+              } else {
+                columns[i].type = FormTypes.hidden //隐藏
               }
             } else if(key === 'expirationDate') {
               if(this.prefixNo === 'CGDD') {
                 columns[i].type = FormTypes.date //显示
               } else {
-                columns[i].type = FormTypes.hidden //显示
+                columns[i].type = FormTypes.hidden //隐藏
               }
             } else if(key === 'snList') {
               if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH'
@@ -501,7 +507,6 @@ export const BillModalMixin = {
       this.changeFormTypes(this.materialTable.columns, 'color', 0)
       this.changeFormTypes(this.materialTable.columns, 'categoryName', 0)
       this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
-      this.changeFormTypes(this.materialTable.columns, 'sku', 0)
     },
     //使得sku、序列号、批号、到期日等为显示
     changeColumnShow(info) {
@@ -517,9 +522,7 @@ export const BillModalMixin = {
       if(info.categoryName) {
         this.changeFormTypes(this.materialTable.columns, 'categoryName', 1)
       }
-      if(info.sku) {
-        this.changeFormTypes(this.materialTable.columns, 'sku', 1)
-      }
+      this.changeFormTypes(this.materialTable.columns, 'sku', 1)
       this.changeFormTypes(this.materialTable.columns, 'snList', 1)
       this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
       this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)

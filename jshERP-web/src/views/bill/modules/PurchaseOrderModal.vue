@@ -187,11 +187,9 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
-            { title: '型号', key: 'internalId', width: '7%', type: FormTypes.normal },
             { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
             { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
@@ -200,6 +198,7 @@
             { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
+            { title: '供应商代码', key: 'sku', width: '6%', type: FormTypes.popupJsh, kind: 'supplier', multi: false },
             { title: '到货日期', key: 'expirationDate',width: '6%', type: FormTypes.date },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input},
             { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
@@ -239,6 +238,7 @@
         this.materialTable.columns[0].type = FormTypes.popupJsh
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
+        this.changeFormTypes(this.materialTable.columns, 'sku', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []

@@ -27,6 +27,22 @@
         </if>
     </select>
 
+    <select id="selectProductSupplierByBarCode"  resultMap="ResultAndInfoMap">
+        select ps.*, m.name material_name, m.model material_model, s.supplier supplier_name from jsh_product_supplier ps
+        left join jsh_supplier s on ps.supplier_id=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.bar_code=ps.bar_code and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="name != null">
+            <bind name="bindKey" value="'%'+name+'%'"/>
+            and s.supplier like #{bindKey}
+        </if>
+        <if test="barCode != null">
+            and me.bar_code = #{barCode}
+        </if>
+        and ifnull(ps.delete_flag,'0') !='1'
+    </select>
+
     <select id="countProductSupplier" resultType="java.lang.Long">
         select count(ps.id) from jsh_product_supplier ps
         left join jsh_supplier s on ps.supplier_id=s.id and ifnull(s.delete_Flag,'0') !='1'

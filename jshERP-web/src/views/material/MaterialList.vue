@@ -224,11 +224,7 @@
             customRender:function (t,r,index) {
               if (r) {
                 let name = t?t:r.unitName
-                if(r.sku) {
-                  return name + '[SKU]';
-                } else {
-                  return name;
-                }
+                return name;
               }
             }
           },
