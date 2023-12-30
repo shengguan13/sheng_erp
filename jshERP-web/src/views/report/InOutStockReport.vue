@@ -136,7 +136,7 @@
           },
           {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
-          {title: '型号', dataIndex: 'materialInternalId'},
+          {title: '型号', dataIndex: 'materialColorCode'},
           {title: '规格', dataIndex: 'materialModel'},
           {title: '扩展信息', dataIndex: 'materialOther'},
           {title: '单位', dataIndex: 'unitName'},
@@ -215,7 +215,7 @@
         let aoa = [['编码', '名称', '型号', '规格', '扩展信息', '单位', '单价', '上月结存数量', '入库数量', '出库数量', '本月结存数量', '结存金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.materialName, ds.materialInternalId, ds.materialModel, ds.materialOther, ds.unitName, ds.unitPrice,
+          let item = [ds.barCode, ds.materialName, ds.materialColorCode, ds.materialModel, ds.materialOther, ds.unitName, ds.unitPrice,
             ds.prevSum, ds.inSum, ds.outSum, ds.thisSum, ds.thisAllPrice]
           aoa.push(item)
         }

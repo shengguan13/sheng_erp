@@ -488,7 +488,7 @@ export const BillModalMixin = {
       return {
         barCode: mInfo.mBarCode,
         name: mInfo.name,
-        internalId: mInfo.internalId,
+        colorCode: mInfo.colorCode,
         model: mInfo.model,
         color: mInfo.color,
         materialOther: mInfo.materialOther,
@@ -640,7 +640,7 @@ export const BillModalMixin = {
                   this.changeColumnShow(mInfo)
                   item.depotId = mInfo.depotId
                   item.name = mInfo.name
-                  item.internalId = mInfo.internalId
+                  item.colorCode = mInfo.colorCode
                   item.model = mInfo.model
                   item.color = mInfo.color
                   item.categoryName = mInfo.categoryName

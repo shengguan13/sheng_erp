@@ -3,7 +3,7 @@ package com.jsh.erp.datasource.entities;
 public class MaterialBomVo4Info extends MaterialBom {
     private String name;
 
-    private String internalId;
+    private String colorCode;
 
     private String model;
 
@@ -23,12 +23,12 @@ public class MaterialBomVo4Info extends MaterialBom {
         this.name = name;
     }
 
-    public String getInternalId() {
-        return internalId;
+    public String getColorCode() {
+        return colorCode;
     }
 
-    public void setInternalId(String internalId) {
-        this.internalId = internalId;
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
     }
 
     public String getModel() {

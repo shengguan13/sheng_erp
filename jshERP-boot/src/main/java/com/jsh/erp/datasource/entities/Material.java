@@ -9,15 +9,13 @@ public class Material {
 
     private String name;
 
-    private String mfrs;
+    private String mat;
 
     private String model;
 
-    private String internalId;
+    private String colorCode;
 
     private String color;
-
-    private String project;
 
     private String unit;
 
@@ -85,12 +83,12 @@ public class Material {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getMfrs() {
-        return mfrs;
+    public String getMat() {
+        return mat;
     }
 
-    public void setMfrs(String mfrs) {
-        this.mfrs = mfrs == null ? null : mfrs.trim();
+    public void setMat(String mat) {
+        this.mat = mat == null ? null : mat.trim();
     }
 
     public String getModel() {
@@ -101,12 +99,12 @@ public class Material {
         this.model = model == null ? null : model.trim();
     }
 
-    public String getInternalId() {
-        return internalId;
+    public String getColorCode() {
+        return colorCode;
     }
 
-    public void setInternalId(String internalId) {
-        this.internalId = internalId == null ? null : internalId.trim();
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode == null ? null : colorCode.trim();
     }
 
     public String getColor() {
@@ -115,14 +113,6 @@ public class Material {
 
     public void setColor(String color) {
         this.color = color == null ? null : color.trim();
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project == null ? null : project.trim();
     }
 
     public String getUnit() {
@@ -260,23 +250,6 @@ public class Material {
     public void setOtherField10(String otherField10) {
         this.otherField10 = otherField10 == null ? null : otherField10.trim();
     }
-
-    public String getOtherField11() {
-        return otherField11;
-    }
-
-    public void setOtherField11(String otherField11) {
-        this.otherField11 = otherField11 == null ? null : otherField11.trim();
-    }
-
-    public String getOtherField12() {
-        return otherField12;
-    }
-
-    public void setOtherField12(String otherField12) {
-        this.otherField12 = otherField12 == null ? null : otherField12.trim();
-    }
-
     public Long getTenantId() {
         return tenantId;
     }

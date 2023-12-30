@@ -129,7 +129,7 @@
           {dataIndex: 'mBarCode', title: '编码', scopedSlots: { customRender: 'customBarCode' }},
           {dataIndex: 'name', title: '名称', scopedSlots: { customRender: 'customName' }},
           {dataIndex: 'categoryName', title: '类别'},
-          {dataIndex: 'internalId', title: '型号'},
+          {dataIndex: 'colorCode', title: '型号'},
           {dataIndex: 'model', title: '规格'},
           {dataIndex: 'color', title: '颜色'},
           {dataIndex: 'unit', title: '单位'},
@@ -206,7 +206,7 @@
             if(res.total ===1) {
               if(this.queryParam.q === this.dataSource[0].mBarCode||
                 this.queryParam.q === this.dataSource[0].name||
-                this.queryParam.q === this.dataSource[0].internalId||
+                this.queryParam.q === this.dataSource[0].colorCode||
                 this.queryParam.q === this.dataSource[0].model||
                 this.queryParam.q === this.dataSource[0].color) {
                 this.title = '选择产品【再次回车可以直接选中】'
@@ -350,7 +350,7 @@
         if(this.dataSource && this.dataSource.length===1) {
           if(this.queryParam.q === this.dataSource[0].mBarCode||
             this.queryParam.q === this.dataSource[0].name||
-            this.queryParam.q === this.dataSource[0].internalId||
+            this.queryParam.q === this.dataSource[0].colorCode||
             this.queryParam.q === this.dataSource[0].model||
             this.queryParam.q === this.dataSource[0].color) {
             let arr = []

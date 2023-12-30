@@ -177,7 +177,7 @@
         columnsDetail: [
           { title: '编码', dataIndex: 'barCode',width:120},
           { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
-          { title: '型号', dataIndex: 'internalId',width:100, ellipsis:true},
+          { title: '型号', dataIndex: 'colorCode',width:100, ellipsis:true},
           { title: '规格', dataIndex: 'model',width:150, ellipsis:true},
           { title: '单位', dataIndex: 'unit',width:50},
           { title: '数量', dataIndex: 'operNumber',width:80},

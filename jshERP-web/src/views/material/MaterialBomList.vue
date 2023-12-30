@@ -150,7 +150,7 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['action','project','barCode','process','name','partNo','internalId','model','color',
+        settingColumns:['action','project','barCode','process','name','partNo','colorCode','model','color',
           'category','processUsage','unit','department','source','remark'],
         // 默认的列
         defColumns: [
@@ -166,7 +166,7 @@
           {title: '工艺流程', dataIndex: 'process', width: 80},
           {title: '名称', dataIndex: 'name', width: 120},
           {title: '零件号', dataIndex: 'partNo', width: 100},
-          {title: '型号', dataIndex: 'internalId', width: 120},
+          {title: '型号', dataIndex: 'colorCode', width: 120},
           {title: '规格', dataIndex: 'model', width: 120},
           {title: '颜色', dataIndex: 'color', width: 40},
           {title: '类别', dataIndex: 'category', width: 60},

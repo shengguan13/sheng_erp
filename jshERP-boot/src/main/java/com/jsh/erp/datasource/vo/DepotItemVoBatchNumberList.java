@@ -9,7 +9,7 @@ public class DepotItemVoBatchNumberList {
     private String id;
     private String barCode;
     private String name;
-    private String internalId;
+    private String colorCode;
     private String model;
     private Long unitId;
     private String commodityUnit;
@@ -44,12 +44,12 @@ public class DepotItemVoBatchNumberList {
         this.name = name;
     }
 
-    public String getInternalId() {
-        return internalId;
+    public String getColorCode() {
+        return colorCode;
     }
 
-    public void setInternalId(String internalId) {
-        this.internalId = internalId;
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
     }
 
     public String getModel() {
@@ -127,7 +127,7 @@ public class DepotItemVoBatchNumberList {
     @Override
     public String toString() {
         return "id: " + id + "; barCode: " + barCode
-                + "; name: " + name + "; internalId: " + internalId
+                + "; name: " + name + "; colorCode: " + colorCode
                 + "; model: " + model + "; batchNumber: " + batchNumber + "; operTime: " + operTime
                 + "; snList: " + snList
                 + "; expirationDate: " + expirationDate + "; expirationDateStr: " + expirationDateStr

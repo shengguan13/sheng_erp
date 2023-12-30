@@ -201,7 +201,7 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['mBarCode','name','internalId','model','project','color','categoryName','materialOther',
+        settingColumns:['mBarCode','name','colorCode','model','project','color','categoryName','materialOther',
           'unit', 'stock','enabled','action','weight','remark'],
         // 默认的列
         defColumns: [
@@ -214,13 +214,13 @@
           },
           {title: '产品编码', dataIndex: 'mBarCode', width: 100, scopedSlots: { customRender: 'customBarCode' }},
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
-          {title: '型号', dataIndex: 'internalId', width: 120},
+          {title: '材质', dataIndex: 'mat', width: 40},
           {title: '规格', dataIndex: 'model', width: 120},
-          {title: '项目', dataIndex: 'project', width: 100},
-          {title: '颜色', dataIndex: 'color', width: 100},
-          {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
+          {title: '颜色', dataIndex: 'color', width: 40},
+          {title: '颜色代码', dataIndex: 'colorCode', width: 50},
+          {title: '类别', dataIndex: 'categoryName', width: 50, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
-          {title: '单位', dataIndex: 'unit', width: 60, ellipsis:true,
+          {title: '单位', dataIndex: 'unit', width: 40, ellipsis:true,
             customRender:function (t,r,index) {
               if (r) {
                 let name = t?t:r.unitName
@@ -229,7 +229,7 @@
             }
           },
           {title: '保质期/月', dataIndex: 'expiryNum', width: 60},
-          {title: '库存', dataIndex: 'stock', width: 80,
+          {title: '库存', dataIndex: 'stock', width: 50,
             scopedSlots: { customRender: 'customRenderStock' }
           },
           {title: '备注', dataIndex: 'remark', width: 80}

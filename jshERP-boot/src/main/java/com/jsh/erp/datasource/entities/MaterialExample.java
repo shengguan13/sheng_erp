@@ -295,73 +295,73 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andMfrsIsNull() {
-            addCriterion("mfrs is null");
+        public Criteria andMatIsNull() {
+            addCriterion("mat is null");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsIsNotNull() {
-            addCriterion("mfrs is not null");
+        public Criteria andMatIsNotNull() {
+            addCriterion("mat is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsEqualTo(String value) {
-            addCriterion("mfrs =", value, "mfrs");
+        public Criteria andMatEqualTo(String value) {
+            addCriterion("mat =", value, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsNotEqualTo(String value) {
-            addCriterion("mfrs <>", value, "mfrs");
+        public Criteria andMatNotEqualTo(String value) {
+            addCriterion("mat <>", value, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsGreaterThan(String value) {
-            addCriterion("mfrs >", value, "mfrs");
+        public Criteria andMatGreaterThan(String value) {
+            addCriterion("mat >", value, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsGreaterThanOrEqualTo(String value) {
-            addCriterion("mfrs >=", value, "mfrs");
+        public Criteria andMatGreaterThanOrEqualTo(String value) {
+            addCriterion("mat >=", value, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsLessThan(String value) {
-            addCriterion("mfrs <", value, "mfrs");
+        public Criteria andMatLessThan(String value) {
+            addCriterion("mat <", value, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsLessThanOrEqualTo(String value) {
-            addCriterion("mfrs <=", value, "mfrs");
+        public Criteria andMatLessThanOrEqualTo(String value) {
+            addCriterion("mat <=", value, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsLike(String value) {
-            addCriterion("mfrs like", value, "mfrs");
+        public Criteria andMatLike(String value) {
+            addCriterion("mat like", value, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsNotLike(String value) {
-            addCriterion("mfrs not like", value, "mfrs");
+        public Criteria andMatNotLike(String value) {
+            addCriterion("mat not like", value, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsIn(List<String> values) {
-            addCriterion("mfrs in", values, "mfrs");
+        public Criteria andMatIn(List<String> values) {
+            addCriterion("mat in", values, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsNotIn(List<String> values) {
-            addCriterion("mfrs not in", values, "mfrs");
+        public Criteria andMatNotIn(List<String> values) {
+            addCriterion("mat not in", values, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsBetween(String value1, String value2) {
-            addCriterion("mfrs between", value1, value2, "mfrs");
+        public Criteria andMatBetween(String value1, String value2) {
+            addCriterion("mat between", value1, value2, "mat");
             return (Criteria) this;
         }
 
-        public Criteria andMfrsNotBetween(String value1, String value2) {
-            addCriterion("mfrs not between", value1, value2, "mfrs");
+        public Criteria andMatNotBetween(String value1, String value2) {
+            addCriterion("mat not between", value1, value2, "mat");
             return (Criteria) this;
         }
 
@@ -435,73 +435,73 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdIsNull() {
-            addCriterion("internal_id is null");
+        public Criteria andColorCodeIsNull() {
+            addCriterion("color_code is null");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdIsNotNull() {
-            addCriterion("internal_id is not null");
+        public Criteria andColorCodeIsNotNull() {
+            addCriterion("color_code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdEqualTo(String value) {
-            addCriterion("internal_id =", value, "internalId");
+        public Criteria andColorCodeEqualTo(String value) {
+            addCriterion("color_code =", value, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdNotEqualTo(String value) {
-            addCriterion("internal_id <>", value, "internalId");
+        public Criteria andColorCodeNotEqualTo(String value) {
+            addCriterion("color_code <>", value, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdGreaterThan(String value) {
-            addCriterion("internal_id >", value, "internalId");
+        public Criteria andColorCodeGreaterThan(String value) {
+            addCriterion("color_code >", value, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdGreaterThanOrEqualTo(String value) {
-            addCriterion("internal_id >=", value, "internalId");
+        public Criteria andColorCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("color_code >=", value, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdLessThan(String value) {
-            addCriterion("internal_id <", value, "internalId");
+        public Criteria andColorCodeLessThan(String value) {
+            addCriterion("color_code <", value, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdLessThanOrEqualTo(String value) {
-            addCriterion("internal_id <=", value, "internalId");
+        public Criteria andColorCodeLessThanOrEqualTo(String value) {
+            addCriterion("color_code <=", value, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdLike(String value) {
-            addCriterion("internal_id like", value, "internalId");
+        public Criteria andColorCodeLike(String value) {
+            addCriterion("color_code like", value, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdNotLike(String value) {
-            addCriterion("internal_id not like", value, "internalId");
+        public Criteria andColorCodeNotLike(String value) {
+            addCriterion("color_code not like", value, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdIn(List<String> values) {
-            addCriterion("internal_id in", values, "internalId");
+        public Criteria andColorCodeIn(List<String> values) {
+            addCriterion("color_code in", values, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdNotIn(List<String> values) {
-            addCriterion("internal_id not in", values, "internalId");
+        public Criteria andColorCodeNotIn(List<String> values) {
+            addCriterion("color_code not in", values, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdBetween(String value1, String value2) {
-            addCriterion("internal_id between", value1, value2, "internalId");
+        public Criteria andColorCodeBetween(String value1, String value2) {
+            addCriterion("color_code between", value1, value2, "colorCode");
             return (Criteria) this;
         }
 
-        public Criteria andInternalIdNotBetween(String value1, String value2) {
-            addCriterion("internal_id not between", value1, value2, "internalId");
+        public Criteria andColorCodeNotBetween(String value1, String value2) {
+            addCriterion("color_code not between", value1, value2, "colorCode");
             return (Criteria) this;
         }
 

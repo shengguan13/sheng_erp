@@ -19,9 +19,9 @@ public class DepotItemStockWarningCount {
 
     private String MProject;
 
-    private String MInternalId;
+    private String MColorCode;
 
-    private String MMfrs;
+    private String MMat;
 
     private String unitName;
 
@@ -46,10 +46,6 @@ public class DepotItemStockWarningCount {
     private String MOtherField9;
 
     private String MOtherField10;
-
-    private String MOtherField11;
-
-    private String MOtherField12;
 
     private String depotName;
 
@@ -119,20 +115,20 @@ public class DepotItemStockWarningCount {
         this.MProject = MProject;
     }
 
-    public String getMInternalId() {
-        return MInternalId;
+    public String getMColorCode() {
+        return MColorCode;
     }
 
-    public void setMInternalId(String MInternalId) {
-        this.MInternalId = MInternalId;
+    public void setMColorCode(String MColorCode) {
+        this.MColorCode = MColorCode;
     }
 
-    public String getMMfrs() {
-        return MMfrs;
+    public String getMMat() {
+        return MMat;
     }
 
-    public void setMMfrs(String MMfrs) {
-        this.MMfrs = MMfrs;
+    public void setMMat(String MMat) {
+        this.MMat = MMat;
     }
 
     public String getUnitName() {
@@ -229,22 +225,6 @@ public class DepotItemStockWarningCount {
 
     public void setMOtherField10(String MOtherField10) {
         this.MOtherField10 = MOtherField10;
-    }
-
-    public String getMOtherField11() {
-        return MOtherField11;
-    }
-
-    public void setMOtherField11(String MOtherField11) {
-        this.MOtherField11 = MOtherField11;
-    }
-
-    public String getMOtherField12() {
-        return MOtherField12;
-    }
-
-    public void setMOtherField12(String MOtherField12) {
-        this.MOtherField12 = MOtherField12;
     }
 
     public String getDepotName() {

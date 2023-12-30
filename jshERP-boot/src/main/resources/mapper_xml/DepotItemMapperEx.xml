@@ -32,9 +32,9 @@
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
         <result column="MProject" jdbcType="VARCHAR" property="MProject" />
-        <result column="MInternalId" jdbcType="VARCHAR" property="MInternalId" />
+        <result column="MColorCode" jdbcType="VARCHAR" property="MColorCode" />
         <result column="MCategoryName" jdbcType="VARCHAR" property="MCategoryName" />
-        <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
+        <result column="MMat" jdbcType="VARCHAR" property="MMat" />
         <result column="weight" jdbcType="VARCHAR" property="weight" />
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
@@ -46,8 +46,6 @@
         <result column="MOtherField8" jdbcType="VARCHAR" property="MOtherField8" />
         <result column="MOtherField9" jdbcType="VARCHAR" property="MOtherField9" />
         <result column="MOtherField10" jdbcType="VARCHAR" property="MOtherField10" />
-        <result column="MOtherField11" jdbcType="VARCHAR" property="MOtherField11" />
-        <result column="MOtherField12" jdbcType="VARCHAR" property="MOtherField12" />
         <result column="MProcess" jdbcType="VARCHAR" property="MProcess" />
         <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
         <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
@@ -59,9 +57,9 @@
         <result column="MId" jdbcType="VARCHAR" property="MId" />
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
-        <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
+        <result column="MMat" jdbcType="VARCHAR" property="MMat" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
-        <result column="MInternalId" jdbcType="VARCHAR" property="MInternalId" />
+        <result column="MColorCode" jdbcType="VARCHAR" property="MColorCode" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
@@ -73,8 +71,6 @@
         <result column="MOtherField8" jdbcType="VARCHAR" property="MOtherField8" />
         <result column="MOtherField9" jdbcType="VARCHAR" property="MOtherField9" />
         <result column="MOtherField10" jdbcType="VARCHAR" property="MOtherField10" />
-        <result column="MOtherField11" jdbcType="VARCHAR" property="MOtherField11" />
-        <result column="MOtherField12" jdbcType="VARCHAR" property="MOtherField12" />
         <result column="unit_id" jdbcType="BIGINT" property="unitId" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
@@ -86,9 +82,9 @@
         <result column="MId" jdbcType="VARCHAR" property="MId" />
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
-        <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
+        <result column="MMat" jdbcType="VARCHAR" property="MMat" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
-        <result column="MInternalId" jdbcType="VARCHAR" property="MInternalId" />
+        <result column="MColorCode" jdbcType="VARCHAR" property="MColorCode" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
@@ -100,8 +96,6 @@
         <result column="MOtherField8" jdbcType="VARCHAR" property="MOtherField8" />
         <result column="MOtherField9" jdbcType="VARCHAR" property="MOtherField9" />
         <result column="MOtherField10" jdbcType="VARCHAR" property="MOtherField10" />
-        <result column="MOtherField11" jdbcType="VARCHAR" property="MOtherField11" />
-        <result column="MOtherField12" jdbcType="VARCHAR" property="MOtherField12" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="current_number" jdbcType="DECIMAL" property="currentNumber" />
         <result column="low_safe_stock" jdbcType="DECIMAL" property="lowSafeStock" />
@@ -123,7 +117,7 @@
         <result column="id" jdbcType="VARCHAR" property="id" />
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="internal_id" jdbcType="VARCHAR" property="internalId" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="unit_id" jdbcType="BIGINT" property="unitId" />
         <result column="commodity_unit" jdbcType="VARCHAR" property="commodityUnit" />
@@ -482,11 +476,11 @@
     </select>
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select di.*,m.name MName,m.model MModel,mc.name MCategoryName,m.unit MaterialUnit,m.color MColor,m.internal_id MInternalId,
-        m.mfrs MMfrs,m.weight,m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        select di.*,m.name MName,m.model MModel,mc.name MCategoryName,m.unit MaterialUnit,m.color MColor,m.color_code MColorCode,
+        m.mat MMat,m.weight,m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field10 MOtherField10,
         dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
         from jsh_depot_item di
         left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
@@ -500,11 +494,11 @@
     </select>
 
     <select id="getDetailListForBOM" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select di.*,m.name MName,m.model MModel,mc.name MCategoryName,m.unit MaterialUnit,m.color MColor,m.internal_id MInternalId,
-        m.mfrs MMfrs,m.weight,m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        select di.*,m.name MName,m.model MModel,mc.name MCategoryName,m.unit MaterialUnit,m.color MColor,m.color_code MColorCode,
+        m.mat MMat,m.weight,m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field10 MOtherField10,
         dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal,
         mb.project MProject, mb.process MProcess
         from jsh_depot_item di
@@ -520,11 +514,11 @@
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
+        select m.id MId, me.bar_code, m.name MName, m.mat MMat, m.model MModel, m.color_code MColorCode,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field10 MOtherField10,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit,
         m.color MColor, m.project MProject, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
         from jsh_material m
@@ -535,7 +529,7 @@
         where 1=1 and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
@@ -557,7 +551,7 @@
         where 1=1 and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
@@ -567,12 +561,11 @@
     </select>
 
     <select id="getListWithBugOrSale" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
+        select m.id MId, me.bar_code, m.name MName, m.mat MMat, m.model MModel, m.color_code MColorCode,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
-        concat_ws('', m.unit, u.basic_unit) MaterialUnit,
+        m.other_field10 MOtherField10, concat_ws('', m.unit, u.basic_unit) MaterialUnit,
         m.color MColor, m.project MProject, u.name unit_name
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
@@ -582,7 +575,7 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="billType =='buy'">
             and (dh.sub_type = '采购' or dh.sub_type = '采购退货')
@@ -620,7 +613,7 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="billType =='buy'">
             and (dh.sub_type = '采购' or dh.sub_type = '采购退货')
@@ -646,11 +639,11 @@
     </select>
 
     <select id="getMaterialListWithProductionOrder" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
+        select m.id MId, me.bar_code, m.name MName, m.mat MMat, m.model MModel, m.color_code MColorCode,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,m.other_field11 MOtherField11,m.other_field12 MOtherField12,
+        m.other_field10 MOtherField10,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit,
         m.color MColor, m.project MProject, u.name unit_name
         from jsh_material m
@@ -662,7 +655,7 @@
         and dh.sub_type = '生产单'
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="beginTime != null">
             and dh.plan_start_time >= #{beginTime}
@@ -695,7 +688,7 @@
         and dh.sub_type = '生产单'
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="beginTime != null">
             and dh.plan_start_time >= #{beginTime}
@@ -977,12 +970,11 @@
     </select>
 
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
-        select m.id MId, m.name MName, me.bar_code, m.mfrs MMfrs, m.model MModel, m.internal_id MInternalId,
+        select m.id MId, m.name MName, me.bar_code, m.mat MMat, m.model MModel, m.color_code MColorCode,
         m.color MColor,m.project MProject, m.other_field1 MOtherField1,m.other_field2 MOtherField2,
         m.other_field3 MOtherField3, m.other_field4 MOtherField4,m.other_field5 MOtherField5,
         m.other_field6 MOtherField6, m.other_field7 MOtherField7,m.other_field8 MOtherField8,
-        m.other_field9 MOtherField9, m.other_field10 MOtherField10,m.other_field11 MOtherField11,
-        m.other_field12 MOtherField12,
+        m.other_field9 MOtherField9, m.other_field10 MOtherField10,
         d.name depotName, m.unit MaterialUnit, u.basic_unit unit_name,mcs.current_number, mis.low_safe_stock, mis.high_safe_stock
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
@@ -998,7 +990,7 @@
             or (ifnull(mis.high_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="depotList.size()>0">
             and mis.depot_id in
@@ -1029,7 +1021,7 @@
             or (ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="depotList.size()>0">
             and mis.depot_id in
@@ -1195,9 +1187,9 @@
     </select>
 
     <select id="getBatchNumberList" resultMap="batchNumberListMap">
-        select id, bar_code, name, internal_id, model, unit_id, oper_time, sn_list,
+        select id, bar_code, name, color_code, model, unit_id, oper_time, sn_list,
         commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
-        (select di.batch_number id, me.bar_code, m.name, m.internal_id, m.model, m.unit_id,
+        (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
          me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time, di.sn_list,
          di.basic_number*(case
             <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->

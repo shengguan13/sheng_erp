@@ -61,9 +61,8 @@ public class MaterialController {
      * @param name
      * @param model
      * @param color
-     * @param project
-     * @param internalId
-     * @param mfrs
+     * @param colorCode
+     * @param mat
      * @param otherField1
      * @param otherField2
      * @param otherField3
@@ -74,8 +73,6 @@ public class MaterialController {
      * @param otherField8
      * @param otherField9
      * @param otherField10
-     * @param otherField11
-     * @param otherField12
      * @param unit
      * @param unitId
      * @param request
@@ -86,24 +83,21 @@ public class MaterialController {
     @ApiOperation(value = "检查产品是否存在")
     public String checkIsExist(@RequestParam("id") Long id, @RequestParam("name") String name,
                                @RequestParam("model") String model, @RequestParam("color") String color,
-                               @RequestParam("project") String project,
-                               @RequestParam("internalId") String internalId, @RequestParam("mfrs") String mfrs,
+                               @RequestParam("colorCode") String colorCode, @RequestParam("mat") String mat,
                                @RequestParam("otherField1") String otherField1, @RequestParam("otherField2") String otherField2,
                                @RequestParam("otherField3") String otherField3, @RequestParam("otherField4") String otherField4,
                                @RequestParam("otherField5") String otherField5, @RequestParam("otherField6") String otherField6,
                                @RequestParam("otherField7") String otherField7, @RequestParam("otherField8") String otherField8,
                                @RequestParam("otherField9") String otherField9, @RequestParam("otherField10") String otherField10,
-                               @RequestParam("otherField11") String otherField11, @RequestParam("otherField12") String otherField12,
                                @RequestParam("unit") String unit,@RequestParam("unitId") Long unitId,
                                HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int exist = materialService.checkIsExist(id, name, StringUtil.toNull(model), StringUtil.toNull(color),
-                StringUtil.toNull(project),
-                StringUtil.toNull(internalId), StringUtil.toNull(mfrs), StringUtil.toNull(otherField1),
+                StringUtil.toNull(colorCode), StringUtil.toNull(mat), StringUtil.toNull(otherField1),
                 StringUtil.toNull(otherField2), StringUtil.toNull(otherField3), StringUtil.toNull(otherField4),
                 StringUtil.toNull(otherField5), StringUtil.toNull(otherField6), StringUtil.toNull(otherField7),
                 StringUtil.toNull(otherField8), StringUtil.toNull(otherField9), StringUtil.toNull(otherField10),
-                StringUtil.toNull(otherField11), StringUtil.toNull(otherField12), StringUtil.toNull(unit), unitId);
+                StringUtil.toNull(unit), unitId);
         if(exist > 0) {
             objectMap.put("status", true);
         } else {
@@ -197,7 +191,6 @@ public class MaterialController {
     public JSONObject findBySelect(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                    @RequestParam(value = "q", required = false) String q,
                                    @RequestParam(value = "mpList", required = false) String mpList,
-                                   @RequestParam(value = "project", required = false) String project,
                                    @RequestParam(value = "depotId", required = false) Long depotId,
                                    @RequestParam("page") Integer currentPage,
                                    @RequestParam("rows") Integer pageSize,
@@ -209,8 +202,8 @@ public class MaterialController {
                 mpArr= mpList.split(",");
             }
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(
-                    categoryId, q, project,(currentPage-1)*pageSize, pageSize);
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, project);
+                    categoryId, q,(currentPage-1)*pageSize, pageSize);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
@@ -242,10 +235,9 @@ public class MaterialController {
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
                     item.put("categoryName", material.getCategoryName());
-                    item.put("internalId", material.getInternalId());
+                    item.put("colorCode", material.getColorCode());
                     item.put("model", material.getModel());
                     item.put("color", material.getColor());
-                    item.put("project", material.getProject());
                     item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
                     BigDecimal stock;
@@ -302,14 +294,14 @@ public class MaterialController {
                 //名称/规格/扩展信息/包装
                 String MaterialName = "";
                 MaterialName = MaterialName + material.getmBarCode() + "_" + material.getName()
-                        + ((material.getInternalId() == null || material.getInternalId().equals("")) ? "" : "(" + material.getInternalId() + ")");
+                        + ((material.getColorCode() == null || material.getColorCode().equals("")) ? "" : "(" + material.getColorCode() + ")");
                 String expand = materialService.getMaterialOtherByParam(mpArr, material); //扩展信息
                 MaterialName = MaterialName + expand + ((material.getUnit() == null || material.getUnit().equals("")) ? "" : "(" + material.getUnit() + ")") + ratio;
                 item.put("MaterialName", MaterialName);
                 item.put("name", material.getName());
                 item.put("expand", expand);
                 item.put("model", material.getModel());
-                item.put("internalId", material.getInternalId());
+                item.put("colorCode", material.getColorCode());
                 item.put("unit", material.getUnit() + ratio);
             }
         } catch (Exception e) {
@@ -323,7 +315,6 @@ public class MaterialController {
      * @param categoryId
      * @param materialParam
      * @param color
-     * @param project
      * @param weight
      * @param expiryNum
      * @param enabled
@@ -337,7 +328,6 @@ public class MaterialController {
     public void exportExcel(@RequestParam(value = "categoryId", required = false) String categoryId,
                             @RequestParam(value = "materialParam", required = false) String materialParam,
                             @RequestParam(value = "color", required = false) String color,
-                            @RequestParam(value = "project", required = false) String project,
                             @RequestParam(value = "weight", required = false) String weight,
                             @RequestParam(value = "expiryNum", required = false) String expiryNum,
                             @RequestParam(value = "enabled", required = false) String enabled,
@@ -350,11 +340,10 @@ public class MaterialController {
                 mpArr= mpList.split(",");
             }
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
-                    StringUtil.toNull(project), StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled),
+                    StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled),
                     StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"编码", "名称", "型号", "规格", "单位", "颜色", "净重量（kg）", "保质期/月", "类别", "项目",
-                    "制造商", "客户/供应商", "客户OR供应商", "材质", "颜色代码", "模腔数", "模具重量", "浇口重量", "可装设备",
-                    "标包", "状态", "备注"};
+            String[] names = {"编码", "名称", "型号", "规格", "单位", "颜色", "净重量（kg）", "保质期/月", "类别",
+                    "材质", "状态", "备注"};
             String title = "产品信息";
             Map<String, String> meIdToBarCodeMap = new HashMap<>();
             if (dataList != null) {
@@ -370,26 +359,16 @@ public class MaterialController {
                     String[] objs = new String[100];
                     objs[0] = m.getmBarCode(); //编码
                     objs[1] = m.getName(); //名称
-                    objs[2] = m.getInternalId(); //型号
+                    objs[2] = m.getColorCode(); //型号
                     objs[3] = m.getModel(); //规格
                     objs[4] = m.getUnit(); //单位
                     objs[5] = m.getColor(); //颜色
                     objs[6] = m.getWeight() == null ? "" : String.valueOf(m.getWeight()); //净重量（kg）
                     objs[7] = m.getExpiryNum() == null ? "" : String.valueOf(m.getExpiryNum()); //保质期/月
                     objs[8] = m.getCategoryName(); //类别
-                    objs[9] = m.getProject(); //项目
-                    objs[10] = m.getMfrs(); //制造商
-                    objs[11] = m.getOtherField1(); //客户/供应商
-                    objs[12] = m.getOtherField2(); //客户OR供应商
-                    objs[13] = m.getOtherField3(); //材质
-                    objs[14] = m.getOtherField4(); //颜色代码
-                    objs[15] = m.getOtherField5(); //模腔数
-                    objs[16] = m.getOtherField6(); //模具重量
-                    objs[17] = m.getOtherField7(); //浇口重量
-                    objs[18] = m.getOtherField8(); //可装设备
-                    objs[19] = m.getOtherField9(); //标包
-                    objs[20] = m.getEnabled() ? "启用" : "禁用"; //状态
-                    objs[21] = m.getRemark(); //备注
+                    objs[9] = m.getMat(); //材质
+                    objs[19] = m.getEnabled() ? "启用" : "禁用"; //状态
+                    objs[20] = m.getRemark(); //备注
                     objects.add(objs);
                 }
             }
@@ -559,7 +538,7 @@ public class MaterialController {
                 JSONObject item = new JSONObject();
                 item.put("barCode", mb.getBarCode() == null ? "" : mb.getBarCode());
                 item.put("name", mb.getName() == null ? "" : mb.getName());
-                item.put("internalId", mb.getInternalId() == null ? "" : mb.getInternalId());
+                item.put("colorCode", mb.getColorCode() == null ? "" : mb.getColorCode());
                 item.put("model", mb.getModel() == null ? "" : mb.getModel());
                 item.put("categoryName", mb.getCategory() == null ? "" : mb.getCategory());
                 item.put("color", mb.getColor() == null ? "" : mb.getColor());

@@ -19,7 +19,6 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> selectByConditionMaterial(
             @Param("materialParam") String materialParam,
             @Param("color") String color,
-            @Param("project") String project,
             @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
@@ -33,7 +32,6 @@ public interface MaterialMapperEx {
     Long countsByMaterial(
             @Param("materialParam") String materialParam,
             @Param("color") String color,
-            @Param("project") String project,
             @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
@@ -52,18 +50,15 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("idList") List<Long> idList,
                                                   @Param("q") String q,
-                                                  @Param("project") String project,
                                                   @Param("offset") Integer offset,
                                                   @Param("rows") Integer rows);
 
     int findBySelectWithBarCodeCount(@Param("idList") List<Long> idList,
-                                     @Param("q") String q,
-                                     @Param("project") String project);
+                                     @Param("q") String q);
 
     List<MaterialVo4Unit> exportExcel(
             @Param("materialParam") String materialParam,
             @Param("color") String color,
-            @Param("project") String project,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
             @Param("enabled") String enabled,
@@ -128,9 +123,8 @@ public interface MaterialMapperEx {
             @Param("name") String name,
             @Param("model") String model,
             @Param("color") String color,
-            @Param("project") String project,
-            @Param("internalId") String internalId,
-            @Param("mfrs") String mfrs,
+            @Param("colorCode") String colorCode,
+            @Param("mat") String mat,
             @Param("otherField1") String otherField1,
             @Param("otherField2") String otherField2,
             @Param("otherField3") String otherField3,
@@ -141,8 +135,6 @@ public interface MaterialMapperEx {
             @Param("otherField8") String otherField8,
             @Param("otherField9") String otherField9,
             @Param("otherField10") String otherField10,
-            @Param("otherField11") String otherField11,
-            @Param("otherField12") String otherField12,
             @Param("unit") String unit,
             @Param("unitId") Long unitId);
 }

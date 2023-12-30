@@ -152,7 +152,7 @@
           },
           {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'mName', width: 200, fixed: 'left'},
-          {title: '型号', dataIndex: 'internalId'},
+          {title: '型号', dataIndex: 'colorCode'},
           {title: '规格', dataIndex: 'model'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'materialUnit'},
@@ -210,7 +210,7 @@
         let aoa = [['编码', '名称', '型号', '规格', '类别', '单位', '入库数量', '入库金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.mName, ds.internalId, ds.model, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum]
+          let item = [ds.barCode, ds.mName, ds.colorCode, ds.model, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '入库汇总')

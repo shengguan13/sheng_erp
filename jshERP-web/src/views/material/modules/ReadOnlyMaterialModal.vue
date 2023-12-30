@@ -29,18 +29,25 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号" data-step="2" data-title="型号" data-intro="型号">
-                  <a-input placeholder="请输入型号" v-decorator.trim="[ 'internalId', validatorRules.internalId ]"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="3" data-title="规格" data-intro="规格">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="2" data-title="规格" data-intro="规格">
                   <a-input placeholder="请输入规格" v-decorator.trim="[ 'model', validatorRules.model ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="单位"
-                  data-step="4" data-title="单位" data-intro="请输入单位">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色" data-step="3" data-title="颜色"
+                             data-intro="请填写零件的颜色">
+                  <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色代码" data-step="4" data-title="颜色代码" data-intro="颜色代码">
+                  <a-input placeholder="请输入颜色代码" v-decorator.trim="[ 'colorCode', validatorRules.colorCode ]"/>
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位" data-step="5" data-title="单位" data-intro="请输入单位">
                   <a-input placeholder="输入单位" v-if="!unitChecked" v-decorator.trim="[ 'unit', validatorRules.unit ]" @change="onlyUnitOnChange" />
                   <a-select :value="unitList" placeholder="选择多单位" v-decorator="[ 'unitId', validatorRules.unitId ]" @change="manyUnitOnChange"
                     showSearch optionFilterProp="children" v-if="unitChecked" :dropdownMatchSelectWidth="false">
@@ -57,14 +64,6 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-            </a-row>
-            <a-row class="form-row" :gutter="24">
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色" data-step="5" data-title="颜色"
-                             data-intro="请填写零件的颜色">
-                  <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
-                </a-form-item>
-              </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="重量" data-step="6" data-title="重量"
                   data-intro="请填写重量">
@@ -74,7 +73,7 @@
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期/月" data-step="7" data-title="保质期/月"
                   data-intro="保质期指的是产品的保质期(月)，主要针对带生产日期的，此类产品一般有批号">
-                  <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
+                  <a-input-number style="width: 100%" placeholder="请输入保质期(月)" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -88,9 +87,8 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="项目" data-step="5" data-title="项目"
-                             data-intro="该零件所属的项目">
-                  <a-input placeholder="若有多个项目，用|隔开" v-decorator.trim="[ 'project' ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材质" data-step="9" data-title="材质" data-intro="名称必填，可以重复">
+                  <a-input placeholder="请输入材质" v-decorator.trim="[ 'mat' ]"/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -122,13 +120,6 @@
             </a-row>
           </a-tab-pane>
           <a-tab-pane key="2" tab="扩展信息" forceRender>
-            <a-row v-if="mpShort.mfrs.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.mfrs.name">
-                  <a-input v-decorator.trim="[ 'mfrs' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
             <a-row v-if="mpShort.otherField1.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">
@@ -196,20 +187,6 @@
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField10.name">
                   <a-input v-decorator.trim="[ 'otherField10' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-if="mpShort.otherField11.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField11.name">
-                  <a-input v-decorator.trim="[ 'otherField11' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-if="mpShort.otherField12.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField12.name">
-                  <a-input v-decorator.trim="[ 'otherField12' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -316,7 +293,6 @@
           sm: { span: 16 },
         },
         mpShort: {
-          mfrs: {},
           otherField1: {},
           otherField2: {},
           otherField3: {},
@@ -326,9 +302,7 @@
           otherField7: {},
           otherField8: {},
           otherField9: {},
-          otherField10: {},
-          otherField11: {},
-          otherField12: {}
+          otherField10: {}
         },
         meTable: {
           loading: false,
@@ -373,7 +347,7 @@
               { max: 100, message: '长度请小于100个字符', trigger: 'blur' }
             ]
           },
-          internalId:{
+          colorCode:{
             rules: [
               { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
             ]
@@ -414,7 +388,7 @@
           meId: mInfo.meId,
           barCode: mInfo.mBarCode,
           name: mInfo.name,
-          internalId: mInfo.internalId,
+          colorCode: mInfo.colorCode,
           model: mInfo.model,
           color: mInfo.color,
           unit: mInfo.commodityUnit,
@@ -454,10 +428,10 @@
           }, 5)
         }
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model, 'name', 'internalId', 'unit', 'unitId', 'model', 'color', 'project',
-            'categoryId','expiryNum','weight','remark','mfrs',
+          this.form.setFieldsValue(pick(this.model, 'name', 'colorCode', 'unit', 'unitId', 'model', 'color', 'project',
+            'categoryId','expiryNum','weight','remark','mat',
             'otherField1','otherField2','otherField3','otherField4','otherField5','otherField6','otherField7',
-            'otherField8','otherField9','otherField10','otherField11','otherField12'))
+            'otherField8','otherField9','otherField10'))
           autoJumpNextInput('materialHeadModal')
           autoJumpNextInput('materialDetailModal')
         });
@@ -560,15 +534,15 @@
           this.$message.warning('抱歉，请输入编码信息！');
           return;
         }
-        //校验产品是否存在，通过校验产品的名称、规格、型号、颜色、单位、制造商等
+        //校验产品是否存在，通过校验产品的名称、规格、型号、颜色、单位、材质等
         let param = {
           id: this.model.id?this.model.id:0,
           name: this.model.name,
           model: this.parseParam(this.model.model),
           color: this.parseParam(this.model.color),
           project: this.parseParam(this.model.project),
-          internalId: this.parseParam(this.model.internalId),
-          mfrs: this.parseParam(this.model.mfrs),
+          colorCode: this.parseParam(this.model.colorCode),
+          mat: this.parseParam(this.model.mat),
           otherField1: this.parseParam(this.model.otherField1),
           otherField2: this.parseParam(this.model.otherField2),
           otherField3: this.parseParam(this.model.otherField3),
@@ -579,8 +553,6 @@
           otherField8: this.parseParam(this.model.otherField8),
           otherField9: this.parseParam(this.model.otherField9),
           otherField10: this.parseParam(this.model.otherField10),
-          otherField11: this.parseParam(this.model.otherField11),
-          otherField12: this.parseParam(this.model.otherField12),
           unit: this.parseParam(this.model.unit),
           unitId: this.parseParam(this.model.unitId)
         }
@@ -886,57 +858,45 @@
       loadParseMaterialProperty() {
         let mpList = Vue.ls.get('materialPropertyList')
         for (let i = 0; i < mpList.length; i++) {
-          if (mpList[i].nativeName === "制造商") {
-            this.mpShort.mfrs.name = mpList[i].anotherName
-            this.mpShort.mfrs.enabled = mpList[i].enabled
-          }
-          if (mpList[i].nativeName === "客户/供应商") {
+          if (mpList[i].nativeName === "主壁厚") {
             this.mpShort.otherField1.name = mpList[i].anotherName
             this.mpShort.otherField1.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "客户OR供应商") {
+          if (mpList[i].nativeName === "模腔数") {
             this.mpShort.otherField2.name = mpList[i].anotherName
             this.mpShort.otherField2.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "材质") {
+          if (mpList[i].nativeName === "模具重量") {
             this.mpShort.otherField3.name = mpList[i].anotherName
             this.mpShort.otherField3.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "颜色代码") {
+          if (mpList[i].nativeName === "浇口重量") {
             this.mpShort.otherField4.name = mpList[i].anotherName
             this.mpShort.otherField4.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "模腔数") {
+          if (mpList[i].nativeName === "可装设备") {
             this.mpShort.otherField5.name = mpList[i].anotherName
             this.mpShort.otherField5.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "模具重量") {
+          if (mpList[i].nativeName === "保留1") {
             this.mpShort.otherField6.name = mpList[i].anotherName
             this.mpShort.otherField6.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "浇口重量") {
+          if (mpList[i].nativeName === "保留2") {
             this.mpShort.otherField7.name = mpList[i].anotherName
             this.mpShort.otherField7.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "可装设备") {
+          if (mpList[i].nativeName === "保留3") {
             this.mpShort.otherField8.name = mpList[i].anotherName
             this.mpShort.otherField8.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "标包") {
+          if (mpList[i].nativeName === "保留4") {
             this.mpShort.otherField9.name = mpList[i].anotherName
             this.mpShort.otherField9.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "主壁厚") {
+          if (mpList[i].nativeName === "保留5") {
             this.mpShort.otherField10.name = mpList[i].anotherName
             this.mpShort.otherField10.enabled = mpList[i].enabled
-          }
-          if (mpList[i].nativeName === "保留2") {
-            this.mpShort.otherField11.name = mpList[i].anotherName
-            this.mpShort.otherField11.enabled = mpList[i].enabled
-          }
-          if (mpList[i].nativeName === "保留3") {
-            this.mpShort.otherField12.name = mpList[i].anotherName
-            this.mpShort.otherField12.enabled = mpList[i].enabled
           }
         }
       },

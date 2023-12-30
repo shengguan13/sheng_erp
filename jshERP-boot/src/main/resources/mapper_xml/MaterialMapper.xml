@@ -5,11 +5,10 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="category_id" jdbcType="BIGINT" property="categoryId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
+    <result column="mat" jdbcType="VARCHAR" property="mat" />
     <result column="model" jdbcType="VARCHAR" property="model" />
-    <result column="internal_id" jdbcType="VARCHAR" property="internalId" />
+    <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
     <result column="color" jdbcType="VARCHAR" property="color" />
-    <result column="project" jdbcType="VARCHAR" property="project" />
     <result column="unit" jdbcType="VARCHAR" property="unit" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="img_name" jdbcType="VARCHAR" property="imgName" />
@@ -27,8 +26,6 @@
     <result column="other_field8" jdbcType="VARCHAR" property="otherField8" />
     <result column="other_field9" jdbcType="VARCHAR" property="otherField9" />
     <result column="other_field10" jdbcType="VARCHAR" property="otherField10" />
-    <result column="other_field11" jdbcType="VARCHAR" property="otherField11" />
-    <result column="other_field12" jdbcType="VARCHAR" property="otherField12" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -91,10 +88,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, category_id, name, mfrs, model, internal_id, color, project, unit, remark, img_name, unit_id,
+    id, category_id, name, mat, model, color_code, color, unit, remark, img_name, unit_id,
     expiry_num, weight, enabled, other_field1, other_field2, other_field3, other_field4, other_field5,
-    other_field6, other_field7, other_field8, other_field9, other_field10, other_field11, other_field12,
-    tenant_id, delete_flag
+    other_field6, other_field7, other_field8, other_field9, other_field10, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
     select
@@ -128,24 +124,24 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Material">
     insert into jsh_material (id, category_id, name, 
-      mfrs, model, internal_id,
-      color, project, unit, remark,
+      mat, model, color_code,
+      color, unit, remark,
       img_name, unit_id, expiry_num, 
       weight, enabled, other_field1, 
       other_field2, other_field3, other_field4,
       other_field5, other_field6, other_field7,
       other_field8, other_field9, other_field10,
-      other_field11, other_field12, tenant_id, delete_flag
+      tenant_id, delete_flag
       )
     values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{mfrs,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{internalId,jdbcType=VARCHAR},
-      #{color,jdbcType=VARCHAR}, #{project,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+      #{mat,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{colorCode,jdbcType=VARCHAR},
+      #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
       #{imgName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{expiryNum,jdbcType=INTEGER}, 
       #{weight,jdbcType=DECIMAL}, #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, 
       #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, #{otherField4,jdbcType=VARCHAR},
       #{otherField5,jdbcType=VARCHAR}, #{otherField6,jdbcType=VARCHAR}, #{otherField7,jdbcType=VARCHAR},
       #{otherField8,jdbcType=VARCHAR}, #{otherField9,jdbcType=VARCHAR}, #{otherField10,jdbcType=VARCHAR},
-      #{otherField11,jdbcType=VARCHAR}, #{otherField12,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Material">
@@ -160,20 +156,17 @@
       <if test="name != null">
         name,
       </if>
-      <if test="mfrs != null">
-        mfrs,
+      <if test="mat != null">
+        mat,
       </if>
       <if test="model != null">
         model,
       </if>
-      <if test="internalId != null">
-        internal_id,
+      <if test="colorCode != null">
+        color_code,
       </if>
       <if test="color != null">
         color,
-      </if>
-      <if test="project != null">
-        project,
       </if>
       <if test="unit != null">
         unit,
@@ -226,12 +219,6 @@
       <if test="otherField10 != null">
         other_field10,
       </if>
-      <if test="otherField11 != null">
-        other_field11,
-      </if>
-      <if test="otherField12 != null">
-        other_field12,
-      </if>
       <if test="tenantId != null">
         tenant_id,
       </if>
@@ -249,20 +236,17 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="mfrs != null">
-        #{mfrs,jdbcType=VARCHAR},
+      <if test="mat != null">
+        #{mat,jdbcType=VARCHAR},
       </if>
       <if test="model != null">
         #{model,jdbcType=VARCHAR},
       </if>
-      <if test="internalId != null">
-        #{internalId,jdbcType=VARCHAR},
+      <if test="colorCode != null">
+        #{colorCode,jdbcType=VARCHAR},
       </if>
       <if test="color != null">
         #{color,jdbcType=VARCHAR},
-      </if>
-      <if test="project != null">
-        #{project,jdbcType=VARCHAR},
       </if>
       <if test="unit != null">
         #{unit,jdbcType=VARCHAR},
@@ -315,12 +299,6 @@
       <if test="otherField10 != null">
         #{otherField10,jdbcType=VARCHAR},
       </if>
-      <if test="otherField11 != null">
-        #{otherField11,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField12 != null">
-        #{otherField12,jdbcType=VARCHAR},
-      </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
       </if>
@@ -347,20 +325,17 @@
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
-      <if test="record.mfrs != null">
-        mfrs = #{record.mfrs,jdbcType=VARCHAR},
+      <if test="record.mat != null">
+        mat = #{record.mat,jdbcType=VARCHAR},
       </if>
       <if test="record.model != null">
         model = #{record.model,jdbcType=VARCHAR},
       </if>
-      <if test="record.internalId != null">
-        internal_id = #{record.internalId,jdbcType=VARCHAR},
+      <if test="record.colorCode != null">
+        color_code = #{record.colorCode,jdbcType=VARCHAR},
       </if>
       <if test="record.color != null">
         color = #{record.color,jdbcType=VARCHAR},
-      </if>
-      <if test="record.project != null">
-        project = #{record.project,jdbcType=VARCHAR},
       </if>
       <if test="record.unit != null">
         unit = #{record.unit,jdbcType=VARCHAR},
@@ -413,12 +388,6 @@
       <if test="record.otherField10 != null">
         other_field10 = #{record.otherField10,jdbcType=VARCHAR},
       </if>
-      <if test="record.otherField11 != null">
-        other_field11 = #{record.otherField11,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherField12 != null">
-        other_field12 = #{record.otherField12,jdbcType=VARCHAR},
-      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -435,11 +404,10 @@
     set id = #{record.id,jdbcType=BIGINT},
       category_id = #{record.categoryId,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
-      mfrs = #{record.mfrs,jdbcType=VARCHAR},
+      mat = #{record.mat,jdbcType=VARCHAR},
       model = #{record.model,jdbcType=VARCHAR},
-      internal_id = #{record.internalId,jdbcType=VARCHAR},
+      color_code = #{record.colorCode,jdbcType=VARCHAR},
       color = #{record.color,jdbcType=VARCHAR},
-      project = #{record.project,jdbcType=VARCHAR},
       unit = #{record.unit,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       img_name = #{record.imgName,jdbcType=VARCHAR},
@@ -457,8 +425,6 @@
       other_field8 = #{record.otherField8,jdbcType=VARCHAR},
       other_field9 = #{record.otherField9,jdbcType=VARCHAR},
       other_field10 = #{record.otherField10,jdbcType=VARCHAR},
-      other_field11 = #{record.otherField11,jdbcType=VARCHAR},
-      other_field12 = #{record.otherField12,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -474,20 +440,17 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="mfrs != null">
-        mfrs = #{mfrs,jdbcType=VARCHAR},
+      <if test="mat != null">
+        mat = #{mat,jdbcType=VARCHAR},
       </if>
       <if test="model != null">
         model = #{model,jdbcType=VARCHAR},
       </if>
-      <if test="internalId != null">
-        internal_id = #{internalId,jdbcType=VARCHAR},
+      <if test="colorCode != null">
+        color_code = #{colorCode,jdbcType=VARCHAR},
       </if>
       <if test="color != null">
         color = #{color,jdbcType=VARCHAR},
-      </if>
-      <if test="project != null">
-        project = #{project,jdbcType=VARCHAR},
       </if>
       <if test="unit != null">
         unit = #{unit,jdbcType=VARCHAR},
@@ -540,12 +503,6 @@
       <if test="otherField10 != null">
         other_field10 = #{otherField10,jdbcType=VARCHAR},
       </if>
-      <if test="otherField11 != null">
-        other_field11 = #{otherField11,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField12 != null">
-        other_field12 = #{otherField12,jdbcType=VARCHAR},
-      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -559,11 +516,10 @@
     update jsh_material
     set category_id = #{categoryId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
-      mfrs = #{mfrs,jdbcType=VARCHAR},
+      mat = #{mat,jdbcType=VARCHAR},
       model = #{model,jdbcType=VARCHAR},
-      internal_id = #{internalId,jdbcType=VARCHAR},
+      color_code = #{colorCode,jdbcType=VARCHAR},
       color = #{color,jdbcType=VARCHAR},
-      project = #{project,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       img_name = #{imgName,jdbcType=VARCHAR},
@@ -581,8 +537,6 @@
       other_field8 = #{otherField8,jdbcType=VARCHAR},
       other_field9 = #{otherField9,jdbcType=VARCHAR},
       other_field10 = #{otherField10,jdbcType=VARCHAR},
-      other_field11 = #{otherField11,jdbcType=VARCHAR},
-      other_field12 = #{otherField12,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

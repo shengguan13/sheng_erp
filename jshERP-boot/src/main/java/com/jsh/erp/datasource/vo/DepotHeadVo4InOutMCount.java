@@ -13,7 +13,7 @@ public class DepotHeadVo4InOutMCount {
 
     private String Model;
 
-    private String internalId;
+    private String colorCode;
 
     private String categoryName;
 
@@ -57,12 +57,12 @@ public class DepotHeadVo4InOutMCount {
         Model = model;
     }
 
-    public String getInternalId() {
-        return internalId;
+    public String getColorCode() {
+        return colorCode;
     }
 
-    public void setInternalId(String internalId) {
-        this.internalId = internalId;
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
     }
 
     public String getCategoryName() {

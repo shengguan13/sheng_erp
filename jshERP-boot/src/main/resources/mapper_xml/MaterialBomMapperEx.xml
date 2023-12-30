@@ -4,7 +4,7 @@
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialBomMapper.BaseResultMap" id="ResultAndInfoMap" type="com.jsh.erp.datasource.entities.MaterialBomVo4Info">
         <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="internal_id" jdbcType="VARCHAR" property="internalId" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="category" jdbcType="VARCHAR" property="category" />
         <result column="color" jdbcType="VARCHAR" property="color" />
@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="selectMaterialBom"  resultMap="ResultAndInfoMap">
-        select mb.*, m.name, m.internal_id, m.model, m.color, mc.name category from jsh_material_bom mb
+        select mb.*, m.name, m.color_code, m.model, m.color, mc.name category from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
@@ -29,7 +29,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (mb.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (mb.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -45,7 +45,7 @@
     </select>
 
     <select id="selectMaterialBomByPrefix" resultMap="ResultAndInfoMap">
-        select mb.*, m.name, me.material_id materialId, m.internal_id, m.model, m.color, me.id meId, mc.name category
+        select mb.*, m.name, me.material_id materialId, m.color_code, m.model, m.color, me.id meId, mc.name category
         from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
@@ -64,7 +64,7 @@
     </select>
 
     <select id="getMaterialBomByBarCode" resultMap="ResultAndInfoMap">
-        select mb.*, m.name, me.material_id materialId, m.internal_id, m.model, m.color, me.id meId, mc.name category
+        select mb.*, m.name, me.material_id materialId, m.color_code, m.model, m.color, me.id meId, mc.name category
         from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
@@ -81,7 +81,7 @@
     </select>
 
     <select id="selectNextLevelBomByPrefix" resultMap="ResultAndInfoMap">
-        select mb.*, m.name, me.material_id materialId, m.internal_id, m.model, m.color, me.id meId, mc.name category
+        select mb.*, m.name, me.material_id materialId, m.color_code, m.model, m.color, me.id meId, mc.name category
         from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
@@ -115,7 +115,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in

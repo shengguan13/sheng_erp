@@ -1250,7 +1250,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1267,7 +1267,7 @@
         productionPlanColumns: [
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1282,7 +1282,7 @@
         productionOrderColumns: [
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1297,7 +1297,7 @@
           { title: '编码', dataIndex: 'barCode'},
           { title: '工艺流程', dataIndex: 'process'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1310,7 +1310,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1326,7 +1326,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1339,7 +1339,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1355,7 +1355,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1372,7 +1372,7 @@
         purchaseApplicationColumns: [
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1386,7 +1386,7 @@
         purchaseOrderColumns: [
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1402,7 +1402,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1419,7 +1419,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1434,7 +1434,7 @@
         saleOrderColumns: [
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1450,7 +1450,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1467,7 +1467,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1483,7 +1483,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1499,7 +1499,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1515,7 +1515,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1531,7 +1531,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1549,7 +1549,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1564,7 +1564,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1578,7 +1578,7 @@
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
-          { title: '型号', dataIndex: 'internalId'},
+          { title: '型号', dataIndex: 'colorCode'},
           { title: '规格', dataIndex: 'model'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '库存', dataIndex: 'stock'},
@@ -1873,7 +1873,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
+          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
             ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
           aoa.push(item)
         }
@@ -1888,7 +1888,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project,
+          let item = [ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project,
           ds.stock, ds.planOrderedNumber, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
@@ -1903,7 +1903,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project,
+          let item = [ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project,
           ds.stock, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
@@ -1918,7 +1918,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project,
+          let item = [ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project,
           ds.prepareNumber, ds.materialPick, ds.materialReturn, ds.unit]
           aoa.push(item)
         }
@@ -1932,7 +1932,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.stock,
+          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.stock,
              ds.preNumber, ds.finishNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
@@ -1946,7 +1946,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.stock,
+          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.stock,
              ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
@@ -1960,7 +1960,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.stock,
+          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.stock,
             ds.batchNumber, ds.operNumber, ds.unit, ds.remark]
           aoa.push(item)
         }
@@ -1986,7 +1986,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
+          let item = [ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
             ds.operNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark]
           aoa.push(item)
         }
@@ -2006,7 +2006,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
+          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
             ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.weight, ds.remark]
           aoa.push(item)
         }
@@ -2026,7 +2026,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
+          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
             ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
           aoa.push(item)
         }
@@ -2040,7 +2040,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.anotherDepotName, ds.unit,
+          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.anotherDepotName, ds.unit,
              ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
           aoa.push(item)
         }
@@ -2054,7 +2054,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.mType, ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
+          let item = [ds.mType, ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
              ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
           aoa.push(item)
         }
@@ -2068,7 +2068,7 @@
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.internalId, ds.model, ds.categoryName, ds.materialOther, ds.stock, ds.unit,
+          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.materialOther, ds.stock, ds.unit,
              ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
           aoa.push(item)
         }

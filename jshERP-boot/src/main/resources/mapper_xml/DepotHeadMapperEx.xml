@@ -17,7 +17,7 @@
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
-        <result column="internal_id" jdbcType="VARCHAR" property="internalId" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="unit_price" jdbcType="DECIMAL" property="UnitPrice" />
         <result column="oper_number" jdbcType="DECIMAL" property="OperNumber" />
         <result column="all_price" jdbcType="DECIMAL" property="AllPrice" />
@@ -35,7 +35,7 @@
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="mName" jdbcType="VARCHAR" property="mName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
-        <result column="internal_id" jdbcType="VARCHAR" property="internalId" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="materialUnit" jdbcType="VARCHAR" property="materialUnit" />
         <result column="numSum" jdbcType="DECIMAL" property="numSum" />
@@ -101,12 +101,11 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey}
-                or m.color like #{bindKey} or m.project like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
+                or m.color like #{bindKey} or m.project like #{bindKey} or m.mat like #{bindKey} or m.other_field1 like #{bindKey}
                 or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey} or m.other_field4 like #{bindKey}
                 or m.other_field5 like #{bindKey} or m.other_field6 like #{bindKey} or m.other_field7 like #{bindKey}
-                or m.other_field8 like #{bindKey} or m.other_field9 like #{bindKey} or m.other_field10 like #{bindKey}
-                or m.other_field11 like #{bindKey} or m.other_field12 like #{bindKey})
+                or m.other_field8 like #{bindKey} or m.other_field9 like #{bindKey} or m.other_field10 like #{bindKey} )
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}
@@ -205,12 +204,11 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey}
-            or m.color like #{bindKey} or m.project like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.project like #{bindKey} or m.mat like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey} or m.other_field4 like #{bindKey}
             or m.other_field5 like #{bindKey} or m.other_field6 like #{bindKey} or m.other_field7 like #{bindKey}
-            or m.other_field8 like #{bindKey} or m.other_field9 like #{bindKey} or m.other_field10 like #{bindKey}
-            or m.other_field11 like #{bindKey} or m.other_field12 like #{bindKey})
+            or m.other_field8 like #{bindKey} or m.other_field9 like #{bindKey} or m.other_field10 like #{bindKey} )
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}
@@ -260,7 +258,7 @@
     </select>
 
     <select id="findMaterialsListMapByHeaderIdList" resultType="com.jsh.erp.datasource.vo.MaterialsListVo">
-        select jsh_depot_item.header_id, group_concat(concat(jsh_material.name,' ',ifnull(jsh_material.internal_id,''),' ',ifnull(jsh_material.model,''))) as materialsList
+        select jsh_depot_item.header_id, group_concat(concat(jsh_material.name,' ',ifnull(jsh_material.color_code,''),' ',ifnull(jsh_material.model,''))) as materialsList
         from jsh_depot_item
         left join jsh_material on jsh_depot_item.material_id = jsh_material.Id and ifnull(jsh_material.delete_Flag,'0') !='1'
         where 1=1
@@ -288,7 +286,7 @@
     </select>
 
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code, m.`name` MName,m.model,m.internal_id,di.unit_price,di.material_unit as mUnit,
+        select dh.number,me.bar_code, m.`name` MName,m.model,m.color_code,di.unit_price,di.material_unit as mUnit,
         di.oper_number,di.all_price, ifnull(di.tax_rate,0) tax_rate, ifnull(di.tax_money,0) tax_money, ifnull(di.tax_last_money,0) tax_last_money,
         s.supplier SName,d.dName DName, date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType,
         concat_ws('  ',dh.remark,di.remark) as newRemark
@@ -331,7 +329,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -386,7 +384,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -398,7 +396,7 @@
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
-        select di.material_id, me.bar_code, m.name mName,m.Model,m.internal_id,mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
+        select di.material_id, me.bar_code, m.name mName,m.Model,m.color_code,mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
         sum(di.basic_number) numSum,
         sum(di.all_price) priceSum
         from jsh_depot_head dh
@@ -442,7 +440,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id
@@ -492,14 +490,14 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id) a
     </select>
 
     <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code, m.`name` MName,m.model,m.internal_id,di.unit_price,di.material_unit as mUnit,di.oper_number,di.all_price,SName, d.dName DName,
+        select dh.number,me.bar_code, m.`name` MName,m.model,m.color_code,di.unit_price,di.material_unit as mUnit,di.oper_number,di.all_price,SName, d.dName DName,
         date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
@@ -537,7 +535,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -586,7 +584,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -955,7 +953,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1000,7 +998,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1038,7 +1036,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1081,7 +1079,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1119,7 +1117,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1162,7 +1160,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (m.name like #{bindKey} or m.internal_id like #{bindKey} or m.model like #{bindKey})
+            and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (

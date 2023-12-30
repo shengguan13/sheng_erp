@@ -176,7 +176,7 @@
           },
           {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'mname', width: 150, fixed: 'left'},
-          {title: '型号', dataIndex: 'internalId'},
+          {title: '型号', dataIndex: 'colorCode'},
           {title: '规格', dataIndex: 'model'},
           {title: '单位', dataIndex: 'mUnit'},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber},
@@ -248,7 +248,7 @@
         let aoa = [['单据编号', '编码', '名称', '型号', '规格', '单位', '数量', '单价', '金额', '税率(%)', '税额', '往来单位', '仓库', '出库日期', '备注']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.number, ds.barCode, ds.mname, ds.internalId, ds.model, ds.mUnit, ds.operNumber, ds.unitPrice,
+          let item = [ds.number, ds.barCode, ds.mname, ds.colorCode, ds.model, ds.mUnit, ds.operNumber, ds.unitPrice,
             ds.allPrice, ds.taxRate, ds.taxMoney, ds.sname, ds.dname, ds.operTime, ds.newRemark]
           aoa.push(item)
         }

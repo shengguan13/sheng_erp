@@ -356,7 +356,7 @@ public class DepotItemController {
                     item.put("materialExtendId", meId);
                     item.put("barCode", m.getBarCode() == null ? "" : m.getBarCode());
                     item.put("name", m.getName() == null ? "" : m.getName());
-                    item.put("internalId", m.getInternalId() == null ? "" : m.getInternalId());
+                    item.put("colorCode", m.getColorCode() == null ? "" : m.getColorCode());
                     item.put("categoryName", m.getCategory() == null ? "" : m.getCategory());
                     item.put("model", m.getModel() == null ? "" : m.getModel());
                     item.put("color", m.getColor() == null ? "" : m.getColor());
@@ -425,7 +425,7 @@ public class DepotItemController {
                     item.put("materialExtendId", diEx.getMaterialExtendId() == null ? "" : diEx.getMaterialExtendId());
                     item.put("barCode", diEx.getBarCode());
                     item.put("name", diEx.getMName());
-                    item.put("internalId", diEx.getMInternalId());
+                    item.put("colorCode", diEx.getMColorCode());
                     item.put("categoryName", diEx.getMCategoryName());
                     item.put("model", diEx.getMModel());
                     item.put("color", diEx.getMColor());
@@ -512,44 +512,35 @@ public class DepotItemController {
     public String getOtherInfo(String[] mpArr, DepotItemVo4WithInfoEx diEx)throws Exception {
         String materialOther = "";
         for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("制造商")) {
-                materialOther = materialOther + ((diEx.getMMfrs() == null || diEx.getMMfrs().equals("")) ? "" : "(" + diEx.getMMfrs() + ")");
-            }
-            if (mpArr[i].equals("客户/供应商")) {
+            if (mpArr[i].equals("主壁厚")) {
                 materialOther = materialOther + ((diEx.getMOtherField1() == null || diEx.getMOtherField1().equals("")) ? "" : "(" + diEx.getMOtherField1() + ")");
             }
-            if (mpArr[i].equals("客户OR供应商")) {
+            if (mpArr[i].equals("模腔数")) {
                 materialOther = materialOther + ((diEx.getMOtherField2() == null || diEx.getMOtherField2().equals("")) ? "" : "(" + diEx.getMOtherField2() + ")");
             }
-            if (mpArr[i].equals("材质")) {
+            if (mpArr[i].equals("模具重量")) {
                 materialOther = materialOther + ((diEx.getMOtherField3() == null || diEx.getMOtherField3().equals("")) ? "" : "(" + diEx.getMOtherField3() + ")");
             }
-            if (mpArr[i].equals("颜色代码")) {
+            if (mpArr[i].equals("浇口重量")) {
                 materialOther = materialOther + ((diEx.getMOtherField4() == null || diEx.getMOtherField4().equals("")) ? "" : "(" + diEx.getMOtherField4() + ")");
             }
-            if (mpArr[i].equals("模腔数")) {
+            if (mpArr[i].equals("可装设备")) {
                 materialOther = materialOther + ((diEx.getMOtherField5() == null || diEx.getMOtherField5().equals("")) ? "" : "(" + diEx.getMOtherField5() + ")");
             }
-            if (mpArr[i].equals("模具重量")) {
-                materialOther = materialOther + ((diEx.getMOtherField6() == null || diEx.getMOtherField6().equals("")) ? "" : "(" + diEx.getMOtherField6() + ")");
-            }
-            if (mpArr[i].equals("浇口重量")) {
-                materialOther = materialOther + ((diEx.getMOtherField7() == null || diEx.getMOtherField7().equals("")) ? "" : "(" + diEx.getMOtherField7() + ")");
-            }
-            if (mpArr[i].equals("可装设备")) {
-                materialOther = materialOther + ((diEx.getMOtherField8() == null || diEx.getMOtherField8().equals("")) ? "" : "(" + diEx.getMOtherField8() + ")");
-            }
-            if (mpArr[i].equals("标包")) {
-                materialOther = materialOther + ((diEx.getMOtherField9() == null || diEx.getMOtherField9().equals("")) ? "" : "(" + diEx.getMOtherField9() + ")");
-            }
-//            if (mpArr[i].equals("主壁厚")) {
-//                materialOther = materialOther + ((diEx.getMOtherField10() == null || diEx.getMOtherField10().equals("")) ? "" : "(" + diEx.getMOtherField10() + ")");
+//            if (mpArr[i].equals("保留1")) {
+//                materialOther = materialOther + ((diEx.getMOtherField6() == null || diEx.getMOtherField6().equals("")) ? "" : "(" + diEx.getMOtherField6() + ")");
 //            }
 //            if (mpArr[i].equals("保留2")) {
-//                materialOther = materialOther + ((diEx.getMOtherField11() == null || diEx.getMOtherField11().equals("")) ? "" : "(" + diEx.getMOtherField11() + ")");
+//                materialOther = materialOther + ((diEx.getMOtherField7() == null || diEx.getMOtherField7().equals("")) ? "" : "(" + diEx.getMOtherField7() + ")");
 //            }
 //            if (mpArr[i].equals("保留3")) {
-//                materialOther = materialOther + ((diEx.getMOtherField12() == null || diEx.getMOtherField12().equals("")) ? "" : "(" + diEx.getMOtherField12() + ")");
+//                materialOther = materialOther + ((diEx.getMOtherField8() == null || diEx.getMOtherField8().equals("")) ? "" : "(" + diEx.getMOtherField8() + ")");
+//            }
+//            if (mpArr[i].equals("保留4")) {
+//                materialOther = materialOther + ((diEx.getMOtherField9() == null || diEx.getMOtherField9().equals("")) ? "" : "(" + diEx.getMOtherField9() + ")");
+//            }
+//            if (mpArr[i].equals("保留5")) {
+//                materialOther = materialOther + ((diEx.getMOtherField10() == null || diEx.getMOtherField10().equals("")) ? "" : "(" + diEx.getMOtherField10() + ")");
 //            }
         }
         return materialOther;
@@ -596,7 +587,7 @@ public class DepotItemController {
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
-                    item.put("materialInternalId", diEx.getMInternalId());
+                    item.put("materialColorCode", diEx.getMColorCode());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
@@ -747,7 +738,7 @@ public class DepotItemController {
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
-                    item.put("materialInternalId", diEx.getMInternalId());
+                    item.put("materialColorCode", diEx.getMColorCode());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
@@ -820,7 +811,7 @@ public class DepotItemController {
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
-                    item.put("materialInternalId", diEx.getMInternalId());
+                    item.put("materialColorCode", diEx.getMColorCode());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
@@ -892,7 +883,7 @@ public class DepotItemController {
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialId", diEx.getMId());
-                    item.put("materialInternalId", diEx.getMInternalId());
+                    item.put("materialColorCode", diEx.getMColorCode());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
@@ -965,7 +956,7 @@ public class DepotItemController {
             if (null != list) {
                 for (DepotItemStockWarningCount disw : list) {
                     DepotItemVo4WithInfoEx diEx = new DepotItemVo4WithInfoEx();
-                    diEx.setMMfrs(disw.getMMfrs());
+                    diEx.setMMat(disw.getMMat());
                     diEx.setMOtherField1(disw.getMOtherField1());
                     diEx.setMOtherField2(disw.getMOtherField2());
                     diEx.setMOtherField3(disw.getMOtherField3());
@@ -976,8 +967,6 @@ public class DepotItemController {
                     diEx.setMOtherField8(disw.getMOtherField8());
                     diEx.setMOtherField9(disw.getMOtherField9());
                     diEx.setMOtherField10(disw.getMOtherField10());
-                    diEx.setMOtherField11(disw.getMOtherField11());
-                    diEx.setMOtherField12(disw.getMOtherField12());
                     disw.setMaterialOther(getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
                     if(null!=disw.getLowSafeStock() && disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {

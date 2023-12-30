@@ -115,7 +115,7 @@
           {title: '仓库', dataIndex: 'depotName', width: 150, fixed: 'left'},
           {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'mname', width: 150, fixed: 'left'},
-          {title: '型号', dataIndex: 'mInternalId'},
+          {title: '型号', dataIndex: 'mColorCode'},
           {title: '规格', dataIndex: 'mmodel'},
           {title: '扩展信息', dataIndex: 'materialOther'},
           {title: '单位', dataIndex: 'materialUnit'},
@@ -154,7 +154,7 @@
         let aoa = [['仓库', '编码', '名称', '型号', '规格', '扩展信息', '单位', '库存', '最低安全库存', '最高安全库存', '建议入库量', '建议出库量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.mname, ds.mInternalId, ds.mmodel, ds.materialOther, ds.materialUnit,
+          let item = [ds.depotName, ds.barCode, ds.mname, ds.mColorCode, ds.mmodel, ds.materialOther, ds.materialUnit,
             ds.currentNumber, ds.lowSafeStock, ds.highSafeStock, ds.lowCritical, ds.highCritical]
           aoa.push(item)
         }

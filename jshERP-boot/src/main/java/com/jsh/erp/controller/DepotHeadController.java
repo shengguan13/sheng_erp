@@ -119,17 +119,17 @@ public class DepotHeadController {
     @GetMapping(value = "/findInOutDetail")
     @ApiOperation(value = "入库出库明细接口")
     public BaseResponseInfo findInOutDetail(@RequestParam("currentPage") Integer currentPage,
-                                        @RequestParam("pageSize") Integer pageSize,
-                                        @RequestParam(value = "organId", required = false) Integer oId,
-                                        @RequestParam("number") String number,
-                                        @RequestParam("materialParam") String materialParam,
-                                        @RequestParam(value = "depotId", required = false) Long depotId,
-                                        @RequestParam("beginTime") String beginTime,
-                                        @RequestParam("endTime") String endTime,
-                                        @RequestParam(value = "roleType", required = false) String roleType,
-                                        @RequestParam("type") String type,
-                                        @RequestParam("remark") String remark,
-                                        HttpServletRequest request)throws Exception {
+                                            @RequestParam("pageSize") Integer pageSize,
+                                            @RequestParam(value = "organId", required = false) Integer oId,
+                                            @RequestParam("number") String number,
+                                            @RequestParam("materialParam") String materialParam,
+                                            @RequestParam(value = "depotId", required = false) Long depotId,
+                                            @RequestParam("beginTime") String beginTime,
+                                            @RequestParam("endTime") String endTime,
+                                            @RequestParam(value = "roleType", required = false) String roleType,
+                                            @RequestParam("type") String type,
+                                            @RequestParam("remark") String remark,
+                                            HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {

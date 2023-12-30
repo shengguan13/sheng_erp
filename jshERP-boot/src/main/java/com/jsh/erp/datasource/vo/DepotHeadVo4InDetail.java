@@ -14,7 +14,7 @@ public class DepotHeadVo4InDetail {
 
     private String Model;
 
-    private String internalId;
+    private String colorCode;
 
     private BigDecimal UnitPrice;
 
@@ -74,12 +74,12 @@ public class DepotHeadVo4InDetail {
         Model = model;
     }
 
-    public String getInternalId() {
-        return internalId;
+    public String getColorCode() {
+        return colorCode;
     }
 
-    public void setInternalId(String internalId) {
-        this.internalId = internalId;
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
     }
 
     public BigDecimal getUnitPrice() {
