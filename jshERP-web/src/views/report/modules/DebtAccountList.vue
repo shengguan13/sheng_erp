@@ -97,6 +97,8 @@
           roleType: Vue.ls.get('roleType'),
           status: ""
         },
+        beginTime: "",
+        endTime: "",
         ipagination:{
           pageSize: 10001
         },
@@ -155,6 +157,8 @@
         this.queryParam.status = status
         this.queryParam.beginTime = beginTime
         this.queryParam.endTime = endTime
+        this.beginTime = beginTime
+        this.endTime = endTime
         this.columns[2].title = organType
         if(type === '入库') {
           this.columns[7].title = '已付欠款'
@@ -197,7 +201,7 @@
             numbers = numbers + ',' + ds.number
           }
         }
-        postAction(this.url.statement, {numbers: numbers}).then((res) => {
+        postAction(this.url.statement, {numbers: numbers, beginTime: this.beginTime, endTime: this.endTime}).then((res) => {
           if(res && res.code === 200){
             this.$message.info('操作成功');
           } else {

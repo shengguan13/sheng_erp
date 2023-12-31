@@ -103,8 +103,8 @@ public class AccountHeadController {
     public Object generateStatement(@RequestBody JSONObject jsonObject, HttpServletRequest request) throws  Exception{
         JSONObject result;
         try {
-            String numbers = jsonObject.getString("numbers");
-            logger.info("XXXXX call success with param: " + numbers);
+            accountHeadService.generateStatement(jsonObject.getString("numbers"),
+                    jsonObject.getString("beginTime"), jsonObject.getString("endTime"));
             result = ExceptionConstants.standardSuccess();
         } catch (Exception e) {
             result = new JSONObject();

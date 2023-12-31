@@ -2,6 +2,7 @@ package com.jsh.erp.service.accountHead;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Table;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
@@ -12,12 +13,19 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
+import com.jsh.erp.service.productSupplier.ProductSupplierService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,7 +35,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jsh.erp.utils.Tools.getCenternTime;
@@ -46,7 +58,13 @@ public class AccountHeadService {
     @Resource
     private DepotHeadService depotHeadService;
     @Resource
+    private DepotItemService depotItemService;
+    @Resource
     private UserService userService;
+    @Resource
+    private MaterialService materialService;
+    @Resource
+    private ProductSupplierService productSupplierService;
     @Resource
     private SupplierService supplierService;
     @Resource
@@ -407,6 +425,73 @@ public class AccountHeadService {
         }
         logService.insertLog("财务单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).toString(), request);
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void generateStatement(String numbers, String beginTime, String endTime) throws Exception {
+        AccountHead accountHead = new AccountHead();
+
+        List<DepotHead> depotHeadList = new ArrayList<>();
+        String[] numberArr = numbers.split(",");
+        for (String number : numberArr) {
+            depotHeadList.add(depotHeadService.getDepotHead(number));
+        }
+        Long supplierId = depotHeadList.get(0).getOrganId();
+        Supplier supplier = supplierService.getSupplier(supplierId);
+        Map<String, Map<String, BigDecimal>> barCodeDateToAmountMap = new HashMap<>();
+
+        for (DepotHead depotHead : depotHeadList) {
+            List<DepotItemVo4WithInfoEx> depotItemList = depotItemService.getDetailList(depotHead.getId());
+            for (DepotItemVo4WithInfoEx depotItem : depotItemList) {
+                if (!barCodeDateToAmountMap.containsKey(depotItem.getBarCode())) {
+                    barCodeDateToAmountMap.put(depotItem.getBarCode(), new HashMap<>());
+                }
+                barCodeDateToAmountMap.get(depotItem.getBarCode()).merge(
+                        new SimpleDateFormat("yyyy-MM-dd HH/mm/ss").format(depotHead.getOperTime()),
+                        depotItem.getOperNumber(),
+                        BigDecimal::add);
+            }
+        }
+        generateStatementExcel(supplier.getSupplier(), beginTime, endTime, barCodeDateToAmountMap);
+    }
+
+    private void generateStatementExcel(String supplierName, String beginTime, String endTime,
+                                        Map<String, Map<String, BigDecimal>> barCodeDateToAmountMap) throws IOException {
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
+        XSSFSheet xssfSheet = xssfWorkbook.createSheet("对账单");
+        XSSFRow xssfRow; // 行
+        XSSFCell xssfCell; // 列
+        xssfRow = xssfSheet.getRow(0);
+        if (xssfRow == null) {
+            xssfRow = xssfSheet.createRow(0);
+        }
+        xssfCell = xssfRow.createCell(0);
+        xssfCell.setCellValue(supplierName + "对账单" + "(" + beginTime + "-" + endTime + ")");
+        int rowCnt = 1;
+        for (String barCode : barCodeDateToAmountMap.keySet()) {
+            XSSFRow row = xssfSheet.getRow(rowCnt);
+            if (row == null) {
+                row = xssfSheet.createRow(rowCnt);
+            }
+            XSSFCell materialCell = row.createCell(0);
+            materialCell.setCellValue(barCode);
+            int cellCnt = 1;
+            for (String time : barCodeDateToAmountMap.get(barCode).keySet()) {
+                XSSFCell cell = row.createCell(cellCnt);
+                cell.setCellValue(barCodeDateToAmountMap.get(barCode).get(time).doubleValue());
+                cellCnt++;
+            }
+            rowCnt++;
+        }
+        File path = new File("/opt/jshERP/upload" + File.separator + "statement" + File.separator);
+        if (!path.exists()) {
+            path.mkdirs();
+        }
+        File statementFile = new File(path,  "a.xlsx");
+        FileOutputStream outputStream = new FileOutputStream(statementFile);
+        xssfWorkbook.write(outputStream);
+        outputStream.close();
+        xssfWorkbook.close();
     }
 
     private Set<Long> getImpactedBillIds(String rows) throws Exception {

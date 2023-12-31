@@ -16,10 +16,6 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -220,9 +216,6 @@ public class AccountItemService {
         deleteAccountItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
         if (null != rowArr && rowArr.size() > 0) {
-            if("供应商对账".equals(type) || "客户对账".equals(type)) {
-                generateStatement(rows, headerId);
-            }
             for (int i = 0; i < rowArr.size(); i++) {
                 AccountItem accountItem = new AccountItem();
                 JSONObject tempInsertedJson = JSONObject.parseObject(rowArr.getString(i));
@@ -286,27 +279,5 @@ public class AccountItemService {
 
     public BigDecimal getEachAmountByBillId(Long billId) {
         return accountItemMapperEx.getEachAmountByBillId(billId).abs();
-    }
-
-    private void generateStatement(String rows, Long headerId) throws IOException {
-        XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
-        XSSFSheet xssfSheet = xssfWorkbook.createSheet("对账单");
-        XSSFRow xssfRow; // 行
-        XSSFCell xssfCell; // 列
-        xssfRow = xssfSheet.getRow(0);
-        if (xssfRow == null) {
-            xssfRow = xssfSheet.createRow(0);
-        }
-        xssfCell = xssfRow.createCell(0);
-        xssfCell.setCellValue("测试");
-        File path = new File("/opt/jshERP/upload" + File.separator + "statement" + File.separator);
-        if (!path.exists()) {
-            path.mkdirs();
-        }
-        File statementFile = new File(path,  "a.txt");
-        FileOutputStream outputStream = new FileOutputStream(statementFile);
-        xssfWorkbook.write(outputStream);
-        outputStream.close();
-        xssfWorkbook.close();
     }
 }
