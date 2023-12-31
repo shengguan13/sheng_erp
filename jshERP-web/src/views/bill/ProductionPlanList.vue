@@ -196,9 +196,9 @@
               }
             }
           },
-          { title: '计划开始日期（含）', dataIndex: 'planStartTimeStr',width:120},
-          { title: '计划完成日期（含）', dataIndex: 'planFinishTimeStr',width:120},
-          { title: '计划生产数量', dataIndex: 'materialCount',width:120},
+          { title: '开始日期（含）', dataIndex: 'planStartTimeStr',width:120},
+          { title: '完成日期（含）', dataIndex: 'planFinishTimeStr',width:120},
+          { title: '计划数量', dataIndex: 'materialCount',width:120},
           { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }

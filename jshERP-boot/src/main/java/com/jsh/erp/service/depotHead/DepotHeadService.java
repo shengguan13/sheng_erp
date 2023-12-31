@@ -1,5 +1,6 @@
 package com.jsh.erp.service.depotHead;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableList;
 import com.jsh.erp.constants.BusinessConstants;
@@ -21,6 +22,7 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.person.PersonService;
+import com.jsh.erp.service.productSupplier.ProductSupplierService;
 import com.jsh.erp.service.qrCode.QrCodeUtil;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.sequence.SequenceService;
@@ -78,7 +80,7 @@ public class DepotHeadService {
     @Resource
     private MaterialService materialService;
     @Resource
-    DepotItemService depotItemService;
+    private DepotItemService depotItemService;
     @Resource
     private SupplierService supplierService;
     @Resource
@@ -96,7 +98,9 @@ public class DepotHeadService {
     @Resource
     private AccountItemService accountItemService;
     @Resource
-    DepotItemMapperEx depotItemMapperEx;
+    private DepotItemMapperEx depotItemMapperEx;
+    @Resource
+    private ProductSupplierService productSupplierService;
     @Resource
     private LogService logService;
 
@@ -947,6 +951,31 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG));
             }
         }
+        if (SUB_TYPE_PURCHASE_ORDER.equals(subType)) {
+            JSONArray rowArr = JSONArray.parseArray(rows);
+            List<String> ids = new ArrayList<>();
+            if (null != rowArr && rowArr.size()>0) {
+                for (int i = 0; i < rowArr.size(); i++) {
+                    JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
+                    String productSupplierId = rowObj.getString("sku");
+                    if (productSupplierId != null && !"".equals(productSupplierId)) {
+                        ids.add(productSupplierId);
+                    }
+                }
+            }
+            List<ProductSupplierVo4Info> productSupplierList = productSupplierService.selectByIds(String.join(",", ids));
+            Set<String> supplierSet = productSupplierList.stream().map(e -> e.getSupplierName()).collect(Collectors.toSet());
+            List<String> supplierList = supplierSet.stream().collect(Collectors.toList());
+            if (supplierSet.size() > 1) {
+                throw new BusinessRunTimeException(ExceptionConstants.SUPPLIER_MORE_THAN_ONE_FAILED_CODE,
+                        String.format(ExceptionConstants.SUPPLIER_MORE_THAN_ONE_FAILED_MSG, supplierList.get(0), supplierList.get(1)));
+            }
+            if (supplierSet.size() == 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.SUPPLIER_ZERO_FAILED_CODE,
+                        ExceptionConstants.SUPPLIER_ZERO_FAILED_MSG);
+            }
+            depotHead.setOrganId(productSupplierList.get(0).getSupplierId());
+        }
         //判断用户是否已经登录过，登录过不再处理
         User userInfo = userService.getCurrentUser();
         depotHead.setCreator(userInfo == null ? null : userInfo.getId());
@@ -1354,13 +1383,13 @@ public class DepotHeadService {
             for (int i = 1; i < rightRows; i++) {
                 String purchaseOrderId = ExcelUtils.getContent(src, i, 0); //采购订单
                 String linkNumber = "";
+                Long organId = 0L;
                 List<DepotItem> poItems = new ArrayList<>();
                 for (DepotHead head : allDepotHeads) {
                     if (purchaseOrderId.equals(head.getRemark())) {
                         linkNumber = head.getNumber();
+                        organId = head.getOrganId();
                         poItems = depotItemService.getListByHeaderId(head.getId());
-                        logger.info("poItems size: " + poItems.size());
-                        logger.info("poItems id: " + poItems.get(0).getId());
                     }
                 }
                 if ("".equals(linkNumber)) {
@@ -1400,6 +1429,7 @@ public class DepotHeadService {
                 depotHead.setType("入库");
                 depotHead.setSubType("采购");
                 depotHead.setNumber(headNumber);
+                depotHead.setOrganId(organId);
                 depotHead.setDefaultNumber(headNumber);
                 depotHead.setCreateTime(dateValue);
                 depotHead.setOperTime(dateValue);
@@ -1946,7 +1976,7 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4List> debtList(Long organId, String materialParam, String number, String beginTime, String endTime,
-                                           String roleType, String status, Integer offset, Integer rows) {
+                                           String type, String subType, String roleType, String status, Integer offset, Integer rows) {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try {
             String depotIds = depotService.findDepotStrByCurrentUser();
@@ -1955,7 +1985,7 @@ public class DepotHeadService {
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime, BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4List> list = depotHeadMapperEx.debtList(organId, creatorArray, status, number,
-                    beginTime, endTime, materialParam, depotArray, offset, rows);
+                    beginTime, endTime, type, subType, materialParam, depotArray, offset, rows);
             if (null != list) {
                 List<Long> idList = new ArrayList<>();
                 for (DepotHeadVo4List dh : list) {

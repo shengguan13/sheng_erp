@@ -208,6 +208,8 @@ public interface DepotHeadMapperEx {
             @Param("number") String number,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
+            @Param("type") String type,
+            @Param("subType") String subType,
             @Param("materialParam") String materialParam,
             @Param("depotArray") String[] depotArray,
             @Param("offset") Integer offset,

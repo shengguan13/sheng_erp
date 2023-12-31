@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.jsh.erp.constants.ExceptionConstants.*;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
@@ -91,6 +92,29 @@ public class AccountHeadController {
     }
 
     /**
+     * 新增财务主表及财务子表信息
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/generateStatement")
+    @ApiOperation(value = "生成对账单")
+    public Object generateStatement(@RequestBody JSONObject jsonObject, HttpServletRequest request) throws  Exception{
+        JSONObject result;
+        try {
+            String numbers = jsonObject.getString("numbers");
+            logger.info("XXXXX call success with param: " + numbers);
+            result = ExceptionConstants.standardSuccess();
+        } catch (Exception e) {
+            result = new JSONObject();
+            result.put(GLOBAL_RETURNS_CODE, SERVICE_SYSTEM_ERROR_CODE);
+            result.put(GLOBAL_RETURNS_MESSAGE, SERVICE_SYSTEM_ERROR_MSG);
+        }
+        return result;
+    }
+
+    /**
      * 根据编号查询单据信息
      * @param billNo
      * @param request
@@ -126,7 +150,7 @@ public class AccountHeadController {
     @GetMapping(value = "/getFinancialBillNoByBillId")
     @ApiOperation(value = "根据编号查询单据信息")
     public BaseResponseInfo getFinancialBillNoByBillId(@RequestParam("billId") Long billId,
-                                              HttpServletRequest request)throws Exception {
+                                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             List<AccountHead> list = accountHeadService.getFinancialBillNoByBillId(billId);

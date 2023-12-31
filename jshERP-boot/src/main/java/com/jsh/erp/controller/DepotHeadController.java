@@ -432,11 +432,11 @@ public class DepotHeadController {
             String subTypeBack = "";
             String billType = "";
             if (("供应商").equals(supplierType)) {
-                type = "其它";
-                subType = "采购订单";
+                type = "入库";
+                subType = "采购";
             } else if (("客户").equals(supplierType)) {
-                type = "其它";
-                subType = "销售订单";
+                type = "出库";
+                subType = "销售";
             }
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
@@ -622,10 +622,12 @@ public class DepotHeadController {
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
+        String type = StringUtil.getInfo(search, "type");
+        String subType = StringUtil.getInfo(search, "subType");
         String roleType = StringUtil.getInfo(search, "roleType");
         String status = StringUtil.getInfo(search, "status");
-        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime, roleType,
-                status, (currentPage-1)*pageSize, pageSize);
+        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime,
+                type, subType, roleType, status, (currentPage-1)*pageSize, pageSize);
         int total = depotHeadService.debtListCount(organId, materialParam, number, beginTime, endTime, roleType, status);
         if (list != null) {
             objectMap.put("rows", list);

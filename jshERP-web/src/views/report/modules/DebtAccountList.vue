@@ -34,7 +34,7 @@
               <a-col :md="6" :sm="24">
                 <a-button type="primary" @click="searchQuery">查询</a-button>
                 <a-button style="margin-left: 8px" v-print="'#debtAccountPrint'" icon="printer">打印</a-button>
-                <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                <a-button style="margin-left: 8px" @click="generateStatement">生成对账单</a-button>
               </a-col>
             </span>
           </a-row>
@@ -73,9 +73,9 @@
 <script>
   import BillDetail from '../../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { openDownloadDialog, sheet2blob} from "@/utils/util"
-  import {mixinDevice} from '@/utils/mixin'
+  import { mixinDevice } from '@/utils/mixin'
   import { findBillDetailByNumber } from '@/api/api'
+  import { postAction } from '@/api/manage'
   import Vue from 'vue'
   export default {
     name: 'DebtAccountList',
@@ -135,7 +135,8 @@
           { title: '待收欠款', dataIndex: 'debt',width:70}
         ],
         url: {
-          list: "/depotHead/debtList"
+          list: "/depotHead/debtList",
+          statement: "accountHead/generateStatement"
         }
       }
     },
@@ -186,14 +187,23 @@
       onDateOk(value) {
         console.log(value);
       },
-      exportExcel() {
-        let aoa = [['单据编号', this.columns[2].title, '产品信息', '单据日期', '制单人', '本单欠款', '已收欠款', '待收欠款']]
+      generateStatement() {
+        let numbers = ''
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.number, ds.organName, ds.materialsList, ds.operTimeStr, ds.userName, ds.needDebt, ds.finishDebt, ds.debt]
-          aoa.push(item)
+          if (i === 0) {
+            numbers = numbers + ds.number
+          } else {
+            numbers = numbers + ',' + ds.number
+          }
         }
-        openDownloadDialog(sheet2blob(aoa), '欠款详情')
+        postAction(this.url.statement, {numbers: numbers}).then((res) => {
+          if(res && res.code === 200){
+            this.$message.info('操作成功');
+          } else {
+            this.$message.warning('操作失败');
+          }
+        })
       }
     }
   }

@@ -434,13 +434,9 @@ public class DepotItemController {
                     BigDecimal stock;
                     Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
                     String materialUnit = diEx.getMaterialUnit();
-                    if(StringUtil.isNotEmpty(diEx.getSku())){
-                        stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
-                    } else {
-                        stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
-                        if (StringUtil.isNotEmpty(unitInfo.getName())) {
-                            stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
-                        }
+                    stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
+                    if (StringUtil.isNotEmpty(unitInfo.getName())) {
+                        stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
                     }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());

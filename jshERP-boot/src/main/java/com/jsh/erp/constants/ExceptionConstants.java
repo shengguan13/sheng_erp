@@ -364,6 +364,12 @@ public class ExceptionConstants {
      *  单据信息
      * type = 85
      * */
+    //单据录入-供应商代码为空
+    public static final int SUPPLIER_ZERO_FAILED_CODE = 8500002;
+    public static final String SUPPLIER_ZERO_FAILED_MSG = "供应商代码为空或提供的供应商代码错误";
+    //单据录入-供应商代码太多
+    public static final int SUPPLIER_MORE_THAN_ONE_FAILED_CODE = 8500003;
+    public static final String SUPPLIER_MORE_THAN_ONE_FAILED_MSG = "一个采购订单不能选择多个供应商：%s、%s";
     //单据录入-仓库不能为空
     public static final int DEPOT_HEAD_DEPOT_FAILED_CODE = 8500004;
     public static final String DEPOT_HEAD_DEPOT_FAILED_MSG = "仓库不能为空";

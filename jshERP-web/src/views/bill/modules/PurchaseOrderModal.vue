@@ -27,23 +27,6 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商" data-step="1" data-title="供应商"
-              data-intro="供应商必须选择，如果发现需要选择的供应商尚未录入，可以在下拉框中点击新增供应商进行录入">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <div slot="dropdownRender" slot-scope="menu">
-                  <v-nodes :vnodes="menu" />
-                  <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
-                       @mousedown="e => e.preventDefault()" @click="addSupplier"><a-icon type="plus" /> 新增供应商</div>
-                </div>
-                <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                  {{ item.supplier }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
               <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
             </a-form-item>
@@ -198,7 +181,8 @@
             { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '供应商代码', key: 'sku', width: '6%', type: FormTypes.popupJsh, kind: 'supplier', multi: false },
+            { title: '供应商代码', key: 'sku', width: '6%', type: FormTypes.popupJsh, kind: 'supplier', multi: false,
+              validateRules: [{ required: true, message: '${title}不能为空' }]},
             { title: '到货日期', key: 'expirationDate',width: '6%', type: FormTypes.date },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input},
             { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
@@ -209,11 +193,6 @@
           operTime:{
             rules: [
               { required: true, message: '请输入单据日期!' }
-            ]
-          },
-          organId:{
-            rules: [
-              { required: true, message: '请选择供应商!' }
             ]
           },
           linkNumber:{
@@ -257,8 +236,7 @@
           }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
-            'discountLastMoney','accountId'))
+            this.form.setFieldsValue(pick(this.model, 'operTime', 'number', 'remark', 'discountLastMoney','accountId'))
           });
           // 加载子表数据
           let params = {
@@ -276,7 +254,6 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initSupplier()
         this.initAccount()
       },
       /** 整理成formData */

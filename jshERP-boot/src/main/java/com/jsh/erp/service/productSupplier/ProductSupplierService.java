@@ -151,6 +151,17 @@ public class ProductSupplierService {
         return batchDeleteProductSupplierByIds(ids);
     }
 
+    public List<ProductSupplierVo4Info> selectByIds(String ids)throws Exception {
+        String [] idArray=ids.split(",");
+        List<ProductSupplierVo4Info> result = new ArrayList<>();
+        try {
+            result = productSupplierMapperEx.selectByIds(idArray);
+        } catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteProductSupplierByIds(String ids) throws Exception{
         String [] idArray=ids.split(",");

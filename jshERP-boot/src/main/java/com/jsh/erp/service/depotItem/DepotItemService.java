@@ -804,10 +804,6 @@ public class DepotItemService {
                                 .collect(Collectors.toList());
                     }
                     BigDecimal stock = getStockByParam(depotItem.getDepotId(), depotItem.getMaterialId(), null, null);
-                    if (StringUtil.isNotEmpty(depotItem.getSku())) {
-                        //对于sku产品要换个方式计算库存
-                        stock = getSkuStockByParam(depotItem.getDepotId(), depotItem.getMaterialExtendId(), null, null);
-                    }
                     BigDecimal thisBasicNumber = depotItem.getBasicNumber() == null ? BigDecimal.ZERO : depotItem.getBasicNumber();
                     if (!systemConfigService.getMinusStockFlag() && stock.compareTo(thisBasicNumber) < 0) {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
