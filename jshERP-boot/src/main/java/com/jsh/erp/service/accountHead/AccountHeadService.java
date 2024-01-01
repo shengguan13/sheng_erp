@@ -39,8 +39,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.Tools.getCenternTime;
 
@@ -447,42 +448,148 @@ public class AccountHeadService {
                     barCodeDateToAmountMap.put(depotItem.getBarCode(), new HashMap<>());
                 }
                 barCodeDateToAmountMap.get(depotItem.getBarCode()).merge(
-                        new SimpleDateFormat("yyyy-MM-dd HH/mm/ss").format(depotHead.getOperTime()),
+                        new SimpleDateFormat("yyyy/MM/dd").format(depotHead.getOperTime()),
                         depotItem.getOperNumber(),
                         BigDecimal::add);
             }
         }
-        generateStatementExcel(supplier.getSupplier(), beginTime, endTime, barCodeDateToAmountMap);
+        generateStatementExcel(supplier, beginTime, endTime, barCodeDateToAmountMap);
     }
 
-    private void generateStatementExcel(String supplierName, String beginTime, String endTime,
-                                        Map<String, Map<String, BigDecimal>> barCodeDateToAmountMap) throws IOException {
+    private void generateStatementExcel(Supplier supplier, String beginTime, String endTime,
+                                        Map<String, Map<String, BigDecimal>> barCodeDateToAmountMap) throws Exception {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
         XSSFSheet xssfSheet = xssfWorkbook.createSheet("对账单");
-        XSSFRow xssfRow; // 行
-        XSSFCell xssfCell; // 列
-        xssfRow = xssfSheet.getRow(0);
-        if (xssfRow == null) {
-            xssfRow = xssfSheet.createRow(0);
+        XSSFRow titleRow, supplierRow, headRow; // 行
+        XSSFCell titleCell, supplierCell, headCell; // 列
+        titleRow = xssfSheet.getRow(0);
+        if (titleRow == null) {
+            titleRow = xssfSheet.createRow(0);
         }
-        xssfCell = xssfRow.createCell(0);
-        xssfCell.setCellValue(supplierName + "对账单" + "(" + beginTime + "-" + endTime + ")");
-        int rowCnt = 1;
+        titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("对账单" + "(" + beginTime + "至" + endTime + ")");
+
+        supplierRow = xssfSheet.getRow(1);
+        if (supplierRow == null) {
+            supplierRow = xssfSheet.createRow(1);
+        }
+        supplierCell = supplierRow.createCell(0);
+        supplierCell.setCellValue("供应商名称：" + supplier.getSupplier());
+        supplierCell = supplierRow.createCell(1);
+        supplierCell.setCellValue("联系方式：" + supplier.getPhoneNum());
+
+        headRow = xssfSheet.getRow(2);
+        if (headRow == null) {
+            headRow = xssfSheet.createRow(2);
+        }
+        headCell = headRow.createCell(0);
+        headCell.setCellValue("物料型号");
+        headCell = headRow.createCell(1);
+        headCell.setCellValue("规格");
+        headCell = headRow.createCell(2);
+        headCell.setCellValue("单位");
+        headCell = headRow.createCell(3);
+        headCell.setCellValue("单价（未税，小数点后4位）");
+        Set<String> dateSet = new HashSet<>();
+        for (String barCode : barCodeDateToAmountMap.keySet()) {
+            for (String date : barCodeDateToAmountMap.get(barCode).keySet()) {
+                dateSet.add(date);
+            }
+        }
+        List<String> dateList = dateSet.stream()
+                .map(s -> {
+                    try {
+                        return new SimpleDateFormat("yyyy/MM/dd").parse(s);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .sorted()
+                .map(d -> new SimpleDateFormat("yyyy/MM/dd").format(d))
+                .collect(Collectors.toList());
+        int i = 0;
+        for (; i < dateList.size(); i++) {
+            headCell = headRow.createCell(4 + i);
+            headCell.setCellValue(dateList.get(i).substring(5));
+        }
+        headCell = headRow.createCell(5 + i);
+        headCell.setCellValue("数量合计");
+        headCell = headRow.createCell(6 + i);
+        headCell.setCellValue("金额（未税，小数点后4位）");
+        headCell = headRow.createCell(7 + i);
+        headCell.setCellValue("税率");
+        headCell = headRow.createCell(8 + i);
+        headCell.setCellValue("税额（小数点后4位）");
+        headCell = headRow.createCell(9 + i);
+        headCell.setCellValue("金额（含税，小数点后4位）");
+
+        int rowCnt = 3;
+        double amountTotal = 0.0;
+        double priceNoTaxTotal = 0.0;
+        double taxTotal = 0.0;
+        double priceTotal = 0.0;
         for (String barCode : barCodeDateToAmountMap.keySet()) {
             XSSFRow row = xssfSheet.getRow(rowCnt);
             if (row == null) {
                 row = xssfSheet.createRow(rowCnt);
             }
-            XSSFCell materialCell = row.createCell(0);
+            XSSFCell indexCell = row.createCell(0);
+            indexCell.setCellValue(rowCnt - 2);
+            XSSFCell materialCell = row.createCell(1);
             materialCell.setCellValue(barCode);
-            int cellCnt = 1;
-            for (String time : barCodeDateToAmountMap.get(barCode).keySet()) {
-                XSSFCell cell = row.createCell(cellCnt);
-                cell.setCellValue(barCodeDateToAmountMap.get(barCode).get(time).doubleValue());
-                cellCnt++;
+            List<MaterialVo4Unit> material = materialService.getMaterialByBarCode(barCode);
+            materialCell = row.createCell(2);
+            materialCell.setCellValue(material.get(0).getModel());
+            materialCell = row.createCell(3);
+            materialCell.setCellValue(material.get(0).getUnitName());
+            List<ProductSupplierVo4Info> productSupplier = productSupplierService.getProductSupplierList(supplier.getSupplier(), barCode);
+            double priceNoTax = productSupplier.get(0).getPriceNoTax() == null ? 0.0 : productSupplier.get(0).getPriceNoTax().doubleValue();
+            double taxRate = productSupplier.get(0).getTaxRate() == null ? 0.0 : productSupplier.get(0).getTaxRate().doubleValue();
+
+            materialCell = row.createCell(4);
+            materialCell.setCellValue(priceNoTax);
+            double materialTotal = 0.0;
+            int dateIndex = 0;
+            for (; dateIndex < dateList.size(); dateIndex++) {
+                XSSFCell cell = row.createCell(4 + dateIndex);
+                if (barCodeDateToAmountMap.get(barCode).containsKey(dateList.get(dateIndex))) {
+                    double value = barCodeDateToAmountMap.get(barCode).get(dateList.get(dateIndex)).doubleValue();
+                    cell.setCellValue(value);
+                    materialTotal += value;
+                }
             }
+            amountTotal += materialTotal;
+            priceNoTaxTotal += materialTotal * priceNoTax;
+            taxTotal += materialTotal * priceNoTax * taxRate;
+            priceTotal += materialTotal * priceNoTax * (1.0 + taxRate);
+
+            XSSFCell cell = row.createCell(5 + dateIndex);
+            cell.setCellValue(materialTotal);
+            cell = row.createCell(6 + dateIndex);
+            cell.setCellValue(materialTotal * priceNoTax);
+            cell = row.createCell(7 + dateIndex);
+            cell.setCellValue(taxRate);
+            cell = row.createCell(8 + dateIndex);
+            cell.setCellValue(materialTotal * priceNoTax * taxRate);
+            cell = row.createCell(9 + dateIndex);
+            cell.setCellValue(materialTotal * priceNoTax * (1.0 + taxRate));
             rowCnt++;
         }
+        XSSFRow row = xssfSheet.getRow(rowCnt);
+        if (row == null) {
+            row = xssfSheet.createRow(rowCnt);
+        }
+        XSSFCell cell = row.createCell(1);
+        cell.setCellValue("合计");
+        cell = row.createCell(5 + i);
+        cell.setCellValue(amountTotal);
+        cell = row.createCell(6 + i);
+        cell.setCellValue(priceNoTaxTotal);
+        cell = row.createCell(8 + i);
+        cell.setCellValue(taxTotal);
+        cell = row.createCell(9 + i);
+        cell.setCellValue(priceTotal);
+
         File path = new File("/opt/jshERP/upload" + File.separator + "statement" + File.separator);
         if (!path.exists()) {
             path.mkdirs();
