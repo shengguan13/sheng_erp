@@ -8,6 +8,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.AccountHeadMapper;
 import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
+import com.jsh.erp.datasource.mappers.AccountItemMapper;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
@@ -18,6 +19,7 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.productSupplier.ProductSupplierService;
+import com.jsh.erp.service.sequence.SequenceService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -51,6 +53,8 @@ public class AccountHeadService {
     @Resource
     private AccountHeadMapper accountHeadMapper;
     @Resource
+    private AccountItemMapper accountItemMapper;
+    @Resource
     private AccountHeadMapperEx accountHeadMapperEx;
     @Resource
     private OrgaUserRelService orgaUserRelService;
@@ -68,6 +72,8 @@ public class AccountHeadService {
     private ProductSupplierService productSupplierService;
     @Resource
     private SupplierService supplierService;
+    @Resource
+    private SequenceService sequenceService;
     @Resource
     private LogService logService;
     @Resource
@@ -127,45 +133,8 @@ public class AccountHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<AccountHeadVo4ListEx> list;
-            if ("全部采购".equals(type)) {
-                List<AccountHeadVo4ListEx> list1 = accountHeadMapperEx.selectByConditionAccountHead("采购定金", creatorArray, billNo,
-                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
-                List<AccountHeadVo4ListEx> list2 = accountHeadMapperEx.selectByConditionAccountHead("采购付款", creatorArray, billNo,
-                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
-                List<AccountHeadVo4ListEx> list3 = accountHeadMapperEx.selectByConditionAccountHead("采购退款", creatorArray, billNo,
-                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
-                list = new ArrayList<>();
-                if (list1 != null) {
-                    list.addAll(list1);
-                }
-                if (list2 != null) {
-                    list.addAll(list2);
-                }
-                if (list3 != null) {
-                    list.addAll(list3);
-                }
-            } else if ("全部销售".equals(type)) {
-                List<AccountHeadVo4ListEx> list1 = accountHeadMapperEx.selectByConditionAccountHead("销售定金", creatorArray, billNo,
-                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
-                List<AccountHeadVo4ListEx> list2 = accountHeadMapperEx.selectByConditionAccountHead("销售收款", creatorArray, billNo,
-                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
-                List<AccountHeadVo4ListEx> list3 = accountHeadMapperEx.selectByConditionAccountHead("销售退款", creatorArray, billNo,
-                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
-                list = new ArrayList<>();
-                if (list1 != null) {
-                    list.addAll(list1);
-                }
-                if (list2 != null) {
-                    list.addAll(list2);
-                }
-                if (list3 != null) {
-                    list.addAll(list3);
-                }
-            } else {
-                list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
-                        beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
-            }
+            List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
             if (null != list) {
                 for (AccountHeadVo4ListEx ah : list) {
                     if(ah.getChangeAmount() != null) {
@@ -430,8 +399,6 @@ public class AccountHeadService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void generateStatement(String numbers, String beginTime, String endTime) throws Exception {
-        AccountHead accountHead = new AccountHead();
-
         List<DepotHead> depotHeadList = new ArrayList<>();
         String[] numberArr = numbers.split(",");
         for (String number : numberArr) {
@@ -453,11 +420,11 @@ public class AccountHeadService {
                         BigDecimal::add);
             }
         }
-        generateStatementExcel(supplier, beginTime, endTime, barCodeDateToAmountMap);
+        generateStatement(supplier, beginTime, endTime, barCodeDateToAmountMap);
     }
 
-    private void generateStatementExcel(Supplier supplier, String beginTime, String endTime,
-                                        Map<String, Map<String, BigDecimal>> barCodeDateToAmountMap) throws Exception {
+    private void generateStatement(Supplier supplier, String beginTime, String endTime,
+                                   Map<String, Map<String, BigDecimal>> barCodeDateToAmountMap) throws Exception {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
         XSSFSheet xssfSheet = xssfWorkbook.createSheet("对账单");
         XSSFRow titleRow, supplierRow, headRow; // 行
@@ -512,15 +479,15 @@ public class AccountHeadService {
             headCell = headRow.createCell(4 + i);
             headCell.setCellValue(dateList.get(i).substring(5));
         }
-        headCell = headRow.createCell(5 + i);
+        headCell = headRow.createCell(4 + i);
         headCell.setCellValue("数量合计");
-        headCell = headRow.createCell(6 + i);
+        headCell = headRow.createCell(5 + i);
         headCell.setCellValue("金额（未税，小数点后4位）");
-        headCell = headRow.createCell(7 + i);
+        headCell = headRow.createCell(6 + i);
         headCell.setCellValue("税率");
-        headCell = headRow.createCell(8 + i);
+        headCell = headRow.createCell(7 + i);
         headCell.setCellValue("税额（小数点后4位）");
-        headCell = headRow.createCell(9 + i);
+        headCell = headRow.createCell(8 + i);
         headCell.setCellValue("金额（含税，小数点后4位）");
 
         int rowCnt = 3;
@@ -563,15 +530,15 @@ public class AccountHeadService {
             taxTotal += materialTotal * priceNoTax * taxRate;
             priceTotal += materialTotal * priceNoTax * (1.0 + taxRate);
 
-            XSSFCell cell = row.createCell(5 + dateIndex);
+            XSSFCell cell = row.createCell(4 + dateIndex);
             cell.setCellValue(materialTotal);
-            cell = row.createCell(6 + dateIndex);
+            cell = row.createCell(5 + dateIndex);
             cell.setCellValue(materialTotal * priceNoTax);
-            cell = row.createCell(7 + dateIndex);
+            cell = row.createCell(6 + dateIndex);
             cell.setCellValue(taxRate);
-            cell = row.createCell(8 + dateIndex);
+            cell = row.createCell(7 + dateIndex);
             cell.setCellValue(materialTotal * priceNoTax * taxRate);
-            cell = row.createCell(9 + dateIndex);
+            cell = row.createCell(8 + dateIndex);
             cell.setCellValue(materialTotal * priceNoTax * (1.0 + taxRate));
             rowCnt++;
         }
@@ -581,24 +548,53 @@ public class AccountHeadService {
         }
         XSSFCell cell = row.createCell(1);
         cell.setCellValue("合计");
-        cell = row.createCell(5 + i);
+        cell = row.createCell(4 + i);
         cell.setCellValue(amountTotal);
-        cell = row.createCell(6 + i);
+        cell = row.createCell(5 + i);
         cell.setCellValue(priceNoTaxTotal);
-        cell = row.createCell(8 + i);
+        cell = row.createCell(7 + i);
         cell.setCellValue(taxTotal);
-        cell = row.createCell(9 + i);
+        cell = row.createCell(8 + i);
         cell.setCellValue(priceTotal);
 
+        String accountNumber = "FK" + sequenceService.buildOnlyNumber();
         File path = new File("/opt/jshERP/upload" + File.separator + "statement" + File.separator);
         if (!path.exists()) {
             path.mkdirs();
         }
-        File statementFile = new File(path,  "a.xlsx");
+        File statementFile = new File(path,  accountNumber + ".xlsx");
         FileOutputStream outputStream = new FileOutputStream(statementFile);
         xssfWorkbook.write(outputStream);
         outputStream.close();
         xssfWorkbook.close();
+
+        AccountHead accountHead = new AccountHead();
+        accountHead.setCreator(userService.getCurrentUser().getId());
+        accountHead.setOrganId(supplier.getId());
+        accountHead.setTotalPrice(BigDecimal.valueOf(priceTotal));
+        accountHead.setBillNo(accountNumber);
+        accountHead.setBillTime(new Date());
+        accountHead.setType("供应商对账");
+        accountHead.setStatus("0");
+        accountHead.setDeleteFlag("0");
+        accountHead.setFileName("statement/" + accountNumber + ".xlsx");
+        accountHeadMapper.insertSelective(accountHead);
+        logger.info("XXXXX checkpoint 1");
+        //根据单据编号查询单据id
+        AccountHeadExample dhExample = new AccountHeadExample();
+        dhExample.createCriteria().andBillNoEqualTo(accountHead.getBillNo()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<AccountHead> list = accountHeadMapper.selectByExample(dhExample);
+        if(list != null) {
+            logger.info("XXXXX checkpoint 2");
+            Long headId = list.get(0).getId();
+            AccountItem accountItem = new AccountItem();
+            accountItem.setHeaderId(headId);
+            accountItem.setNeedDebt(BigDecimal.valueOf(priceTotal));
+            accountItem.setDeleteFlag("0");
+            /**处理单据子表信息*/
+            accountItemMapper.insertSelective(accountItem);
+            logger.info("XXXXX checkpoint 3");
+        }
     }
 
     private Set<Long> getImpactedBillIds(String rows) throws Exception {

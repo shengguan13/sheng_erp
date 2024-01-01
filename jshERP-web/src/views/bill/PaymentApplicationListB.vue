@@ -185,7 +185,7 @@
         queryParam: {
           billNo: "",
           searchMaterial: "",
-          type: "全部销售",
+          type: "客户对账",
           organId: "",
           creator: "",
           handsPersonId: "",

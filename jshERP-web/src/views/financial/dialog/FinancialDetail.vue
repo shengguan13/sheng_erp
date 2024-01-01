@@ -15,12 +15,8 @@
       <a-button v-if="financialType === '转账'" v-print="'#giroPrint'" ghost type="primary">打印</a-button>
       <a-button v-if="financialType === '收入'" v-print="'#itemInPrint'" ghost type="primary">打印</a-button>
       <a-button v-if="financialType === '支出'" v-print="'#itemOutPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '采购定金'" v-print="'#CGDJPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '采购付款'" v-print="'#CGFKPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '采购退款'" v-print="'#CGTKPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '销售定金'" v-print="'#XSDJPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '销售收款'" v-print="'#XSSKPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '销售退款'" v-print="'#XSTKPrint'" ghost type="primary">打印</a-button>
+      <a-button v-if="financialType === '供应商对账'" v-print="'#GYSDZPrint'" ghost type="primary">打印</a-button>
+      <a-button v-if="financialType === '客户对账'" v-print="'#KHDZPrint'" ghost type="primary">打印</a-button>
       <!--反审核-->
       <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
@@ -257,9 +253,9 @@
           </a-row>
         </section>
       </template>
-      <!--采购定金-->
-      <template v-if="financialType === '采购定金'">
-        <section ref="print" id="CGDJPrint">
+      <!--供应商对账-->
+      <template v-if="financialType === '供应商对账'">
+        <section ref="print" id="GYSDZPrint">
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
@@ -289,7 +285,7 @@
             bordered
             rowKey="id"
             :pagination="false"
-            :columns="CGDJColumns"
+            :columns="GYSDZColumns"
             :dataSource="dataSource">
           </a-table>
           <a-row class="form-row" :gutter="24">
@@ -306,21 +302,21 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请定金">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="应付金额">
                 {{model.totalPrice}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付定金">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
                 {{model.changeAmount}}
               </a-form-item>
             </a-col>
           </a-row>
         </section>
       </template>
-      <!--采购付款-->
-      <template v-if="financialType === '采购付款'">
-        <section ref="print" id="CGFKPrint">
+      <!--客户对账-->
+      <template v-if="financialType === '客户对账'">
+        <section ref="print" id="KHDZPrint">
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
@@ -350,68 +346,7 @@
             bordered
             rowKey="id"
             :pagination="false"
-            :columns="CGFKColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请付款">
-                {{model.totalPrice}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际付款">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </section>
-      </template>
-      <!--采购退款-->
-      <template v-if="financialType === '采购退款'">
-        <section ref="print" id="CGTKPrint">
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="CGTKColumns"
+            :columns="KHDZColumns"
             :dataSource="dataSource">
           </a-table>
           <a-row class="form-row" :gutter="24">
@@ -428,195 +363,12 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="提交退款">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="应收金额">
                 {{model.totalPrice}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实收退款">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </section>
-      </template>
-      <!--销售定金-->
-      <template v-if="financialType === '销售定金'">
-        <section ref="print" id="XSDJPrint">
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="XSDJColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="提交定金">
-                {{model.totalPrice}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实收定金">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </section>
-      </template>
-      <!--销售收款-->
-      <template v-if="financialType === '销售收款'">
-        <section ref="print" id="XSSKPrint">
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="XSSKColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="提交收款">
-                {{model.totalPrice}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际收款">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </section>
-      </template>
-      <!--销售退款-->
-      <template v-if="financialType === '销售退款'">
-        <section ref="print" id="XSTKPrint">
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="XSTKColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请退款">
-                {{model.totalPrice}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付退款">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实收金额">
                 {{model.changeAmount}}
               </a-form-item>
             </a-col>
@@ -697,7 +449,7 @@
           { title: '金额',dataIndex: 'eachAmount', width: '30%'},
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
-        CGDJColumns: [
+        GYSDZColumns: [
           {
             title: '采购单据编号', dataIndex: 'billNumber', width: '20%'
           },
@@ -705,44 +457,12 @@
           { title: '实付定金',dataIndex: 'finishDebt', width: '10%'},
           { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
-        CGFKColumns: [
-          {
-            title: '采购单据编号', dataIndex: 'billNumber', width: '20%'
-          },
-          { title: '申请付款',dataIndex: 'needDebt', width: '10%'},
-          { title: '实付款',dataIndex: 'finishDebt', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '20%'}
-        ],
-        CGTKColumns: [
-          {
-            title: '采购单据编号', dataIndex: 'billNumber', width: '20%'
-          },
-          { title: '提交退款',dataIndex: 'needDebt', width: '10%'},
-          { title: '实收退款',dataIndex: 'finishDebt', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '20%'}
-        ],
-        XSDJColumns: [
+        KHDZColumns: [
           {
             title: '销售单据编号', dataIndex: 'billNumber', width: '20%'
           },
           { title: '提交定金',dataIndex: 'needDebt', width: '10%'},
           { title: '实收定金',dataIndex: 'finishDebt', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '20%'}
-        ],
-        XSSKColumns: [
-          {
-            title: '销售单据编号', dataIndex: 'billNumber', width: '20%'
-          },
-          { title: '提交收款',dataIndex: 'needDebt', width: '10%'},
-          { title: '实际收款',dataIndex: 'finishDebt', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '20%'}
-        ],
-        XSTKColumns: [
-          {
-            title: '销售单据编号', dataIndex: 'billNumber', width: '20%'
-          },
-          { title: '申请退款',dataIndex: 'needDebt', width: '10%'},
-          { title: '实付退款',dataIndex: 'finishDebt', width: '10%'},
           { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
       }
