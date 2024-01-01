@@ -28,13 +28,8 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="款项种类">
-              <a-select placeholder="选择款项种类" v-decorator="[ 'type', validatorRules.type ]"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option value="销售定金">收定金</a-select-option>
-                <a-select-option value="销售收款">收款</a-select-option>
-                <a-select-option value="销售退款">退款</a-select-option>
-              </a-select>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据类型">
+              <a-input placeholder="客户对账" v-decorator="['type', {initialValue:'客户对账'}]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -46,16 +41,6 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'billNo' ]" :readOnly="true"/>
             </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
-            <!-- 操作按钮 -->
-            <div class="action-button">
-              <a-button type="primary" icon="plus" @click="handleClickAdd">选择单据</a-button>
-              <span class="gap"></span>
-              <a-button icon="minus" @click="handleClear">清空</a-button>
-            </div>
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
@@ -96,7 +81,6 @@
         </a-row>
       </a-form>
     </a-spin>
-    <purchase-and-sale-list-b ref="purchaseAndSaleListB" @ok="purchaseAndSaleListOk"></purchase-and-sale-list-b>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
@@ -104,7 +88,6 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import PurchaseAndSaleListB from '../dialog/PurchaseAndSaleListB'
   import CustomerModal from '../../system/modules/CustomerModal'
   import AccountModal from '../../system/modules/AccountModal'
   import PersonModal from '../../system/modules/PersonModal'
@@ -153,11 +136,9 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '销售单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
-            { title: '申请金额',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
-              validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
-            { title: '备注',key: 'remark', width: '20%', type: FormTypes.input, placeholder: '请输入${title}'}
+            { title: '出库单号',key: 'billNumber',width: '30%', type: FormTypes.input, readonly: true },
+            { title: '出库日期',key: 'operTimeStr',width: '30%', type: FormTypes.input, readonly: true },
+            { title: '备注',key: 'remark', width: '40%', type: FormTypes.input, placeholder: '请输入${title}'}
           ]
         },
         confirmLoading: false,
@@ -236,18 +217,6 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
-      },
-      handleClickAdd() {
-        let organId = this.form.getFieldValue('organId')
-        if(organId){
-          this.$refs.purchaseAndSaleListB.show(organId, '其它', '销售订单', '客户', "")
-          this.$refs.purchaseAndSaleListB.title = "选择销售订单（已审核的订单才能申请款项）"
-        } else {
-          this.$message.warning('请选择客户！');
-        }
-      },
-      handleClear() {
-        this.accountTable.dataSource = []
       }
     }
   }

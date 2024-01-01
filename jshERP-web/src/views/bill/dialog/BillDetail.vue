@@ -1364,7 +1364,7 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '下单数量', dataIndex: 'operNumber'},
           { title: '已入库', dataIndex: 'finishNumber'},
-          { title: '金额', dataIndex: 'allPrice'},
+          { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseInColumns: [

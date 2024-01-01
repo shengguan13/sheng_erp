@@ -119,8 +119,8 @@
   import BillDetail from '../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
-  import {getAction} from '@/api/manage'
-  import {findBySelectOrgan, findBillDetailByNumber} from '@/api/api'
+  import { getAction } from '@/api/manage'
+  import { findBySelectOrgan, findBillDetailByNumber } from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'

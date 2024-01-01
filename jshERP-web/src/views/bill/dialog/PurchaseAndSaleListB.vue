@@ -126,13 +126,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
-          { title: '制单人', dataIndex: 'userName',width:70, ellipsis:true},
-          { title: '已提交定金', dataIndex: 'changeAmount',width:70, ellipsis:true},
-          { title: '已收到定金', dataIndex: 'backAmount',width:70, ellipsis:true},
-          { title: '已提交收款', dataIndex: 'discount',width:70, ellipsis:true},
-          { title: '已收款', dataIndex: 'discountMoney',width:70, ellipsis:true},
-          { title: '已申请退款', dataIndex: 'otherMoney',width:70, ellipsis:true},
-          { title: '已退款', dataIndex: 'deposit',width:70, ellipsis:true}
+          { title: '制单人', dataIndex: 'userName',width:70, ellipsis:true}
         ],
         url: {
           list: "/depotHead/saleOutList"

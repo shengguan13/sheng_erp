@@ -579,22 +579,6 @@ public class AccountHeadService {
         accountHead.setDeleteFlag("0");
         accountHead.setFileName("statement/" + accountNumber + ".xlsx");
         accountHeadMapper.insertSelective(accountHead);
-        logger.info("XXXXX checkpoint 1");
-        //根据单据编号查询单据id
-        AccountHeadExample dhExample = new AccountHeadExample();
-        dhExample.createCriteria().andBillNoEqualTo(accountHead.getBillNo()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<AccountHead> list = accountHeadMapper.selectByExample(dhExample);
-        if(list != null) {
-            logger.info("XXXXX checkpoint 2");
-            Long headId = list.get(0).getId();
-            AccountItem accountItem = new AccountItem();
-            accountItem.setHeaderId(headId);
-            accountItem.setNeedDebt(BigDecimal.valueOf(priceTotal));
-            accountItem.setDeleteFlag("0");
-            /**处理单据子表信息*/
-            accountItemMapper.insertSelective(accountItem);
-            logger.info("XXXXX checkpoint 3");
-        }
     }
 
     private Set<Long> getImpactedBillIds(String rows) throws Exception {

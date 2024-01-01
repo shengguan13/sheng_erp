@@ -111,12 +111,12 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计应付">
-              <a-input placeholder="合计应付" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
+              <a-input placeholder="合计应付" v-decorator.trim="[ 'totalPrice' ]" />
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际付款">
-              <a-input placeholder="实际付款" v-decorator.trim="[ 'changeAmount' ]" :readOnly="true"/>
+              <a-input placeholder="实际付款" v-decorator.trim="[ 'changeAmount' ]" />
             </a-form-item>
           </a-col>
         </a-row>

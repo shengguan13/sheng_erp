@@ -44,16 +44,6 @@
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
-            <!-- 操作按钮 -->
-            <div class="action-button">
-              <a-button type="primary" icon="plus" @click="handleClickAdd">选择采购入库</a-button>
-              <span class="gap"></span>
-              <a-button icon="minus" @click="handleClear">清空</a-button>
-            </div>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
           <a-col :span="24">
             <j-editable-table
               :ref="refKeys[0]"
@@ -78,7 +68,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计金额">
-              <a-input placeholder="请输入合计付款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
+              <a-input placeholder="请输入合计付款" v-decorator.trim="[ 'totalPrice' ]" />
             </a-form-item>
           </a-col>
         </a-row>
@@ -91,7 +81,6 @@
         </a-row>
       </a-form>
     </a-spin>
-    <purchase-and-sale-list ref="purchaseAndSaleList" @ok="purchaseAndSaleListOk"></purchase-and-sale-list>
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
@@ -99,7 +88,6 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import PurchaseAndSaleList from '../dialog/PurchaseAndSaleList'
   import VendorModal from '../../system/modules/VendorModal'
   import AccountModal from '../../system/modules/AccountModal'
   import PersonModal from '../../system/modules/PersonModal'
@@ -112,7 +100,6 @@
     name: "PaymentApplicationModal",
     mixins: [JEditableTableMixin, PaymentApplicationModalMixin],
     components: {
-      PurchaseAndSaleList,
       VendorModal,
       AccountModal,
       PersonModal,
@@ -148,12 +135,9 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '采购单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
-            { title: '申请金额',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
-              validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
-            { title: '入库单日期',key: 'operTimeStr',width: '20%', type: FormTypes.input, readonly: true },
-            { title: '备注',key: 'remark', width: '20%', type: FormTypes.input, placeholder: '请输入${title}'}
+            { title: '入库单号',key: 'billNumber',width: '30%', type: FormTypes.input, readonly: true },
+            { title: '入库日期',key: 'operTimeStr',width: '30%', type: FormTypes.input, readonly: true },
+            { title: '备注',key: 'remark', width: '40%', type: FormTypes.input, placeholder: '请输入${title}'}
           ]
         },
         confirmLoading: false,
@@ -229,18 +213,6 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
-      },
-      handleClickAdd() {
-        let organId = this.form.getFieldValue('organId')
-        if(organId){
-          this.$refs.purchaseAndSaleList.show(organId, '其它', '采购订单', '供应商', "")
-          this.$refs.purchaseAndSaleList.title = "选择采购订单（已审核的订单才能申请款项）"
-        } else {
-          this.$message.warning('请选择供应商！');
-        }
-      },
-      handleClear() {
-        this.accountTable.dataSource = []
       }
     }
   }

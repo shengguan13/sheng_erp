@@ -451,19 +451,19 @@
         ],
         GYSDZColumns: [
           {
-            title: '采购单据编号', dataIndex: 'billNumber', width: '20%'
+            title: '入库单号', dataIndex: 'billNumber', width: '30%',
+            scopedSlots: { customRender: 'numberCustomRender' },
           },
-          { title: '申请定金',dataIndex: 'needDebt', width: '10%'},
-          { title: '实付定金',dataIndex: 'finishDebt', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '20%'}
+          { title: '入库日期',dataIndex: 'operTime', width: '30%'},
+          { title: '备注',dataIndex: 'remark', width: '40%'}
         ],
         KHDZColumns: [
           {
-            title: '销售单据编号', dataIndex: 'billNumber', width: '20%'
+            title: '出库单号', dataIndex: 'billNumber', width: '30%',
+            scopedSlots: { customRender: 'numberCustomRender' },
           },
-          { title: '提交定金',dataIndex: 'needDebt', width: '10%'},
-          { title: '实收定金',dataIndex: 'finishDebt', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '20%'}
+          { title: '出库日期',dataIndex: 'operTime', width: '30%'},
+          { title: '备注',dataIndex: 'remark', width: '40%'}
         ],
       }
     },

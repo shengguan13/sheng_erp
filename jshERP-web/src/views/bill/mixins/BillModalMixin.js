@@ -477,7 +477,58 @@ export const BillModalMixin = {
             }
           });
           break;
+        case "operNumber":
+          operNumber = value-0
+          taxRate = row.taxRate-0 //税率
+          unitPrice = row.unitPrice-0 //单价
+          allPrice = (unitPrice*operNumber).toFixed(2)-0
+          taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+          taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+          target.setValues([{rowKey: row.id, values: {allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+          target.recalcAllStatisticsColumns()
+          that.autoChangePrice(target)
+          break;
+        case "unitPrice":
+          operNumber = row.operNumber-0 //数量
+          unitPrice = value-0 //单价
+          taxRate = row.taxRate-0 //税率
+          allPrice = (unitPrice*operNumber).toFixed(2)-0
+          taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+          taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+          target.setValues([{rowKey: row.id, values: {allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+          target.recalcAllStatisticsColumns()
+          that.autoChangePrice(target)
+          break;
         case "allPrice":
+          operNumber = row.operNumber-0 //数量
+          taxRate = row.taxRate-0 //税率
+          allPrice = value-0
+          unitPrice = (allPrice/operNumber).toFixed(2)-0 //单价
+          taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+          taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+          target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+          target.recalcAllStatisticsColumns()
+          that.autoChangePrice(target)
+          break;
+        case "taxRate":
+          operNumber = row.operNumber-0 //数量
+          allPrice = row.allPrice-0
+          unitPrice = row.unitPrice-0
+          taxRate = value-0 //税率
+          taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+          taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+          target.setValues([{rowKey: row.id, values: {taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+          target.recalcAllStatisticsColumns()
+          that.autoChangePrice(target)
+          break;
+        case "taxLastMoney":
+          operNumber = row.operNumber-0 //数量
+          taxLastMoney = value-0
+          taxRate = row.taxRate-0 //税率
+          unitPrice = (taxLastMoney/operNumber/(1+taxRate*0.01)).toFixed(2)-0
+          allPrice = (unitPrice*operNumber).toFixed(2)-0
+          taxMoney =(taxLastMoney-allPrice).toFixed(2)-0
+          target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, allPrice: allPrice, taxMoney: taxMoney}}])
           target.recalcAllStatisticsColumns()
           that.autoChangePrice(target)
           break;
@@ -543,9 +594,10 @@ export const BillModalMixin = {
     },
     //改变优惠、本次付款、欠款的值
     autoChangePrice(target) {
+      let allTaxLastMoney = target.statisticsColumns.taxLastMoney-0
       let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
       let deposit = this.form.getFieldValue('deposit')
-      let discountLastMoney = target.statisticsColumns.allPrice-0
+      let discountLastMoney = allTaxLastMoney
       let changeAmountNew = (discountLastMoney + otherMoney).toFixed(2)-0
       if(deposit) {
         changeAmountNew = (changeAmountNew - deposit).toFixed(2)-0
