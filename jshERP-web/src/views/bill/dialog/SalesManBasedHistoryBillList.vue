@@ -186,8 +186,6 @@
         this.loadData(1)
       },
       loadSalesMan(salesManType, salesMan) {
-        console.log("salesManType: " + salesManType)
-        console.log("salesMan: " + salesMan)
         if (salesManType === "销售人员") {
           getPersonByNumType({type:1}).then((res)=>{
             if(res) {
@@ -200,7 +198,6 @@
           })
         } else if (salesManType === "领料人员") {
           getPersonByNumType({type:2}).then((res)=>{
-            console.log("res: " + JSON.stringify(res))
             if(res) {
               this.salesManList = res
               if(salesMan) {

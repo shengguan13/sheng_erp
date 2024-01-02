@@ -512,7 +512,6 @@ public class MaterialService {
 
                 String enabled = "1"; //状态
                 String remark = ""; //备注
-
 //                名称为空
 //                if(StringUtil.isEmpty(name)) {
 //                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
@@ -566,7 +565,6 @@ public class MaterialService {
                 m.setUnit(unit);
                 m.setMaterialExObj(materialExObj);
                 m.setEnabled("1".equals(enabled));
-
                 // -------------------------------------------------------------
                 m.setStockMap(new HashMap<>());
                 //m.setStockMap(getStockMapCache(src, depotCount, depotMap, i));

@@ -154,14 +154,14 @@
             scopedSlots: { customRender: 'action' }
           },
           {title: '编码', dataIndex: 'mBarCode', width: 100, fixed: 'left'},
-          {title: '名称', dataIndex: 'name', width: 150, fixed: 'left'},
-          {title: '型号', dataIndex: 'colorCode'},
-          {title: '规格', dataIndex: 'model'},
-          {title: '颜色', dataIndex: 'color'},
-          {title: '类别', dataIndex: 'categoryName'},
-          {title: '单位', dataIndex: 'unitName'},
-          {title: '初始库存', dataIndex: 'initialStock', sorter: (a, b) => a.initialStock - b.initialStock},
-          {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock,
+          {title: '名称', dataIndex: 'name', width: 120, fixed: 'left'},
+          {title: '规格', dataIndex: 'model', width: 100},
+          {title: '颜色', dataIndex: 'color', width: 50},
+          {title: '颜色代码', dataIndex: 'colorCode', width: 60},
+          {title: '类别', dataIndex: 'categoryName', width: 50},
+          {title: '单位', dataIndex: 'unitName', width: 40},
+          {title: '初始库存', dataIndex: 'initialStock', width: 60, sorter: (a, b) => a.initialStock - b.initialStock},
+          {title: '库存', dataIndex: 'currentStock', width: 60, sorter: (a, b) => a.currentStock - b.currentStock,
             scopedSlots: { customRender: 'customRenderStock' }
           }
         ],

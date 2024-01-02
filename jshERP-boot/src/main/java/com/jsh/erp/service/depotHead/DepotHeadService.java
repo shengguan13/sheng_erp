@@ -1449,13 +1449,13 @@ public class DepotHeadService {
                     }
                 }
 
-                if (!orderNumberToDepotItems.containsKey(purchaseOrderId)) {
-                    orderNumberToDepotItems.put(purchaseOrderId, new HashMap<>());
+                if (!orderNumberToDepotItems.containsKey(headNumber)) {
+                    orderNumberToDepotItems.put(headNumber, new HashMap<>());
                 }
-                orderNumberToDepotItems.get(purchaseOrderId).put(barCode, depotItem);
+                orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
 
-                if (!orderNumberToDepotHead.containsKey(purchaseOrderId)) {
-                    orderNumberToDepotHead.put(purchaseOrderId, depotHead);
+                if (!orderNumberToDepotHead.containsKey(headNumber)) {
+                    orderNumberToDepotHead.put(headNumber, depotHead);
                 }
             }
             importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);

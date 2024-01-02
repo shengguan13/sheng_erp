@@ -263,7 +263,6 @@ export default {
     nodeModalClose() {
     },
     hide() {
-      console.log(111)
       this.visible = false
     },
     onCheck(checkedKeys, info) {

@@ -177,7 +177,6 @@
         columnsDetail: [
           { title: '编码', dataIndex: 'barCode',width:120},
           { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
-          { title: '型号', dataIndex: 'colorCode',width:100, ellipsis:true},
           { title: '规格', dataIndex: 'model',width:150, ellipsis:true},
           { title: '数量', dataIndex: 'operNumber',width:80},
           { title: '单位', dataIndex: 'unit',width:50},
@@ -199,7 +198,6 @@
     },
     methods: {
       show(type, subType, organType, status) {
-        console.log("salesManBasedLinkBillList show()")
         this.selectType = 'list'
         this.showType = 'basic'
         this.queryParam.type = type
@@ -212,7 +210,6 @@
         this.loadData(1)
       },
       myHandleDetail(record) {
-        console.log("salesManBasedLinkBillList myHandleDetail()")
         findBillDetailByNumber({ number: record.number }).then((res) => {
           if (res && res.code === 200) {
             let type = res.data.depotHeadType
@@ -241,22 +238,18 @@
           this.selectType = 'detail'
           this.title = "选择单据明细"
           if(this.selectBillRows && this.selectBillRows.length>0) {
-            console.log("1st select")
             let record = this.selectBillRows[0]
             this.linkNumber = record.number
             this.organId = record.organId
             this.salesMan = record.salesMan
-            console.log("record in link: " + JSON.stringify(record))
             this.discountMoney = record.discountMoney
             this.deposit = record.changeAmount - record.finishDeposit
             this.remark = record.remark
             this.loadDetailData(1)
           }
         } else {
-          console.log("2nd select")
           if(this.selectedDetailRowKeys.length) {
             this.getSelectBillDetailRows()
-            console.log("this.salesMan: " + this.salesMan)
             this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.salesMan, this.discountMoney, this.deposit, this.remark)
             this.close()
           } else {
@@ -309,7 +302,6 @@
         this.queryParam.endTime=dateString[1];
       },
       onDateOk(value) {
-        console.log(value);
       },
       searchReset() {
         this.queryParam = {

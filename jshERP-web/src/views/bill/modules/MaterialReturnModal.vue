@@ -338,7 +338,6 @@
         // TODO:
         //for(let j=0; j<personList.options.length; j++) {
         //  let person = personList.options[j];
-        //  console.log("person: " + JSON.stringify(person))
         //  if (person.value === salesMan) {
         //    this.salesManReadOnly = person.text
         //  }

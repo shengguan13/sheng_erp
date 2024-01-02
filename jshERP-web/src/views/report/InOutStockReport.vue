@@ -200,7 +200,6 @@
         })
       },
       onChange: function (value, dateString) {
-        console.log(dateString);
         this.queryParam.monthTime=dateString;
       },
       searchQuery() {

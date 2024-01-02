@@ -279,15 +279,6 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="GYSDZColumns"
-            :dataSource="dataSource">
-          </a-table>
           <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -340,15 +331,6 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="KHDZColumns"
-            :dataSource="dataSource">
-          </a-table>
           <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -448,22 +430,6 @@
           { title: '支出项目',dataIndex: 'inOutItemName',width: '30%'},
           { title: '金额',dataIndex: 'eachAmount', width: '30%'},
           { title: '备注',dataIndex: 'remark', width: '30%'}
-        ],
-        GYSDZColumns: [
-          {
-            title: '入库单号', dataIndex: 'billNumber', width: '30%',
-            scopedSlots: { customRender: 'numberCustomRender' },
-          },
-          { title: '入库日期',dataIndex: 'operTime', width: '30%'},
-          { title: '备注',dataIndex: 'remark', width: '40%'}
-        ],
-        KHDZColumns: [
-          {
-            title: '出库单号', dataIndex: 'billNumber', width: '30%',
-            scopedSlots: { customRender: 'numberCustomRender' },
-          },
-          { title: '出库日期',dataIndex: 'operTime', width: '30%'},
-          { title: '备注',dataIndex: 'remark', width: '40%'}
         ],
       }
     },
