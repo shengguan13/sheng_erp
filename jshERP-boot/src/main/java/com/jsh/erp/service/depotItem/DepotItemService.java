@@ -16,6 +16,8 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
+import com.jsh.erp.service.qrCode.QrCodeUtil;
+import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -58,6 +61,8 @@ public class DepotItemService {
     private DepotHeadMapper depotHeadMapper;
     @Resource
     private DepotHeadMapperEx depotHeadMapperEx;
+    @Resource
+    private SupplierService supplierService;
     @Resource
     private UserService userService;
     @Resource
@@ -584,6 +589,7 @@ public class DepotItemService {
         //删除单据的明细
         deleteDepotItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
+        StringBuilder fileListSb = new StringBuilder();
         if (null != rowArr && rowArr.size()>0) {
             //针对组装单、拆卸单校验是否存在组合件和普通子件
             checkAssembleWithMaterialType(rowArr, depotHead.getSubType());
@@ -777,7 +783,7 @@ public class DepotItemService {
                     if (BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
                         if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
                             List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
-                                    null, null, depotItem.getDepotId(), rowObj.getString("barCode"), depotItem.getBatchNumber());
+                                    null, null, depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
                             if (batchNumberList.size() != 1 || batchNumberList.get(0).getTotalNum().compareTo(depotItem.getOperNumber()) < 0) {
                                 throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
                                         String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, depotItem.getBatchNumber()));
@@ -787,7 +793,7 @@ public class DepotItemService {
                     //当出库类型不是调拨时，根据先入先出自动填充批号
                     else {
                         List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
-                                null, null, depotItem.getDepotId(), rowObj.getString("barCode"), null);
+                                null, null, depotItem.getDepotId(), barCode, null);
                         if (batchNumberList.size() == 0) {
                             throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
                                     String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, depotItem.getBatchNumber()));
@@ -850,10 +856,78 @@ public class DepotItemService {
                         }
                     }
                 }
+                StringBuilder contentSb = new StringBuilder();
+                if ("入库".equals(depotHead.getType()) && ("采购".equals(depotHead.getSubType()) || "生产".equals(depotHead.getSubType()))) {
+                    contentSb.append("物料名称：" + material.getName() + "\n");
+                    contentSb.append("物料规格：" + material.getModel() + "\n");
+                    contentSb.append("颜色/颜色代码：" + material.getColor() + "/" + material.getColorCode() + "\n");
+                    contentSb.append("入库批号：" + depotItem.getBatchNumber() + "\n\n");
+                    if ("采购".equals(depotHead.getSubType())) {
+                        if (depotHead.getLinkNumber() != null && !"".equals(depotHead.getLinkNumber())) {
+                            DepotHead po = depotHeadService.getDepotHead(depotHead.getLinkNumber());
+                            contentSb.append("采购订单：" + po.getNumber() + "\n");
+                            contentSb.append("采购订单日期：" + po.getOperTime() + "\n");
+                            if (depotHead.getOrganId() != null) {
+                                Supplier supplier = supplierService.getSupplier(depotHead.getOrganId());
+                                contentSb.append("供应商：" + supplier.getSupplier() + "\n");
+                            }
+                        }
+                    } else if ("生产".equals(depotHead.getSubType())) {
+                        if (depotHead.getLinkNumber() != null && !"".equals(depotHead.getLinkNumber())) {
+                            DepotHead order = depotHeadService.getDepotHead(depotHead.getLinkNumber());
+                            contentSb.append("生产单号：" + order.getNumber() + "\n");
+                            contentSb.append("生产设备：" + "\n");
+                            contentSb.append("生产负责人员：" + "\n");
+                            contentSb.append("质量负责人员：" + "\n");
+                            contentSb.append("生产日期：" + order.getPlanStartTime() + "\n\n");
+                            List<DepotHead> pickList = depotHeadService.getBillListByLinkNumber(order.getNumber());
+                            List<DepotItem> pickDetailList = new ArrayList<>();
+                            Map<String, DepotHead> pickIdToPickMap = new HashMap<>();
+                            for (DepotHead pick : pickList) {
+                                if ("出库".equals(pick.getType()) && "领料".equals(pick.getSubType())) {
+                                    pickIdToPickMap.put(pick.getId().toString(), pick);
+                                    pickDetailList.addAll(getListByHeaderId(pick.getId()));
+                                }
+                            }
+                            for (DepotItem pickDetail : pickDetailList) {
+                                List<MaterialVo4Unit> pickMaterialList = materialService.getMaterialByMeId(pickDetail.getMaterialExtendId());
+                                if (pickMaterialList.size() > 0) {
+                                    MaterialVo4Unit m = pickMaterialList.get(0);
+                                    contentSb.append("领料详情：" + m.getmBarCode() + "-" + m.getName() + "，批号：" + pickDetail.getBatchNumber() + "\n");
+                                }
+                            }
+                        }
+                    }
+                    File file = new File("/opt/jshERP/upload" + File.separator + "bill" + File.separator
+                            + depotHead.getNumber() + File.separator);
+                    QrCodeUtil.createCodeToFile(contentSb.toString(), file, barCode + "-" + material.getName());
+                    if (i == 0) {
+                        fileListSb.append("bill" + File.separator + depotHead.getNumber() + File.separator + barCode + "-" + material.getName() + ".png");
+                    } else {
+                        fileListSb.append(",bill" + File.separator + depotHead.getNumber() + File.separator + barCode + "-" + material.getName() + ".png");
+                    }
+                }
                 //更新当前库存
                 updateCurrentStock(depotItem);
                 //更新产品的价格
                 updateMaterialExtendPrice(materialExtend.getId(), depotHead.getSubType(), rowObj);
+            }
+            if (fileListSb.length() > 0) {
+                String fileList = "";
+                if (depotHead.getFileName() != null && !"".equals(depotHead.getFileName())) {
+                    fileList = depotHead.getFileName() + "," + fileListSb;
+                } else {
+                    fileList = fileListSb.toString();
+                }
+                DepotHead depotHeadFileList = new DepotHead();
+                depotHeadFileList.setFileName(fileList);
+                DepotHeadExample example = new DepotHeadExample();
+                example.createCriteria().andNumberEqualTo(depotHead.getNumber());
+                try{
+                    depotHeadMapper.updateByExampleSelective(depotHeadFileList, example);
+                }catch(Exception e){
+                    JshException.writeFail(logger, e);
+                }
             }
             //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产单（决定生产计划的状态）、生产入库（决定生产单的状态）、退料入库（决定领料出库的状态）
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
@@ -933,10 +1007,7 @@ public class DepotItemService {
         try{
             depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
     }
 

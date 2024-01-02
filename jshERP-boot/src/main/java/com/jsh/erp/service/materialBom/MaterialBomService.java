@@ -227,13 +227,11 @@ public class MaterialBomService {
                 String partNo = ExcelUtils.getContent(src, i, 1); //规格
                 String barCode = ExcelUtils.getContent(src, i, 2); //编码
 
-                String project = ExcelUtils.getContent(src, i, 16); //项目
-                String department = ExcelUtils.getContent(src, i, 19); //部门
+                String project = ExcelUtils.getContent(src, i, 13); //项目
+                String department = ExcelUtils.getContent(src, i, 28); //部门
                 String source = ExcelUtils.getContent(src, i, 14); //物料来源
-                String processUsage = ExcelUtils.getContent(src, i, 13); //用量
-                String unit = ExcelUtils.getContent(src, i, 8); //单位
-                String weight = ExcelUtils.getContent(src, i, 12); //重量（kg）
-                //String remark = ExcelUtils.getContent(src, i, 17); //备注
+                String processUsage = ExcelUtils.getContent(src, i, 15); //用量
+                String unit = ExcelUtils.getContent(src, i, 10); //单位
 
                 // 批量校验excel中有无重复BOM
                 batchCheckExistMaterialBomByParam(bomList, process, project, barCode);

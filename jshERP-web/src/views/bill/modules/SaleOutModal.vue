@@ -306,11 +306,10 @@
           } else {
             this.manyAccountBtnStatus = false
           }
-          this.personList.value = this.model.salesMan
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
-              'discountLastMoney','otherMoney','accountId','deposit','changeAmount','debt','salesMan'))
+              'discountLastMoney','otherMoney','accountId','deposit','changeAmount','debt'))
           });
           // 加载子表数据
           let params = {
@@ -329,7 +328,6 @@
         }
         this.initSystemConfig()
         this.initCustomer()
-        this.initSalesman()
         this.initDepot()
         this.initAccount()
       },
@@ -358,7 +356,6 @@
         if(this.model.id){
           billMain.id = this.model.id
         }
-        billMain.salesMan = this.personList.value
         billMain.status = this.billStatus
         return {
           info: JSON.stringify(billMain),

@@ -218,11 +218,6 @@
               { required: true, message: '请输入单据日期！' }
             ]
           },
-          salesMan:{
-            rules: [
-              { required: true, message: '请选择领料人员！' }
-            ]
-          },
           linkNumber:{
             rules: [
               { required: true, message: '请选择关联生产单！' }
@@ -278,7 +273,6 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initDepotMan()
         this.initDepot()
         this.initAccount()
       },
@@ -368,6 +362,12 @@
                   'remark': remark,
                   'orderStatus': this.orderStatusStr,
                 })
+              })
+            } else {
+              this.form.setFieldsValue({
+                'linkNumber': linkNumber,
+                'remark': remark,
+                'orderStatus': this.orderStatusStr,
               })
             }
           })

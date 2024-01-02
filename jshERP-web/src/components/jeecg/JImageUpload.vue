@@ -19,7 +19,7 @@
       <div class="ant-upload-text">{{ text }}</div>
     </div>
     <a-modal :visible="previewVisible" :width="1000" :footer="null" @cancel="handleCancel()">
-      <img alt="example" style="width: 100%" :src="previewImage"/>
+      <img alt="example" style="width: 60%" :src="previewImage"/>
     </a-modal>
   </a-upload>
 </template>
