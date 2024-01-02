@@ -101,7 +101,7 @@
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "RepairOutModal",
+    name: "DefectOutModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       DepotModal,
@@ -118,7 +118,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
-        prefixNo: 'FXCK',
+        prefixNo: 'BHGCK',
         defaultDepotId: '',
         fileList:[],
         model: {},
@@ -225,7 +225,7 @@
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
         billMain.type = '出库'
-        billMain.subType = '返修出库'
+        billMain.subType = '不合格出库'
         billMain.defaultNumber = billMain.number
         for(let item of detailArr){
           totalPrice += item.allPrice-0

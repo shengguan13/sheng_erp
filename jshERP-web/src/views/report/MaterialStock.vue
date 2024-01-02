@@ -145,16 +145,16 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
+            title: '#', dataIndex: 'rowIndex', width:60,
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '库存流水', dataIndex: 'action', align:"center", width: 100, fixed: 'left',
+          {title: '库存流水', dataIndex: 'action', width: 40,
             scopedSlots: { customRender: 'action' }
           },
-          {title: '编码', dataIndex: 'mBarCode', width: 100, fixed: 'left'},
-          {title: '名称', dataIndex: 'name', width: 120, fixed: 'left'},
+          {title: '编码', dataIndex: 'mBarCode', width: 80},
+          {title: '名称', dataIndex: 'name', width: 120},
           {title: '规格', dataIndex: 'model', width: 100},
           {title: '颜色', dataIndex: 'color', width: 50},
           {title: '颜色代码', dataIndex: 'colorCode', width: 60},

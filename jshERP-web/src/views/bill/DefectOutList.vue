@@ -78,7 +78,6 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -89,7 +88,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="用于返修入库。" slot="action">
+          <a-tooltip placement="left" title="用于不合格入库。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
@@ -109,7 +108,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '返修入库', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '不合格入库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -128,8 +127,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <repair-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></repair-out-modal>
-        <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
+        <defect-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></defect-out-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
@@ -137,20 +135,18 @@
 </template>
 <!--power by jishenghua-->
 <script>
-  import RepairOutModal from './modules/RepairOutModal'
+  import DefectOutModal from './modules/DefectOutModal'
   import BillDetail from './dialog/BillDetail'
-  import ImportFileModal from '@/components/tools/ImportFileModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "RepairOutList",
+    name: "DefectOutList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
-      RepairOutModal,
+      DefectOutModal,
       BillDetail,
-      ImportFileModal,
       JDate
     },
     data () {
@@ -160,7 +156,7 @@
           number: "",
           materialParam: "",
           type: "出库",
-          subType: "返修出库",
+          subType: "不合格出库",
           roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",
@@ -203,14 +199,10 @@
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
           batchSetStatusUrl: "/depotHead/batchSetStatus",
-          importExcelUrl: "/depotHead/importRepairOutExcel"
         }
       }
     },
     computed: {
-      importExcelUrl: function () {
-        return `${window._CONFIG['domianURL']}${this.url.importExcelUrl}`;
-      }
     },
     created() {
       this.initSystemConfig()
@@ -218,13 +210,6 @@
       this.initUser()
     },
     methods: {
-      handleImportXls() {
-        let importExcelUrl = this.url.importExcelUrl
-        let templateUrl = '/doc/goods_template.xls'
-        let templateName = '返修出库Excel模板[下载]'
-        this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
-        this.$refs.modalImportForm.title = "返修出库导入";
-      },
     }
   }
 </script>
