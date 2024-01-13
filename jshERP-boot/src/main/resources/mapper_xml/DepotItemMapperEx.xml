@@ -520,7 +520,7 @@
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
         m.other_field10 MOtherField10,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit,
-        m.color MColor, m.project MProject, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
+        m.color MColor, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
@@ -566,7 +566,7 @@
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
         m.other_field10 MOtherField10, concat_ws('', m.unit, u.basic_unit) MaterialUnit,
-        m.color MColor, m.project MProject, u.name unit_name
+        m.color MColor, u.name unit_name
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -645,7 +645,7 @@
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
         m.other_field10 MOtherField10,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit,
-        m.color MColor, m.project MProject, u.name unit_name
+        m.color MColor, u.name unit_name
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -971,7 +971,7 @@
 
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
         select m.id MId, m.name MName, me.bar_code, m.mat MMat, m.model MModel, m.color_code MColorCode,
-        m.color MColor,m.project MProject, m.other_field1 MOtherField1,m.other_field2 MOtherField2,
+        m.color MColor, m.other_field1 MOtherField1,m.other_field2 MOtherField2,
         m.other_field3 MOtherField3, m.other_field4 MOtherField4,m.other_field5 MOtherField5,
         m.other_field6 MOtherField6, m.other_field7 MOtherField7,m.other_field8 MOtherField8,
         m.other_field9 MOtherField9, m.other_field10 MOtherField10,

@@ -114,8 +114,8 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
-          {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
+          {title: '编码', dataIndex: 'barCode', width: 100},
+          {title: '名称', dataIndex: 'materialName', width: 150},
           {title: '型号', dataIndex: 'materialColorCode'},
           {title: '规格', dataIndex: 'materialModel'},
           {title: '扩展信息', dataIndex: 'materialOther', ellipsis:true},

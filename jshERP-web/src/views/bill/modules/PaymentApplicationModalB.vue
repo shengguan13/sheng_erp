@@ -100,7 +100,6 @@
     name: "PaymentApplicationModalB",
     mixins: [JEditableTableMixin, PaymentApplicationModalMixin],
     components: {
-      PurchaseAndSaleListB,
       CustomerModal,
       AccountModal,
       PersonModal,
