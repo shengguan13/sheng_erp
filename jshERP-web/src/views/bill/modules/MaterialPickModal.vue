@@ -198,10 +198,10 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
-            { title: '型号', key: 'colorCode', width: '7%', type: FormTypes.normal },
-            { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
+            { title: '型号', key: 'model', width: '7%', type: FormTypes.normal },
             { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
+            { title: '颜色代码', key: 'colorCode', width: '7%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,

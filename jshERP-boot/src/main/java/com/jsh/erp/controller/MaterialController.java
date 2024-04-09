@@ -362,8 +362,8 @@ public class MaterialController {
                     String[] objs = new String[100];
                     objs[0] = m.getmBarCode(); //编码
                     objs[1] = m.getName(); //名称
-                    objs[2] = m.getColorCode(); //型号
-                    objs[3] = m.getModel(); //规格
+                    objs[2] = m.getModel(); // 型号
+                    objs[3] = m.getColorCode(); //颜色代码
                     objs[4] = m.getUnit(); //单位
                     objs[5] = m.getColor(); //颜色
                     objs[6] = m.getWeight() == null ? "" : String.valueOf(m.getWeight()); //净重量（kg）

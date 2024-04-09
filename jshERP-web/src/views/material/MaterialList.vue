@@ -215,7 +215,7 @@
           {title: '产品编码', dataIndex: 'mBarCode', width: 100, scopedSlots: { customRender: 'customBarCode' }},
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '材质', dataIndex: 'mat', width: 40},
-          {title: '规格', dataIndex: 'model', width: 120},
+          {title: '型号', dataIndex: 'model', width: 120},
           {title: '颜色', dataIndex: 'color', width: 40},
           {title: '颜色代码', dataIndex: 'colorCode', width: 50},
           {title: '类别', dataIndex: 'categoryName', width: 50, ellipsis:true},

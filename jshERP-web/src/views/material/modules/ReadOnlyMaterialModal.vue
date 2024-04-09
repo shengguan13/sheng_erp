@@ -874,7 +874,7 @@
             this.mpShort.otherField4.name = mpList[i].anotherName
             this.mpShort.otherField4.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "可装设备") {
+          if (mpList[i].nativeName === "规格") {
             this.mpShort.otherField5.name = mpList[i].anotherName
             this.mpShort.otherField5.enabled = mpList[i].enabled
           }

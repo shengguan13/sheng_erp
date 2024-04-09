@@ -786,7 +786,7 @@ public class DepotItemService {
                                     null, null, depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
                             if (batchNumberList.size() != 1 || batchNumberList.get(0).getTotalNum().compareTo(depotItem.getOperNumber()) < 0) {
                                 throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
-                                        String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, depotItem.getBatchNumber()));
+                                        String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
                             }
                         }
                     }
@@ -796,14 +796,14 @@ public class DepotItemService {
                                 null, null, depotItem.getDepotId(), barCode, null);
                         if (batchNumberList.size() == 0) {
                             throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
-                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, depotItem.getBatchNumber()));
+                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
                         }
                         Optional<BigDecimal> total = batchNumberList.stream()
                                 .map(e -> e.getTotalNum())
                                 .reduce((a,b)->a.add(b));
                         if (!total.isPresent() || total.get().compareTo(depotItem.getOperNumber()) < 0) {
                             throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
-                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, depotItem.getBatchNumber()));
+                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
                         }
                         sortedByBatchNumber = batchNumberList.stream()
                                 .sorted(Comparator.comparing(DepotItemVoBatchNumberList::getOperTime))

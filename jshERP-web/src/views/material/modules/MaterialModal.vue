@@ -310,7 +310,7 @@
             {
               title: '编码', key: 'barCode', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' },
-                { pattern: /^[A-Z]+\.[a-z]+\.(0\d*|\d+)\.(0\d*|\d+)$/, message: '参考格式ZC.jj.01.007' },
+                //{ pattern: /^[A-Z]+\.[a-z]+\.(0\d*|\d+)\.(0\d*|\d+)$/, message: '参考格式ZC.jj.01.007' },
                 { handler: this.validateBarCode}]
             },
             {
@@ -871,7 +871,7 @@
             this.mpShort.otherField4.name = mpList[i].anotherName
             this.mpShort.otherField4.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "可装设备") {
+          if (mpList[i].nativeName === "规格") {
             this.mpShort.otherField5.name = mpList[i].anotherName
             this.mpShort.otherField5.enabled = mpList[i].enabled
           }

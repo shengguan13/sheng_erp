@@ -355,7 +355,7 @@ public class ExceptionConstants {
     public static final String MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG = "抱歉，EXCEL中存在重复的编码，具体编码为：%s";
     //批号库存不足
     public static final int BATCH_STOCK_NOT_ENOUGH_CODE = 80000025;
-    public static final String BATCH_STOCK_NOT_ENOUGH_MSG = "批号%s的库存不足";
+    public static final String BATCH_STOCK_NOT_ENOUGH_MSG = "产品编码%s批号%s的库存不足";
     //用量不为数字
     public static final int BOM_USAGE_ERROR_CODE = 8000026;
     public static final String BOM_USAGE_ERROR_MSG = "第%s行用量格式错误";

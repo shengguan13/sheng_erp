@@ -498,20 +498,44 @@ public class MaterialService {
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
             for (int i = 1; i < rightRows; i++) {
-                String barCode = ExcelUtils.getContent(src, i, 1); //物料编码
-                String name = ExcelUtils.getContent(src, i, 8); //名称
-                String model = ExcelUtils.getContent(src, i, 9); //规格
-                String color = ExcelUtils.getContent(src, i, 14); //颜色
-                String unit = ExcelUtils.getContent(src, i, 15); //单位
-                String mat = ExcelUtils.getContent(src, i, 11); //材质
-                String colorCode = ExcelUtils.getContent(src, i, 13); //颜色代码
-                String categoryName = ExcelUtils.getContent(src, i, 16); //分类
-                String expiryNum = ExcelUtils.getContent(src, i, 18); //保质期/月
-                String other1 = ExcelUtils.getContent(src, i, 10); //主壁厚
-                String other2 = ExcelUtils.getContent(src, i, 40); //模腔数
+                String barCode = ExcelUtils.getContent(src, i, 0); //物料编码
+                String category = ExcelUtils.getContent(src, i, 1); //分类
+                String categoryName = "";
+                try {
+                    if (category.contains("总成")) {
+                        categoryName = "总成";
+                    } else if (category.contains("半成品")) {
+                        categoryName = "半成品";
+                    } else if (category.contains("项目")) {
+                        categoryName = "项目";
+                    } else {
+                        String[] categoryList = category.split(",");
+                        categoryName = categoryList[0];
+                    }
+                } catch (Exception e) {
+
+                }
+                String name = ExcelUtils.getContent(src, i, 3); //名称
+                String model = ExcelUtils.getContent(src, i, 2); //型号
+                String color = ExcelUtils.getContent(src, i, 5); //颜色
+                String unit = ExcelUtils.getContent(src, i, 11); //单位
+                String mat = ExcelUtils.getContent(src, i, 7); //材质
+                String colorCode = ExcelUtils.getContent(src, i, 6); //颜色代码
+                BigDecimal weight = BigDecimal.ZERO;
+                String weightStr = ExcelUtils.getContent(src, i, 10); //重量
+                try {
+                    Double weightVal = Double.parseDouble(weightStr);
+                    weight = BigDecimal.valueOf(weightVal);
+                } catch (Exception e) {
+
+                }
+
+                String expiryNum = ""; //保质期/月
+                String other1 = ExcelUtils.getContent(src, i, 9); //主壁厚
+                String other2 = ExcelUtils.getContent(src, i, 13); //模腔数
                 String other3 = ""; //模具重量
-                String other4 = ExcelUtils.getContent(src, i, 42); //浇口重量
-                String other5 = ""; //可装设备
+                String other4 = ExcelUtils.getContent(src, i, 12); //浇口重量
+                String other5 = ExcelUtils.getContent(src, i, 8); //规格
 
                 String enabled = "1"; //状态
                 String remark = ""; //备注
@@ -532,6 +556,7 @@ public class MaterialService {
                 m.setColorCode(colorCode);
                 m.setModel(model);
                 m.setColor(color);
+                m.setWeight(weight);
                 m.setOtherField1(other1);
                 m.setOtherField2(other2);
                 m.setOtherField3(other3);
@@ -551,11 +576,11 @@ public class MaterialService {
                     }
                     m.setExpiryNum(Integer.parseInt(expiryNum));
                 }
-                //校验编码的格式
-                if(!StringUtil.checkBarCode(barCode)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
-                            String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
-                }
+//                校验编码的格式
+//                if(!StringUtil.checkBarCode(barCode)) {
+//                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
+//                            String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
+//                }
 //                批量校验excel中有无重复产品，是指名称、型号、规格、颜色、单位
 //                batchCheckExistMaterialListByParam(mList, name, other1, other2, mat, colorCode,
 //                        model, color, other4, unit, categoryId, other9);
@@ -1192,7 +1217,7 @@ public class MaterialService {
                 materialOther = materialOther +
                         ((m.getOtherField4() == null || m.getOtherField4().equals("")) ? "" : "\"" + mpArr[i] + "\":[" + m.getOtherField4() + "]");
             }
-            if (mpArr[i].equals("可装设备")) {
+            if (mpArr[i].equals("规格")) {
                 materialOther = materialOther +
                         ((m.getOtherField5() == null || m.getOtherField5().equals("")) ? "" : "\"" + mpArr[i] + "\":[" + m.getOtherField5() + "]");
             }

@@ -520,7 +520,7 @@ public class DepotItemController {
             if (mpArr[i].equals("浇口重量")) {
                 materialOther = materialOther + ((diEx.getMOtherField4() == null || diEx.getMOtherField4().equals("")) ? "" : "(" + diEx.getMOtherField4() + ")");
             }
-            if (mpArr[i].equals("可装设备")) {
+            if (mpArr[i].equals("规格")) {
                 materialOther = materialOther + ((diEx.getMOtherField5() == null || diEx.getMOtherField5().equals("")) ? "" : "(" + diEx.getMOtherField5() + ")");
             }
 //            if (mpArr[i].equals("保留1")) {

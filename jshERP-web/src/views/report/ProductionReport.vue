@@ -134,8 +134,7 @@
           },
           {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
-          {title: '型号', dataIndex: 'materialColorCode'},
-          {title: '规格', dataIndex: 'materialModel'},
+          {title: '型号', dataIndex: 'materialModel'},
           {title: '扩展信息', dataIndex: 'materialOther', ellipsis:true},
           {title: '单位', dataIndex: 'materialUnit', ellipsis:true},
           {title: '生产入库数量', dataIndex: 'productionIn', sorter: (a, b) => a.productionIn - b.productionIn}
