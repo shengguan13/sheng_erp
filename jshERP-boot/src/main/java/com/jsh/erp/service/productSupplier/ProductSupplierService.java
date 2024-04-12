@@ -205,13 +205,13 @@ public class ProductSupplierService {
             }
 
             for (int i = 1; i < rightRows; i++) {
-                String supplierName = ExcelUtils.getContent(src, i, 1);
-                String barCode = ExcelUtils.getContent(src, i, 4);
-                String type = ExcelUtils.getContent(src, i, 6);
-                String unit = ExcelUtils.getContent(src, i, 14);
-                String model = ExcelUtils.getContent(src, i, 5);
-                String pack = ExcelUtils.getContent(src, i, 7);
-                String purchaseCycle = ExcelUtils.getContent(src, i, 18);
+                String supplierName = ExcelUtils.getContent(src, i, 0);
+                String barCode = ExcelUtils.getContent(src, i, 2);
+                String type = ExcelUtils.getContent(src, i, 7);
+                String unit = ExcelUtils.getContent(src, i, 6);
+                String model = ExcelUtils.getContent(src, i, 3);
+                String pack = ExcelUtils.getContent(src, i, 4);
+                String purchaseCycle = ExcelUtils.getContent(src, i, 8);
 
                 if (!supplierNameToId.containsKey(supplierName)) {
                     throw new BusinessRunTimeException(ExceptionConstants.SUPPLIER_NAME_NOT_EXIST_CODE,

@@ -152,7 +152,7 @@
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        order by dh.id desc
+        order by dh.oper_time desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

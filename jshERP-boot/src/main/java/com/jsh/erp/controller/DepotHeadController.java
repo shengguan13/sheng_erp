@@ -335,6 +335,23 @@ public class DepotHeadController {
         return res;
     }
 
+    @PostMapping(value = "/importPurchaseApplicationExcel")
+    @ApiOperation(value = "excel表格导入")
+    public BaseResponseInfo importPurchaseApplicationExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = depotHeadService.importPurchaseApplicationExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
     @PostMapping(value = "/importPurchaseOrderExcel")
     @ApiOperation(value = "excel表格导入出入库")
     public BaseResponseInfo importPurchaseOrderExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
