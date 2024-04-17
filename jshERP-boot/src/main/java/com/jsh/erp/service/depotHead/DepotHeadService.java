@@ -1063,9 +1063,10 @@ public class DepotHeadService {
                     continue;
                 }
 
-                String batchNumber = null; //批号
-                String allocation = ExcelUtils.getContent(src, i, 2); //货位
-                String operNumber = ExcelUtils.getContent(src, i, 4); //数量
+                String batchNumber = ExcelUtils.getContent(src, i, 5); //批号
+                String allocation = ExcelUtils.getContent(src, i, 3); //货位
+                String operNumber = ExcelUtils.getContent(src, i, 2); //数量
+                String poNumber = ExcelUtils.getContent(src, i, 6); //采购订单号
                 BigDecimal operNumberValue;
                 try {
                     operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
@@ -1096,6 +1097,14 @@ public class DepotHeadService {
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
+
+                List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead("其它", "采购订单", null,
+                        null, null, null, null, null, null, null,
+                        null, null, null, null, null, null, null,
+                        null, poNumber, null, null);
+                if (list != null && !list.isEmpty()) {
+                    depotHead.setLinkNumber(list.get(0).getNumber());
+                }
 
                 if (orderNumberToDepotItems.containsKey(headNumber)) {
                     orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);

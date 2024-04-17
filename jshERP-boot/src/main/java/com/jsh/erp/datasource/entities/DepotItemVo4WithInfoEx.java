@@ -10,6 +10,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String MModel;
 
+    private String SupplierModel;
+
     private String MaterialUnit;
 
     private String MColor;
@@ -88,6 +90,14 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setMModel(String MModel) {
         this.MModel = MModel;
+    }
+
+    public String getSupplierModel() {
+        return SupplierModel;
+    }
+
+    public void setSupplierModel(String supplierModel) {
+        SupplierModel = supplierModel;
     }
 
     public String getMaterialUnit() {

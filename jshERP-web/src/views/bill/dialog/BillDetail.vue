@@ -900,7 +900,7 @@
             </a-col>
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                {{model.linkNumber}} {{model.billType}}
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
           </a-row>
@@ -946,7 +946,7 @@
             </a-col>
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                {{model.linkNumber}} {{model.billType}}
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
           </a-row>
@@ -992,7 +992,7 @@
             </a-col>
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                {{model.linkNumber}} {{model.billType}}
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
           </a-row>
@@ -1143,7 +1143,7 @@
             </a-col>
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                {{model.linkNumber}}
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
             <a-col :span="6"></a-col>
@@ -1357,6 +1357,7 @@
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
           { title: '规格', dataIndex: 'model'},
+          { title: '型号', dataIndex: 'supplierModel'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
           { title: '颜色代码', dataIndex: 'colorCode'},
