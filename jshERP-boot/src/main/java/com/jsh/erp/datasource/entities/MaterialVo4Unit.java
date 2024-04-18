@@ -8,6 +8,8 @@ public class MaterialVo4Unit extends Material{
 
     private String categoryName;
 
+    private String supplierModel;
+
     private String materialOther;
 
     private BigDecimal stock;
@@ -57,6 +59,14 @@ public class MaterialVo4Unit extends Material{
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public String getSupplierModel() {
+        return supplierModel;
+    }
+
+    public void setSupplierModel(String supplierModel) {
+        this.supplierModel = supplierModel;
     }
 
     public String getMaterialOther() {

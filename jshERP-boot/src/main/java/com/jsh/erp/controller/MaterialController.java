@@ -206,7 +206,6 @@ public class MaterialController {
                     categoryId, q,(currentPage-1)*pageSize, pageSize);
             int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
             long t2 = System.currentTimeMillis();
-            logger.info("XXXXX select material sql time: " + (t2 - t1));
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
@@ -238,6 +237,7 @@ public class MaterialController {
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
                     item.put("categoryName", material.getCategoryName());
+                    item.put("supplierModel", material.getSupplierModel());
                     item.put("colorCode", material.getColorCode());
                     item.put("model", material.getModel());
                     item.put("color", material.getColor());

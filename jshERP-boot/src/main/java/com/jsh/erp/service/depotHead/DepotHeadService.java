@@ -1177,7 +1177,7 @@ public class DepotHeadService {
                     continue;
                 }
 
-                String batchNumber = null; //批号
+                String batchNumber = ExcelUtils.getContent(src, i, 3); //批号
                 String allocation = ExcelUtils.getContent(src, i, 2); //货位
                 String operNumber = ExcelUtils.getContent(src, i, 4); //数量
                 BigDecimal operNumberValue;

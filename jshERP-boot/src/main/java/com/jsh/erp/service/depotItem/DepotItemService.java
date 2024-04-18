@@ -668,43 +668,43 @@ public class DepotItemService {
                         depotItem.setBasicNumber(oNumber); //其他情况
                     }
                 }
-                //如果数量+已完成数量>原订单数量，给出预警(判断前提是存在关联订单)
-                if (StringUtil.isNotEmpty(depotHead.getLinkNumber())
-                        && StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
-                    if("add".equals(actionType)) {
-                        //在新增模式进行状态赋值
-                        BigDecimal preNumber = rowObj.getBigDecimal("preNumber");
-                        BigDecimal finishNumber = rowObj.getBigDecimal("finishNumber");
-                        BigDecimal planOrderedNumber = rowObj.getBigDecimal("planOrderedNumber");
-                        if ("生产单".equals(depotHead.getSubType())) {
-                            if (depotItem.getOperNumber().add(planOrderedNumber).compareTo(preNumber) > 0) {
-                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
-                                        String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG_2, barCode));
-                            }
-                        } else if ("生产".equals(depotHead.getSubType()) && "入库".equals(depotHead.getType())) {
-                            // 生产单不需要检查什么，允许实际入库比生产多的情况
-                        } else {
-                            if (depotItem.getOperNumber().add(finishNumber).compareTo(preNumber) > 0) {
-                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
-                                        String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
-                            }
-                        }
-                    } else if("update".equals(actionType)) {
-                        //当前单据的类型
-                        String currentSubType = depotHead.getSubType();
-                        //在更新模式进行状态赋值
-                        String unit = rowObj.get("unit").toString();
-                        Long preHeaderId = depotHeadService.getDepotHead(depotHead.getLinkNumber()).getId();
-                        //原订单的数量
-                        BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
-                        //除去此单据之外的已入库|已出库|已下生产单（生产单不能多下，但是实际入库是可以超过生产单的）
-                        BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
-                        if(!"生产单".equals(depotHead.getSubType()) && depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber) > 0) {
-                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
-                                    String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
-                        }
-                    }
-                }
+                // 如果数量 + 已完成数量 > 原订单数量，给出预警(判断前提是存在关联订单)
+//                if (StringUtil.isNotEmpty(depotHead.getLinkNumber())
+//                        && StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
+//                    if("add".equals(actionType)) {
+//                        //在新增模式进行状态赋值
+//                        BigDecimal preNumber = rowObj.getBigDecimal("preNumber");
+//                        BigDecimal finishNumber = rowObj.getBigDecimal("finishNumber");
+//                        BigDecimal planOrderedNumber = rowObj.getBigDecimal("planOrderedNumber");
+//                        if ("生产单".equals(depotHead.getSubType())) {
+//                            if (depotItem.getOperNumber().add(planOrderedNumber).compareTo(preNumber) > 0) {
+//                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
+//                                        String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG_2, barCode));
+//                            }
+//                        } else if ("生产".equals(depotHead.getSubType()) && "入库".equals(depotHead.getType())) {
+//                            // 生产单不需要检查什么，允许实际入库比生产多的情况
+//                        } else {
+//                            if (depotItem.getOperNumber().add(finishNumber).compareTo(preNumber) > 0) {
+//                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
+//                                        String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
+//                            }
+//                        }
+//                    } else if("update".equals(actionType)) {
+//                        //当前单据的类型
+//                        String currentSubType = depotHead.getSubType();
+//                        //在更新模式进行状态赋值
+//                        String unit = rowObj.get("unit").toString();
+//                        Long preHeaderId = depotHeadService.getDepotHead(depotHead.getLinkNumber()).getId();
+//                        //原订单的数量
+//                        BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
+//                        //除去此单据之外的已入库|已出库|已下生产单（生产单不能多下，但是实际入库是可以超过生产单的）
+//                        BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
+//                        if(!"生产单".equals(depotHead.getSubType()) && depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber) > 0) {
+//                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
+//                                    String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
+//                        }
+//                    }
+//                }
                 if (StringUtil.isExist(rowObj.get("unitPrice"))) {
                     BigDecimal unitPrice = rowObj.getBigDecimal("unitPrice");
                     depotItem.setUnitPrice(unitPrice);

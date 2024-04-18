@@ -128,8 +128,9 @@
         columns: [
           {dataIndex: 'mBarCode', title: '编码', scopedSlots: { customRender: 'customBarCode' }},
           {dataIndex: 'name', title: '名称', scopedSlots: { customRender: 'customName' }},
+          {dataIndex: 'supplierModel', title: '客/供型号'},
           {dataIndex: 'categoryName', title: '类别'},
-          {dataIndex: 'model', title: '规格'},
+          {dataIndex: 'model', title: '零件号'},
           {dataIndex: 'color', title: '颜色'},
           {dataIndex: 'colorCode', title: '颜色代码'},
           {dataIndex: 'unit', title: '单位'},

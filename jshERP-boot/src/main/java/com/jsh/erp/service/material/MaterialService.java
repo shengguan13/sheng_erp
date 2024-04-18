@@ -136,7 +136,6 @@ public class MaterialService {
             list= materialMapperEx.selectByConditionMaterial(materialParam, color,
                     materialOther, weight, expiryNum, enabled, remark, idList, mpList, offset, rows);
             long t2 = System.currentTimeMillis();
-            logger.info("XXXXX material sql time: " + (t2 - t1));
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
