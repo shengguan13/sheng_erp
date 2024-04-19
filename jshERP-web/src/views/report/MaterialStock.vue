@@ -155,7 +155,7 @@
           },
           {title: '编码', dataIndex: 'mBarCode', width: 80},
           {title: '名称', dataIndex: 'name', width: 120},
-          {title: '规格', dataIndex: 'model', width: 100},
+          {title: '零件号', dataIndex: 'model', width: 100},
           {title: '颜色', dataIndex: 'color', width: 50},
           {title: '颜色代码', dataIndex: 'colorCode', width: 60},
           {title: '类别', dataIndex: 'categoryName', width: 50},
