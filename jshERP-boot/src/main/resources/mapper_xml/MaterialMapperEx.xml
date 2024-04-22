@@ -333,7 +333,7 @@
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-                or m.model like #{bindKey} or m.color like #{bindKey})
+                or m.model like #{bindKey} or m.color like #{bindKey} or ps.model like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -359,7 +359,7 @@
         <if test="q != null">
             <bind name="bindKey" value="'%'+q+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.model like #{bindKey} or m.color like #{bindKey})
+            or m.model like #{bindKey} or m.color like #{bindKey} or ps.model like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
