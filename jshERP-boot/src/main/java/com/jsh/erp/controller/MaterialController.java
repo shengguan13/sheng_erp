@@ -201,11 +201,9 @@ public class MaterialController {
             if(StringUtil.isNotEmpty(mpList)){
                 mpArr= mpList.split(",");
             }
-            long t1 = System.currentTimeMillis();
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(
                     categoryId, q,(currentPage-1)*pageSize, pageSize);
             int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
-            long t2 = System.currentTimeMillis();
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
