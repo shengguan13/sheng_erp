@@ -8,6 +8,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.DepotHeadMapper;
 import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
+import com.jsh.erp.datasource.mappers.DepotItemMapper;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.vo.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
@@ -63,6 +64,8 @@ public class DepotHeadService {
 
     @Resource
     private DepotHeadMapper depotHeadMapper;
+    @Resource
+    private DepotItemMapper depotItemMapper;
     @Resource
     private DepotHeadMapperEx depotHeadMapperEx;
     @Resource
@@ -1127,6 +1130,65 @@ public class DepotHeadService {
             logger.info(e.toString());
             info.code = 500;
             info.data = "导入失败";
+        }
+        return info;
+    }
+
+    /**
+     * 从某个仓库调拨到另外一个仓库
+     * @param file
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BaseResponseInfo adjustDepot(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        List<Material> allMaterial = materialService.getMaterial();
+        List<Material> materials = new ArrayList<>();
+        for (Material material : allMaterial) {
+            if (material.getCategoryId() != null && material.getCategoryId().longValue() == 43L) {
+                materials.add(material);
+            }
+        }
+        for (int i = 0; i < materials.size(); i++) {
+            String barCode = materialService.findByIdWithBarCode(materials.get(i).getId()).get(0).getmBarCode();
+            List<DepotItemVoBatchNumberList> batchNumberList = depotItemService.getBatchNumberList(
+                    null, null, 26L, barCode, null);
+            if (batchNumberList != null) {
+                for (DepotItemVoBatchNumberList batch : batchNumberList) {
+                    String headNumber = "DBCK" + sequenceService.buildOnlyNumber();
+                    DepotHead depotHead = new DepotHead();
+                    depotHead.setType("出库");
+                    depotHead.setSubType("调拨");
+                    depotHead.setNumber(headNumber);
+                    depotHead.setDefaultNumber(headNumber);
+                    depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                    depotHead.setOperTime(new Timestamp(System.currentTimeMillis()));
+                    depotHead.setCreator(63L);
+                    depotHead.setPayType("现付");
+                    depotHead.setStatus("1");
+                    depotHead.setPurchaseStatus("0");
+                    depotHead.setDeleteFlag("0");
+                    depotHeadMapper.insertSelective(depotHead);
+                    DepotHeadExample dhExample = new DepotHeadExample();
+                    dhExample.createCriteria().andNumberEqualTo(depotHead.getNumber()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                    List<DepotHead> list = depotHeadMapper.selectByExample(dhExample);
+                    DepotItem depotItem = new DepotItem();
+                    depotItem.setHeaderId(list.get(0).getId());
+                    depotItem.setMaterialId(materials.get(i).getId());
+                    depotItem.setMaterialExtendId(materials.get(i).getId());
+                    depotItem.setSnList(batch.getSnList());
+                    depotItem.setDepotId(26L);
+                    depotItem.setAnotherDepotId(28L);
+                    depotItem.setBatchNumber(batch.getBatchNumber());
+                    depotItem.setOperNumber(batch.getTotalNum());
+                    depotItem.setBasicNumber(batch.getTotalNum());
+                    depotItem.setMaterialUnit(batch.getCommodityUnit());
+                    depotItemMapper.insertSelective(depotItem);
+                    depotItemService.updateCurrentStock(depotItem);
+                }
+            }
         }
         return info;
     }
