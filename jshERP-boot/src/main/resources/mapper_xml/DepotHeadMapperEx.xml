@@ -336,6 +336,7 @@
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and dh.sub_type!='调拨'
+        and dh.sub_type!='隔离'
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
         <if test="offset != null and rows != null">
@@ -391,6 +392,7 @@
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and dh.sub_type!='调拨'
+        and dh.sub_type!='隔离'
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
     </select>
@@ -426,13 +428,13 @@
         </if>
         <if test="depotList.size()>0">
             <if test="type == '入库'">
-                and dh.sub_type!='调拨' and di.depot_id in
+                and dh.sub_type!='调拨' and dh.sub_type!='隔离' and di.depot_id in
                 <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                     #{item}
                 </foreach>
             </if>
             <if test="type == '出库'">
-                and dh.sub_type!='调拨' and di.depot_id in
+                and dh.sub_type!='调拨' and dh.sub_type!='隔离' and di.depot_id in
                 <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                     #{item}
                 </foreach>
@@ -476,13 +478,13 @@
         </if>
         <if test="depotList.size()>0">
             <if test="type == '入库'">
-                and dh.sub_type!='调拨' and di.depot_id in
+                and dh.sub_type!='调拨' and dh.sub_type!='隔离' and di.depot_id in
                 <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                     #{item}
                 </foreach>
             </if>
             <if test="type == '出库'">
-                and dh.sub_type!='调拨' and di.depot_id in
+                and dh.sub_type!='调拨' and dh.sub_type!='隔离' and di.depot_id in
                 <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                     #{item}
                 </foreach>

@@ -168,7 +168,7 @@
           { 'key': 'FXRK', 'value': '返修入库' },
           { 'key': 'FXCK', 'value': '返修出库' },
           { 'key': 'BHGRK', 'value': '不合格入库' },
-          { 'key': 'BHGCK', 'value': '不合格出库' },
+          { 'key': 'GLCK', 'value': '隔离出库' },
           { 'key': 'QTCK', 'value': '其它出库' },
           { 'key': 'DBCK', 'value': '调拨出库' },
           { 'key': 'ZZD', 'value': '组装单' },

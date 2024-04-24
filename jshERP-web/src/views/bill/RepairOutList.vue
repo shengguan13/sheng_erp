@@ -78,7 +78,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
+          <a-button v-if="btnEnableList.indexOf(3)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -89,7 +89,8 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="用于返修入库。" slot="action">
+          返修出库指的是将产品从隔离库中取出进行返修。
+          <a-tooltip placement="left" title="返修出库指的是将产品从隔离库中取出进行返修。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
@@ -160,7 +161,7 @@
           number: "",
           materialParam: "",
           type: "出库",
-          subType: "返修出库",
+          subType: "返修",
           roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",

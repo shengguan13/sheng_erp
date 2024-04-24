@@ -737,6 +737,24 @@ public class DepotItemService {
                 // 有仓库号的就设置仓库号
                 if (StringUtil.isExist(rowObj.get("depotId"))) {
                     depotItem.setDepotId(rowObj.getLong("depotId"));
+                    // 返修出库的仓库必须是隔离库
+                    if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                            && BusinessConstants.SUB_TYPE_REPAIR.equals(depotHead.getSubType())) {
+                        Depot depot = depotService.getDepot(rowObj.getLong("depotId"));
+                        if (!depot.getName().equals("隔离库")) {
+                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_CODE,
+                                    String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_MSG));
+                        }
+                    }
+                    // 隔离出库的仓库不能是隔离库
+                    if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                            && BusinessConstants.SUB_TYPE_ISOLATE.equals(depotHead.getSubType())) {
+                        Depot depot = depotService.getDepot(rowObj.getLong("depotId"));
+                        if (depot.getName().equals("隔离库")) {
+                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_ISOLATE_FAILED_CODE,
+                                    String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_ISOLATE_FAILED_MSG));
+                        }
+                    }
                 } else {
                     // 只有[采购订单、采购申请、销售订单、生产计划、生产单]可以没有仓库号
                     if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
@@ -759,6 +777,14 @@ public class DepotItemService {
                     } else {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_MSG));
+                    }
+                }
+                if(BusinessConstants.SUB_TYPE_ISOLATE.equals(depotHead.getSubType())) {
+                    List<Depot> depots = depotService.getDepot();
+                    for (Depot depot : depots) {
+                        if ("隔离库".equals(depot.getName())) {
+                            depotItem.setAnotherDepotId(depot.getId());
+                        }
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("taxRate"))) {

@@ -1724,8 +1724,8 @@ public class DepotHeadService {
 
                 String headNumber = "FXRK" + sequenceService.buildOnlyNumber();
                 DepotHead depotHead = new DepotHead();
-                depotHead.setType("出库");
-                depotHead.setSubType("返修入库");
+                depotHead.setType("入库");
+                depotHead.setSubType("返修");
                 depotHead.setNumber(headNumber);
                 depotHead.setDefaultNumber(headNumber);
                 depotHead.setCreateTime(dateValue);

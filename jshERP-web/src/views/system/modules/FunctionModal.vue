@@ -88,7 +88,6 @@
             { text: '启用禁用', value: '4' },
             { text: '打印', value: '5' },
             { text: '作废', value: '6' },
-            { text: '启用禁用', value: '4' },
             { text: '部门审核', value: 'a' },
             { text: '商务审核', value: 'b' },
             { text: '最终审核', value: 'c' }

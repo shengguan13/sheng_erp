@@ -154,7 +154,9 @@
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '调入仓库', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [], allowSearch:true},
+            { title: '调入仓库', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },

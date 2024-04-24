@@ -94,6 +94,8 @@ public class BusinessConstants {
     public static final String SUB_TYPE_MATERIAL_RETURN = "退料";
     public static final String SUB_TYPE_PRODUCTION = "生产";
     public static final String SUB_TYPE_TRANSFER = "调拨";
+    public static final String SUB_TYPE_REPAIR = "返修";
+    public static final String SUB_TYPE_ISOLATE = "隔离";
     public static final String SUB_TYPE_CHECK_ENTER = "盘点录入";
     public static final String SUB_TYPE_REPLAY = "盘点复盘";
     public static final String SUB_TYPE_ASSEMBLE = "组装单";

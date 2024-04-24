@@ -19,7 +19,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-              <a-input-search placeholder="请选择关联单据" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
+              <a-input-search placeholder="请选择关联单据" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">

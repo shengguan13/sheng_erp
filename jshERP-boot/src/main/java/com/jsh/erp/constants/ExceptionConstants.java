@@ -376,6 +376,12 @@ public class ExceptionConstants {
     //单据录入-调入仓库不能为空
     public static final int DEPOT_HEAD_ANOTHER_DEPOT_FAILED_CODE = 8500005;
     public static final String DEPOT_HEAD_ANOTHER_DEPOT_FAILED_MSG = "调入仓库不能为空";
+    //单据录入-返修出库仓库必须为隔离库
+    public static final int DEPOT_HEAD_DEPOT_REPAIR_FAILED_CODE = 8500005;
+    public static final String DEPOT_HEAD_DEPOT_REPAIR_FAILED_MSG = "返修出库仓库必须为隔离库";
+    //单据录入-返修出库仓库必须为隔离库
+    public static final int DEPOT_HEAD_DEPOT_ISOLATE_FAILED_CODE = 8500005;
+    public static final String DEPOT_HEAD_DEPOT_ISOLATE_FAILED_MSG = "隔离出库仓库不能为隔离库";
     //单据录入-明细不能为空
     public static final int DEPOT_HEAD_ROW_FAILED_CODE = 8500006;
     public static final String DEPOT_HEAD_ROW_FAILED_MSG = "单据明细不能为空";

@@ -118,9 +118,9 @@ export const BillModalMixin = {
         if(columns[i].key === key) {
           if(type){
             if(key === 'batchNumber') {
-              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'DBCK'
-                  || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK' || this.prefixNo === 'LLCK'
-                  || this.prefixNo === 'BHGRK' || this.prefixNo === 'BHGCK') {
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK'
+                  || this.prefixNo === 'DBCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK'
+                  || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //输入
@@ -138,9 +138,9 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.hidden //隐藏
               }
             } else if(key === 'snList') {
-              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH'
-                  || this.prefixNo === 'QTRK' || this.prefixNo === 'DBCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK'
-                  || this.prefixNo === 'BHGCK' || this.prefixNo === 'BHGRK') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK'
+                  || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK' || this.prefixNo === 'DBCK'
+                  || this.prefixNo === 'FXRK') {
                 columns[i].type = FormTypes.select //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
@@ -224,9 +224,17 @@ export const BillModalMixin = {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if(res.code === 200){
           let arr = res.data
-          for (let i = 0; i < arr.length; i++) {
-            if(arr[i].isDefault){
-              that.defaultDepotId = arr[i].id
+          if(that.prefixNo == "FXCK") {
+            for (let i = 0; i < arr.length; i++) {
+              if(arr[i].depotName == "隔离库"){
+                that.defaultDepotId = arr[i].id
+              }
+            }
+          } else {
+            for (let i = 0; i < arr.length; i++) {
+              if(arr[i].isDefault){
+                that.defaultDepotId = arr[i].id
+              }
             }
           }
           for(let item of that.materialTable.columns){
@@ -396,9 +404,17 @@ export const BillModalMixin = {
           if(arr.length===1) {
             target.setValues([{rowKey: row.id, values: {depotId: arr[0].id+''}}])
           } else {
-            for (let i = 0; i < arr.length; i++) {
-              if(arr[i].isDefault){
-                target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+            if(this.prefixNo == "FXCK") {
+              for (let i = 0; i < arr.length; i++) {
+                if(arr[i].depotName == "隔离库"){
+                  target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+                }
+              }
+            } else {
+              for (let i = 0; i < arr.length; i++) {
+                if(arr[i].isDefault){
+                  target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+                }
               }
             }
           }

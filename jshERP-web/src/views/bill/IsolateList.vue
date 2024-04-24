@@ -88,7 +88,8 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="用于不合格入库。" slot="action">
+          隔离出库指将疑似有问题的产品从对应的仓库（成品、半成品、辅料等）中出库，并入库到隔离库以待进一步检测/返修/销毁。
+          <a-tooltip placement="left" title="隔离出库指将疑似有问题的产品从对应的仓库（成品、半成品、辅料等）中出库，并入库到隔离库以待进一步检测/返修/销毁。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
@@ -108,7 +109,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '不合格入库', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '隔离出库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -127,7 +128,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <defect-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></defect-out-modal>
+        <isolate-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></isolate-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
@@ -135,17 +136,17 @@
 </template>
 <!--power by jishenghua-->
 <script>
-  import DefectOutModal from './modules/DefectOutModal'
+  import IsolateModal from './modules/IsolateModal'
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "DefectOutList",
+    name: "IsolateList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
-      DefectOutModal,
+      IsolateModal,
       BillDetail,
       JDate
     },
@@ -156,14 +157,14 @@
           number: "",
           materialParam: "",
           type: "出库",
-          subType: "不合格出库",
+          subType: "隔离",
           roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",
           status: "",
           remark: ""
         },
-        prefixNo: 'FXCK',
+        prefixNo: 'GLCK',
         labelCol: {
           span: 5
         },

@@ -154,10 +154,6 @@
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '调入仓库', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [], allowSearch:true},
-            { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]
         },
@@ -225,7 +221,7 @@
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
         billMain.type = '出库'
-        billMain.subType = '返修出库'
+        billMain.subType = '返修'
         billMain.defaultNumber = billMain.number
         for(let item of detailArr){
           totalPrice += item.allPrice-0
