@@ -88,7 +88,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="用于不合格入库。" slot="action">
+          <a-tooltip placement="left" title="用于差异入库。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
@@ -108,7 +108,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '不合格入库', prefixNo)">查看</a>
+              <a @click="myHandleDetail(record, '差异入库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -127,7 +127,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <defect-in-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></defect-in-modal>
+        <diff-in-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></diff-in-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
@@ -135,17 +135,17 @@
 </template>
 <!--power by jishenghua-->
 <script>
-  import DefectInModal from './modules/DefectInModal'
+  import DiffInModal from './modules/DiffInModal'
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "DefectInList",
+    name: "DiffInList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
-      DefectInModal,
+      DiffInModal,
       BillDetail,
       JDate
     },
@@ -155,15 +155,15 @@
         queryParam: {
           number: "",
           materialParam: "",
-          type: "出库",
-          subType: "不合格入库",
+          type: "入库",
+          subType: "差异",
           roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",
           status: "",
           remark: ""
         },
-        prefixNo: 'BHGRK',
+        prefixNo: 'CYRK',
         labelCol: {
           span: 5
         },

@@ -629,12 +629,12 @@ public class DepotItemService {
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("expirationDate"))) {
-                    if (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType())
-                            && BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
-                            && rowObj.getDate("expirationDate").toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS).compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
-                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_CODE,
-                                String.format(ExceptionConstants.DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_MSG));
-                    }
+//                    if (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType())
+//                            && BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
+//                            && rowObj.getDate("expirationDate").toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS).compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
+//                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_CODE,
+//                                String.format(ExceptionConstants.DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_MSG));
+//                    }
                     depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
                 }
                 if (StringUtil.isExist(rowObj.get("sku"))) {
@@ -647,7 +647,7 @@ public class DepotItemService {
                 Unit unitInfo = materialService.findUnit(materialExtend.getMaterialId()); //查询计量单位信息
                 if (StringUtil.isExist(rowObj.get("operNumber"))) {
                     depotItem.setOperNumber(rowObj.getBigDecimal("operNumber"));
-                    if (depotItem.getOperNumber().doubleValue() <= 0.0) {
+                    if (!"差异".equals(depotHead.getSubType()) && depotItem.getOperNumber().doubleValue() <= 0.0) {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_NUMBER_MUST_BE_POSITIVE_CODE,
                                 ExceptionConstants.DEPOT_ITEM_NUMBER_MUST_BE_POSITIVE_MSG);
                     }

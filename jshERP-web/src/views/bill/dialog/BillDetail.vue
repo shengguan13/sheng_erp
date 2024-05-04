@@ -30,6 +30,7 @@
       <a-button v-if="billType === '返修入库'" v-print="'#repairInPrint'">普通打印</a-button>
       <a-button v-if="billType === '返修出库'" v-print="'#repairOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '隔离出库'" v-print="'#isolatePrint'">普通打印</a-button>
+      <a-button v-if="billType === '差异入库'" v-print="'#diffInPrint'">普通打印</a-button>
       <a-button v-if="billType === '其它入库'" v-print="'#otherInPrint'">普通打印</a-button>
       <a-button v-if="billType === '其它出库'" v-print="'#otherOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '调拨出库'" v-print="'#allocationOutPrint'">普通打印</a-button>
@@ -1000,6 +1001,46 @@
           </a-row>
         </section>
       </template>
+      <!--差异入库-->
+      <template v-else-if="billType === '差异入库'">
+        <section ref="print" id="diffInPrint">
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                {{model.operTimeStr}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                {{model.number}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <div :style="tableWidth">
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="columns"
+              :dataSource="dataSource">
+            </a-table>
+          </div>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="24" :md="24" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                {{model.remark}}
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </section>
+      </template>
       <!--其它入库-->
       <template v-else-if="billType === '其它入库'">
         <section ref="print" id="anotherInPrint">
@@ -1575,6 +1616,22 @@
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
+        diffInColumns: [
+          { title: '仓库名称', dataIndex: 'depotName'},
+          { title: '编码', dataIndex: 'barCode'},
+          { title: '名称', dataIndex: 'name'},
+          { title: '零件号', dataIndex: 'model'},
+          { title: '客/供型号', dataIndex: 'supplierModel'},
+          { title: '类别', dataIndex: 'categoryName'},
+          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
+          { title: '库存', dataIndex: 'stock'},
+          { title: '单位', dataIndex: 'unit'},
+          { title: '货位', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '数量', dataIndex: 'operNumber'},
+          { title: '备注', dataIndex: 'remark'}
+        ],
         otherInColumns: [
           { title: '仓库名称', dataIndex: 'depotName'},
           { title: '编码', dataIndex: 'barCode'},
@@ -1684,6 +1741,8 @@
           this.defColumns = this.repairOutColumns
         } else if (type === '隔离出库') {
           this.defColumns = this.isolateColumns
+        } else if (type === '差异入库') {
+          this.defColumns = this.diffInColumns
         } else if (type === '其它入库') {
           this.defColumns = this.otherInColumns
         } else if (type === '其它出库') {

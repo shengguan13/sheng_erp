@@ -101,7 +101,7 @@
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "DefectInModal",
+    name: "DiffInModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       DepotModal,
@@ -118,7 +118,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
-        prefixNo: 'BHGRK',
+        prefixNo: 'CYRK',
         defaultDepotId: '',
         fileList:[],
         model: {},
@@ -150,7 +150,7 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.normal, kind: 'batch', multi: false },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -223,8 +223,8 @@
         let totalPrice = 0
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '出库'
-        billMain.subType = '不合格入库'
+        billMain.type = '入库'
+        billMain.subType = '差异'
         billMain.defaultNumber = billMain.number
         for(let item of detailArr){
           totalPrice += item.allPrice-0

@@ -140,7 +140,7 @@ export const BillModalMixin = {
             } else if(key === 'snList') {
               if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK'
                   || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK' || this.prefixNo === 'DBCK'
-                  || this.prefixNo === 'FXRK') {
+                  || this.prefixNo === 'FXRK' || this.prefixNo === 'CYRK') {
                 columns[i].type = FormTypes.select //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
