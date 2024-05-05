@@ -180,6 +180,7 @@
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
+            { title: '到货日期', key: 'expirationDate',width: '6%', type: FormTypes.date },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input},
           ]
         },
@@ -222,6 +223,7 @@
         this.billStatus = '0'
         this.materialTable.columns[0].type = FormTypes.popupJsh
         this.changeColumnHide()
+        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []

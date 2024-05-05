@@ -1096,7 +1096,7 @@ public class DepotHeadService {
 
                 DepotItem depotItem = new DepotItem();
                 depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
-                depotItem.setDepotId(26L);
+                depotItem.setDepotId(23L);
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
@@ -1269,7 +1269,7 @@ public class DepotHeadService {
                 DepotItem depotItem = new DepotItem();
                 depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
                 depotItem.setBatchNumber(batchNumber);
-                depotItem.setDepotId(26L);
+                depotItem.setDepotId(23L);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
 
@@ -1559,7 +1559,7 @@ public class DepotHeadService {
             List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
             Map<String, String> allocationNameToId = new HashMap<>();
             for (DepotAllocation depotAllocation : allocationList) {
-                allocationNameToId.put(depotAllocation.getType() + depotAllocation.getAllocation(), depotAllocation.getId().toString());
+                allocationNameToId.put(depotAllocation.getAllocation(), depotAllocation.getId().toString());
             }
 
             Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
@@ -1590,16 +1590,15 @@ public class DepotHeadService {
                     continue;
                 }
 
-                String barCode = ExcelUtils.getContent(src, i, 3); //物料编码
+                String barCode = ExcelUtils.getContent(src, i, 2); //物料编码
                 List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
                 if (mList.isEmpty()) {
                     continue;
                 }
 
-                String batchNumber = ExcelUtils.getContent(src, i, 4); //批号
-                String depotType = ExcelUtils.getContent(src, i, 5); //仓库
-                String allocation = ExcelUtils.getContent(src, i, 6); //货位
-                String operNumber = ExcelUtils.getContent(src, i, 8); //数量
+                String batchNumber = ExcelUtils.getContent(src, i, 6); //批号
+                String allocation = ExcelUtils.getContent(src, i, 3); //货位
+                String operNumber = ExcelUtils.getContent(src, i, 5); //数量
                 BigDecimal operNumberValue;
                 try {
                     operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
@@ -1627,7 +1626,7 @@ public class DepotHeadService {
                 depotHead.setLinkNumber(linkNumber);
 
                 DepotItem depotItem = new DepotItem();
-                depotItem.setSnList(allocationNameToId.getOrDefault(depotType + allocation, "564"));
+                depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
                 depotItem.setDepotId(23L);
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
