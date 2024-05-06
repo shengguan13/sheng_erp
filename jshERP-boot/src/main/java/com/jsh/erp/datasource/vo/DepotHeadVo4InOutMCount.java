@@ -13,6 +13,8 @@ public class DepotHeadVo4InOutMCount {
 
     private String Model;
 
+    private String supplierModel;
+
     private String colorCode;
 
     private String categoryName;
@@ -55,6 +57,14 @@ public class DepotHeadVo4InOutMCount {
 
     public void setModel(String model) {
         Model = model;
+    }
+
+    public String getSupplierModel() {
+        return supplierModel;
+    }
+
+    public void setSupplierModel(String supplierModel) {
+        this.supplierModel = supplierModel;
     }
 
     public String getColorCode() {

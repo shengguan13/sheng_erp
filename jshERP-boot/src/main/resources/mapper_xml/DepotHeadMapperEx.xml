@@ -17,6 +17,7 @@
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
+        <result column="supplier_model" jdbcType="VARCHAR" property="supplierModel" />
         <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="unit_price" jdbcType="DECIMAL" property="UnitPrice" />
         <result column="oper_number" jdbcType="DECIMAL" property="OperNumber" />
@@ -35,6 +36,7 @@
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="mName" jdbcType="VARCHAR" property="mName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
+        <result column="supplier_model" jdbcType="VARCHAR" property="supplierModel" />
         <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="materialUnit" jdbcType="VARCHAR" property="materialUnit" />
@@ -286,7 +288,7 @@
     </select>
 
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code, m.`name` MName,m.model,m.color_code,di.unit_price,di.material_unit as mUnit,
+        select dh.number,me.bar_code, m.`name` MName,m.model,m.color_code,di.unit_price,di.material_unit as mUnit, ps.model supplier_model,
         di.oper_number,di.all_price, ifnull(di.tax_rate,0) tax_rate, ifnull(di.tax_money,0) tax_money, ifnull(di.tax_last_money,0) tax_last_money,
         s.supplier SName,d.dName DName, date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType,
         concat_ws('  ',dh.remark,di.remark) as newRemark
@@ -295,6 +297,7 @@
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         left join (select id,name as dName,delete_Flag from jsh_depot ) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
@@ -329,7 +332,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey} or ps.model like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -351,6 +354,7 @@
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         left join (select id,name as dName,delete_Flag from jsh_depot) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
@@ -385,7 +389,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey} or ps.model like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -398,7 +402,8 @@
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
-        select di.material_id, me.bar_code, m.name mName,m.Model,m.color_code,mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
+        select di.material_id, me.bar_code, m.name mName,m.Model,m.color_code,mc.name categoryName,ps.model supplier_model,
+        concat_ws('', m.unit, u.basic_unit) materialUnit,
         sum(di.basic_number) numSum,
         sum(di.all_price) priceSum
         from jsh_depot_head dh
@@ -407,6 +412,7 @@
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id=mc.Id and ifnull(mc.delete_flag,'0') !='1'
+        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where me.default_flag=1
         and dh.type=#{type} and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
@@ -442,7 +448,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey} or ps.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id
@@ -456,7 +462,10 @@
         (select di.material_id from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id  and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id=mc.Id and ifnull(mc.delete_flag,'0') !='1'
+        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where me.default_flag=1
         and dh.type=#{type} and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
@@ -492,7 +501,7 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey} or ps.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id) a

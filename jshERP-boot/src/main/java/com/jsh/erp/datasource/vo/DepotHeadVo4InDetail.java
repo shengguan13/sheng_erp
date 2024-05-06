@@ -14,6 +14,8 @@ public class DepotHeadVo4InDetail {
 
     private String Model;
 
+    private String supplierModel;
+
     private String colorCode;
 
     private BigDecimal UnitPrice;
@@ -72,6 +74,14 @@ public class DepotHeadVo4InDetail {
 
     public void setModel(String model) {
         Model = model;
+    }
+
+    public String getSupplierModel() {
+        return supplierModel;
+    }
+
+    public void setSupplierModel(String supplierModel) {
+        this.supplierModel = supplierModel;
     }
 
     public String getColorCode() {

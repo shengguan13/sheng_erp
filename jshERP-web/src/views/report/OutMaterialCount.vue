@@ -152,7 +152,8 @@
           },
           {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'mName', width: 200, fixed: 'left'},
-          {title: '型号', dataIndex: 'model'},
+          {title: '规格', dataIndex: 'model'},
+          {title: '客/供型号', dataIndex: 'supplierModel'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'materialUnit'},
           {title: '出库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum}
