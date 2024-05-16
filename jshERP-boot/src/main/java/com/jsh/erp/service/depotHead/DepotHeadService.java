@@ -287,30 +287,31 @@ public class DepotHeadService {
      */
     public String[] getOrganArray(String subType, String purchaseStatus) throws Exception {
         String[] organArray = null;
-        String type = "UserCustomer";
-        Long userId = userService.getCurrentUser().getId();
-        //获取权限信息
-        String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
-        List<Supplier> supplierList = supplierService.findBySelectCus();
-        if (BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType) || BusinessConstants.SUB_TYPE_SALES.equals(subType)
-                || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)) {
-            //采购订单里面选择销售订单的时候不要过滤
-            if (StringUtil.isEmpty(purchaseStatus)) {
-                if (null != supplierList && supplierList.size() > 0) {
-                    boolean customerFlag = systemConfigService.getCustomerFlag();
-                    List<String> organList = new ArrayList<>();
-                    for (Supplier supplier : supplierList) {
-                        boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
-                        if (!customerFlag || flag) {
-                            organList.add(supplier.getId().toString());
-                        }
-                    }
-                    if (organList.size() > 0) {
-                        organArray = StringUtil.listToStringArray(organList);
-                    }
-                }
-            }
-        }
+//        String type = "UserCustomer";
+//        Long userId = userService.getCurrentUser().getId();
+//        //获取权限信息
+//        String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
+//        List<Supplier> supplierList = supplierService.findBySelectCus();
+//        if (BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)
+//                || BusinessConstants.SUB_TYPE_SALES.equals(subType)
+//                || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)) {
+//            //采购订单里面选择销售订单的时候不要过滤
+//            if (StringUtil.isEmpty(purchaseStatus)) {
+//                if (null != supplierList && supplierList.size() > 0) {
+//                    boolean customerFlag = systemConfigService.getCustomerFlag();
+//                    List<String> organList = new ArrayList<>();
+//                    for (Supplier supplier : supplierList) {
+//                        boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
+//                        if (!customerFlag || flag) {
+//                            organList.add(supplier.getId().toString());
+//                        }
+//                    }
+//                    if (organList.size() > 0) {
+//                        organArray = StringUtil.listToStringArray(organList);
+//                    }
+//                }
+//            }
+//        }
         return organArray;
     }
 

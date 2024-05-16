@@ -139,7 +139,7 @@
             </foreach>
             )
         </if>
-        <if test="accountId != null">
+        <if test="accountId != null and accountId !=''">
             <bind name="bindAccountId" value="'%'+accountId+'%'"/>
             and (dh.account_id=#{accountId} or dh.account_id_list like #{bindAccountId})
         </if>
@@ -242,7 +242,7 @@
             </foreach>
             )
         </if>
-        <if test="accountId != null">
+        <if test="accountId != null and accountId !=''">
             <bind name="bindAccountId" value="'%'+accountId+'%'"/>
             and (dh.account_id=#{accountId} or dh.account_id_list like #{bindAccountId})
         </if>

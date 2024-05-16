@@ -1220,7 +1220,7 @@
             and dh.number!= #{number}
         </if>
         and di.delete_flag!=1) tb
-        group by batch_number, sn_list
+        group by batch_number
         order by oper_time asc
     </select>
 

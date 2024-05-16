@@ -803,7 +803,7 @@ public class DepotItemService {
                     depotItem.setRemark(rowObj.getString("remark"));
                 }
                 List<DepotItemVoBatchNumberList> sortedByBatchNumber = null;
-                //出库时判断库存是否充足
+                // 出库时判断库存是否充足
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
                     // 当出库类型为调拨时，检查对应批号的库存是否足够
                     if (BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
@@ -817,7 +817,7 @@ public class DepotItemService {
                         }
                     }
                     //当出库类型不是调拨时，根据先入先出自动填充批号
-                    else {
+                    else if (depotItem.getBatchNumber() == null || "".equals(depotItem.getBatchNumber())) {
                         List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
                                 null, null, depotItem.getDepotId(), barCode, null);
                         if (batchNumberList.size() == 0) {
@@ -940,8 +940,19 @@ public class DepotItemService {
             }
             if (fileListSb.length() > 0) {
                 String fileList = "";
+                String[] newFiles = fileListSb.toString().split(",");
+                Set<String> newFileSet = new HashSet<>();
+                for (String name : newFiles) {
+                    newFileSet.add(name);
+                }
                 if (depotHead.getFileName() != null && !"".equals(depotHead.getFileName())) {
-                    fileList = depotHead.getFileName() + "," + fileListSb;
+                    String[] oldFiles = depotHead.getFileName().split(",");
+                    for (String oldFile : oldFiles) {
+                        if (!newFileSet.contains(oldFile)) {
+                            fileList = fileList + oldFile + ",";
+                        }
+                    }
+                    fileList = fileList + fileListSb;
                 } else {
                     fileList = fileListSb.toString();
                 }
