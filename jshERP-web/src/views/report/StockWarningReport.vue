@@ -119,6 +119,7 @@
           {title: '扩展信息', dataIndex: 'materialOther'},
           {title: '单位', dataIndex: 'materialUnit'},
           {title: '库存', dataIndex: 'currentNumber', sorter: (a, b) => a.currentNumber - b.currentNumber},
+          {title: '周用量', dataIndex: 'usagePerWeek', sorter: (a, b) => a.usagePerWeek - b.usagePerWeek},
           {title: '最低安全库存', dataIndex: 'lowSafeStock', sorter: (a, b) => a.lowSafeStock - b.lowSafeStock},
           {title: '最高安全库存', dataIndex: 'highSafeStock', sorter: (a, b) => a.highSafeStock - b.highSafeStock},
           {title: '建议入库量', dataIndex: 'lowCritical', sorter: (a, b) => a.lowCritical - b.lowCritical},

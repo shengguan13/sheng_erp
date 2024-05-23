@@ -49,12 +49,9 @@ public class MaterialUsageService {
     }
 
     public List<MaterialInitialStockVo4Info> getMaterialUsage() throws Exception{
-        MaterialInitialStockExample example = new MaterialInitialStockExample();
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id desc");
         List<MaterialInitialStockVo4Info> list=null;
         try{
-            list=materialUsageMapper.selectByExample(example);
+            list=materialUsageMapper.selectAllUsage();
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

@@ -197,7 +197,7 @@
     methods: {
       //加载初始化列
       initColumnsSetting(){
-        let columnsStr = Vue.ls.get('materialColumns')
+        let columnsStr = Vue.ls.get('materialBomColumns')
         if(columnsStr && columnsStr.indexOf(',')>-1) {
           this.settingColumns = columnsStr.split(',')
         }
@@ -217,7 +217,7 @@
           return false
         })
         let columnsStr = checkedValues.join()
-        Vue.ls.set('materialColumns', columnsStr)
+        Vue.ls.set('materialBomColumns', columnsStr)
       },
       loadTreeData(){
         let that = this;

@@ -967,7 +967,9 @@ public class DepotItemController {
                     disw.setMaterialOther(getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
                     if(null!=disw.getLowSafeStock() && disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {
-                        disw.setLowCritical(disw.getLowSafeStock().subtract(disw.getCurrentNumber()));
+                        disw.setLowCritical(disw.getLowSafeStock()
+                                .add(disw.getUsagePerWeek().multiply(BigDecimal.valueOf(4)))
+                                .subtract(disw.getCurrentNumber()));
                     }
                     if(null!=disw.getHighSafeStock() && disw.getCurrentNumber().compareTo(disw.getHighSafeStock())>0) {
                         disw.setHighCritical(disw.getCurrentNumber().subtract(disw.getHighSafeStock()));

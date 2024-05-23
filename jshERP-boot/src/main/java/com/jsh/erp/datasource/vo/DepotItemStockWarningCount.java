@@ -59,6 +59,8 @@ public class DepotItemStockWarningCount {
 
     private BigDecimal highCritical;
 
+    private BigDecimal usagePerWeek;
+
     public Long getMId() {
         return MId;
     }
@@ -273,5 +275,13 @@ public class DepotItemStockWarningCount {
 
     public void setHighCritical(BigDecimal highCritical) {
         this.highCritical = highCritical;
+    }
+
+    public BigDecimal getUsagePerWeek() {
+        return usagePerWeek;
+    }
+
+    public void setUsagePerWeek(BigDecimal usagePerWeek) {
+        this.usagePerWeek = usagePerWeek;
     }
 }

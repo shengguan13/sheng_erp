@@ -10,7 +10,7 @@ import java.util.List;
 public interface MaterialUsageMapper {
     MaterialInitialStockVo4Info selectByPrimaryKey(long id);
 
-    List<MaterialInitialStockVo4Info> selectByExample(MaterialInitialStockExample example);
+    List<MaterialInitialStockVo4Info> selectAllUsage();
 
     List<MaterialBomVo4Info> selectMaterialUsage(@Param("materialParam") String materialParam,
                                                  @Param("idList") List<Long> idList,

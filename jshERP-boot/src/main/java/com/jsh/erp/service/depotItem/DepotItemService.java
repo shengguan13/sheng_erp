@@ -74,6 +74,8 @@ public class DepotItemService {
     @Resource
     private MaterialCurrentStockMapper materialCurrentStockMapper;
     @Resource
+    private MaterialUsageMapper materialUsageMapper;
+    @Resource
     private LogService logService;
 
     public DepotItem getDepotItem(long id)throws Exception {
@@ -1139,6 +1141,14 @@ public class DepotItemService {
         List<DepotItemStockWarningCount> list = null;
         try{
             list =depotItemMapperEx.findStockWarningCount(offset, rows, materialParam, depotList);
+            List<MaterialInitialStockVo4Info> usageList = materialUsageMapper.selectAllUsage();
+            Map<String, BigDecimal> barCodeToUsage = new HashMap<>();
+            for (MaterialInitialStockVo4Info mi : usageList) {
+                barCodeToUsage.put(mi.getBarCode(), mi.getNumber());
+            }
+            for (DepotItemStockWarningCount sw : list) {
+                sw.setUsagePerWeek(barCodeToUsage.getOrDefault(sw.getBarCode(), BigDecimal.ZERO));
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

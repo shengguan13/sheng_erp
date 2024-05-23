@@ -329,7 +329,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey}
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or ps.model like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
@@ -388,7 +388,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey}
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or ps.model like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
@@ -449,7 +449,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey}
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or ps.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
@@ -504,7 +504,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey}
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or ps.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
@@ -551,7 +551,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey}
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or dh.remark like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
@@ -602,7 +602,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey}
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or dh.remark like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
@@ -977,7 +977,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam})
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1023,7 +1023,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam})
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1062,7 +1062,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam})
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1106,7 +1106,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam})
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1145,7 +1145,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam})
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1189,7 +1189,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindParam} or m.color like #{bindParam})
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (

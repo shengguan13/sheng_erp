@@ -139,8 +139,8 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['action','barCode','name','colorCode','model','color',
-          'category','number','unit','supplierModel','remark'],
+        settingColumns:['action','barCode','name','colorCode','model','color', 'category',
+          'number','unit','supplierModel','remark'],
         // 默认的列
         defColumns: [
           {
@@ -182,7 +182,7 @@
     methods: {
       //加载初始化列
       initColumnsSetting(){
-        let columnsStr = Vue.ls.get('materialColumns')
+        let columnsStr = Vue.ls.get('materialUsageColumns')
         if(columnsStr && columnsStr.indexOf(',')>-1) {
           this.settingColumns = columnsStr.split(',')
         }
@@ -202,7 +202,7 @@
           return false
         })
         let columnsStr = checkedValues.join()
-        Vue.ls.set('materialColumns', columnsStr)
+        Vue.ls.set('materialUsageColumns', columnsStr)
       },
       loadTreeData(){
         let that = this;
