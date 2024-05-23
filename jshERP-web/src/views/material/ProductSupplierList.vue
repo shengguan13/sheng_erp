@@ -116,8 +116,8 @@
           {title: '客商类别', dataIndex: 'supplierType', width: 40},
           {title: '物料编码', dataIndex: 'barCode', width: 70},
           {title: '物料名称', dataIndex: 'materialName', width: 120},
-          {title: '型号', dataIndex: 'model', width: 80},
-          {title: '规格', dataIndex: 'materialModel', width: 80},
+          {title: '客/供型号', dataIndex: 'model', width: 80},
+          {title: '零件号', dataIndex: 'materialModel', width: 80},
           {title: '标包', dataIndex: 'pack', width: 40}
         ],
         url: {

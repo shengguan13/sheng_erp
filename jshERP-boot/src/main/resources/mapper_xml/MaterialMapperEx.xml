@@ -47,7 +47,8 @@
         where m.enabled=1 and me.id is not null
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
@@ -98,7 +99,8 @@
         where m.enabled=1 and me.id is not null
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
@@ -334,7 +336,8 @@
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-                or m.model like #{bindKey} or m.color like #{bindKey} or ps.model like #{bindKey})
+                or m.model like #{bindKey} or m.color like #{bindKey} or ps.model like #{bindKey}
+                or m.other_field5 like #{bindParam})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -362,7 +365,8 @@
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.model like #{bindKey} or m.color like #{bindKey} or ps.model like #{bindKey})
+            or m.model like #{bindKey} or m.color like #{bindKey} or ps.model like #{bindKey}
+            or m.other_field5 like #{bindParam})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -385,7 +389,8 @@
         and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam}or m.model like #{bindKey})
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
@@ -596,7 +601,8 @@
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.color_code like #{bindParam}
-                or m.model like #{bindParam} or m.color like #{bindParam} or ps.model like #{bindParam})
+                or m.model like #{bindParam} or m.color like #{bindParam} or ps.model like #{bindParam}
+                or m.other_field5 like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
@@ -639,7 +645,8 @@
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.color_code like #{bindParam}
-                or m.model like #{bindParam} or m.color like #{bindParam} or ps.model like #{bindParam})
+                or m.model like #{bindParam} or m.color like #{bindParam} or ps.model like #{bindParam}
+                or m.other_field5 like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
@@ -674,7 +681,8 @@
         </if>
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.color_code like #{bindParam} or m.model like #{bindParam})
+            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.color_code like #{bindParam}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>

@@ -1468,6 +1468,8 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '申请数量', dataIndex: 'operNumber'},
+          { title: '到货日期', dataIndex: 'expirationDate'},
+          { title: '收货地', dataIndex: 'anotherDepotName'},
           { title: '已下单', dataIndex: 'finishNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
@@ -1482,8 +1484,10 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '下单数量', dataIndex: 'operNumber'},
-          { title: '已入库', dataIndex: 'finishNumber'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
+          { title: '到货日期', dataIndex: 'expirationDate'},
+          { title: '收货地', dataIndex: 'anotherDepotName'},
+          { title: '已入库', dataIndex: 'finishNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseInColumns: [

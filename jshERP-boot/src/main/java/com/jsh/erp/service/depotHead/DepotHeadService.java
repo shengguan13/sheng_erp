@@ -1097,7 +1097,7 @@ public class DepotHeadService {
 
                 DepotItem depotItem = new DepotItem();
                 depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
-                depotItem.setDepotId(23L);
+                depotItem.setDepotId(null);
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
@@ -1180,8 +1180,8 @@ public class DepotHeadService {
                     depotItem.setMaterialId(materials.get(i).getId());
                     depotItem.setMaterialExtendId(materials.get(i).getId());
                     depotItem.setSnList(batch.getSnList());
-                    depotItem.setDepotId(26L);
-                    depotItem.setAnotherDepotId(28L);
+                    depotItem.setDepotId(null);
+                    depotItem.setAnotherDepotId(null);
                     depotItem.setBatchNumber(batch.getBatchNumber());
                     depotItem.setOperNumber(batch.getTotalNum());
                     depotItem.setBasicNumber(batch.getTotalNum());
@@ -1270,7 +1270,7 @@ public class DepotHeadService {
                 DepotItem depotItem = new DepotItem();
                 depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
                 depotItem.setBatchNumber(batchNumber);
-                depotItem.setDepotId(23L);
+                depotItem.setDepotId(null);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
 
@@ -1628,7 +1628,7 @@ public class DepotHeadService {
 
                 DepotItem depotItem = new DepotItem();
                 depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
-                depotItem.setDepotId(23L);
+                depotItem.setDepotId(null);
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
@@ -1742,8 +1742,8 @@ public class DepotHeadService {
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
-                depotItem.setDepotId(24L);
-                depotItem.setAnotherDepotId(23L);
+                depotItem.setDepotId(null);
+                depotItem.setAnotherDepotId(null);
 
                 if (orderNumberToDepotItems.containsKey(headNumber)) {
                     orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
@@ -1847,8 +1847,8 @@ public class DepotHeadService {
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
-                depotItem.setDepotId(23L);
-                depotItem.setAnotherDepotId(24L);
+                depotItem.setDepotId(null);
+                depotItem.setAnotherDepotId(null);
 
                 if (orderNumberToDepotItems.containsKey(headNumber)) {
                     orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);

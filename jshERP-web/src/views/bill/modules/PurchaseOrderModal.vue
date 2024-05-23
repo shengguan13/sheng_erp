@@ -170,7 +170,7 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
-            { title: '规格', key: 'model', width: '7%', type: FormTypes.normal },
+            { title: '零件号', key: 'model', width: '7%', type: FormTypes.normal },
             { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
@@ -186,6 +186,9 @@
             { title: '供应商代码', key: 'sku', width: '6%', type: FormTypes.popupJsh, kind: 'supplier', multi: false,
               validateRules: [{ required: true, message: '${title}不能为空' }]},
             { title: '到货日期', key: 'expirationDate',width: '6%', type: FormTypes.date },
+            { title: '收货地', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input},
             { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
           ]
@@ -257,6 +260,7 @@
         }
         this.initSystemConfig()
         this.initAccount()
+        this.initDepot()
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {

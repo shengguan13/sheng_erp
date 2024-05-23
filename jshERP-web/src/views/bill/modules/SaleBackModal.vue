@@ -24,7 +24,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
-              <a-select placeholder="选择客户" v-decorator="[ 'organId', validatorRules.organId ]" :disabled="!rowCanEdit"
+              <a-select placeholder="选择客户" v-decorator="[ 'organId' ]" :disabled="!rowCanEdit"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -294,6 +294,7 @@
         this.initSystemConfig()
         this.initCustomer()
         this.initDepot()
+        this.initAllocation()
         this.initAccount()
       },
       //提交单据时整理成formData

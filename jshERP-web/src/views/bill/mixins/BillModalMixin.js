@@ -132,7 +132,7 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.hidden //隐藏
               }
             } else if(key === 'expirationDate') {
-              if(this.prefixNo === 'CGDD') {
+              if(this.prefixNo === 'CGDD' || this.prefixNo === 'CGSQ') {
                 columns[i].type = FormTypes.date //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏

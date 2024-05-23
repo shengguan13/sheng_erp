@@ -181,6 +181,9 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '到货日期', key: 'expirationDate',width: '6%', type: FormTypes.date },
+            { title: '收货地', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input},
           ]
         },
@@ -267,6 +270,7 @@
         this.initAccount()
         this.initDepartment()
         this.initPerson()
+        this.initDepot()
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {

@@ -20,11 +20,6 @@
                   <a-input placeholder="请输入编码、名称、型号、规格查询" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item label="项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input style="width: 100%" placeholder="请输入项目信息查询" v-model="queryParam.project"></a-input>
-                </a-form-item>
-              </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
@@ -81,8 +76,6 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, columnWidth:'2%'}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="handleDetail(record)">查看</a>
-              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="handleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -93,8 +86,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <material-bom-view-modal ref="bomViewModalForm"></material-bom-view-modal>
-        <material-bom-modal ref="modalForm"></material-bom-modal>
+        <material-usage-modal ref="modalForm"></material-usage-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
@@ -102,8 +94,7 @@
   </a-row>
 </template>
 <script>
-  import MaterialBomViewModal from './modules/MaterialBomViewModal'
-  import MaterialBomModal from './modules/MaterialBomModal'
+  import MaterialUsageModal from './modules/MaterialUsageModal'
   import ImportFileModal from '@/components/tools/ImportFileModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
@@ -115,11 +106,10 @@
   import Vue from 'vue'
 
   export default {
-    name: "MaterialBomList",
+    name: "MaterialUsageList",
     mixins:[JeecgListMixin],
     components: {
-      MaterialBomViewModal,
-      MaterialBomModal,
+      MaterialUsageModal,
       ImportFileModal,
       BatchSetInfoModal,
       JEllipsis,
@@ -141,7 +131,6 @@
         queryParam: {
           categoryId:'',
           materialParam:'',
-          project:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
@@ -150,8 +139,8 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['action','project','barCode','process','name','partNo','colorCode','model','color',
-          'category','processUsage','unit','department','source','remark'],
+        settingColumns:['action','barCode','name','colorCode','model','color',
+          'category','number','unit','supplierModel','remark'],
         // 默认的列
         defColumns: [
           {
@@ -161,26 +150,22 @@
             width: 100,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '项目', dataIndex: 'project', width: 70},
           {title: '物料编码', dataIndex: 'barCode', width: 90},
-          {title: '工艺流程', dataIndex: 'process', width: 80},
           {title: '名称', dataIndex: 'name', width: 120},
-          {title: '零件号', dataIndex: 'partNo', width: 80},
-          {title: '零件号', dataIndex: 'model', width: 80},
+          {title: '型号', dataIndex: 'model', width: 80},
+          {title: '规格', dataIndex: 'otherField5', width: 80},
+          {title: '客/供型号', dataIndex: 'supplierModel', width: 80},
           {title: '颜色', dataIndex: 'color', width: 40},
-          {title: '类别', dataIndex: 'category', width: 50},
-          {title: '用量', dataIndex: 'processUsage', width: 50},
-          {title: '单位', dataIndex: 'unit', width: 50},
-          {title: '负责部门', dataIndex: 'department', width: 50},
-          {title: '物料来源', dataIndex: 'source', width: 50},
-          {title: '备注', dataIndex: 'remark', width: 60}
+          {title: '颜色代码', dataIndex: 'colorCode', width: 60},
+          {title: '周用量', dataIndex: 'number', width: 50},
+          {title: '单位', dataIndex: 'unit', width: 50}
         ],
         url: {
-          list: "/materialBom/list",
-          delete: "/materialBom/delete",
-          deleteBatch: "/materialBom/deleteBatch",
-          importExcelUrl: "/materialBom/importExcel",
-          exportXlsUrl: "/materialBom/exportExcel"
+          list: "/materialUsage/list",
+          delete: "/materialUsage/delete",
+          deleteBatch: "/materialUsage/deleteBatch",
+          importExcelUrl: "/materialUsage/importExcel",
+          exportXlsUrl: "/materialUsage/exportExcel"
         }
       }
     },
@@ -233,14 +218,6 @@
           }
         })
       },
-      handleDetail: function (record) {
-        this.$refs.bomViewModalForm.edit(record);
-        this.$refs.bomViewModalForm.title = "详情";
-        this.$refs.bomViewModalForm.disableSubmit = false;
-        if(this.btnEnableList.indexOf(1)===-1) {
-          this.$refs.bomViewModalForm.isReadOnly = true
-        }
-      },
       handleEdit: function (record) {
         this.$refs.modalForm.edit(record);
         this.$refs.modalForm.title = "编辑";
@@ -251,10 +228,10 @@
       },
       handleImportXls() {
         let importExcelUrl = this.url.importExcelUrl
-        let templateUrl = '/doc/bom_template.xls'
-        let templateName = '项目BOM模板[下载]'
+        let templateUrl = '/doc/usage_template.xls'
+        let templateName = '产品用量模板[下载]'
         this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
-        this.$refs.modalImportForm.title = "项目BOM导入";
+        this.$refs.modalImportForm.title = "产品用量导入";
       },
       searchReset() {
         this.queryParam = {

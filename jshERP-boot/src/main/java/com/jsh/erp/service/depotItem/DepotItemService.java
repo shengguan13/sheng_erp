@@ -778,6 +778,11 @@ public class DepotItemService {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_MSG));
                     }
+                } else if (BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
+                        || BusinessConstants.SUB_TYPE_PURCHASE_APPLICATION.equals(depotHead.getSubType())) {
+                    if (StringUtil.isExist(rowObj.get("anotherDepotId"))) {
+                        depotItem.setAnotherDepotId(rowObj.getLong("anotherDepotId"));
+                    }
                 }
                 if(BusinessConstants.SUB_TYPE_ISOLATE.equals(depotHead.getSubType())) {
                     List<Depot> depots = depotService.getDepot();

@@ -531,7 +531,8 @@
         where 1=1 and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
@@ -553,7 +554,8 @@
         where 1=1 and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
@@ -577,7 +579,8 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="billType =='buy'">
             and (dh.sub_type = '采购' or dh.sub_type = '采购退货')
@@ -615,7 +618,8 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="billType =='buy'">
             and (dh.sub_type = '采购' or dh.sub_type = '采购退货')
@@ -657,7 +661,8 @@
         and dh.sub_type = '生产单'
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="beginTime != null">
             and dh.plan_start_time >= #{beginTime}
@@ -690,7 +695,8 @@
         and dh.sub_type = '生产单'
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="beginTime != null">
             and dh.plan_start_time >= #{beginTime}
@@ -992,7 +998,8 @@
             or (ifnull(mis.high_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="depotList.size()>0">
             and mis.depot_id in
@@ -1023,7 +1030,8 @@
             or (ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindParam} or m.color like #{bindParam} or m.model like #{bindKey})
         </if>
         <if test="depotList.size()>0">
             and mis.depot_id in

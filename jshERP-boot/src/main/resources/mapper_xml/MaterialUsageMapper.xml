@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialUsageMapper">
+    <resultMap extends="com.jsh.erp.datasource.mappers.MaterialInitialStockMapper.BaseResultMap" id="ResultAndInfoMap" type="com.jsh.erp.datasource.entities.MaterialInitialStockVo4Info">
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
+        <result column="model" jdbcType="VARCHAR" property="model" />
+        <result column="supplier_model" jdbcType="VARCHAR" property="supplierModel" />
+        <result column="color" jdbcType="VARCHAR" property="color" />
+        <result column="unit" jdbcType="VARCHAR" property="unit" />
+        <result column="other_field5" jdbcType="VARCHAR" property="otherField5" />
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialInitialStockExample" resultMap="ResultAndInfoMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        mi.*, m.name, me.bar_code, m.color_code, m.color, m.model, u.name unit, ps.model supplier_model, m.other_field5 other_field5
+        from jsh_material_initial_stock mi
+        left join jsh_material m on m.id = mi.material_id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        where mi.depot_id=-1
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultAndInfoMap">
+        select mi.*, m.name, me.bar_code, m.color_code, m.color, m.model, u.name unit, ps.model supplier_model, m.other_field5 other_field5
+        from jsh_material_initial_stock mi
+        left join jsh_material m on m.id = mi.material_id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        where mi.depot_id=-1
+        and mi.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectMaterialUsage"  resultMap="ResultAndInfoMap">
+        select mi.*, m.name, me.bar_code, m.color_code, m.color, m.model, u.name unit, ps.model supplier_model, m.other_field5 other_field5
+        from jsh_material_initial_stock mi
+        left join jsh_material m on m.id = mi.material_id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        where mi.depot_id=-1
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindKey} or ps.model like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="idList.size()>0">
+            and m.category_id in
+            <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        and ifnull(mi.delete_flag,'0') !='1'
+        order by mi.id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countMaterialUsage" resultType="java.lang.Long">
+        SELECT count(mi.id) from jsh_material_initial_stock mi
+        left join jsh_material m on m.id = mi.material_id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        where mi.depot_id=-1
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindKey} or ps.model like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="idList.size()>0">
+            and m.category_id in
+            <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        and ifnull(mi.delete_flag,'0') !='1'
+    </select>
+    <update id="batchDeleteMaterialUsageByIds">
+        update jsh_material_initial_stock
+        set delete_flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+        and depot_id=-1
+    </update>
+</mapper>

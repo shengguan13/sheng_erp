@@ -76,9 +76,8 @@
           {dataIndex: 'id', title: '供应商代码', width: 50, align: 'left', ellipsis:true},
           {dataIndex: 'supplierName', title: '供应商', width: 120, align: 'left', ellipsis:true},
           {dataIndex: 'pack', title: '标包', width: 50, ellipsis:true},
-          {dataIndex: 'model', title: '型号', width: 100, ellipsis:true},
+          {dataIndex: 'model', title: '零件号', width: 100, ellipsis:true},
           {dataIndex: 'unit', title: '单位', width: 50, ellipsis:true},
-          {dataIndex: 'model', title: '规格', width: 100, ellipsis:true},
           {dataIndex: 'purchaseCycle', title: '采购周期', width: 50, ellipsis:true}
         ],
         scrollTrigger: {},

@@ -51,10 +51,6 @@ public class Material {
 
     private String otherField10;
 
-    private String otherField11;
-
-    private String otherField12;
-
     private Long tenantId;
 
     private String deleteFlag;

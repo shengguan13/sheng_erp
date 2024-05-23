@@ -71,6 +71,9 @@ const getMaterialAttributeValueListById = (params)=>getAction("/materialAttribut
 const addMaterialBom = (params)=>postAction("/materialBom/add",params);
 const editMaterialBom = (params)=>putAction("/materialBom/update",params);
 const findComposite = (params)=>putAction("/materialBom/findComposite",params);
+//产品用量
+const addMaterialUsage = (params)=>postAction("/materialUsage/add",params);
+const editMaterialUsage = (params)=>putAction("/materialUsage/update",params);
 //功能管理
 const addFunction = (params)=>postAction("/function/add",params);
 const editFunction = (params)=>putAction("/function/update",params);
@@ -167,6 +170,8 @@ export {
   batchUpdateMaterial,
   addMaterialBom,
   editMaterialBom,
+  addMaterialUsage,
+  editMaterialUsage,
   addMaterialAttribute,
   editMaterialAttribute,
   checkMaterialAttribute,
