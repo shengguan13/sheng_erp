@@ -1144,7 +1144,7 @@ public class DepotItemService {
             List<MaterialInitialStockVo4Info> usageList = materialUsageMapper.selectAllUsage();
             Map<String, BigDecimal> barCodeToUsage = new HashMap<>();
             for (MaterialInitialStockVo4Info mi : usageList) {
-                barCodeToUsage.put(mi.getBarCode(), mi.getNumber());
+                barCodeToUsage.put(mi.getBarCode(), mi.getNumber() == null ? BigDecimal.ZERO : mi.getNumber());
             }
             for (DepotItemStockWarningCount sw : list) {
                 sw.setUsagePerWeek(barCodeToUsage.getOrDefault(sw.getBarCode(), BigDecimal.ZERO));

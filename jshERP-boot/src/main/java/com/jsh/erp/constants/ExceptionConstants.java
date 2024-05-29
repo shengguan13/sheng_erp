@@ -360,6 +360,9 @@ public class ExceptionConstants {
     public static final int BOM_USAGE_ERROR_CODE = 8000026;
     public static final String BOM_USAGE_ERROR_MSG = "第%s行用量格式错误";
 
+    public static final int USAGE_ERROR_CODE = 8000027;
+    public static final String USAGE_ERROR_MSG = "物料编码%s数字格式错误";
+
     /**
      *  单据信息
      * type = 85

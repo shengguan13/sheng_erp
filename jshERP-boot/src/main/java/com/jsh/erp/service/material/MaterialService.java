@@ -978,7 +978,7 @@ public class MaterialService {
         if(list!=null && list.size()>0) {
             for(MaterialInitialStock ms: list) {
                 if(ms!=null) {
-                    stock = stock.add(ms.getNumber());
+                    stock = stock.add(ms.getNumber() == null ? BigDecimal.ZERO : ms.getNumber());
                 }
             }
         }
@@ -998,7 +998,7 @@ public class MaterialService {
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
-            stock = list.get(0).getNumber();
+            stock = list.get(0).getNumber() == null ? BigDecimal.ZERO : list.get(0).getNumber();
         }
         return stock;
     }
