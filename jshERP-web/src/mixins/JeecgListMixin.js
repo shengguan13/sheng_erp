@@ -280,6 +280,11 @@ export const JeecgListMixin = {
       this.$refs.modalForm.title = "编辑";
       this.$refs.modalForm.disableSubmit = false;
     },
+    handleAddReceipt: function (record) {
+      this.$refs.receiptForm.edit(record);
+      this.$refs.receiptForm.title = "添加发票";
+      this.$refs.receiptForm.disableSubmit = false;
+    },
     handleAdd: function () {
       this.$refs.modalForm.add();
       this.$refs.modalForm.title = "新增";

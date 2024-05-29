@@ -91,8 +91,6 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" @click="batchSetPurchaseStatus(1)" type="check">签收发票</a-button>
-          <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetPurchaseStatus(0)" type="stop">取消签收发票</a-button>
           <a-tooltip placement="left" title="采购订单不涉及付款金额，采购订单可以转采购入库单，但需要先对采购订单进行审核。
           勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
@@ -118,6 +116,8 @@
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+              <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAddReceipt(record)">发票</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleCopyAdd(record)">复制</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => myHandleDelete(record)">
@@ -132,14 +132,11 @@
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
               <a-tag v-if="record.hasFinancialFlag" color="red">有退货</a-tag>
             </template>
-            <template slot="customRenderReceiptStatus" slot-scope="purchaseStatus, record">
-              <a-tag v-if="purchaseStatus == '0'" color="red">未开票</a-tag>
-              <a-tag v-if="purchaseStatus == '1'" color="green">已开票</a-tag>
-            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
+        <receipt-modal ref="receiptForm" @ok="modalFormOk" @close="modalFormClose"></receipt-modal>
         <purchase-order-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></purchase-order-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
@@ -150,6 +147,7 @@
 <!-- by  ji  sheng  hua-->
 <script>
   import PurchaseOrderModal from './modules/PurchaseOrderModal'
+  import ReceiptModal from './modules/ReceiptModal'
   import BillDetail from './dialog/BillDetail'
   import ImportFileModal from '@/components/tools/ImportFileModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
@@ -161,6 +159,7 @@
     mixins:[JeecgListMixin,BillListMixin],
     components: {
       PurchaseOrderModal,
+      ReceiptModal,
       BillDetail,
       ImportFileModal,
       JDate
@@ -211,16 +210,13 @@
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           },
-          { title: '发票', dataIndex: 'purchaseStatus', width: 80, align: "center",
-            scopedSlots: { customRender: 'customRenderReceiptStatus' }
-          }
+          { title: '发票号码', dataIndex: 'billType', width: 80}
         ],
         url: {
           list: "/depotHead/list",
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
           batchSetStatusUrl: "/depotHead/batchSetStatus",
-          batchSetPurchaseStatusUrl: "/depotHead/batchSetPurchaseStatus",
           importExcelUrl: "/depotHead/importPurchaseOrderExcel"
         }
       }

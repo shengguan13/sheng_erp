@@ -1022,6 +1022,19 @@ public class DepotHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void updateReceipt(String beanJson, HttpServletRequest request) throws Exception {
+        DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        try {
+            depotHeadMapper.updateByPrimaryKeySelective(depotHead);
+        } catch (Exception e) {
+            JshException.writeFail(logger, e);
+        }
+        logService.insertLog("单据",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public BaseResponseInfo importOtherInExcel(MultipartFile file, HttpServletRequest request) throws Exception {
         BaseResponseInfo info = new BaseResponseInfo();
         try {

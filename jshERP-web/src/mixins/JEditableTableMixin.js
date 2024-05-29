@@ -1,5 +1,5 @@
 import JEditableTable from '@/components/jeecg/JEditableTable'
-import { VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
+import { VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables, validateFormOnly } from '@/utils/JEditableTableUtil'
 import { httpAction, getAction } from '@/api/manage'
 
 export const JEditableTableMixin = {
@@ -132,6 +132,23 @@ export const JEditableTableMixin = {
         /** 一次性验证主表和所有的次表 */
         return validateFormAndTables(this.form, tables)
       }).then(allValues => {
+        if (typeof this.classifyIntoFormData !== 'function') {
+          throw this.throwNotFunction('classifyIntoFormData')
+        }
+        let formData = this.classifyIntoFormData(allValues)
+        // 发起请求
+        return this.request(formData)
+      }).catch(e => {
+        if (e.error === VALIDATE_NO_PASSED) {
+          // 如果有未通过表单验证的子表，就自动跳转到它所在的tab
+          this.activeKey = e.index == null ? this.activeKey : this.refKeys[e.index]
+        } else {
+          console.error(e)
+        }
+      })
+    },
+    handleReceiptOk() {
+      validateFormOnly(this.form).then(allValues => {
         if (typeof this.classifyIntoFormData !== 'function') {
           throw this.throwNotFunction('classifyIntoFormData')
         }

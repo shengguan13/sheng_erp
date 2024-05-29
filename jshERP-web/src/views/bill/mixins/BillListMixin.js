@@ -75,6 +75,19 @@ export const BillListMixin = {
         this.$message.warning("抱歉，只有未审核的单据才能编辑！")
       }
     },
+    myHandleAddReceipt(record) {
+      this.$refs.receiptForm.action = "edit";
+      if(this.btnEnableList.indexOf(2)===-1) {
+        this.$refs.receiptForm.isCanCheck = false
+      }
+      //查询单条单据信息
+      findBillDetailByNumber({ number: record.number }).then((res) => {
+        if (res && res.code === 200) {
+          let item = res.data
+          this.handleAddReceipt(item)
+        }
+      })
+    },
     myHandleDelete(record) {
       if(record.status === '0') {
         this.handleDelete(record.id)

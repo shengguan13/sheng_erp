@@ -241,7 +241,7 @@
           }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model, 'operTime', 'number', 'remark', 'discountLastMoney','accountId'))
+            this.form.setFieldsValue(pick(this.model, 'operTime', 'linkNumber', 'number', 'remark', 'discountLastMoney','accountId'))
           });
           // 加载子表数据
           let params = {

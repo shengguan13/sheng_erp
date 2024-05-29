@@ -75,6 +75,27 @@ export function validateFormAndTables(form, cases) {
 
 }
 
+export function validateFormOnly(form) {
+
+  if (!(form && typeof form.validateFields === 'function')) {
+    throw `form 参数需要的是一个form对象，而传入的却是${typeof form}`
+  }
+
+  let options = {}
+  return new Promise((resolve, reject) => {
+    // 验证主表表单
+    form.validateFields((err, values) => {
+      err ? reject({ error: VALIDATE_NO_PASSED }) : resolve(values)
+    })
+  }).then(values => {
+    Object.assign(options, { formValue: values })
+    return Promise.resolve(options)
+  }).catch(error => {
+    return Promise.reject(error)
+  })
+
+}
+
 /**
  * 验证并获取一个或多个表格的所有值
  * @param cases 接收一个数组，每项都是一个JEditableTable实例

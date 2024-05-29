@@ -563,6 +563,15 @@ public class DepotHeadController {
         return result;
     }
 
+    @PutMapping(value = "/updateReceipt")
+    @ApiOperation(value = "更新单据主表中发票")
+    public Object updateReceipt(@RequestBody DepotHeadVo4Body body, HttpServletRequest request) throws Exception{
+        JSONObject result = ExceptionConstants.standardSuccess();
+        String beanJson = body.getInfo();
+        depotHeadService.updateReceipt(beanJson, request);
+        return result;
+    }
+
     /**
      * 统计今日采购额、昨日采购额、本月采购额、今年采购额|销售额|零售额
      * @param request

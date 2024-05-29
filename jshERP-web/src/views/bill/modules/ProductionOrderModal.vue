@@ -265,8 +265,7 @@
           this.model.operTime = this.model.operTimeStr
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime',
-            'planStartTime', 'workHour', 'number', 'linkNumber', 'remark'))
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'planStartTime', 'workHour', 'number', 'linkNumber', 'remark'))
           });
           // 加载子表数据
           let params = {
