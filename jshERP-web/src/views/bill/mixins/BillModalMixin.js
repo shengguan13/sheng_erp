@@ -260,13 +260,25 @@ export const BillModalMixin = {
           for(let item of that.materialTable.columns){
             if(item.key == 'snList') {
               item.options = []
+              let info1 = {};
+              info1.value = 564
+              info1.text = "期初-期初"
+              info1.title = "期初-期初"
+              let info2 = {};
+              info2.value = 565
+              info2.text = "隔离-隔离"
+              info2.title = "隔离-隔离"
+              item.options.push(info1)
+              item.options.push(info2)
               for(let i=0; i<arr.length; i++) {
-                let allocationInfo = {};
-                let text = arr[i].allocation + '-' + arr[i].type;
-                allocationInfo.value = arr[i].id
-                allocationInfo.text = text
-                allocationInfo.title = text
-                item.options.push(allocationInfo)
+                if( arr[i].allocation!='期初' && arr[i].allocation!='隔离' ) {
+                  let allocationInfo = {};
+                  let text = arr[i].allocation + '-' + arr[i].type;
+                  allocationInfo.value = arr[i].id
+                  allocationInfo.text = text
+                  allocationInfo.title = text
+                  item.options.push(allocationInfo)
+                }
               }
             }
           }
@@ -322,6 +334,11 @@ export const BillModalMixin = {
       this.$refs.batchSetDepotModalForm.add();
       this.$refs.batchSetDepotModalForm.title = "批量设置仓库";
       this.$refs.batchSetDepotModalForm.disableSubmit = false;
+    },
+    handleBatchSetAllocation() {
+      this.$refs.batchSetAllocationModalForm.add();
+      this.$refs.batchSetAllocationModalForm.title = "批量设置货位";
+      this.$refs.batchSetAllocationModalForm.disableSubmit = false;
     },
     addDepot() {
       this.$refs.depotModalForm.add();
@@ -387,6 +404,21 @@ export const BillModalMixin = {
             this.materialTable.dataSource = newDetailArr
           }
         })
+      })
+    },
+    batchSetAllocationModalFormOk(snList) {
+      this.getAllTable().then(tables => {
+        return getListData(this.form, tables)
+      }).then(allValues => {
+        //获取单据明细列表信息
+        let detailArr = allValues.tablesValue[0].values
+        let newDetailArr = []
+        for(let detail of detailArr){
+          let item = detail
+          item.snList = snList
+          newDetailArr.push(item)
+        }
+        this.materialTable.dataSource = newDetailArr
       })
     },
     depotModalFormOk() {

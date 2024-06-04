@@ -224,14 +224,13 @@ public class MaterialBomService {
                 if (StringUtil.isEmpty(process)) {
                     continue;
                 }
-                String partNo = ExcelUtils.getContent(src, i, 1); //规格
-                String barCode = ExcelUtils.getContent(src, i, 2); //编码
-
-                String project = ExcelUtils.getContent(src, i, 13); //项目
-                String department = ExcelUtils.getContent(src, i, 28); //部门
-                String source = ExcelUtils.getContent(src, i, 14); //物料来源
-                String processUsage = ExcelUtils.getContent(src, i, 15); //用量
-                String unit = ExcelUtils.getContent(src, i, 10); //单位
+                String barCode = ExcelUtils.getContent(src, i, 1); //编码
+                String partNo = ExcelUtils.getContent(src, i, 2); //零件号
+                String project = ExcelUtils.getContent(src, i, 3); //项目
+                String department = ExcelUtils.getContent(src, i, 4); //部门
+                String source = ExcelUtils.getContent(src, i, 5); //物料来源
+                String processUsage = ExcelUtils.getContent(src, i, 6); //用量
+                String unit = ExcelUtils.getContent(src, i, 7); //单位
 
                 // 批量校验excel中有无重复BOM
                 batchCheckExistMaterialBomByParam(bomList, process, project, barCode);
@@ -258,10 +257,10 @@ public class MaterialBomService {
                 }
                 //bom.setRemark(remark);
                 //校验产品编码
-                if(!StringUtil.checkBarCodeEmptyAllowed(barCode)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
-                            String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
-                }
+//                if(!StringUtil.checkBarCodeEmptyAllowed(barCode)) {
+//                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
+//                            String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
+//                }
                 bomList.add(bom);
             }
             for (MaterialBom bom : bomList) {

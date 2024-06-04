@@ -192,6 +192,11 @@ public class DepotHeadService {
                     if (StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap, dh.getSalesMan()));
                     }
+                    if (dh.getSubType().equals(SUB_TYPE_PURCHASE_ORDER) && dh.getLinkNumber() != null && !"".equals(dh.getLinkNumber())) {
+                        DepotHead purchaseApplication = getDepotHead(dh.getLinkNumber());
+                        if (purchaseApplication != null && purchaseApplication.getSalesMan() != null)
+                        dh.setSalesManStr(personService.getPersonByMapAndIds(personMap, purchaseApplication.getSalesMan()));
+                    }
                     if (dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }

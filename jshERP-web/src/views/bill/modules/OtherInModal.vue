@@ -71,15 +71,14 @@
                 <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
-            <a-row :gutter="24" style="float:left;">
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
               <a-col :md="24" :sm="24">
-                <a-dropdown>
-                  <a-menu slot="overlay">
-                    <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
-                    <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
-                  </a-menu>
-                  <a-button style="margin-left: 8px">仓库操作 <a-icon type="down" /></a-button>
-                </a-dropdown>
+                <a-button @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置仓库</a-button>
+              </a-col>
+            </a-row>
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
+              <a-col :md="24" :sm="24">
+                <a-button @click="handleBatchSetAllocation"><a-icon type="setting"/>批量设置货位</a-button>
               </a-col>
             </a-row>
           </template>
@@ -103,6 +102,7 @@
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
+    <batch-set-allocation ref="batchSetAllocationModalForm" @ok="batchSetAllocationModalFormOk"></batch-set-allocation>
   </j-modal>
 </template>
 <script>
@@ -110,6 +110,7 @@
   import VendorModal from '../../system/modules/VendorModal'
   import DepotModal from '../../system/modules/DepotModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
+  import BatchSetAllocation from '../dialog/BatchSetAllocation'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -124,6 +125,7 @@
       VendorModal,
       DepotModal,
       BatchSetDepot,
+      BatchSetAllocation,
       JUpload,
       JDate,
       VNodes: {
