@@ -1137,10 +1137,10 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public List<DepotItemStockWarningCount> findStockWarningCount(Integer offset, Integer rows, String materialParam, List<Long> depotList) {
+    public List<DepotItemStockWarningCount> findStockWarningCount(String materialParam, List<Long> depotList) {
         List<DepotItemStockWarningCount> list = null;
         try{
-            list =depotItemMapperEx.findStockWarningCount(offset, rows, materialParam, depotList);
+            list = depotItemMapperEx.findStockWarningCount(materialParam, depotList);
             List<MaterialInitialStockVo4Info> usageList = materialUsageMapper.selectAllUsage();
             Map<String, BigDecimal> barCodeToUsage = new HashMap<>();
             for (MaterialInitialStockVo4Info mi : usageList) {
@@ -1150,7 +1150,7 @@ public class DepotItemService {
                 sw.setUsagePerWeek(barCodeToUsage.getOrDefault(sw.getBarCode(), BigDecimal.ZERO));
             }
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }

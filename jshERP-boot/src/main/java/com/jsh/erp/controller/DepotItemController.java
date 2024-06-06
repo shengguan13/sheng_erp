@@ -12,16 +12,13 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotAllocation.DepotAllocationService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
-import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -948,7 +946,8 @@ public class DepotItemController {
                 }
             }
             String[] mpArr = mpList.split(",");
-            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize, materialParam, depotList);
+            int offset = (currentPage - 1) * pageSize, rows = pageSize;
+            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount(materialParam, depotList);
             //存放数据json数组
             if (null != list) {
                 for (DepotItemStockWarningCount disw : list) {
@@ -966,19 +965,26 @@ public class DepotItemController {
                     diEx.setMOtherField10(disw.getMOtherField10());
                     disw.setMaterialOther(getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
-                    if(null!=disw.getLowSafeStock() && disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {
-                        disw.setLowCritical(disw.getLowSafeStock()
-                                .add(disw.getUsagePerWeek().multiply(BigDecimal.valueOf(4)))
-                                .subtract(disw.getCurrentNumber()));
+                    BigDecimal current = disw.getCurrentNumber() == null ? BigDecimal.ZERO : disw.getCurrentNumber();
+                    BigDecimal required = disw.getLowSafeStock() == null ? disw.getUsagePerWeek().multiply(BigDecimal.valueOf(4)) :
+                            disw.getLowSafeStock().add(disw.getUsagePerWeek().multiply(BigDecimal.valueOf(4)));
+                    if(null!=disw.getLowSafeStock() && required.compareTo(current) > 0) {
+                        disw.setLowCritical(required.subtract(current));
                     }
-                    if(null!=disw.getHighSafeStock() && disw.getCurrentNumber().compareTo(disw.getHighSafeStock())>0) {
-                        disw.setHighCritical(disw.getCurrentNumber().subtract(disw.getHighSafeStock()));
+                    if(null!=disw.getHighSafeStock() && current.compareTo(disw.getHighSafeStock()) > 0) {
+                        disw.setHighCritical(current.subtract(disw.getHighSafeStock()));
+                    }
+                    if (required.doubleValue() == 0) {
+                        disw.setStockLevel(BigDecimal.ONE);
+                    } else {
+                        disw.setStockLevel(current.divide(required, 3, RoundingMode.HALF_UP));
                     }
                 }
             }
+            list.sort(Comparator.comparingDouble(a -> a.getStockLevel().doubleValue()));
             int total = depotItemService.findStockWarningCountTotal(materialParam, depotList);
             map.put("total", total);
-            map.put("rows", list);
+            map.put("rows", list.subList(offset, Math.min(offset + rows, total)));
             res.code = 200;
             res.data = map;
         } catch(Exception e){

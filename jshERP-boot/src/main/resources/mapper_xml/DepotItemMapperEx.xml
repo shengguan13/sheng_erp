@@ -995,8 +995,7 @@
         and me.default_flag=1
         and ifnull(m.delete_flag,'0') !='1'
         and mis.depot_id=mcs.depot_id
-        and ((ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number &lt; ifnull(mis.low_safe_stock,0))
-            or (ifnull(mis.high_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
+        and (ifnull(mis.low_safe_stock,0)!=0 or ifnull(mis.high_safe_stock,0)!=0 or ifnull(mcs.current_number,0)!=0)
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
@@ -1008,15 +1007,16 @@
                 #{item}
             </foreach>
         </if>
-        order by depotName asc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
     </select>
 
     <select id="findStockWarningCountTotal" resultType="java.lang.Integer">
         select count(1) from
-        (select m.id
+        (select m.id MId, m.name MName, me.bar_code, m.mat MMat, m.model MModel, m.color_code MColorCode,
+        m.color MColor, m.other_field1 MOtherField1,m.other_field2 MOtherField2,
+        m.other_field3 MOtherField3, m.other_field4 MOtherField4,m.other_field5 MOtherField5,
+        m.other_field6 MOtherField6, m.other_field7 MOtherField7,m.other_field8 MOtherField8,
+        m.other_field9 MOtherField9, m.other_field10 MOtherField10,
+        d.name depotName, m.unit MaterialUnit, u.basic_unit unit_name,mcs.current_number, mis.low_safe_stock, mis.high_safe_stock
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material_initial_stock mis on mis.material_id=m.id and ifnull(mis.delete_Flag,'0') !='1'
@@ -1028,8 +1028,7 @@
         and me.default_flag=1
         and ifnull(m.delete_flag,'0') !='1'
         and mis.depot_id=mcs.depot_id
-        and ((ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number &lt; ifnull(mis.low_safe_stock,0))
-            or (ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
+        and (ifnull(mis.low_safe_stock,0)!=0 or ifnull(mis.high_safe_stock,0)!=0 or ifnull(mcs.current_number,0)!=0)
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}

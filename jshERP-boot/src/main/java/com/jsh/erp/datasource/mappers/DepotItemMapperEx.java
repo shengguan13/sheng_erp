@@ -209,8 +209,6 @@ public interface DepotItemMapperEx {
     List<DepotItem> getDepotItemListListByMaterialIds(@Param("materialIds") String[] materialIds);
 
     List<DepotItemStockWarningCount> findStockWarningCount(
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList);
 
