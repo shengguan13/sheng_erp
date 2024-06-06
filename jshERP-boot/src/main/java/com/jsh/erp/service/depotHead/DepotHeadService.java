@@ -505,7 +505,9 @@ public class DepotHeadService {
                             || (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&          // 生产入库（关联生产单）
                             BusinessConstants.SUB_TYPE_PRODUCTION.equals(depotHead.getSubType()))
                             || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&       // 采购订单（关联采购申请）
-                            SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType()))) {
+                            SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType()))
+                            || (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&       // 退料（关联领料）
+                            SUB_TYPE_MATERIAL_RETURN.equals(depotHead.getSubType()))) {
 
                         String billStatus = depotItemService.getBillStatusByParam(depotHead);
                         depotItemService.changeBillStatus(depotHead, billStatus);
@@ -1235,32 +1237,38 @@ public class DepotHeadService {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
-            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
-            Map<String, String> allocationNameToId = new HashMap<>();
-            for (DepotAllocation depotAllocation : allocationList) {
-                allocationNameToId.put(depotAllocation.getAllocation(), depotAllocation.getId().toString());
-            }
-
+//            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+//            Map<String, String> allocationNameToId = new HashMap<>();
+//            for (DepotAllocation depotAllocation : allocationList) {
+//                allocationNameToId.put(depotAllocation.getAllocation(), depotAllocation.getId().toString());
+//            }
             Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
             Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
+            Date dateValue = new Date();
+            try {
+                dateValue = new SimpleDateFormat("M/d/yyyy HH:mm:ss").parse("6/3/2024 12:00:00");
+            } catch (Exception e) {}
+            DepotHead depotHead = new DepotHead();
+            String headNumber = "XSCK" + sequenceService.buildOnlyNumber();
+            depotHead.setType("出库");
+            depotHead.setSubType("销售");
+            depotHead.setNumber(headNumber);
+            depotHead.setDefaultNumber(headNumber);
+            depotHead.setCreateTime(dateValue);
+            depotHead.setOperTime(dateValue);
+            depotHead.setCreator(63L);
+            depotHead.setPayType("现付");
+            depotHead.setStatus("0");
+            depotHead.setPurchaseStatus("0");
+            depotHead.setDeleteFlag("0");
+            orderNumberToDepotHead.put(headNumber, depotHead);
             for (int i = 1; i < rightRows; i++) {
-                String date = ExcelUtils.getContent(src, i, 0); //日期
-                Date dateValue;
-                try {
-                    dateValue = new SimpleDateFormat("M/d/yy").parse(date);
-                } catch (Exception e) {
-                    continue;
-                }
-
-                String barCode = ExcelUtils.getContent(src, i, 1); //物料编码
+                String barCode = ExcelUtils.getContent(src, i, 0); //物料编码
                 List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
                 if (mList.isEmpty()) {
                     continue;
                 }
-
-                String batchNumber = ExcelUtils.getContent(src, i, 3); //批号
-                String allocation = ExcelUtils.getContent(src, i, 2); //货位
-                String operNumber = ExcelUtils.getContent(src, i, 4); //数量
+                String operNumber = ExcelUtils.getContent(src, i, 1); //数量
                 BigDecimal operNumberValue;
                 try {
                     operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
@@ -1270,35 +1278,18 @@ public class DepotHeadService {
                 if (operNumberValue.compareTo(BigDecimal.ZERO) <= 0) {
                     continue;
                 }
-
-                String headNumber = "QTCK" + sequenceService.buildOnlyNumber();
-                DepotHead depotHead = new DepotHead();
-                depotHead.setType("出库");
-                depotHead.setSubType("其它");
-                depotHead.setNumber(headNumber);
-                depotHead.setDefaultNumber(headNumber);
-                depotHead.setCreateTime(dateValue);
-                depotHead.setOperTime(dateValue);
-                depotHead.setCreator(63L);
-                depotHead.setPayType("现付");
-                depotHead.setStatus("1");
-                depotHead.setPurchaseStatus("0");
-                depotHead.setDeleteFlag("0");
-
                 DepotItem depotItem = new DepotItem();
-                depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
-                depotItem.setBatchNumber(batchNumber);
-                depotItem.setDepotId(null);
+                //depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
+                //depotItem.setBatchNumber(batchNumber);
+                depotItem.setDepotId(26L);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
-
                 if (orderNumberToDepotItems.containsKey(headNumber)) {
                     orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
                 } else {
                     orderNumberToDepotItems.put(headNumber, new HashMap<>());
                     orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
                 }
-                orderNumberToDepotHead.put(headNumber, depotHead);
             }
             importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
             Long endTime = System.currentTimeMillis();
