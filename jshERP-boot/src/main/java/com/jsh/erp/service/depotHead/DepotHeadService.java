@@ -1139,34 +1139,176 @@ public class DepotHeadService {
 //                orderNumberToDepotHead.put(headNumber, depotHead);
 //            }
 //            importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+
             List<Material> materials = materialService.getMaterial();
             int count = 0;
             for (Material material : materials) {
-                if (count == 1) {
+                if (count == 20) {
                     break;
                 }
-                DepotItemExample example = new DepotItemExample();
-                example.createCriteria().andMaterialExtendIdEqualTo(material.getId()).andDeleteFlagNotEqualTo("1");
-                List<DepotItem> items = depotItemMapper.selectByExample(example);
-                if (items == null || items.size() == 0) {
+                boolean adjusted = false;
+                // 处理单一物料，以及单一仓库的出入库
+                String barCode = materialService.getMaterialByMeId(material.getId()).get(0).getmBarCode();
+                long depotId = 26L;
+                List<DepotItemVoBatchNumberList> batchList =  depotItemMapperEx.getBatchNumberList(null, null, depotId, barCode, null);
+                if (batchList == null || batchList.isEmpty()) {
                     continue;
                 }
-                List<Long> headerIds = new ArrayList<>(items.stream().map(x -> x.getHeaderId()).collect(Collectors.toSet()));
-                DepotHeadExample headExample = new DepotHeadExample();
-                headExample.createCriteria().andIdIn(headerIds).andDeleteFlagNotEqualTo("1");
-                List<DepotHead> heads = depotHeadMapper.selectByExample(headExample);
-                if (heads == null || heads.size() == 0) {
+                Map<String, Double> batchNumberToAmount = new HashMap<>();
+                for (DepotItemVoBatchNumberList batch : batchList) {
+                    if (batch.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
+                        batchNumberToAmount.merge(batch.getBatchNumber(), batch.getTotalNum().doubleValue(), Double::sum);
+                    }
+                }
+                // 负数的批次都需要校正
+                Set<String> batchToAdjust = new HashSet<>();
+                for (Map.Entry<String, Double> entry : batchNumberToAmount.entrySet()) {
+                    if (entry.getValue() < 0) {
+                        batchToAdjust.add(entry.getKey());
+                    }
+                }
+                if (!batchToAdjust.isEmpty()) {
+                    logger.info("XXXXX 仓库" + depotId + "中物料" + barCode + "需要调整");
+                    logger.info("XXXXX 调整前");
+                    for (Map.Entry<String, Double> entry : batchNumberToAmount.entrySet()) {
+                        logger.info("XXXXX " + entry.getKey() + ": " + entry.getValue());
+                    }
+                } else {
+                    logger.info("XXXXX 仓库" + depotId + "中物料" + barCode + "不需要调整");
                     continue;
                 }
-                Map<Long, DepotHead> depotHeadMap = new HashMap<>();
-                for (DepotHead head : heads) {
-                    depotHeadMap.put(head.getId(), head);
-                }
-                List<Long> depotList = Arrays.asList(23L, 26L, 27L, 28L);
-                for (Long depotId : depotList) {
+                for (String batch : batchToAdjust) {
+                    logger.info("XXXXX 调整中 " + batch);
+                    DepotItemExample itemExample = new DepotItemExample();
+                    itemExample.createCriteria().andMaterialIdEqualTo(material.getId())
+                            .andDepotIdEqualTo(depotId)
+                            .andBatchNumberEqualTo(batch)
+                            .andDeleteFlagNotEqualTo("1");
 
+                    List<DepotItem> items = depotItemMapper.selectByExample(itemExample);
+                    logger.info("XXXXX 找到" + batch + "的item*" + (items == null ? 0 : items.size()));
+                    if (items == null || items.size() == 0) {
+                        continue;
+                    }
+                    List<Long> headerIds = new ArrayList<>(items.stream().map(x -> x.getHeaderId()).collect(Collectors.toSet()));
+                    DepotHeadExample headExample = new DepotHeadExample();
+                    headExample.createCriteria().andTypeEqualTo("出库")
+                            .andSubTypeIn(Arrays.asList("其它","销售"))
+                            .andIdIn(headerIds)
+                            .andDeleteFlagNotEqualTo("1");
+                    List<DepotHead> heads = depotHeadMapper.selectByExample(headExample);
+                    logger.info("XXXXX 找到" + batch + "的head*" + (heads == null ? 0 : heads.size()));
+                    if (heads == null || heads.size() == 0) {
+                        continue;
+                    }
+                    // 重新筛选含有问题批次的，单据类型符合的headId
+                    headerIds = heads.stream().map(e -> e.getId()).collect(Collectors.toList());
+                    List<String> sortedBatchNumber = batchNumberToAmount.keySet().stream().sorted().collect(Collectors.toList());
+                    for (DepotItem item : items) {
+                        if (!headerIds.contains(item.getHeaderId())) {
+                            continue;
+                        }
+                        adjusted = true;
+                        logger.info("XXXXX 准备处理 depotItem " + item.getDepotId() + "-" + item.getBatchNumber() + "-" + item.getBasicNumber());
+                        // 单个就能解决负数的问题，这一笔多出了，把多余的部分分到别的批号（单个或者多个）
+                        if (item.getBasicNumber().doubleValue() + batchNumberToAmount.get(item.getBatchNumber()) > 0) {
+                            BigDecimal newAmount = BigDecimal.valueOf(item.getBasicNumber().doubleValue() + batchNumberToAmount.get(item.getBatchNumber()));
+                            DepotItem updated = new DepotItem();
+                            updated.setBasicNumber(newAmount);
+                            updated.setOperNumber(newAmount);
+                            DepotItemExample example = new DepotItemExample();
+                            example.createCriteria().andIdEqualTo(item.getId());
+                            int result = depotItemMapper.updateByExampleSelective(updated, example);
+                            logger.info("XXXXX 更新 depotItem " + item.getDepotId() + "-" + item.getBatchNumber() + "-" + newAmount);
+                            double remain = 0.0 - batchNumberToAmount.get(item.getBatchNumber());
+                            batchNumberToAmount.put(item.getBatchNumber(), 0.0);
+                            while (remain > 0.0) {
+                                for (String otherBatch : sortedBatchNumber) {
+                                    if (batchNumberToAmount.get(otherBatch) <= 0) {
+                                        continue;
+                                    }
+                                    if (batchNumberToAmount.get(otherBatch) >= remain) {
+                                        DepotItem newItem = DepotItem.copyWithoutId(item);
+                                        newItem.setBasicNumber(BigDecimal.valueOf(remain));
+                                        newItem.setOperNumber(BigDecimal.valueOf(remain));
+                                        newItem.setBatchNumber(otherBatch);
+                                        depotItemMapper.insertSelective(newItem);
+                                        logger.info("XXXXX 新增 depotItem " + newItem.getDepotId() + "-" + newItem.getBatchNumber() + "-" + newItem.getBasicNumber());
+                                        batchNumberToAmount.put(otherBatch, batchNumberToAmount.get(otherBatch) - remain);
+                                        remain = 0.0;
+                                    } else {
+                                        remain -= batchNumberToAmount.get(otherBatch);
+                                        DepotItem newItem = DepotItem.copyWithoutId(item);
+                                        newItem.setBasicNumber(BigDecimal.valueOf(batchNumberToAmount.get(otherBatch)));
+                                        newItem.setOperNumber(BigDecimal.valueOf(batchNumberToAmount.get(otherBatch)));
+                                        newItem.setBatchNumber(otherBatch);
+                                        depotItemMapper.insertSelective(newItem);
+                                        logger.info("XXXXX 新增 depotItem " + newItem.getDepotId() + "-" + newItem.getBatchNumber() + "-" + newItem.getBasicNumber());
+                                        batchNumberToAmount.put(otherBatch, 0.0);
+                                    }
+                                    if (remain <= 0.0) {
+                                        break;
+                                    }
+                                }
+                            }
+                            // 单个depotItem改过来就可以了，这个批次就不用修正了
+                            break;
+                        } else {
+                            // 单个不能解决负数的问题，这一笔出多了，全部修改到别的批号（单个或者多个）
+                            double remain = item.getBasicNumber().doubleValue();
+                            batchNumberToAmount.put(item.getBatchNumber(), batchNumberToAmount.get(item.getBatchNumber()) + remain);
+                            while (remain > 0.0) {
+                                for (String otherBatch : sortedBatchNumber) {
+                                    if (batchNumberToAmount.get(otherBatch) <= 0) {
+                                        continue;
+                                    }
+                                    if (batchNumberToAmount.get(otherBatch) >= remain) {
+                                        DepotItem newItem = DepotItem.copyWithoutId(item);
+                                        newItem.setBasicNumber(BigDecimal.valueOf(remain));
+                                        newItem.setOperNumber(BigDecimal.valueOf(remain));
+                                        newItem.setBatchNumber(otherBatch);
+                                        depotItemMapper.insertSelective(newItem);
+                                        logger.info("XXXXX 新增 depotItem " + newItem.getDepotId() + "-" + newItem.getBatchNumber() + "-" + newItem.getBasicNumber());
+                                        batchNumberToAmount.put(otherBatch, batchNumberToAmount.get(otherBatch) - remain);
+                                        remain = 0.0;
+                                    } else {
+                                        remain -= batchNumberToAmount.get(otherBatch);
+                                        DepotItem newItem = DepotItem.copyWithoutId(item);
+                                        newItem.setBasicNumber(BigDecimal.valueOf(batchNumberToAmount.get(otherBatch)));
+                                        newItem.setOperNumber(BigDecimal.valueOf(batchNumberToAmount.get(otherBatch)));
+                                        newItem.setBatchNumber(otherBatch);
+                                        depotItemMapper.insertSelective(newItem);
+                                        logger.info("XXXXX 新增 depotItem " + newItem.getDepotId() + "-" + newItem.getBatchNumber() + "-" + newItem.getBasicNumber());
+                                        batchNumberToAmount.put(otherBatch, 0.0);
+                                    }
+                                    if (remain <= 0.0) {
+                                        break;
+                                    }
+                                }
+                            }
+                            int result = depotItemMapper.deleteByPrimaryKey(item.getId());
+                            logger.info("XXXXX 删除 depotItem " + item.getDepotId() + "-" + item.getBatchNumber() + "-" + item.getBasicNumber());
+                            // 如果一个或者多个depotItem之后，批次库存是正数了，就不用修正了
+                            if (batchNumberToAmount.get(item.getBatchNumber()) >= 0) {
+                                break;
+                            }
+                        }
+                    }
                 }
-                count += 1;
+                List<DepotItemVoBatchNumberList> afterList =  depotItemMapperEx.getBatchNumberList(null, null, depotId, barCode, null);
+                Map<String, Double> afterMap = new HashMap<>();
+                for (DepotItemVoBatchNumberList batch : afterList) {
+                    if (batch.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
+                        afterMap.merge(batch.getBatchNumber(), batch.getTotalNum().doubleValue(), Double::sum);
+                    }
+                }
+                logger.info("XXXXX 调整后");
+                for (Map.Entry<String, Double> entry : afterMap.entrySet()) {
+                    logger.info("XXXXX " + entry.getKey() + ": " + entry.getValue());
+                }
+                if (adjusted) {
+                    count += 1;
+                }
             }
             Long endTime = System.currentTimeMillis();
             logger.info("导入耗时：{}", endTime - beginTime);
@@ -1275,7 +1417,7 @@ public class DepotHeadService {
             Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
             Date dateValue = new Date();
             try {
-                dateValue = new SimpleDateFormat("M/d/yyyy HH:mm:ss").parse("6/3/2024 12:00:00");
+                dateValue = new SimpleDateFormat("M/d/yyyy HH:mm:ss").parse("1/1/2025 12:00:00");
             } catch (Exception e) {}
             DepotHead depotHead = new DepotHead();
             String headNumber = "XSCK" + sequenceService.buildOnlyNumber();
@@ -1321,6 +1463,7 @@ public class DepotHeadService {
                 }
             }
             importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+            logger.info("XXXXX depotHead number " + depotHead.getNumber());
             Long endTime = System.currentTimeMillis();
             logger.info("导入耗时：{}", endTime - beginTime);
             info.code = 200;

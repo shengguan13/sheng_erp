@@ -347,8 +347,8 @@
         if(billMain.accountId === 0) {
           billMain.accountId = ''
         }
-        billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
-        billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
+        billMain.accountIdList = ""
+        billMain.accountMoneyList = ""
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {

@@ -253,4 +253,31 @@ public class DepotItem {
     public void setDeleteFlag(String deleteFlag) {
         this.deleteFlag = deleteFlag == null ? null : deleteFlag.trim();
     }
+
+    public static DepotItem copyWithoutId(DepotItem source) {
+        DepotItem dest = new DepotItem();
+        dest.setHeaderId(source.getHeaderId());
+        dest.setMaterialId(source.getMaterialId());
+        dest.setMaterialExtendId(source.getMaterialExtendId());
+        dest.setMaterialUnit(source.getMaterialUnit());
+        dest.setSku(source.getSku());
+        dest.setLinkId(source.getLinkId());
+        dest.setUnitPrice(source.getUnitPrice());
+        dest.setPurchaseUnitPrice(source.getPurchaseUnitPrice());
+        dest.setTaxUnitPrice(source.getTaxUnitPrice());
+        dest.setAllPrice(source.getAllPrice());
+        dest.setDepotId(source.getDepotId());
+        dest.setAnotherDepotId(source.getAnotherDepotId());
+        dest.setTaxRate(source.getTaxRate());
+        dest.setTaxMoney(source.getTaxMoney());
+        dest.setTaxLastMoney(source.getTaxLastMoney());
+        dest.setMaterialType(source.getMaterialType());
+        dest.setRemark(source.getRemark());
+        dest.setSnList(source.getSnList());
+        dest.setBatchNumber(source.getBatchNumber());
+        dest.setExpirationDate(source.getExpirationDate());
+        dest.setBasicNumber(source.getBasicNumber());
+        dest.setOperNumber(source.getOperNumber());
+        return dest;
+    }
 }
