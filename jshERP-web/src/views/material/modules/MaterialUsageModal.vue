@@ -30,13 +30,43 @@
             <a-input placeholder="请输入周用量" v-decorator.trim="[ 'number', validatorRules.number ]" />
           </a-form-item>
         </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请部门">
+            <a-select placeholder="选择部门" v-model="selectedDepartment"
+              :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+              <a-select-option v-for="(item,index) in departmentList.options" :key="index" :value="item.value">
+                {{ item.text }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请人">
+            <a-select placeholder="选择申请人" v-decorator="[ 'salesMan', validatorRules.salesMan ]"
+              :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+              <a-select-option v-for="(item,index) in dynamicOptions" :key="index" :value="item.value">
+                {{ item.text }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请原因">
+            <a-input placeholder="请输入申请原因" v-decorator.trim="[ 'remark', validatorRules.remark ]" />
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请日期">
+            <a-input placeholder="请输入申请日期" v-decorator.trim="[ 'time', validatorRules.time ]" />
+          </a-form-item>
+        </a-form>
       </a-spin>
     </a-modal>
   </div>
 </template>
 <script>
   import pick from 'lodash.pick'
-  import {addMaterialUsage,editMaterialUsage,checkMaterialAttribute } from '@/api/api'
+  import {addMaterialUsage,editMaterialUsage,checkMaterialAttribute,getAllPerson,getDepartment } from '@/api/api'
   import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "MaterialUsageModal",
@@ -46,6 +76,16 @@
         title:"操作",
         visible: false,
         model: {},
+        dynamicOptions:[],
+        selectedDepartment:'',
+        personList: {
+          options: [],
+          value: ''
+        },
+        departmentList: {
+          options: [],
+          value: ''
+        },
         isReadOnly: false,
         labelCol: {
           xs: { span: 24 },
@@ -67,22 +107,65 @@
             rules: [
               { required: true, message: '请输入周用量!' }
             ]
-          }
+          },
+          salesMan:{
+            rules: [
+              { required: true, message: '请选择申请人!' }
+            ]
+          },
+          remark:{
+            rules: [
+              { required: true, message: '请选择申请原因!' }
+            ]
+          },
+          time:{
+            rules: [
+              { required: true, message: '请选择申请日期!' }
+            ]
+          },
         }
       }
     },
     created () {
     },
+    watch: {
+      selectedDepartment(newVal) {
+        this.dynamicOptions = [];
+        for (let i = 0; i < this.personList.options.length; i++) {
+          const option = this.personList.options[i]
+          if (option.department === this.selectedDepartment) {
+            this.dynamicOptions.push(option)
+          }
+        }
+      }
+    },
     methods: {
       add () {
         this.edit({});
       },
+      initDepartment() {
+        getDepartment().then((res)=>{
+          if(res) {
+            this.departmentList.options = res;
+          }
+        });
+      },
+      initPerson() {
+        getAllPerson().then((res)=>{
+          if(res) {
+            this.personList.options = res;
+            this.dynamicOptions = res;
+          }
+        });
+      },
       edit (record) {
+        this.initDepartment()
+        this.initPerson()
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model, 'barCode', 'number'))
+          this.form.setFieldsValue(pick(this.model, 'barCode', 'number', 'salesMan', 'remark', 'time'))
         });
       },
       close () {

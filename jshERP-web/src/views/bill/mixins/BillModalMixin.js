@@ -709,10 +709,14 @@ export const BillModalMixin = {
         this.getAllTable().then(tables => {
           return getListData(this.form, tables)
         }).then(allValues => {
+          let map = this.parseBarCode(this.scanBarCode)
           let param = {
             barCode: this.scanBarCode,
             mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
             prefixNo: this.prefixNo
+          }
+          if (map.size > 0) {
+            param.barCode = this.getBarCodeStrOnly(this.scanBarCode)
           }
           getMaterialByBarCode(param).then((res) => {
             if (res && res.code === 200) {
@@ -734,24 +738,29 @@ export const BillModalMixin = {
               }
               if(!hasFinished) {
                 //将扫码的条码对应的商品加入列表
-                let item = {}
-                item.barCode = this.scanBarCode
                 let mList = res.data
                 if(mList && mList.length>0) {
-                  let mInfo = mList[0]
-                  this.changeColumnShow(mInfo)
-                  item.depotId = mInfo.depotId
-                  item.name = mInfo.name
-                  item.colorCode = mInfo.colorCode
-                  item.model = mInfo.model
-                  item.color = mInfo.color
-                  item.categoryName = mInfo.categoryName
-                  item.materialOther = mInfo.materialOther
-                  item.stock = mInfo.stock
-                  item.unit = mInfo.commodityUnit
-                  item.sku = mInfo.sku
-                  item.operNumber = 1
-                  newDetailArr.push(item)
+                  for (let i = 0; i < mList.length; i++) {
+                    let item = {}
+                    let mInfo = mList[i]
+                    item.barCode = mInfo.mBarCode
+                    this.changeColumnShow(mInfo)
+                    item.depotId = mInfo.depotId
+                    item.name = mInfo.name
+                    item.colorCode = mInfo.colorCode
+                    item.model = mInfo.model
+                    item.color = mInfo.color
+                    item.categoryName = mInfo.categoryName
+                    item.materialOther = mInfo.materialOther
+                    item.stock = mInfo.stock
+                    item.unit = mInfo.commodityUnit
+                    item.sku = mInfo.sku
+                    item.operNumber = 1
+                    if (map.size > 0) {
+                      item.operNumber = map.get(mInfo.mBarCode)
+                    }
+                    newDetailArr.push(item)
+                  }
                 } else {
                   this.$message.warning('抱歉，此条码不存在商品信息！');
                 }
@@ -787,6 +796,39 @@ export const BillModalMixin = {
           })
         })
       }
+    },
+    isNumber: function (str) {
+      return /^\d+$/.test(str);
+    },
+    getBarCodeStrOnly: function (str) {
+      var arr = str.split(',')
+      var res = ''
+      for (let i = 0; i < arr.length; i++) {
+        if(i % 2 == 0) {
+          res = res + arr[i]
+          if(i < arr.length - 2) {
+            res = res + ','
+          }
+        }
+      }
+      return res
+    },
+    parseBarCode: function (str) {
+      var arr = str.split(',')
+      let map = new Map()
+      if (arr.length == 1) {
+        return map
+      }
+      for (let i = 0; i < arr.length; i++) {
+        if(i % 2 > 0) {
+          if (this.isNumber(arr[i])) {
+            map.set(arr[i-1], arr[i]-0)
+          } else {
+            return new Map()
+          }
+        }
+      }
+      return map
     },
     stopScan() {
       this.scanStatus = true

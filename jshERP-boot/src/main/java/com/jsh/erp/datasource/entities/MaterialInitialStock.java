@@ -15,6 +15,12 @@ public class MaterialInitialStock {
 
     private BigDecimal highSafeStock;
 
+    private String remark;
+
+    private String salesMan;
+
+    private String time;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -81,5 +87,29 @@ public class MaterialInitialStock {
 
     public void setDeleteFlag(String deleteFlag) {
         this.deleteFlag = deleteFlag == null ? null : deleteFlag.trim();
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getSalesMan() {
+        return salesMan;
+    }
+
+    public void setSalesMan(String salesMan) {
+        this.salesMan = salesMan;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

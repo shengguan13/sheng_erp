@@ -1419,7 +1419,7 @@
           { title: '领料数量', dataIndex: 'operNumber'},
           { title: '退料数量', dataIndex: 'finishNumber'},
           { title: '领料批号', dataIndex: 'batchNumber'},
-          { title: '领料货位', dataIndex: 'snList'},
+          { title: '领料货位', dataIndex: 'snListStr'},
           { title: '备注', dataIndex: 'remark'}
         ],
         materialReturnColumns: [
@@ -1448,7 +1448,7 @@
           { title: '项目', dataIndex: 'project'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '入库数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1501,7 +1501,7 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '入库数量', dataIndex: 'operNumber'},
           { title: '退货数量', dataIndex: 'finishNumber'},
@@ -1519,7 +1519,7 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '退货数量', dataIndex: 'operNumber'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],
@@ -1550,7 +1550,7 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '出库数量', dataIndex: 'operNumber'},
           { title: '退货数量', dataIndex: 'finishNumber'},
@@ -1567,7 +1567,7 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '退货数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1583,7 +1583,7 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1599,7 +1599,7 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1615,7 +1615,7 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1631,7 +1631,7 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1648,7 +1648,7 @@
           { title: '项目', dataIndex: 'project'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1664,7 +1664,7 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1681,7 +1681,7 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '调入仓库', dataIndex: 'anotherDepotName'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '货位', dataIndex: 'snList'},
+          { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}

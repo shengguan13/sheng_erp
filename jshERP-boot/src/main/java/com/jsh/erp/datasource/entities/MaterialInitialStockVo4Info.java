@@ -7,6 +7,7 @@ public class MaterialInitialStockVo4Info extends MaterialInitialStock {
     private String supplierModel;
     private String colorCode;
     private String otherField5;
+    private String salesManStr;
     private String color;
     private String unit;
 
@@ -72,5 +73,13 @@ public class MaterialInitialStockVo4Info extends MaterialInitialStock {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public void setSalesManStr(String salesManStr) {
+        this.salesManStr = salesManStr;
+    }
+
+    public String getSalesManStr() {
+        return salesManStr;
     }
 }

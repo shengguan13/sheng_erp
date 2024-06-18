@@ -12,6 +12,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.service.person.PersonService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ExcelUtils;
@@ -50,6 +51,8 @@ public class MaterialUsageService {
     @Resource
     private UserService userService;
     @Resource
+    private PersonService personService;
+    @Resource
     private MaterialMapper materialMapper;
 
     public MaterialInitialStockVo4Info getMaterialUsage(long id)throws Exception {
@@ -72,14 +75,22 @@ public class MaterialUsageService {
         return list;
     }
 
-    public List<MaterialBomVo4Info> select(String categoryId, String materialParam, int offset, int rows) throws Exception{
-        List<MaterialBomVo4Info> list = new ArrayList<>();
+    public List<MaterialInitialStockVo4Info> select(String categoryId, String materialParam, int offset, int rows) throws Exception{
+        List<MaterialInitialStockVo4Info> list = new ArrayList<>();
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             list = materialUsageMapper.selectMaterialUsage(materialParam, idList, offset, rows);
+            for (MaterialInitialStockVo4Info m : list) {
+                if (m.getSalesMan() != null && !"".equals(m.getSalesMan())) {
+                    try {
+                        Person person = personService.getPerson(Long.valueOf(m.getSalesMan()));
+                        m.setSalesManStr(person.getName());
+                    } catch (Exception e) {}
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

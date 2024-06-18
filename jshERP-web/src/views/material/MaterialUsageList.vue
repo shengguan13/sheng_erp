@@ -139,8 +139,8 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['action','barCode','name','colorCode','model','color', 'category',
-          'number','unit','supplierModel','remark'],
+        settingColumns:['action','barCode','salesManStr','time','name','model','otherField5','supplierModel', 'color',
+          'colorCode','number','unit'],
         // 默认的列
         defColumns: [
           {
@@ -150,15 +150,17 @@
             width: 100,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '物料编码', dataIndex: 'barCode', width: 90},
-          {title: '名称', dataIndex: 'name', width: 120},
-          {title: '型号', dataIndex: 'model', width: 80},
-          {title: '规格', dataIndex: 'otherField5', width: 80},
-          {title: '客/供型号', dataIndex: 'supplierModel', width: 80},
+          {title: '物料编码', dataIndex: 'barCode', width: 50},
+          {title: '申请人', dataIndex: 'salesManStr', width: 30},
+          {title: '申请时间', dataIndex: 'time', width: 40},
+          {title: '名称', dataIndex: 'name', width: 100},
+          {title: '型号', dataIndex: 'model', width: 50},
+          {title: '规格', dataIndex: 'otherField5', width: 50},
+          {title: '客/供型号', dataIndex: 'supplierModel', width: 50},
           {title: '颜色', dataIndex: 'color', width: 40},
-          {title: '颜色代码', dataIndex: 'colorCode', width: 60},
-          {title: '周用量', dataIndex: 'number', width: 50},
-          {title: '单位', dataIndex: 'unit', width: 50}
+          {title: '颜色代码', dataIndex: 'colorCode', width: 40},
+          {title: '周用量', dataIndex: 'number', width: 40},
+          {title: '单位', dataIndex: 'unit', width: 40}
         ],
         url: {
           list: "/materialUsage/list",

@@ -439,7 +439,8 @@ public class DepotItemController {
                     }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
-                    item.put("snList", allocationIdToName.getOrDefault(diEx.getSnList(), ""));
+                    item.put("snListStr", allocationIdToName.getOrDefault(diEx.getSnList(), ""));
+                    item.put("snList", diEx.getSnList());
                     item.put("batchNumber", diEx.getBatchNumber());
                     item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
                     item.put("sku", diEx.getSku());
