@@ -685,7 +685,7 @@ public class MaterialService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("导入失败：{}", e.getMessage());
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }

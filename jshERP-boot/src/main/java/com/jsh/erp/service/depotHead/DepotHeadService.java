@@ -1156,7 +1156,7 @@ public class DepotHeadService {
                 }
                 Map<String, Double> batchNumberToAmount = new HashMap<>();
                 for (DepotItemVoBatchNumberList batch : batchList) {
-                    if (batch.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
+                    if (batch.getTotalNum() != null && batch.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
                         batchNumberToAmount.merge(batch.getBatchNumber(), batch.getTotalNum().doubleValue(), Double::sum);
                     }
                 }
@@ -1298,7 +1298,7 @@ public class DepotHeadService {
                 List<DepotItemVoBatchNumberList> afterList =  depotItemMapperEx.getBatchNumberList(null, null, depotId, barCode, null);
                 Map<String, Double> afterMap = new HashMap<>();
                 for (DepotItemVoBatchNumberList batch : afterList) {
-                    if (batch.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
+                    if (batch.getTotalNum() != null && batch.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
                         afterMap.merge(batch.getBatchNumber(), batch.getTotalNum().doubleValue(), Double::sum);
                     }
                 }
@@ -1319,7 +1319,7 @@ public class DepotHeadService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("导入失败：{}", e.getMessage());
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }
@@ -1473,7 +1473,7 @@ public class DepotHeadService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("导入失败：{}", e.getMessage());
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }
@@ -1582,7 +1582,7 @@ public class DepotHeadService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("导入失败：{}", e.getMessage());
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }
@@ -1708,7 +1708,7 @@ public class DepotHeadService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("导入失败：{}", e.getMessage());
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }
@@ -1839,7 +1839,7 @@ public class DepotHeadService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("导入失败：{}", e.getMessage());
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }
@@ -1944,7 +1944,7 @@ public class DepotHeadService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("导入失败：{}", e.getMessage());
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }
@@ -2049,7 +2049,7 @@ public class DepotHeadService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("导入失败：{}", e.getMessage());
-            logger.info(e.toString());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }

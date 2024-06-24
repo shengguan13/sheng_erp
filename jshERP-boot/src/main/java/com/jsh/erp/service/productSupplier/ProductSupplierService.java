@@ -254,7 +254,7 @@ public class ProductSupplierService {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.info(e.getMessage());
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }
