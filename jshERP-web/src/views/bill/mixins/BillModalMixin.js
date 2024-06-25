@@ -126,7 +126,7 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.input //输入
               }
             } else if(key === 'sku') {
-              if(this.prefixNo === 'CGDD') {
+              if(this.prefixNo === 'CGDD' || this.prefixNo === 'CGSQ') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏

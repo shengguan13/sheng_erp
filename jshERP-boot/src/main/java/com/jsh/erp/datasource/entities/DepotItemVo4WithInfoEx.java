@@ -12,6 +12,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String SupplierModel;
 
+    private Long SupplierId;
+
     private String MaterialUnit;
 
     private String MColor;
@@ -98,6 +100,14 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setSupplierModel(String supplierModel) {
         SupplierModel = supplierModel;
+    }
+
+    public Long getSupplierId() {
+        return SupplierId;
+    }
+
+    public void setSupplierId(Long supplierId) {
+        SupplierId = supplierId;
     }
 
     public String getMaterialUnit() {

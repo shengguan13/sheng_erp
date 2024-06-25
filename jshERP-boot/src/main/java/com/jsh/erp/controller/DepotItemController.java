@@ -15,6 +15,7 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.role.RoleService;
+import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
@@ -61,6 +62,9 @@ public class DepotItemController {
 
     @Resource
     private DepotService depotService;
+
+    @Resource
+    private SupplierService supplierService;
 
     @Resource
     private DepotAllocationService depotAllocationService;
@@ -427,6 +431,12 @@ public class DepotItemController {
                     item.put("categoryName", diEx.getMCategoryName());
                     item.put("model", diEx.getMModel());
                     item.put("supplierModel", diEx.getSupplierModel());
+                    if (diEx.getSupplierId() != null) {
+                        try {
+                            Supplier supplier = supplierService.getSupplier(diEx.getSupplierId());
+                            item.put("supplier", supplier.getSupplier());
+                        } catch (Exception e) {}
+                    }
                     item.put("color", diEx.getMColor());
                     item.put("project", diEx.getMProject());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));

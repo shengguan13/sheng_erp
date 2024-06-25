@@ -1460,6 +1460,7 @@
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
           { title: '零件号', dataIndex: 'model'},
+          { title: '供应商', dataIndex: 'supplier'},
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},

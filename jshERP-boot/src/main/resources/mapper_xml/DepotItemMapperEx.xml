@@ -14,7 +14,7 @@
     </resultMap>
 
     <resultMap id="MaterialUsageDetailResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4MaterialUsageDetail">
-        <result column="material_id" jdbcType="VARCHAR" property="materialId" />
+        <result column="material_id" jdbcType="BIGINT" property="materialId" />
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="material_name" jdbcType="VARCHAR" property="materialName" />
         <result column="use_num" jdbcType="DECIMAL" property="useNum" />
@@ -30,6 +30,7 @@
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
         <result column="SupplierModel" jdbcType="VARCHAR" property="SupplierModel" />
+        <result column="SupplierId" jdbcType="BIGINT" property="SupplierId" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
         <result column="MProject" jdbcType="VARCHAR" property="MProject" />
@@ -481,7 +482,7 @@
         m.mat MMat,m.weight,m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,
+        m.other_field10 MOtherField10, ps.supplier_id SupplierId,
         CASE
         WHEN di.sku IS NOT NULL THEN ps.model
         ELSE
