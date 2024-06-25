@@ -326,17 +326,18 @@
     </select>
 
     <select id="findBySelectWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.name unit_name,mc.name categoryName,me.bar_code m_bar_code,me.id meId,me.commodity_unit,me.sku,ps.model supplier_model
+        select m.*,u.name unit_name,mc.name categoryName,me.bar_code m_bar_code,me.id meId,me.commodity_unit,me.sku,ps.models_combined supplier_model
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ', ') as models_combined from
+        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where m.enabled=1 and me.id is not null
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-                or m.model like #{bindKey} or m.color like #{bindKey} or ps.model like #{bindKey}
+                or m.model like #{bindKey} or m.color like #{bindKey} or ps.models_combined like #{bindKey}
                 or m.other_field5 like #{bindKey})
         </if>
         <if test="idList.size()>0">
@@ -355,17 +356,18 @@
 
     <select id="findBySelectWithBarCodeCount" resultType="java.lang.Integer">
         select count(tb.id) from
-        (select m.*,u.name unit_name,mc.name categoryName,me.bar_code m_bar_code,me.id meId,me.commodity_unit,me.sku,ps.model supplier_model
+        (select m.*,u.name unit_name,mc.name categoryName,me.bar_code m_bar_code,me.id meId,me.commodity_unit,me.sku,ps.models_combined supplier_model
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left join jsh_product_supplier ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ', ') as models_combined from
+        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where m.enabled=1 and me.id is not null
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.model like #{bindKey} or m.color like #{bindKey} or ps.model like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or ps.models_combined like #{bindKey}
             or m.other_field5 like #{bindKey})
         </if>
         <if test="idList.size()>0">
@@ -574,7 +576,7 @@
     </select>
 
     <select id="getListWithStock" resultMap="ResultMapListWithStock">
-        select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code,ps.model supplier_model,
+        select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code,ps.models_combined supplier_model,
         ifnull(me.purchase_decimal,0) purchase_decimal,
         ifnull(sum(mcs.current_number),0) currentStock,
         sum(ifnull(me.purchase_decimal, 0) * ifnull(mcs.current_number, 0)) currentStockPrice
@@ -583,7 +585,8 @@
         left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left join (select bar_code, model, delete_Flag from jsh_product_supplier group by bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ', ') as models_combined from
+        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
         <if test="depotList.size()>0">
@@ -601,7 +604,7 @@
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.color_code like #{bindParam}
-                or m.model like #{bindParam} or m.color like #{bindParam} or ps.model like #{bindParam}
+                or m.model like #{bindParam} or m.color like #{bindParam} or ps.models_combined like #{bindParam}
                 or m.other_field5 like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
@@ -627,7 +630,8 @@
         left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left join (select bar_code, model, delete_Flag from jsh_product_supplier group by bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ', ') as models_combined from
+        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
         <if test="depotList.size()>0">
@@ -645,7 +649,7 @@
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.color_code like #{bindParam}
-                or m.model like #{bindParam} or m.color like #{bindParam} or ps.model like #{bindParam}
+                or m.model like #{bindParam} or m.color like #{bindParam} or ps.models_combined like #{bindParam}
                 or m.other_field5 like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
