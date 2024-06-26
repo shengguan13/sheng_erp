@@ -59,7 +59,7 @@ export const BillListMixin = {
       this.$refs.modalForm.materialTable.columns[1].type = FormTypes.popupJsh
     },
     myHandleEdit(record) {
-      if(record.status === '0' || record.status === '10') {
+      if(record.status === '0' || record.status === '10' || record.subType === '采购申请' || record.subType === '采购订单') {
         this.$refs.modalForm.action = "edit";
         if(this.btnEnableList.indexOf(2)===-1) {
           this.$refs.modalForm.isCanCheck = false

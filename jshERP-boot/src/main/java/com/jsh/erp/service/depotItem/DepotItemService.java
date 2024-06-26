@@ -993,7 +993,7 @@ public class DepotItemService {
         }
     }
     /**
-     * 判断单据的状态
+     * 判断父单据的状态
      * 通过数组对比：原单据的产品和产品数量（汇总） 与 分批操作后单据的产品和产品数量（汇总）
      * TODO: 对于领料出库，不需要三个状态，只需要两个 - 有退料或者无退料
      * @param depotHead
@@ -1015,7 +1015,7 @@ public class DepotItemService {
         for(DepotItemVo4MaterialAndSum materialAndSum : linkList) {
             //过滤掉原单里面有数量为0的产品
             if(materialAndSum.getOperNumber().compareTo(BigDecimal.ZERO) != 0) {
-                BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
+                BigDecimal materialSum = materialSumMap.getOrDefault(materialAndSum.getMaterialExtendId(), BigDecimal.ZERO);
                 if (materialSum != null) {
                     // 如果finish < pre, res = BusinessConstants.BILLS_STATUS_SKIPING;
                     if (materialSum.compareTo(materialAndSum.getOperNumber()) < 0) {
@@ -1037,7 +1037,57 @@ public class DepotItemService {
     }
 
     /**
-     * 更新单据状态
+     * 判断单据的状态
+     * 通过数组对比：原单据的产品和产品数量（汇总） 与 分批操作后单据的产品和产品数量（汇总）
+     * TODO: 对于领料出库，不需要三个状态，只需要两个 - 有退料或者无退料
+     * @param depotHead
+     * @return
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public String getBillStatusByParamSelf(DepotHead depotHead) {
+        String res = BusinessConstants.BILLS_STATUS_SKIPED;
+        //获取原单据的产品和产品数量（汇总）
+        List<DepotItemVo4MaterialAndSum> linkList = depotItemMapperEx.getLinkBillDetailMaterialSum(depotHead.getNumber());
+        //获取分批操作后单据的产品和产品数量（汇总）
+        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSumWithoutType(depotHead.getNumber());
+        //将分批操作后的单据的产品和产品数据构造成Map
+        Map<Long, BigDecimal> materialSumMap = new HashMap<>();
+        if (batchList != null) {
+            for (DepotItemVo4MaterialAndSum materialAndSum : batchList) {
+                materialSumMap.put(materialAndSum.getMaterialExtendId(), materialAndSum.getOperNumber());
+            }
+        }
+        boolean hasPositiveFinishNumber = false;
+        for(DepotItemVo4MaterialAndSum materialAndSum : linkList) {
+            //过滤掉原单里面有数量为0的产品
+            if(materialAndSum.getOperNumber().compareTo(BigDecimal.ZERO) != 0) {
+                BigDecimal materialSum = materialSumMap.getOrDefault(materialAndSum.getMaterialExtendId(), BigDecimal.ZERO);
+                if (materialSum != null) {
+                    // 如果finish < pre, res = BusinessConstants.BILLS_STATUS_SKIPING;
+                    if (materialSum.compareTo(materialAndSum.getOperNumber()) < 0) {
+                        res = BusinessConstants.BILLS_STATUS_SKIPING;
+                    }
+                    if (materialSum.compareTo(BigDecimal.ZERO) != 0) {
+                        hasPositiveFinishNumber = true;
+                    }
+                } else {
+                    res = BusinessConstants.BILLS_STATUS_SKIPING;
+                }
+            }
+        }
+        // 如果没有完成，但是也没有大于0的finishNumber，说明这个单据还处于没开始的状态
+        if (!hasPositiveFinishNumber && res == BusinessConstants.BILLS_STATUS_SKIPING) {
+            if ("采购申请".equals(depotHead.getSubType()) || "采购订单".equals(depotHead.getSubType())) {
+                res = BusinessConstants.BILLS_STATUS_UN_AUDIT;
+            } else {
+                res = BusinessConstants.BILLS_STATUS_AUDIT;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 更新当前单据的父单据状态
      * @param depotHead
      * @param billStatus
      */
@@ -1048,6 +1098,24 @@ public class DepotItemService {
         DepotHeadExample example = new DepotHeadExample();
         List<String> linkNumberList = StringUtil.strToStringList(depotHead.getLinkNumber());
         example.createCriteria().andNumberIn(linkNumberList);
+        try{
+            depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+    }
+
+    /**
+     * 更新当前单据的状态
+     * @param depotHead
+     * @param billStatus
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void changeBillStatusSelf(DepotHead depotHead, String billStatus) {
+        DepotHead depotHeadOrders = new DepotHead();
+        depotHeadOrders.setStatus(billStatus);
+        DepotHeadExample example = new DepotHeadExample();
+        example.createCriteria().andNumberEqualTo(depotHead.getNumber());
         try{
             depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
         }catch(Exception e){

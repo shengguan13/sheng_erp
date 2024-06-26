@@ -2208,6 +2208,10 @@ public class DepotHeadService {
         }
         /**入库和出库处理单据子表信息*/
         depotItemService.saveDetails(rows, depotHead.getId(), "update", request);
+        if ("采购申请".equals(subType) || "采购订单".equals(subType)) {
+            String billStatus = depotItemService.getBillStatusByParamSelf(depotHead);
+            depotItemService.changeBillStatusSelf(depotHead, billStatus);
+        }
         logService.insertLog("单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
