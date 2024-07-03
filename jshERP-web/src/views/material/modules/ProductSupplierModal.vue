@@ -40,6 +40,11 @@
           </a-form-item>
         </a-form>
         <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制造商">
+            <a-input placeholder="制造商" v-decorator.trim="[ 'manufactory' ]" />
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号">
             <a-input placeholder="型号" v-decorator.trim="[ 'model', validatorRules.model]" />
           </a-form-item>
@@ -147,7 +152,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'supplierId', 'supplierType', 'model',
-          'barCode', 'purchaseCycle', 'pack', 'unit', 'priceNoTax', 'taxRate'))
+          'barCode', 'purchaseCycle', 'manufactory', 'pack', 'unit', 'priceNoTax', 'taxRate'))
         });
       },
       close () {

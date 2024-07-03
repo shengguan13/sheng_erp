@@ -112,12 +112,13 @@
             width: 50,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '客商名称', dataIndex: 'supplierName', width: 120},
+          {title: '客商名称', dataIndex: 'supplierName', width: 100},
+          {title: '制造商', dataIndex: 'manufactory', width: 100},
           {title: '客商类别', dataIndex: 'supplierType', width: 40},
-          {title: '物料编码', dataIndex: 'barCode', width: 70},
-          {title: '物料名称', dataIndex: 'materialName', width: 120},
+          {title: '物料编码', dataIndex: 'barCode', width: 40},
+          {title: '物料名称', dataIndex: 'materialName', width: 100},
           {title: '客/供型号', dataIndex: 'model', width: 80},
-          {title: '零件号', dataIndex: 'materialModel', width: 80},
+          {title: '零件号', dataIndex: 'materialModel', width: 60},
           {title: '标包', dataIndex: 'pack', width: 40}
         ],
         url: {

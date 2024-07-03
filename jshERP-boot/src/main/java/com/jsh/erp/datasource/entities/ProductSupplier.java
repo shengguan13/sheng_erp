@@ -8,6 +8,8 @@ public class ProductSupplier {
     private Long supplierId;
 
     private String supplierType;
+    
+    private String manufactory;
 
     private String model;
 
@@ -49,6 +51,14 @@ public class ProductSupplier {
 
     public void setSupplierId(Long supplierId) {
         this.supplierId = supplierId;
+    }
+
+    public String getManufactory() {
+        return manufactory;
+    }
+
+    public void setManufactory(String manufactory) {
+        this.manufactory = manufactory;
     }
 
     public String getSupplierType() {
