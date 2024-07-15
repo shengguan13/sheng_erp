@@ -331,7 +331,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or ps.models_combined like #{bindKey})
+            or m.mat like #{bindKey} or ps.models_combined like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -391,7 +391,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or ps.models_combined like #{bindKey})
+            or m.mat like #{bindKey} or ps.models_combined like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -453,7 +453,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or ps.models_combined like #{bindKey})
+            or m.mat like #{bindKey} or ps.models_combined like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id
@@ -509,7 +509,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or ps.models_combined like #{bindKey})
+            or m.mat like #{bindKey} or ps.models_combined like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id) a
@@ -556,7 +556,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or dh.remark like #{bindKey})
+            or m.mat like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -607,7 +607,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or dh.remark like #{bindKey})
+            or m.mat like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -981,7 +981,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
+            or m.mat like #{bindKey} or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1027,7 +1027,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
+            or m.mat like #{bindKey} or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1066,7 +1066,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
+            or m.mat like #{bindKey} or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1110,7 +1110,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
+            or m.mat like #{bindKey} or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1149,7 +1149,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
+            or m.mat like #{bindKey} or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -1193,7 +1193,7 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.color_code like #{bindKey} or m.model like #{bindKey}
-            or m.other_field5 like #{bindKey} or m.color like #{bindKey})
+            or m.mat like #{bindKey} or m.other_field5 like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="creatorArray != null">
             and dh.creator in (

@@ -117,6 +117,7 @@ public class SupplierController {
         JSONArray arr = new JSONArray();
         try {
             List<Supplier> supplierList = supplierService.findBySelectSup();
+            List<Supplier> customerList = supplierService.findBySelectCus();
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
                 for (Supplier supplier : supplierList) {
@@ -124,6 +125,13 @@ public class SupplierController {
                     item.put("id", supplier.getId());
                     //供应商名称
                     item.put("supplier", supplier.getSupplier());
+                    dataArray.add(item);
+                }
+                for (Supplier customer : customerList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", customer.getId());
+                    //供应商名称
+                    item.put("supplier", customer.getSupplier());
                     dataArray.add(item);
                 }
             }
