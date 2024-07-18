@@ -107,6 +107,7 @@ public class AccountHeadController {
                     jsonObject.getString("beginTime"), jsonObject.getString("endTime"));
             result = ExceptionConstants.standardSuccess();
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             result = new JSONObject();
             result.put(GLOBAL_RETURNS_CODE, SERVICE_SYSTEM_ERROR_CODE);
             result.put(GLOBAL_RETURNS_MESSAGE, SERVICE_SYSTEM_ERROR_MSG);

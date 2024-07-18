@@ -739,15 +739,15 @@ public class DepotItemService {
                 // 有仓库号的就设置仓库号
                 if (StringUtil.isExist(rowObj.get("depotId"))) {
                     depotItem.setDepotId(rowObj.getLong("depotId"));
-                    // 返修出库的仓库必须是隔离库
-                    if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                            && BusinessConstants.SUB_TYPE_REPAIR.equals(depotHead.getSubType())) {
-                        Depot depot = depotService.getDepot(rowObj.getLong("depotId"));
-                        if (!depot.getName().equals("隔离库")) {
-                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_CODE,
-                                    String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_MSG));
-                        }
-                    }
+//                    // 返修出库的仓库必须是隔离库
+//                    if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+//                            && BusinessConstants.SUB_TYPE_REPAIR.equals(depotHead.getSubType())) {
+//                        Depot depot = depotService.getDepot(rowObj.getLong("depotId"));
+//                        if (!depot.getName().equals("隔离库")) {
+//                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_CODE,
+//                                    String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_MSG));
+//                        }
+//                    }
                     // 隔离出库的仓库不能是隔离库
                     if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
                             && BusinessConstants.SUB_TYPE_ISOLATE.equals(depotHead.getSubType())) {
