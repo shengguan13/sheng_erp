@@ -75,13 +75,13 @@
         },
         categoryTree:[],
         columns: [
-          {dataIndex: 'batchNumber', title: '批号', width: 100, align: 'left', ellipsis:true},
-          {dataIndex: 'barCode', title: '编码', width: 100, ellipsis:true},
+          {dataIndex: 'batchNumber', title: '批号', width: 60, align: 'left', ellipsis:true},
+          {dataIndex: 'snListStr', title: '货位', width: 100, ellipsis:true},
+          {dataIndex: 'barCode', title: '编码', width: 60, ellipsis:true},
           {dataIndex: 'name', title: '名称', width: 100, ellipsis:true},
-          {dataIndex: 'model', title: '零件号', width: 80, ellipsis:true},
-          {dataIndex: 'commodityUnit', title: '单位', width: 60, ellipsis:true},
+          {dataIndex: 'totalNum', title: '库存', width: 60},
+          {dataIndex: 'commodityUnit', title: '单位', width: 40, ellipsis:true},
           {dataIndex: 'expirationDateStr', title: '有效期至', width: 80},
-          {dataIndex: 'totalNum', title: '库存', width: 80}
         ],
         scrollTrigger: {},
         dataSource: [],

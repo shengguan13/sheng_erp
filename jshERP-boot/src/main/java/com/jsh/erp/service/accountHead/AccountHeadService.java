@@ -428,35 +428,27 @@ public class AccountHeadService {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
         XSSFSheet xssfSheet = xssfWorkbook.createSheet("对账单");
         XSSFRow titleRow, supplierRow, headRow; // 行
-        XSSFCell titleCell, supplierCell, headCell; // 列
         titleRow = xssfSheet.getRow(0);
         if (titleRow == null) {
             titleRow = xssfSheet.createRow(0);
         }
-        titleCell = titleRow.createCell(0);
-        titleCell.setCellValue("对账单" + "(" + beginTime + "至" + endTime + ")");
+        titleRow.createCell(0).setCellValue("对账单" + "(" + beginTime + "至" + endTime + ")");
 
         supplierRow = xssfSheet.getRow(1);
         if (supplierRow == null) {
             supplierRow = xssfSheet.createRow(1);
         }
-        supplierCell = supplierRow.createCell(0);
-        supplierCell.setCellValue("供应商名称：" + supplier.getSupplier());
-        supplierCell = supplierRow.createCell(1);
-        supplierCell.setCellValue("联系方式：" + supplier.getPhoneNum());
+        supplierRow.createCell(0).setCellValue("供应商名称：" + supplier.getSupplier());
+        supplierRow.createCell(1).setCellValue("联系方式：" + supplier.getPhoneNum());
 
         headRow = xssfSheet.getRow(2);
         if (headRow == null) {
             headRow = xssfSheet.createRow(2);
         }
-        headCell = headRow.createCell(0);
-        headCell.setCellValue("物料型号");
-        headCell = headRow.createCell(1);
-        headCell.setCellValue("规格");
-        headCell = headRow.createCell(2);
-        headCell.setCellValue("单位");
-        headCell = headRow.createCell(3);
-        headCell.setCellValue("单价（未税，小数点后4位）");
+        headRow.createCell(0).setCellValue("物料型号");
+        headRow.createCell(1).setCellValue("规格");
+        headRow.createCell(2).setCellValue("单位");
+        headRow.createCell(3).setCellValue("单价（未税，小数点后4位）");
         Set<String> dateSet = new HashSet<>();
         for (String barCode : barCodeDateToAmountMap.keySet()) {
             for (String date : barCodeDateToAmountMap.get(barCode).keySet()) {
@@ -476,19 +468,13 @@ public class AccountHeadService {
                 .collect(Collectors.toList());
         int i = 0;
         for (; i < dateList.size(); i++) {
-            headCell = headRow.createCell(4 + i);
-            headCell.setCellValue(dateList.get(i).substring(5));
+            headRow.createCell(4 + i).setCellValue(dateList.get(i).substring(5));
         }
-        headCell = headRow.createCell(4 + i);
-        headCell.setCellValue("数量合计");
-        headCell = headRow.createCell(5 + i);
-        headCell.setCellValue("金额（未税，小数点后4位）");
-        headCell = headRow.createCell(6 + i);
-        headCell.setCellValue("税率");
-        headCell = headRow.createCell(7 + i);
-        headCell.setCellValue("税额（小数点后4位）");
-        headCell = headRow.createCell(8 + i);
-        headCell.setCellValue("金额（含税，小数点后4位）");
+        headRow.createCell(4 + i).setCellValue("数量合计");
+        headRow.createCell(5 + i).setCellValue("金额（未税，小数点后4位）");
+        headRow.createCell(6 + i).setCellValue("税率");
+        headRow.createCell(7 + i).setCellValue("税额（小数点后4位）");
+        headRow.createCell(8 + i).setCellValue("金额（含税，小数点后4位）");
 
         int rowCnt = 3;
         double amountTotal = 0.0;
@@ -500,21 +486,16 @@ public class AccountHeadService {
             if (row == null) {
                 row = xssfSheet.createRow(rowCnt);
             }
-            XSSFCell indexCell = row.createCell(0);
-            indexCell.setCellValue(rowCnt - 2);
-            XSSFCell materialCell = row.createCell(1);
-            materialCell.setCellValue(barCode);
+            row.createCell(0).setCellValue(rowCnt - 2);
+            row.createCell(1).setCellValue(barCode);
             List<MaterialVo4Unit> material = materialService.getMaterialByBarCode(barCode);
-            materialCell = row.createCell(2);
-            materialCell.setCellValue(material.get(0).getModel());
-            materialCell = row.createCell(3);
-            materialCell.setCellValue(material.get(0).getUnitName());
+            row.createCell(2).setCellValue(material.get(0).getModel());
+            row.createCell(3).setCellValue(material.get(0).getUnitName());
             List<ProductSupplierVo4Info> productSupplier = productSupplierService.getProductSupplierList(supplier.getSupplier(), barCode);
             double priceNoTax = productSupplier.get(0).getPriceNoTax() == null ? 0.0 : productSupplier.get(0).getPriceNoTax().doubleValue();
             double taxRate = productSupplier.get(0).getTaxRate() == null ? 0.0 : productSupplier.get(0).getTaxRate().doubleValue();
 
-            materialCell = row.createCell(4);
-            materialCell.setCellValue(priceNoTax);
+            row.createCell(4).setCellValue(priceNoTax);
             double materialTotal = 0.0;
             int dateIndex = 0;
             for (; dateIndex < dateList.size(); dateIndex++) {
@@ -530,32 +511,22 @@ public class AccountHeadService {
             taxTotal += materialTotal * priceNoTax * taxRate;
             priceTotal += materialTotal * priceNoTax * (1.0 + taxRate);
 
-            XSSFCell cell = row.createCell(4 + dateIndex);
-            cell.setCellValue(materialTotal);
-            cell = row.createCell(5 + dateIndex);
-            cell.setCellValue(materialTotal * priceNoTax);
-            cell = row.createCell(6 + dateIndex);
-            cell.setCellValue(taxRate);
-            cell = row.createCell(7 + dateIndex);
-            cell.setCellValue(materialTotal * priceNoTax * taxRate);
-            cell = row.createCell(8 + dateIndex);
-            cell.setCellValue(materialTotal * priceNoTax * (1.0 + taxRate));
+            row.createCell(4 + dateIndex).setCellValue(materialTotal);
+            row.createCell(5 + dateIndex).setCellValue(materialTotal * priceNoTax);
+            row.createCell(6 + dateIndex).setCellValue(taxRate);
+            row.createCell(7 + dateIndex).setCellValue(materialTotal * priceNoTax * taxRate);
+            row.createCell(8 + dateIndex).setCellValue(materialTotal * priceNoTax * (1.0 + taxRate));
             rowCnt++;
         }
         XSSFRow row = xssfSheet.getRow(rowCnt);
         if (row == null) {
             row = xssfSheet.createRow(rowCnt);
         }
-        XSSFCell cell = row.createCell(1);
-        cell.setCellValue("合计");
-        cell = row.createCell(4 + i);
-        cell.setCellValue(amountTotal);
-        cell = row.createCell(5 + i);
-        cell.setCellValue(priceNoTaxTotal);
-        cell = row.createCell(7 + i);
-        cell.setCellValue(taxTotal);
-        cell = row.createCell(8 + i);
-        cell.setCellValue(priceTotal);
+        row.createCell(1).setCellValue("合计");
+        row.createCell(4 + i).setCellValue(amountTotal);
+        row.createCell(5 + i).setCellValue(priceNoTaxTotal);
+        row.createCell(7 + i).setCellValue(taxTotal);
+        row.createCell(8 + i).setCellValue(priceTotal);
 
         String accountNumber = "FK" + sequenceService.buildOnlyNumber();
         File path = new File("/opt/jshERP/upload" + File.separator + "statement" + File.separator);

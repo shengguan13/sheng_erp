@@ -413,7 +413,7 @@ public class DepotItemController {
             List<DepotAllocation> depotAllocationList = depotAllocationService.getDepotAllocation();
             Map<String, String> allocationIdToName = new HashMap<>();
             for (DepotAllocation allocation : depotAllocationList) {
-                allocationIdToName.put(allocation.getId().toString(), allocation.getAllocation() + '-' + allocation.getType());
+                allocationIdToName.put(allocation.getId().toString(), allocation.getType() + '-' + allocation.getAllocation());
             }
             if (null != dataList) {
                 BigDecimal totalOperNumber = BigDecimal.ZERO;
@@ -449,8 +449,21 @@ public class DepotItemController {
                     }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
-                    item.put("snListStr", allocationIdToName.getOrDefault(diEx.getSnList(), ""));
                     item.put("snList", diEx.getSnList());
+                    if (diEx.getSnList() != null && !"".equals(diEx.getSnList())) {
+                        try {
+                            StringBuilder sb = new StringBuilder();
+                            String[] allocationIds = diEx.getSnList().split(",");
+                            for (String allocationId : allocationIds) {
+                                if (sb.length() == 0) {
+                                    sb.append(allocationIdToName.getOrDefault(allocationId, ""));
+                                } else {
+                                    sb.append("," + allocationIdToName.getOrDefault(allocationId, ""));
+                                }
+                            }
+                            item.put("snListStr", sb.toString());
+                        } catch (Exception e) {}
+                    }
                     item.put("batchNumber", diEx.getBatchNumber());
                     item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
                     item.put("sku", diEx.getSku());
@@ -1088,7 +1101,7 @@ public class DepotItemController {
             res.code = 200;
             res.data = map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }

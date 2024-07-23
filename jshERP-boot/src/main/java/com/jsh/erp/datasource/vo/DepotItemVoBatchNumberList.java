@@ -18,6 +18,8 @@ public class DepotItemVoBatchNumberList {
     private String expirationDateStr;
     private Date operTime;
     private String snList;
+
+    private String snListStr;
     private BigDecimal totalNum;
 
     public String getId() {
@@ -116,6 +118,14 @@ public class DepotItemVoBatchNumberList {
         this.snList = snList;
     }
 
+    public String getSnListStr() {
+        return snListStr;
+    }
+
+    public void setSnListStr(String snListStr) {
+        this.snListStr = snListStr;
+    }
+
     public BigDecimal getTotalNum() {
         return totalNum;
     }
@@ -129,7 +139,7 @@ public class DepotItemVoBatchNumberList {
         return "id: " + id + "; barCode: " + barCode
                 + "; name: " + name + "; colorCode: " + colorCode
                 + "; model: " + model + "; batchNumber: " + batchNumber + "; operTime: " + operTime
-                + "; snList: " + snList
+                + "; snList: " + snList + "; snListStr: " + snListStr
                 + "; expirationDate: " + expirationDate + "; expirationDateStr: " + expirationDateStr
                 + "; totalNum: " + totalNum ;
     }

@@ -36,6 +36,10 @@ import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import jxl.Sheet;
 import jxl.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,8 +50,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -1849,6 +1856,34 @@ public class DepotHeadService {
             info.data = "导入失败";
         }
         return info;
+    }
+
+    private void generateStockStatement(List<Material> materials) throws Exception {
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
+        XSSFSheet xssfSheet = xssfWorkbook.createSheet("入库");
+        XSSFRow titleRow, headRow; // 行
+        XSSFCell cell; // 列
+        titleRow = xssfSheet.getRow(0);
+        if (titleRow == null) {
+            titleRow = xssfSheet.createRow(0);
+        }
+        cell = titleRow.createCell(0);
+        cell.setCellValue("库存表");
+
+        headRow = xssfSheet.getRow(2);
+        if (headRow == null) {
+            headRow = xssfSheet.createRow(2);
+        }
+        headRow.createCell(0).setCellValue("序号");
+        headRow.createCell(1).setCellValue("零件号码");
+        headRow.createCell(2).setCellValue("零件名称");
+        headRow.createCell(3).setCellValue("车型/项目");
+        headRow.createCell(4).setCellValue("客户");
+
+        List<DepotHeadVo4InDetail> inList = findInOutDetail(null, null, "入库", null, null,
+                StringUtil.toNull("barCode"), null, null, null, null, 0, 1000);
+        List<DepotHeadVo4InDetail> outList = findInOutDetail(null, null, "出库", null, null,
+                StringUtil.toNull("barCode"), null, null, null, null, 0, 1000);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

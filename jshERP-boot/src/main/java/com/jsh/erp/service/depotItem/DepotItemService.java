@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depot.DepotService;
+import com.jsh.erp.service.depotAllocation.DepotAllocationService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
@@ -33,8 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -69,6 +68,8 @@ public class DepotItemService {
     private SystemConfigService systemConfigService;
     @Resource
     private DepotService depotService;
+    @Resource
+    private DepotAllocationService depotAllocationService;
     @Resource
     private UnitService unitService;
     @Resource
@@ -1526,14 +1527,32 @@ public class DepotItemService {
 
     public List<DepotItemVoBatchNumberList> getBatchNumberList(String number, String name, Long depotId, String barCode, String batchNumber) throws Exception {
         List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
+        List<DepotAllocation> allocations = depotAllocationService.getDepotAllocation();
+        Map<String, String> allocationIdToName = new HashMap<>();
+        allocations.stream().forEach(e -> allocationIdToName.put(e.getId().toString(), e.getType() + "-" + e.getAllocation()));
         List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
         for(DepotItemVoBatchNumberList bn: list) {
-            if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
+            //if(bn.getTotalNum() != null && bn.getTotalNum().compareTo(BigDecimal.ZERO) > 0) {
+            if(bn.getTotalNum() != null && bn.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
                 bn.setExpirationDateStr(Tools.parseDateToStr(bn.getExpirationDate()));
                 if(bn.getUnitId()!=null) {
                     Unit unit = unitService.getUnit(bn.getUnitId());
                     String commodityUnit = bn.getCommodityUnit();
                     bn.setTotalNum(unitService.parseStockByUnit(bn.getTotalNum(), unit, commodityUnit));
+                }
+                if(bn.getSnList() != null && !"".equals(bn.getSnList())) {
+                    try {
+                        StringBuilder sb = new StringBuilder();
+                        String[] allocationIds = bn.getSnList().split(",");
+                        for (String allocationId : allocationIds) {
+                            if (sb.length() == 0) {
+                                sb.append(allocationIdToName.getOrDefault(allocationId, ""));
+                            } else {
+                                sb.append("," + allocationIdToName.getOrDefault(allocationId, ""));
+                            }
+                        }
+                        bn.setSnListStr(sb.toString());
+                    } catch (Exception e) {}
                 }
                 reslist.add(bn);
             }

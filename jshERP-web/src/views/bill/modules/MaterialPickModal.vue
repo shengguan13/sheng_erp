@@ -219,6 +219,8 @@
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '货位', key: 'snList', width: '6%', type: FormTypes.hidden},
+            { title: '货位', key: 'snListStr', width: '6%', type: FormTypes.normal},
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },

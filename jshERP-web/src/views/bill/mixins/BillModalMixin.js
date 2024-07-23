@@ -457,12 +457,33 @@ export const BillModalMixin = {
     onValueChange(event) {
       let that = this
       const { type, row, column, value, target } = event
-      let param,snList,batchNumber,operNumber,unitPrice,allPrice,taxRate,taxMoney,taxLastMoney
+      let param,snList,snListStr,batchNumber,operNumber,unitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
         case "depotId":
           if(row.barCode){
             that.getStockByDepotBarCode(row, target)
           }
+          break;
+        case "batchNumber":
+          param = {
+            barCode: row.barCode,
+            depotId: row.depotId,
+            batchNumber: value,
+            name: '',
+            depotItemId: '',
+          }
+          getBatchNumberList(param).then((res) => {
+            if (res && res.code === 200) {
+              let batchList = res.data.rows
+              console.log("getBatchNumberList")
+              for (let i = 0; i < batchList.length; i++) {
+                let batchInfo = batchList[i]
+                console.log("selected " + batchInfo.id + "-" + batchInfo.snListStr)
+                target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
+                target.recalcAllStatisticsColumns()
+              }
+            }
+          });
           break;
         case "barCode":
           param = {
