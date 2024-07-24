@@ -840,6 +840,7 @@ public class DepotItemService {
                                     String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
                         }
                         sortedByBatchNumber = batchNumberList.stream()
+                                .filter(b -> b.getTotalNum().compareTo(BigDecimal.ZERO) > 0)
                                 .sorted(Comparator.comparing(DepotItemVoBatchNumberList::getOperTime))
                                 .collect(Collectors.toList());
                     }
@@ -1530,6 +1531,7 @@ public class DepotItemService {
         List<DepotAllocation> allocations = depotAllocationService.getDepotAllocation();
         Map<String, String> allocationIdToName = new HashMap<>();
         allocations.stream().forEach(e -> allocationIdToName.put(e.getId().toString(), e.getType() + "-" + e.getAllocation()));
+        // 使用的时候注意batch可能有负数的
         List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
         for(DepotItemVoBatchNumberList bn: list) {
             //if(bn.getTotalNum() != null && bn.getTotalNum().compareTo(BigDecimal.ZERO) > 0) {

@@ -1162,6 +1162,7 @@ public class DepotHeadService {
                 // 处理单一物料，以及单一仓库的出入库
                 String barCode = materialService.getMaterialByMeId(material.getId()).get(0).getmBarCode();
                 long depotId = 26L;
+                // 使用的时候注意batch可能有负数的
                 List<DepotItemVoBatchNumberList> batchList =  depotItemMapperEx.getBatchNumberList(null, null, depotId, barCode, null);
                 if (batchList == null || batchList.isEmpty()) {
                     continue;
@@ -1307,6 +1308,7 @@ public class DepotHeadService {
                         }
                     }
                 }
+                // 使用的时候注意batch可能有负数的
                 List<DepotItemVoBatchNumberList> afterList =  depotItemMapperEx.getBatchNumberList(null, null, depotId, barCode, null);
                 Map<String, Double> afterMap = new HashMap<>();
                 for (DepotItemVoBatchNumberList batch : afterList) {
@@ -1357,6 +1359,7 @@ public class DepotHeadService {
         }
         for (int i = 0; i < materials.size(); i++) {
             String barCode = materialService.findByIdWithBarCode(materials.get(i).getId()).get(0).getmBarCode();
+            // 使用的时候注意batch可能有负数的
             List<DepotItemVoBatchNumberList> batchNumberList = depotItemService.getBatchNumberList(
                     null, null, 26L, barCode, null);
             if (batchNumberList != null) {

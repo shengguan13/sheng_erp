@@ -88,6 +88,7 @@
         selectedRowKeys: [],
         selectRows: [],
         selectIds: [],
+        selectStocks: [],
         title: '选择批号',
         isorter: {
           column: 'createTime',
@@ -195,18 +196,30 @@
       handleSubmit() {
         let that = this;
         this.getSelectRows();
-        that.$emit('ok', that.selectRows, that.selectIds);
-        that.searchReset(0)
-        that.close();
+        let positive = true;
+        for (let num of that.selectStocks) {
+          if (num < 0) {
+            positive = false;
+            that.$message.warning("无法选择库存为负数的批次");
+            that.close()
+          }
+        }
+        if (positive) {
+          that.$emit('ok', that.selectRows, that.selectIds);
+          that.searchReset(0)
+          that.close();
+        }
       },
       //获取选择信息
       getSelectRows(rowId) {
         let dataSource = this.dataSource;
         let ids = "";
         this.selectRows = [];
+        this.selectStocks = [];
         for (let i = 0, len = dataSource.length; i < len; i++) {
           if (this.selectedRowKeys.includes(dataSource[i].id)) {
             this.selectRows.push(dataSource[i]);
+            this.selectStocks.push(dataSource[i].totalNum)
             ids = ids + "," + dataSource[i].batchNumber
           }
         }
