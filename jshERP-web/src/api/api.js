@@ -115,6 +115,8 @@ const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDe
 const getBatchNumberList = (params)=>getAction("/depotItem/getBatchNumberList",params);
 const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailByNumber",params);
 const getAccountItemList = (params)=>getAction("/accountItem/getDetailList",params);
+//货位相关
+const getAllocationList = (params)=>getAction("/depotAllocation/getAllocationList",params);
 
 export {
   getBuyAndSaleStatistics,
@@ -206,6 +208,7 @@ export {
   findBillDetailByNumber,
   findStockByDepotAndBarCode,
   getBatchNumberList,
+  getAllocationList,
   getProductSupplierList,
   findFinancialDetailByNumber,
   getAccountItemList

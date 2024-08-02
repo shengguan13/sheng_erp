@@ -1,21 +1,32 @@
 package com.jsh.erp.controller;
 
+import com.jsh.erp.datasource.entities.DepotAllocationVo4Depot;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotAllocation.DepotAllocationService;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/depotAllocation")
 @Api(tags = {"货位管理"})
 public class DepotAllocationController {
+    private Logger logger = LoggerFactory.getLogger(DepotAllocationController.class);
+
+    @Resource
+    private LogService logService;
     @Resource
     private DepotAllocationService depotAllocationService;
 
@@ -41,7 +52,35 @@ public class DepotAllocationController {
             info.data = e.getMessage();
             return info;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 获取批次产品列表信息
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getAllocationList")
+    @ApiOperation(value = "获取货位信息")
+    public BaseResponseInfo getAllocationList(@RequestParam("name") String name,
+                                              @RequestParam("type") String type,
+                                              HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<DepotAllocationVo4Depot> list = depotAllocationService.select(null, type, name, null, null);
+            map.put("rows", list);
+            map.put("total", list.size());
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            res.code = 500;
+            res.data = "获取数据失败";
         }
         return res;
     }

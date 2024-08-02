@@ -138,10 +138,10 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.hidden //隐藏
               }
             } else if(key === 'snList') {
-              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK'
-                  || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK' || this.prefixNo === 'DBCK'
-                  || this.prefixNo === 'FXRK' || this.prefixNo === 'CYRK' || this.prefixNo === 'TLRK') {
-                columns[i].type = FormTypes.select //显示
+              if (this.prefixNo === 'QTRK' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' ||
+                this.prefixNo === 'XSTH' || this.prefixNo === 'DBCK' || this.prefixNo === 'FXRK' ||
+                this.prefixNo === 'CYRK' || this.prefixNo === 'TLRK') {
+                columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
               }

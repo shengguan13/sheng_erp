@@ -73,7 +73,7 @@ public class DepotAllocationService {
     }
 
     public List<DepotAllocationVo4Depot> select(
-            String depotId, String type, String allocation, int offset, int rows) throws Exception{
+            String depotId, String type, String allocation, Integer offset, Integer rows) throws Exception{
         List<DepotAllocationVo4Depot> list = new ArrayList<>();
         try{
             list = depotAllocationMapperEx.selectDepotAllocation(depotId, type, allocation, offset, rows);

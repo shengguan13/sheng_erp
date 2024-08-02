@@ -36,6 +36,8 @@ import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import jxl.Sheet;
 import jxl.Workbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -54,12 +56,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.jsh.erp.constants.BusinessConstants.*;
@@ -1072,65 +1075,11 @@ public class DepotHeadService {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
-            int counter = 0;
-            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
-            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
-            DepotHead depotHead = new DepotHead();
-            Date dateValue = new Date();
-            try {
-                dateValue = new SimpleDateFormat("M/d/yyyy HH:mm:ss").parse("1/1/2025 12:00:00");
-            } catch (Exception e) {}
-            String headNumber = "CYRK" + sequenceService.buildOnlyNumber();
-            depotHead.setType("入库");
-            depotHead.setSubType("差异");
-            depotHead.setNumber(headNumber);
-            depotHead.setDefaultNumber(headNumber);
-            depotHead.setCreateTime(dateValue);
-            depotHead.setOperTime(dateValue);
-            depotHead.setCreator(63L);
-            depotHead.setPayType("现付");
-            depotHead.setStatus("0");
-            depotHead.setPurchaseStatus("0");
-            depotHead.setDeleteFlag("0");
-            orderNumberToDepotHead.put(headNumber, depotHead);
+            List<String> barCodes = new ArrayList<>();
             for (int i = 1; i < rightRows; i++) {
-                String barCode = ExcelUtils.getContent(src, i, 0); //物料编码
-                List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
-                if (mList.isEmpty()) {
-                    continue;
-                }
-                BigDecimal current = materialService.getCurrentStockByMaterialIdAndDepotId(mList.get(0).getId(), 26L);
-                String stock = ExcelUtils.getContent(src, i, 1); //数量
-                BigDecimal expected = BigDecimal.valueOf(Double.parseDouble(stock));
-                if (current.compareTo(expected) != 0) {
-                    DepotItem depotItem = new DepotItem();
-                    depotItem.setSnList("564");
-                    depotItem.setBatchNumber(DateTimeFormatter.ofPattern("yyyyMMdd").format(Instant.now()));
-                    depotItem.setDepotId(26L);
-                    BigDecimal diff = expected.subtract(current);
-                    depotItem.setOperNumber(diff);
-                    depotItem.setMaterialUnit(mList.get(0).getUnit());
-                    if (orderNumberToDepotItems.containsKey(headNumber)) {
-                        orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
-                    } else {
-                        orderNumberToDepotItems.put(headNumber, new HashMap<>());
-                        orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
-                    }
-                    counter += 1;
-                }
-                if (counter % 20 == 0) {
-                    importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
-                    orderNumberToDepotItems = new HashMap<>();
-                    orderNumberToDepotHead = new HashMap<>();
-                    headNumber = "CYRK" + sequenceService.buildOnlyNumber();
-                    depotHead.setNumber(headNumber);
-                    depotHead.setDefaultNumber(headNumber);
-                    orderNumberToDepotHead.put(headNumber, depotHead);
-                }
+                barCodes.add(ExcelUtils.getContent(src, i, 0));
             }
-            if (counter % 20 > 0) {
-                importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
-            }
+            generateStockStatement(barCodes, "2024-07-01", "2024-07-21");
             Long endTime = System.currentTimeMillis();
             logger.info("导入耗时：{}", endTime - beginTime);
             info.code = 200;
@@ -1146,6 +1095,104 @@ public class DepotHeadService {
         }
         return info;
     }
+
+//    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+//    public BaseResponseInfo importOtherInExcel(MultipartFile file, HttpServletRequest request) throws Exception {
+//        BaseResponseInfo info = new BaseResponseInfo();
+//        try {
+//            Long beginTime = System.currentTimeMillis();
+//            //文件扩展名只能为xls
+//            String fileName = file.getOriginalFilename();
+//            if (StringUtil.isNotEmpty(fileName)) {
+//                String fileExt = fileName.substring(fileName.indexOf(".") + 1);
+//                if (!"xls".equals(fileExt)) {
+//                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+//                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+//                }
+//            }
+//            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+//            Sheet src = workbook.getSheet(0);
+//            //获取真实的行数，剔除掉空白行
+//            int rightRows = ExcelUtils.getRightRows(src);
+//            //单次导入超出5000条
+//            if (rightRows > 5001) {
+//                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
+//                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
+//            }
+//            int counter = 0;
+//            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
+//            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
+//            DepotHead depotHead = new DepotHead();
+//            Date dateValue = new Date();
+//            try {
+//                dateValue = new SimpleDateFormat("M/d/yyyy HH:mm:ss").parse("1/1/2025 12:00:00");
+//            } catch (Exception e) {}
+//            String headNumber = "CYRK" + sequenceService.buildOnlyNumber();
+//            depotHead.setType("入库");
+//            depotHead.setSubType("差异");
+//            depotHead.setNumber(headNumber);
+//            depotHead.setDefaultNumber(headNumber);
+//            depotHead.setCreateTime(dateValue);
+//            depotHead.setOperTime(dateValue);
+//            depotHead.setCreator(63L);
+//            depotHead.setPayType("现付");
+//            depotHead.setStatus("0");
+//            depotHead.setPurchaseStatus("0");
+//            depotHead.setDeleteFlag("0");
+//            orderNumberToDepotHead.put(headNumber, depotHead);
+//            for (int i = 1; i < rightRows; i++) {
+//                String barCode = ExcelUtils.getContent(src, i, 0); //物料编码
+//                List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
+//                if (mList.isEmpty()) {
+//                    continue;
+//                }
+//                BigDecimal current = materialService.getCurrentStockByMaterialIdAndDepotId(mList.get(0).getId(), 26L);
+//                String stock = ExcelUtils.getContent(src, i, 1); //数量
+//                BigDecimal expected = BigDecimal.valueOf(Double.parseDouble(stock));
+//                if (current.compareTo(expected) != 0) {
+//                    DepotItem depotItem = new DepotItem();
+//                    depotItem.setSnList("564");
+//                    depotItem.setBatchNumber(DateTimeFormatter.ofPattern("yyyyMMdd").format(Instant.now()));
+//                    depotItem.setDepotId(26L);
+//                    BigDecimal diff = expected.subtract(current);
+//                    depotItem.setOperNumber(diff);
+//                    depotItem.setMaterialUnit(mList.get(0).getUnit());
+//                    if (orderNumberToDepotItems.containsKey(headNumber)) {
+//                        orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+//                    } else {
+//                        orderNumberToDepotItems.put(headNumber, new HashMap<>());
+//                        orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
+//                    }
+//                    counter += 1;
+//                }
+//                if (counter % 20 == 0) {
+//                    importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+//                    orderNumberToDepotItems = new HashMap<>();
+//                    orderNumberToDepotHead = new HashMap<>();
+//                    headNumber = "CYRK" + sequenceService.buildOnlyNumber();
+//                    depotHead.setNumber(headNumber);
+//                    depotHead.setDefaultNumber(headNumber);
+//                    orderNumberToDepotHead.put(headNumber, depotHead);
+//                }
+//            }
+//            if (counter % 20 > 0) {
+//                importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+//            }
+//            Long endTime = System.currentTimeMillis();
+//            logger.info("导入耗时：{}", endTime - beginTime);
+//            info.code = 200;
+//            info.data = "导入成功";
+//        } catch (BusinessRunTimeException e) {
+//            throw e;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            logger.info("导入失败：{}", e.getMessage());
+//            logger.error(e.getMessage(), e);
+//            info.code = 500;
+//            info.data = "导入失败";
+//        }
+//        return info;
+//    }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public BaseResponseInfo adjustBatchNumber(MultipartFile file, HttpServletRequest request) throws Exception {
@@ -1861,32 +1908,74 @@ public class DepotHeadService {
         return info;
     }
 
-    private void generateStockStatement(List<Material> materials) throws Exception {
+    private void generateStockStatement(List<String> barCodes, String beginTime, String endTime) throws Exception {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
-        XSSFSheet xssfSheet = xssfWorkbook.createSheet("入库");
+        XSSFSheet inSheet = xssfWorkbook.createSheet("入库");
+        List<MaterialVo4Unit> materials = materialService.getMaterialByBarCode(barCodes.get(0));
+        Map<String, MaterialVo4Unit> barCodeToMaterial = new HashMap<>();
+        for(MaterialVo4Unit m : materials) {
+            barCodeToMaterial.put(m.getmBarCode(), m);
+        }
+        generateStockSheet(inSheet, barCodes, barCodeToMaterial, beginTime, endTime, "入库", "SCRK");
+        File path = new File("/opt/jshERP/upload" + File.separator + "statement" + File.separator);
+        if (!path.exists()) {
+            path.mkdirs();
+        }
+        File statementFile = new File(path,   "test.xlsx");
+        FileOutputStream outputStream = new FileOutputStream(statementFile);
+        xssfWorkbook.write(outputStream);
+        outputStream.close();
+        xssfWorkbook.close();
+    }
+
+    private void generateStockSheet(XSSFSheet xssfSheet, List<String> barCodes, Map<String, MaterialVo4Unit> map,
+                                    String beginTime, String endTime, String type, String prefix) throws Exception {
         XSSFRow titleRow, headRow; // 行
-        XSSFCell cell; // 列
         titleRow = xssfSheet.getRow(0);
         if (titleRow == null) {
             titleRow = xssfSheet.createRow(0);
         }
-        cell = titleRow.createCell(0);
-        cell.setCellValue("库存表");
+        titleRow.createCell(0).setCellValue("库存表");
 
-        headRow = xssfSheet.getRow(2);
+        headRow = xssfSheet.getRow(1);
         if (headRow == null) {
             headRow = xssfSheet.createRow(2);
         }
         headRow.createCell(0).setCellValue("序号");
-        headRow.createCell(1).setCellValue("零件号码");
-        headRow.createCell(2).setCellValue("零件名称");
-        headRow.createCell(3).setCellValue("车型/项目");
-        headRow.createCell(4).setCellValue("客户");
-
-        List<DepotHeadVo4InDetail> inList = findInOutDetail(null, null, "入库", null, null,
-                StringUtil.toNull("barCode"), null, null, null, null, 0, 1000);
-        List<DepotHeadVo4InDetail> outList = findInOutDetail(null, null, "出库", null, null,
-                StringUtil.toNull("barCode"), null, null, null, null, 0, 1000);
+        headRow.createCell(1).setCellValue("编码");
+        headRow.createCell(2).setCellValue("零件号码");
+        headRow.createCell(3).setCellValue("零件名称");
+        LocalDate begin =  LocalDate.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate end = LocalDate.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        long days = ChronoUnit.DAYS.between(begin, end) + 1;
+        for (int i = 0; i < days; i++) {
+            String date = begin.plusDays(i).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            headRow.createCell(4 + i).setCellValue(date);
+        }
+        for (int count = 0; count < barCodes.size(); count++) {
+            XSSFRow row = xssfSheet.getRow(2 + count);
+            String barCode = barCodes.get(count);
+            row.createCell(0).setCellValue(count + 1);
+            row.createCell(1).setCellValue(barCode);
+            if (map.containsKey(barCode)) {
+                row.createCell(2).setCellValue(map.get(barCode).getModel());
+                row.createCell(3).setCellValue(map.get(barCode).getName());
+                List<DepotHeadVo4InDetail> list = findInOutDetail(beginTime, endTime, type, null, null,
+                        barCode, new ArrayList<>(), null, null, null, null, null);
+                for (DepotHeadVo4InDetail detail : list) {
+                    if (detail.getNumber().startsWith(prefix)) {
+                        LocalDate date = LocalDate.parse(detail.getOperTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                        long index = ChronoUnit.DAYS.between(begin, date);
+                        Cell cell = row.getCell(4 + (int)index);
+                        if (cell == null || cell.getCellType() != CellType.NUMERIC) {
+                            cell.setCellValue(detail.getOperNumber().doubleValue());
+                        } else {
+                            cell.setCellValue(cell.getNumericCellValue() + detail.getOperNumber().doubleValue());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

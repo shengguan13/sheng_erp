@@ -198,9 +198,7 @@
             { title: '已出库', key: 'preNumber', width: '5%', type: FormTypes.normal },
             { title: '已退货', key: 'finishNumber', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '库位', key: 'snList', width: '10%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
+            { title: '库位', key: 'snList', width: '6%', type: FormTypes.popupJsh, kind: 'allocation', multi: false },
             { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.input },
             { title: '退货数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -294,7 +292,6 @@
         this.initSystemConfig()
         this.initCustomer()
         this.initDepot()
-        this.initAllocation()
         this.initAccount()
       },
       //提交单据时整理成formData

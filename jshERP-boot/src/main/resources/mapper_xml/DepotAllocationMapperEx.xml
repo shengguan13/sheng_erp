@@ -14,9 +14,8 @@
             <bind name="bindAllocation" value="'%'+allocation+'%'"/>
             and da.allocation like #{bindAllocation}
         </if>
-        <if test="type != null">
-            <bind name="bindType" value="'%'+type+'%'"/>
-            and da.type like #{bindType}
+        <if test="type != null and type !=''">
+            and da.type = #{type}
         </if>
         <if test="depotId != null">
             and da.depot_id = #{depotId}
