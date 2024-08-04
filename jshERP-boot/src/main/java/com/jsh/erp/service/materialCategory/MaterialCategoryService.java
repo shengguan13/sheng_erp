@@ -249,12 +249,30 @@ public class MaterialCategoryService {
      */
     public List<TreeNode> getMaterialCategoryTree(Long id) throws Exception{
         List<TreeNode> list=null;
+        List<TreeNode> res=null;
         try{
             list=materialCategoryMapperEx.getNodeTree(id);
+            User user = userService.getCurrentUser();
+            res = new ArrayList<>();
+            if ("lihongjun".equals(user.getLoginName())) {
+                for (TreeNode node : list) {
+                    if ("半成品".equals(node.getTitle()) || "项目".equals(node.getTitle())) {
+                        res.add(node);
+                    }
+                }
+            } else if ("zhangshanshan".equals(user.getLoginName())) {
+                for (TreeNode node : list) {
+                    if ("成品".equals(node.getTitle())) {
+                        res.add(node);
+                    }
+                }
+            } else {
+                res.addAll(list);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
-       return list;
+       return res;
     }
     /**
      * create by: cjl

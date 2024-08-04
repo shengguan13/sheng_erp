@@ -224,17 +224,9 @@ export const BillModalMixin = {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if(res.code === 200){
           let arr = res.data
-          if(that.prefixNo == "FXCK") {
-            for (let i = 0; i < arr.length; i++) {
-              if(arr[i].depotName == "隔离库"){
-                that.defaultDepotId = arr[i].id
-              }
-            }
-          } else {
-            for (let i = 0; i < arr.length; i++) {
-              if(arr[i].isDefault){
-                that.defaultDepotId = arr[i].id
-              }
+          for (let i = 0; i < arr.length; i++) {
+            if(arr[i].isDefault){
+              that.defaultDepotId = arr[i].id
             }
           }
           for(let item of that.materialTable.columns){

@@ -305,13 +305,13 @@ public class DepotService {
     public JSONArray findDepotByCurrentUser() throws Exception {
         JSONArray arr = new JSONArray();
         String type = "UserDepot";
-        Long userId = userService.getCurrentUser().getId();
+        User user = userService.getCurrentUser();
         List<Depot> dataList = findUserDepot();
         //开始拼接json数据
         if (null != dataList) {
             boolean depotFlag = systemConfigService.getDepotFlag();
             if(depotFlag) {
-                List<UserBusiness> list = userBusinessService.getBasicData(userId.toString(), type);
+                List<UserBusiness> list = userBusinessService.getBasicData(user.getId().toString(), type);
                 if(list!=null && list.size()>0) {
                     String depotStr = list.get(0).getValue();
                     if(StringUtil.isNotEmpty(depotStr)){

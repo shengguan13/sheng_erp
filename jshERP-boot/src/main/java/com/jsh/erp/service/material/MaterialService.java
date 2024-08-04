@@ -414,6 +414,22 @@ public class MaterialService {
             if(categoryId!=null){
                 Long parentId = categoryId;
                 idList = getListByParentId(parentId);
+            } else {
+                User user = userService.getCurrentUser();
+                List<MaterialCategory> categories = materialCategoryService.getMaterialCategory();
+                if ("lihongjun".equals(user.getLoginName())) {
+                    for (MaterialCategory category : categories) {
+                        if ("半成品".equals(category.getName()) || "项目".equals(category.getName())) {
+                            idList.add(category.getId());
+                        }
+                    }
+                } else if ("zhangshanshan".equals(user.getLoginName())) {
+                    for (MaterialCategory category : categories) {
+                        if ("成品".equals(category.getName())) {
+                            idList.add(category.getId());
+                        }
+                    }
+                } else {}
             }
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
@@ -433,6 +449,22 @@ public class MaterialService {
             if(categoryId!=null){
                 Long parentId = categoryId;
                 idList = getListByParentId(parentId);
+            } else {
+                User user = userService.getCurrentUser();
+                List<MaterialCategory> categories = materialCategoryService.getMaterialCategory();
+                if ("lihongjun".equals(user.getLoginName())) {
+                    for (MaterialCategory category : categories) {
+                        if ("半成品".equals(category.getName()) || "项目".equals(category.getName())) {
+                            idList.add(category.getId());
+                        }
+                    }
+                } else if ("zhangshanshan".equals(user.getLoginName())) {
+                    for (MaterialCategory category : categories) {
+                        if ("成品".equals(category.getName())) {
+                            idList.add(category.getId());
+                        }
+                    }
+                } else {}
             }
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
@@ -511,30 +543,27 @@ public class MaterialService {
                         String[] categoryList = category.split(",");
                         categoryName = categoryList[0];
                     }
-                } catch (Exception e) {
-
-                }
-                String name = ExcelUtils.getContent(src, i, 3); //名称
+                } catch (Exception e) {}
                 String model = ExcelUtils.getContent(src, i, 2); //型号
+                String name = ExcelUtils.getContent(src, i, 3); //名称
                 String color = ExcelUtils.getContent(src, i, 5); //颜色
-                String unit = ExcelUtils.getContent(src, i, 11); //单位
-                String mat = ExcelUtils.getContent(src, i, 7); //材质
                 String colorCode = ExcelUtils.getContent(src, i, 6); //颜色代码
-                BigDecimal weight = BigDecimal.ZERO;
+                String mat = ExcelUtils.getContent(src, i, 7); //材质
+                String other5 = ExcelUtils.getContent(src, i, 8); //规格
+                String other6 = ExcelUtils.getContent(src, i, 9); //材料标准
                 String weightStr = ExcelUtils.getContent(src, i, 10); //重量
+                String unit = ExcelUtils.getContent(src, i, 11); //单位
+                BigDecimal weight = BigDecimal.ZERO;
                 try {
                     Double weightVal = Double.parseDouble(weightStr);
                     weight = BigDecimal.valueOf(weightVal);
                 } catch (Exception e) {
-
                 }
-
                 String expiryNum = ""; //保质期/月
-                String other1 = ExcelUtils.getContent(src, i, 9); //主壁厚
-                String other2 = ExcelUtils.getContent(src, i, 13); //模腔数
+                String other1 = ""; //主壁厚
+                String other2 = ""; //模腔数
                 String other3 = ""; //模具重量
-                String other4 = ExcelUtils.getContent(src, i, 12); //浇口重量
-                String other5 = ExcelUtils.getContent(src, i, 8); //规格
+                String other4 = ""; //浇口重量
 
                 String enabled = "1"; //状态
                 String remark = ""; //备注
@@ -561,6 +590,7 @@ public class MaterialService {
                 m.setOtherField3(other3);
                 m.setOtherField4(other4);
                 m.setOtherField5(other5);
+                m.setOtherField6(other6);
                 m.setRemark(remark);
 
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
