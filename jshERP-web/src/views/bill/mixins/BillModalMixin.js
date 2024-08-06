@@ -604,6 +604,7 @@ export const BillModalMixin = {
         name: mInfo.name,
         colorCode: mInfo.colorCode,
         model: mInfo.model,
+        supplierModel: mInfo.supplierModel,
         color: mInfo.color,
         materialOther: mInfo.materialOther,
         categoryName: mInfo.categoryName,
@@ -618,6 +619,7 @@ export const BillModalMixin = {
     //使得型号、颜色、扩展信息、sku等为隐藏
     changeColumnHide() {
       this.changeFormTypes(this.materialTable.columns, 'model', 0)
+      this.changeFormTypes(this.materialTable.columns, 'supplierModel', 0)
       this.changeFormTypes(this.materialTable.columns, 'color', 0)
       this.changeFormTypes(this.materialTable.columns, 'categoryName', 0)
       this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
@@ -626,6 +628,9 @@ export const BillModalMixin = {
     changeColumnShow(info) {
       if(info.model) {
         this.changeFormTypes(this.materialTable.columns, 'model', 1)
+      }
+      if(info.supplierModel) {
+        this.changeFormTypes(this.materialTable.columns, 'supplierModel', 1)
       }
       if(info.color) {
         this.changeFormTypes(this.materialTable.columns, 'color', 1)
@@ -762,6 +767,7 @@ export const BillModalMixin = {
                     item.name = mInfo.name
                     item.colorCode = mInfo.colorCode
                     item.model = mInfo.model
+                    item.supplierModel = mInfo.supplierModel
                     item.color = mInfo.color
                     item.categoryName = mInfo.categoryName
                     item.materialOther = mInfo.materialOther

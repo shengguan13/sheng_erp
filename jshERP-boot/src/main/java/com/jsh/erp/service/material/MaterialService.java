@@ -425,7 +425,7 @@ public class MaterialService {
                     }
                 } else if ("zhangshanshan".equals(user.getLoginName())) {
                     for (MaterialCategory category : categories) {
-                        if ("成品".equals(category.getName())) {
+                        if ("总成".equals(category.getName())) {
                             idList.add(category.getId());
                         }
                     }
@@ -460,7 +460,7 @@ public class MaterialService {
                     }
                 } else if ("zhangshanshan".equals(user.getLoginName())) {
                     for (MaterialCategory category : categories) {
-                        if ("成品".equals(category.getName())) {
+                        if ("总成".equals(category.getName())) {
                             idList.add(category.getId());
                         }
                     }

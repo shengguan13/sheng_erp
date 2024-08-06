@@ -213,5 +213,5 @@ public class BusinessConstants {
      * redis相关
      * */
     //session的生命周期,秒
-    public static final Long MAX_SESSION_IN_SECONDS= 30 * 60L;
+    public static final Long MAX_SESSION_IN_SECONDS= 4 * 60 * 60L;
 }

@@ -262,7 +262,7 @@ public class MaterialCategoryService {
                 }
             } else if ("zhangshanshan".equals(user.getLoginName())) {
                 for (TreeNode node : list) {
-                    if ("成品".equals(node.getTitle())) {
+                    if ("总成".equals(node.getTitle())) {
                         res.add(node);
                     }
                 }
