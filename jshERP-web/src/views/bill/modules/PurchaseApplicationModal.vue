@@ -20,20 +20,10 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请部门">
-              <a-select placeholder="选择部门" v-model="selectedDepartment"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option v-for="(item,index) in departmentList.options" :key="index" :value="item.value">
-                  {{ item.text }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请人">
               <a-select placeholder="选择申请人" v-decorator="[ 'salesMan', validatorRules.salesMan ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option v-for="(item,index) in dynamicOptions" :key="index" :value="item.value">
+                <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
                   {{ item.text }}
                 </a-select-option>
               </a-select>
@@ -148,8 +138,6 @@
         operTimeStr: '',
         prefixNo: 'CGSQ',
         fileList:[],
-        dynamicOptions:[],
-        selectedDepartment:'',
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -211,17 +199,6 @@
     },
     created () {
     },
-    watch: {
-      selectedDepartment(newVal) {
-        this.dynamicOptions = [];
-        for (let i = 0; i < this.personList.options.length; i++) {
-          const option = this.personList.options[i]
-          if (option.department === this.selectedDepartment) {
-            this.dynamicOptions.push(option)
-          }
-        }
-      }
-    },
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
@@ -271,7 +248,6 @@
         this.initSystemConfig()
         this.initSupplier()
         this.initAccount()
-        this.initDepartment()
         this.initPerson()
         this.initDepot()
       },

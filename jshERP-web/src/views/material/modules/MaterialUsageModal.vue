@@ -31,20 +31,10 @@
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请部门">
-            <a-select placeholder="选择部门" v-model="selectedDepartment"
-              :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-              <a-select-option v-for="(item,index) in departmentList.options" :key="index" :value="item.value">
-                {{ item.text }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-form>
-        <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请人">
             <a-select placeholder="选择申请人" v-decorator="[ 'salesMan', validatorRules.salesMan ]"
               :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-              <a-select-option v-for="(item,index) in dynamicOptions" :key="index" :value="item.value">
+              <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
                 {{ item.text }}
               </a-select-option>
             </a-select>
@@ -76,8 +66,6 @@
         title:"操作",
         visible: false,
         model: {},
-        dynamicOptions:[],
-        selectedDepartment:'',
         personList: {
           options: [],
           value: ''
@@ -128,38 +116,24 @@
     },
     created () {
     },
-    watch: {
-      selectedDepartment(newVal) {
-        this.dynamicOptions = [];
-        for (let i = 0; i < this.personList.options.length; i++) {
-          const option = this.personList.options[i]
-          if (option.department === this.selectedDepartment) {
-            this.dynamicOptions.push(option)
-          }
-        }
-      }
-    },
     methods: {
       add () {
         this.edit({});
       },
-      initDepartment() {
-        getDepartment().then((res)=>{
-          if(res) {
-            this.departmentList.options = res;
-          }
-        });
-      },
       initPerson() {
         getAllPerson().then((res)=>{
           if(res) {
-            this.personList.options = res;
-            this.dynamicOptions = res;
+            let withDepartment = [];
+            for (let i=0; i<res.length; i++) {
+              let info = res[i]
+              info.text = info.text + "-" + info.department
+              withDepartment.push(info)
+            }
+            this.personList.options = withDepartment;
           }
         });
       },
       edit (record) {
-        this.initDepartment()
         this.initPerson()
         this.form.resetFields();
         this.model = Object.assign({}, record);

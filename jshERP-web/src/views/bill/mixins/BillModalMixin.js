@@ -195,19 +195,17 @@ export const BillModalMixin = {
         }
       });
     },
-    initDepartment() {
-      let that = this;
-      getDepartment().then((res)=>{
-        if(res) {
-          that.departmentList.options = res;
-        }
-      });
-    },
     initPerson() {
       let that = this;
       getAllPerson().then((res)=>{
         if(res) {
-          that.personList.options = res;
+          let withDepartment = [];
+          for (let i=0; i<res.length; i++) {
+            let info = res[i]
+            info.text = info.text + "-" + info.department
+            withDepartment.push(info)
+          }
+          that.personList.options = withDepartment;
         }
       });
     },
@@ -238,39 +236,6 @@ export const BillModalMixin = {
                 depotInfo.text = arr[i].depotName
                 depotInfo.title = arr[i].depotName
                 item.options.push(depotInfo)
-              }
-            }
-          }
-        }
-      })
-    },
-    initAllocation() {
-      let that = this;
-      getAction('/depot/findAllocation').then((res) => {
-        if(res.code === 200){
-          let arr = res.data
-          for(let item of that.materialTable.columns){
-            if(item.key == 'snList') {
-              item.options = []
-              let info1 = {};
-              info1.value = 564
-              info1.text = "期初-期初"
-              info1.title = "期初-期初"
-              let info2 = {};
-              info2.value = 565
-              info2.text = "隔离-隔离"
-              info2.title = "隔离-隔离"
-              item.options.push(info1)
-              item.options.push(info2)
-              for(let i=0; i<arr.length; i++) {
-                if( arr[i].allocation!='期初' && arr[i].allocation!='隔离' ) {
-                  let allocationInfo = {};
-                  let text = arr[i].allocation + '-' + arr[i].type;
-                  allocationInfo.value = arr[i].id
-                  allocationInfo.text = text
-                  allocationInfo.title = text
-                  item.options.push(allocationInfo)
-                }
               }
             }
           }
@@ -467,10 +432,8 @@ export const BillModalMixin = {
           getBatchNumberList(param).then((res) => {
             if (res && res.code === 200) {
               let batchList = res.data.rows
-              console.log("getBatchNumberList")
               for (let i = 0; i < batchList.length; i++) {
                 let batchInfo = batchList[i]
-                console.log("selected " + batchInfo.id + "-" + batchInfo.snListStr)
                 target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
                 target.recalcAllStatisticsColumns()
               }
