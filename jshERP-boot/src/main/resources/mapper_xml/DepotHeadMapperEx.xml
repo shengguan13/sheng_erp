@@ -57,12 +57,26 @@
     <select id="selectByConditionDepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
         select distinct dh.*, s.supplier OrganName, u.username userName, a.name AccountName
         from jsh_depot_head dh
-        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join (
+            select di.*, me.bar_code,
+                CASE
+                    WHEN di.sku IS NOT NULL THEN ps.model
+                    ELSE
+                    (
+                    SELECT GROUP_CONCAT(ps2.model SEPARATOR ', ')
+                    FROM jsh_product_supplier ps2
+                    WHERE ps2.bar_code = me.bar_code
+                    )
+                END AS supplierModel
+            from jsh_depot_item di
+            left join jsh_product_supplier ps on ps.id = di.sku and ifnull(ps.delete_flag,'0') !='1'
+            left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
+            where ifnull(di.delete_flag,'0') !='1') di2
+        on dh.id = di2.header_id and ifnull(di2.delete_flag,'0') !='1'
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
-        left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
-        left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
+        left join jsh_material m on di2.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
         <if test="type != null">
             and dh.type=#{type}
@@ -103,9 +117,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            and (di2.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
                 or m.model like #{bindKey} or m.color like #{bindKey} or m.mat like #{bindKey}
-                or m.other_field5 like #{bindKey}  )
+                or m.other_field5 like #{bindKey} or di2.supplierModel like #{bindKey}  )
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}
@@ -121,10 +135,10 @@
             and dh.creator=#{creator}
         </if>
         <if test="depotId != null">
-            and di.depot_id=#{depotId}
+            and di2.depot_id=#{depotId}
         </if>
         <if test="depotArray != null and depotArray !=''">
-            and di.depot_id in (
+            and di2.depot_id in (
             <foreach collection="depotArray" item="depotId" separator=",">
                 #{depotId}
             </foreach>
@@ -149,7 +163,7 @@
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+            and (dh.remark like #{bindRemark} or di2.remark like #{bindRemark})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.oper_time desc
@@ -157,13 +171,28 @@
             limit #{offset},#{rows}
         </if>
     </select>
+
     <select id="countsByDepotHead" resultType="java.lang.Long">
         SELECT
         COUNT(1) from
         (select distinct dh.* FROM jsh_depot_head dh
-        left join jsh_depot_item di on dh.Id = di.header_id and ifnull(di.delete_flag,'0') !='1'
-        left join jsh_material m on di.material_id = m.Id and ifnull(m.delete_Flag,'0') !='1'
-        left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
+        left join (
+            select di.*, me.bar_code,
+                CASE
+                    WHEN di.sku IS NOT NULL THEN ps.model
+                    ELSE
+                    (
+                    SELECT GROUP_CONCAT(ps2.model SEPARATOR ', ')
+                    FROM jsh_product_supplier ps2
+                    WHERE ps2.bar_code = me.bar_code
+                    )
+                END AS supplierModel
+            from jsh_depot_item di
+            left join jsh_product_supplier ps on ps.id = di.sku and ifnull(ps.delete_flag,'0') !='1'
+            left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
+            where ifnull(di.delete_flag,'0') !='1') di2
+        on dh.id = di2.header_id and ifnull(di2.delete_flag,'0') !='1'
+        left join jsh_material m on di2.material_id = m.Id and ifnull(m.delete_Flag,'0') !='1'
         WHERE 1=1
         <if test="type != null">
             and dh.type=#{type}
@@ -204,9 +233,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            and (di2.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.model like #{bindKey} or m.color like #{bindKey} or m.mat like #{bindKey}
-            or m.other_field5 like #{bindKey} )
+            or m.other_field5 like #{bindKey} or di2.supplierModel like #{bindKey} )
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}
@@ -222,10 +251,10 @@
             and dh.creator=#{creator}
         </if>
         <if test="depotId != null">
-            and di.depot_id=#{depotId}
+            and di2.depot_id=#{depotId}
         </if>
         <if test="depotArray != null and depotArray !=''">
-            and di.depot_id in (
+            and di2.depot_id in (
             <foreach collection="depotArray" item="depotId" separator=",">
                 #{depotId}
             </foreach>
@@ -250,7 +279,7 @@
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+            and (dh.remark like #{bindRemark} or di2.remark like #{bindRemark})
         </if>
         and ifnull(dh.delete_Flag,'0') !='1') tb
     </select>

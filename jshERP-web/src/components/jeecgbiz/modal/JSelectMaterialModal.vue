@@ -28,9 +28,14 @@
                   </a-tree-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item label="项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input style="width: 100%" placeholder="请输入项目信息查询" v-model="queryParam.project"></a-input>
+              <a-col :md="6" :sm="8">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库">
+                  <a-select placeholder="选择仓库" v-model="queryParam.depotId" @change="onDepotChange"
+                    :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
+                    <a-select-option v-for="(item,index) in depotList" :key="index" :value="item.id">
+                      {{ item.depotName }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -40,24 +45,8 @@
                   <a-tooltip title="没查询到，决定新增产品！">
                     <a-button style="margin-left: 8px" @click="addMaterial">新增</a-button>
                   </a-tooltip>
-                  <a @click="handleToggleSearch" style="margin-left: 8px">
-                    {{ toggleSearchStatus ? '收起' : '展开' }}
-                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-                  </a>
                 </a-col>
               </span>
-              <template v-if="toggleSearchStatus">
-                <a-col :md="6" :sm="8">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库">
-                    <a-select placeholder="选择仓库" v-model="queryParam.depotId" @change="onDepotChange"
-                      :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
-                      <a-select-option v-for="(item,index) in depotList" :key="index" :value="item.id">
-                        {{ item.depotName }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-              </template>
             </a-row>
           </a-form>
           <a-table
@@ -113,8 +102,7 @@
         queryParam: {
           q: '',
           categoryId: '',
-          depotId: '',
-          project:''
+          depotId: ''
         },
         labelCol: {
           xs: { span: 24 },
@@ -133,6 +121,7 @@
           {dataIndex: 'model', title: '零件号'},
           {dataIndex: 'color', title: '颜色'},
           {dataIndex: 'colorCode', title: '颜色代码'},
+          {dataIndex: 'project', title: '项目'},
           {dataIndex: 'unit', title: '单位'},
           {dataIndex: 'stock', title: '库存'},
           {dataIndex: 'expand', title: '扩展信息'}

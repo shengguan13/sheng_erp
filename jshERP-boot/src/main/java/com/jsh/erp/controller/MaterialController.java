@@ -241,6 +241,7 @@ public class MaterialController {
                     item.put("color", material.getColor());
                     item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
+                    item.put("project", material.getProject());
                     BigDecimal stock;
                     if(StringUtil.isNotEmpty(material.getSku())){
                         stock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
