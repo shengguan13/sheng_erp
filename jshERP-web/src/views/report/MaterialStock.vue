@@ -247,11 +247,11 @@
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['编码', '名称', '型号', '规格', '颜色', '类别', '单位', '初始库存', '库存']]
+        let aoa = [['编码', '名称', '零件号', '客/供型号', '颜色', '颜色代码', '类别', '单位', '初始库存', '库存']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.mBarCode, ds.name, ds.colorCode, ds.model, ds.color, ds.categoryName,
-          ds.unitName, ds.initialStock, ds.currentStock]
+          let item = [ds.mBarCode, ds.name, ds.model, ds.supplierModel, ds.color, ds.colorCode, ds.categoryName,
+            ds.unitName, ds.initialStock, ds.currentStock]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '产品库存')

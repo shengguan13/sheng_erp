@@ -336,7 +336,7 @@ public class DepotHeadController {
     }
 
     @PostMapping(value = "/importPurchaseApplicationExcel")
-    @ApiOperation(value = "excel表格导入")
+    @ApiOperation(value = "excel表格导入采购申请")
     public BaseResponseInfo importPurchaseApplicationExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -353,11 +353,28 @@ public class DepotHeadController {
     }
 
     @PostMapping(value = "/importPurchaseOrderExcel")
-    @ApiOperation(value = "excel表格导入出入库")
+    @ApiOperation(value = "excel表格导入采购订单")
     public BaseResponseInfo importPurchaseOrderExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             res = depotHeadService.importPurchaseOrderExcel(file, request);
+        } catch (BusinessRunTimeException e) {
+            BaseResponseInfo info = new BaseResponseInfo();
+            info.code = e.getCode();
+            info.data = e.getMessage();
+            return info;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/importSaleOrderExcel")
+    @ApiOperation(value = "excel表格导入客户计划")
+    public BaseResponseInfo importSaleOrderExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res = depotHeadService.importSaleOrderExcel(file, request);
         } catch (BusinessRunTimeException e) {
             BaseResponseInfo info = new BaseResponseInfo();
             info.code = e.getCode();

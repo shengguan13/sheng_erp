@@ -26,22 +26,10 @@
               <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col v-if="rowCanEdit" :lg="6" :md="12" :sm="24">
-            <!-- TODO:直接从领料出库绑定，不需要输入-->
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="1" data-title="领料人员"
-                         data-intro="领料人员的数据来自【经手人管理】菜单中的仓管员">
-              <a-select v-model="personList.value" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
-                  {{ item.text }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col v-if="!rowCanEdit" :lg="6" :md="12" :sm="24">
-            <!-- TODO:直接从领料出库绑定，不需要输入-->
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人员" data-step="2" data-title="领料人员"
-                         data-intro="领料人员的数据来自【经手人管理】菜单中的仓管员">
-              <a-select v-model="salesManReadOnly" :disabled="true" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退料人">
+              <a-select placeholder="选择领料人" v-decorator="[ 'salesMan', validatorRules.salesMan ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
                   {{ item.text }}
                 </a-select-option>
@@ -256,7 +244,7 @@
         if (this.action === 'add') {
           this.depositStatus = false
           this.addInit(this.prefixNo)
-          this.personList.value = ''
+          this.salesMan = ''
           this.fileList = []
           this.$nextTick(() => {
             handleIntroJs(this.prefixNo, 1)
@@ -267,7 +255,7 @@
             this.materialTable.columns[1].type = FormTypes.normal
           }
           this.model.operTime = this.model.operTimeStr
-          this.personList.value = this.model.salesMan
+          this.salesMan = this.model.salesMan
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model, 'operTime', 'number', 'linkNumber', 'remark','salesMan'))
@@ -312,7 +300,6 @@
         if(this.model.id){
           billMain.id = this.model.id
         }
-        billMain.salesMan = this.personList.value
         billMain.status = this.billStatus
         return {
           info: JSON.stringify(billMain),
@@ -333,14 +320,6 @@
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
-        this.salesManReadOnly = salesMan
-        // TODO:
-        //for(let j=0; j<personList.options.length; j++) {
-        //  let person = personList.options[j];
-        //  if (person.value === salesMan) {
-        //    this.salesManReadOnly = person.text
-        //  }
-        //}
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           let listEx = []
           for(let j=0; j<selectBillDetailRows.length; j++) {
