@@ -155,7 +155,7 @@
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '库位', key: 'snList', width: '4%', type: FormTypes.popupJsh, kind: 'allocation', multi: false },
+            { title: '库位', key: 'snList', width: '8%', type: FormTypes.popupJsh, kind: 'allocation', multi: false },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]
         },

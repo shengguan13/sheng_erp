@@ -6,6 +6,21 @@
         <result column="depot_name" jdbcType="VARCHAR" property="depotName" />
     </resultMap>
 
+    <resultMap id="batchNumberListMap" type="com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
+        <result column="model" jdbcType="VARCHAR" property="model" />
+        <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+        <result column="commodity_unit" jdbcType="VARCHAR" property="commodityUnit" />
+        <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
+        <result column="oper_time" jdbcType="TIMESTAMP" property="operTime" />
+        <result column="sn_list" jdbcType="VARCHAR" property="snList" />
+        <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
+        <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
+    </resultMap>
+
     <select id="selectDepotAllocation"  resultMap="ResultAndInfoMap">
         select da.*, de.name depot_name from jsh_depot_allocation da
         left join jsh_depot de on da.depot_id=de.id and ifnull(de.delete_Flag,'0') !='1'
@@ -43,6 +58,29 @@
             and da.depot_id = #{depotId}
         </if>
         and ifnull(da.delete_flag,'0') !='1'
+    </select>
+
+    <select id="getAllocationDetail" resultMap="batchNumberListMap">
+        select id, bar_code, name, color_code, model, unit_id, oper_time, commodity_unit, batch_number,
+        expiration_date, sum(basic_number) total_num from
+        (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
+        me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time, di.sn_list,
+        di.basic_number*(case
+        <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
+        when (dh.type='入库'
+        <if test="depotId != null">
+            or (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离') and di.another_depot_id= #{depotId})
+        </if>) then 1
+        when dh.type='出库' then -1
+        end) as basic_number
+        from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id
+        left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag, '0') != '1'
+        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
+        where di.sn_list = #{allocationId}
+        and di.delete_flag!=1) tb
+        group by bar_code, batch_number
+        order by oper_time asc
     </select>
 
     <update id="batchDeleteDepotAllocationByIds">

@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.DepotAllocationVo4Depot;
+import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public interface DepotAllocationMapperEx {
     Long countDepotAllocation(@Param("depotId") String depotId,
                               @Param("type") String type,
                               @Param("allocation") String allocation);
+
+    List<DepotItemVoBatchNumberList> getAllocationDetail(@Param("allocationId") Long allocationId,
+                                                         @Param("depotId") Long depotId);
 
     int batchDeleteDepotAllocationByIds(@Param("ids") String[] ids);
 }

@@ -519,8 +519,6 @@ public class MaterialService {
             //获取真实的行数，剔除掉空白行
             int rightRows = ExcelUtils.getRightRows(src);
             List<Depot> depotList= depotService.getDepot();
-            int depotCount = depotList.size();
-            Map<String, Long> depotMap = parseDepotToMap(depotList);
             User user = userService.getCurrentUser();
             List<MaterialWithInitStock> mList = new ArrayList<>();
             //单次导入超出5000条
@@ -546,25 +544,23 @@ public class MaterialService {
                 } catch (Exception e) {}
                 String model = ExcelUtils.getContent(src, i, 2); //型号
                 String name = ExcelUtils.getContent(src, i, 3); //名称
-                String color = ExcelUtils.getContent(src, i, 5); //颜色
-                String colorCode = ExcelUtils.getContent(src, i, 6); //颜色代码
-                String mat = ExcelUtils.getContent(src, i, 7); //材质
+                String color = ExcelUtils.getContent(src, i, 4); //颜色
+                String colorCode = ExcelUtils.getContent(src, i, 5); //颜色代码
+                String mat = ExcelUtils.getContent(src, i, 6); //材质
+                String other6 = ExcelUtils.getContent(src, i, 7); //材料标准
                 String other5 = ExcelUtils.getContent(src, i, 8); //规格
-                String other6 = ExcelUtils.getContent(src, i, 9); //材料标准
+                String unit = ExcelUtils.getContent(src, i, 9); //单位
                 String weightStr = ExcelUtils.getContent(src, i, 10); //重量
-                String unit = ExcelUtils.getContent(src, i, 11); //单位
                 BigDecimal weight = BigDecimal.ZERO;
                 try {
                     Double weightVal = Double.parseDouble(weightStr);
                     weight = BigDecimal.valueOf(weightVal);
-                } catch (Exception e) {
-                }
+                } catch (Exception e) {}
                 String expiryNum = ""; //保质期/月
-                String other1 = ""; //主壁厚
+                String other1 = ExcelUtils.getContent(src, i, 12); //主壁厚
                 String other2 = ""; //模腔数
                 String other3 = ""; //模具重量
                 String other4 = ""; //浇口重量
-
                 String enabled = "1"; //状态
                 String remark = ""; //备注
 //                名称为空
@@ -572,7 +568,6 @@ public class MaterialService {
 //                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
 //                            String.format(ExceptionConstants.MATERIAL_NAME_EMPTY_MSG, i+1));
 //                }
-//                单位为空
                 if(StringUtil.isEmpty(unit)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
@@ -597,14 +592,14 @@ public class MaterialService {
                 if(null!=categoryId){
                     m.setCategoryId(categoryId);
                 }
-                if(StringUtil.isNotEmpty(expiryNum)) {
-                    //校验保质期是否是正整数
-                    if(!StringUtil.isPositiveLong(expiryNum)) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXPIRY_NUM_NOT_INTEGER_CODE,
-                                String.format(ExceptionConstants.MATERIAL_EXPIRY_NUM_NOT_INTEGER_MSG, i+1));
-                    }
-                    m.setExpiryNum(Integer.parseInt(expiryNum));
-                }
+//                if(StringUtil.isNotEmpty(expiryNum)) {
+//                    //校验保质期是否是正整数
+//                    if(!StringUtil.isPositiveLong(expiryNum)) {
+//                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXPIRY_NUM_NOT_INTEGER_CODE,
+//                                String.format(ExceptionConstants.MATERIAL_EXPIRY_NUM_NOT_INTEGER_MSG, i+1));
+//                    }
+//                    m.setExpiryNum(Integer.parseInt(expiryNum));
+//                }
 //                校验编码的格式
 //                if(!StringUtil.checkBarCode(barCode)) {
 //                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
@@ -632,8 +627,8 @@ public class MaterialService {
             List<MaterialInitialStock> insertInitialStockMaterialList = new ArrayList<>();
             List<MaterialCurrentStock> insertCurrentStockMaterialList = new ArrayList<>();
             for(MaterialWithInitStock m: mList) {
-                Long mId = 0L;
                 // 判断该产品是否存在，如果不存在就新增，如果存在就更新
+                Long mId = 0L;
                 String barCode = getBarCode(m);
 //                TODO: 目前产品一样的情况下也新增，除非物料编码一样才更新
 //                List<Material> materials = getMaterialListByParam(m.getName(), m.getColorCode(),
@@ -653,56 +648,56 @@ public class MaterialService {
                 JSONObject materialExObj = m.getMaterialExObj();
                 insertOrUpdateMaterialExtend(materialExObj, "1", mId, user);
                 //给产品更新库存
-                Map<Long, BigDecimal> stockMap = m.getStockMap();
-                for(Depot depot: depotList){
-                    Long depotId = depot.getId();
-                    BigDecimal stock = stockMap.get(depot.getId());
-                    //新增初始库存
-                    if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
-                        MaterialInitialStock materialInitialStock = new MaterialInitialStock();
-                        materialInitialStock.setMaterialId(mId);
-                        materialInitialStock.setDepotId(depotId);
-                        materialInitialStock.setNumber(stock);
-                        insertInitialStockMaterialList.add(materialInitialStock);
-                        deleteInitialStockMaterialIdList.add(mId);
-                    }
-                    //新增或更新当前库存
-                    Long billCount = depotItemService.getCountByMaterialAndDepot(mId, depotId);
-                    if(billCount == 0) {
-                        if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
-                            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-                            materialCurrentStock.setMaterialId(mId);
-                            materialCurrentStock.setDepotId(depotId);
-                            materialCurrentStock.setCurrentNumber(stock);
-                            insertCurrentStockMaterialList.add(materialCurrentStock);
-                            deleteCurrentStockMaterialIdList.add(mId);
-                        }
-                    } else {
-                        BigDecimal initStock = getInitStock(mId, depotId);
-                        BigDecimal currentNumber = getCurrentStockByMaterialIdAndDepotId(mId, depotId);
-                        //当前库存的更新：减去初始库存，再加上导入的新初始库存
-                        if(currentNumber!=null && initStock!=null && stock!=null) {
-                            currentNumber = currentNumber.subtract(initStock).add(stock);
-                        }
-                        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-                        materialCurrentStock.setMaterialId(mId);
-                        materialCurrentStock.setDepotId(depotId);
-                        materialCurrentStock.setCurrentNumber(currentNumber);
-                        insertCurrentStockMaterialList.add(materialCurrentStock);
-                        deleteCurrentStockMaterialIdList.add(mId);
-                    }
-                }
+//                Map<Long, BigDecimal> stockMap = m.getStockMap();
+//                for(Depot depot: depotList){
+//                    Long depotId = depot.getId();
+//                    BigDecimal stock = stockMap.get(depot.getId());
+//                    //新增初始库存
+//                    if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
+//                        MaterialInitialStock materialInitialStock = new MaterialInitialStock();
+//                        materialInitialStock.setMaterialId(mId);
+//                        materialInitialStock.setDepotId(depotId);
+//                        materialInitialStock.setNumber(stock);
+//                        insertInitialStockMaterialList.add(materialInitialStock);
+//                        deleteInitialStockMaterialIdList.add(mId);
+//                    }
+//                    //新增或更新当前库存
+//                    Long billCount = depotItemService.getCountByMaterialAndDepot(mId, depotId);
+//                    if(billCount == 0) {
+//                        if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
+//                            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+//                            materialCurrentStock.setMaterialId(mId);
+//                            materialCurrentStock.setDepotId(depotId);
+//                            materialCurrentStock.setCurrentNumber(stock);
+//                            insertCurrentStockMaterialList.add(materialCurrentStock);
+//                            deleteCurrentStockMaterialIdList.add(mId);
+//                        }
+//                    } else {
+//                        BigDecimal initStock = getInitStock(mId, depotId);
+//                        BigDecimal currentNumber = getCurrentStockByMaterialIdAndDepotId(mId, depotId);
+//                        //当前库存的更新：减去初始库存，再加上导入的新初始库存
+//                        if(currentNumber!=null && initStock!=null && stock!=null) {
+//                            currentNumber = currentNumber.subtract(initStock).add(stock);
+//                        }
+//                        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+//                        materialCurrentStock.setMaterialId(mId);
+//                        materialCurrentStock.setDepotId(depotId);
+//                        materialCurrentStock.setCurrentNumber(currentNumber);
+//                        insertCurrentStockMaterialList.add(materialCurrentStock);
+//                        deleteCurrentStockMaterialIdList.add(mId);
+//                    }
+//                }
             }
 
             //批量更新库存,先删除后新增
-            if(insertInitialStockMaterialList.size()>0) {
-                batchDeleteInitialStockByMaterialList(deleteInitialStockMaterialIdList);
-                materialInitialStockMapperEx.batchInsert(insertInitialStockMaterialList);
-            }
-            if(insertCurrentStockMaterialList.size()>0) {
-                batchDeleteCurrentStockByMaterialList(deleteCurrentStockMaterialIdList);
-                materialCurrentStockMapperEx.batchInsert(insertCurrentStockMaterialList);
-            }
+//            if(insertInitialStockMaterialList.size()>0) {
+//                batchDeleteInitialStockByMaterialList(deleteInitialStockMaterialIdList);
+//                materialInitialStockMapperEx.batchInsert(insertInitialStockMaterialList);
+//            }
+//            if(insertCurrentStockMaterialList.size()>0) {
+//                batchDeleteCurrentStockByMaterialList(deleteCurrentStockMaterialIdList);
+//                materialCurrentStockMapperEx.batchInsert(insertCurrentStockMaterialList);
+//            }
             logService.insertLog("产品",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

@@ -5,6 +5,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
+import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depot.DepotService;
@@ -111,6 +112,13 @@ public class DepotAllocationService {
             JshException.writeFail(logger, e);
             return 0;
         }
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public List<DepotItemVoBatchNumberList> getAllocationDetail(long allocationId) throws Exception {
+        DepotAllocation allocation = depotAllocationMapper.selectByPrimaryKey(allocationId);
+        List<DepotItemVoBatchNumberList> detailList = depotAllocationMapperEx.getAllocationDetail(allocationId, allocation.getDepotId());
+        return detailList;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

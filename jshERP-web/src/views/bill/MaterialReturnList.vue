@@ -198,7 +198,7 @@
               return text
             }
           },
-          { title: '对应领料入库', dataIndex: 'linkNumber',width:120},
+          { title: '对应领料出库', dataIndex: 'linkNumber',width:120},
           { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
