@@ -624,9 +624,8 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("snList"))) {
                     depotItem.setSnList(rowObj.getString("snList"));
                 } else {
-                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())
-                            || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) && BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType()))) {
-                        // 入库和调拨货位不能为空，出库自动填充
+                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) && !"差异".equals(depotHead.getSubType())) {
+                        // 入库货位不能为空，出库自动填充
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ALLOCATION_EMPTY_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_ALLOCATION_EMPTY_MSG, barCode));
                     }
@@ -1532,16 +1531,24 @@ public class DepotItemService {
         Map<String, String> allocationIdToName = new HashMap<>();
         allocations.stream().forEach(e -> allocationIdToName.put(e.getId().toString(), e.getType() + "-" + e.getAllocation()));
         // 使用的时候注意batch可能有负数的
-        List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
+        List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberListWithoutMergingAllocation(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
+        List<DepotItemVoBatchNumberList> mergedByBatchNumber =  depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
+        Set<String> nonZeroBatches = new HashSet<>();
+        for (DepotItemVoBatchNumberList di : mergedByBatchNumber) {
+            if (di.getTotalNum() != null && di.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
+                nonZeroBatches.add(di.getBatchNumber());
+            }
+        }
         for(DepotItemVoBatchNumberList bn: list) {
             //if(bn.getTotalNum() != null && bn.getTotalNum().compareTo(BigDecimal.ZERO) > 0) {
-            if(bn.getTotalNum() != null && bn.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
+            if(bn.getTotalNum() != null && bn.getTotalNum().compareTo(BigDecimal.ZERO) != 0 && nonZeroBatches.contains(bn.getBatchNumber())) {
                 bn.setExpirationDateStr(Tools.parseDateToStr(bn.getExpirationDate()));
                 if(bn.getUnitId()!=null) {
                     Unit unit = unitService.getUnit(bn.getUnitId());
                     String commodityUnit = bn.getCommodityUnit();
                     bn.setTotalNum(unitService.parseStockByUnit(bn.getTotalNum(), unit, commodityUnit));
                 }
+                bn.setId(bn.getBatchNumber() + "饕" + (bn.getSnList() == null ? "" : bn.getSnList()));
                 if(bn.getSnList() != null && !"".equals(bn.getSnList())) {
                     try {
                         StringBuilder sb = new StringBuilder();

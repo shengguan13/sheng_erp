@@ -249,6 +249,13 @@ public interface DepotItemMapperEx {
             @Param("barCode") String barCode,
             @Param("batchNumber") String batchNumber);
 
+    List<DepotItemVoBatchNumberList> getBatchNumberListWithoutMergingAllocation(
+            @Param("number") String number,
+            @Param("name") String name,
+            @Param("depotId") Long depotId,
+            @Param("barCode") String barCode,
+            @Param("batchNumber") String batchNumber);
+
     Long getCountByMaterialAndDepot(
             @Param("mId") Long mId,
             @Param("depotId") Long depotId);

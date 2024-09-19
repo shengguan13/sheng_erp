@@ -1120,38 +1120,48 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
             int counter = 0;
+            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+            Map<String, String> allocationNameToId = new HashMap<>();
+            for (DepotAllocation depotAllocation : allocationList) {
+                allocationNameToId.put(depotAllocation.getAllocation(), depotAllocation.getId().toString());
+            }
             Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
             Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
             DepotHead depotHead = new DepotHead();
-            Date dateValue = new Date();
-            try {
-                dateValue = new SimpleDateFormat("M/d/yyyy HH:mm:ss").parse("7/31/2024 12:00:00");
-            } catch (Exception e) {}
+
             String headNumber = "QTRK" + sequenceService.buildOnlyNumber();
             depotHead.setType("入库");
             depotHead.setSubType("其它");
             depotHead.setNumber(headNumber);
             depotHead.setDefaultNumber(headNumber);
-            depotHead.setCreateTime(dateValue);
-            depotHead.setOperTime(dateValue);
-            depotHead.setCreator(189L); // 63-管盛 189-半成品 188-成品
+            depotHead.setCreator(63L); // 63-管盛 189-半成品 188-成品
             depotHead.setPayType("现付");
             depotHead.setStatus("0");
             depotHead.setPurchaseStatus("0");
             depotHead.setDeleteFlag("0");
             orderNumberToDepotHead.put(headNumber, depotHead);
             for (int i = 1; i < rightRows; i++) {
-                String barCode = ExcelUtils.getContent(src, i, 0); //物料编码
+                Date dateValue = new Date();
+                try {
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(ExcelUtils.getContent(src, i, 2));
+                    //dateValue = new SimpleDateFormat("yyyy/M/d").parse("2024/1/1");
+                } catch (Exception e) {}
+                depotHead.setCreateTime(dateValue);
+                depotHead.setOperTime(dateValue);
+                depotHead.setRemark("退库");
+                String barCode = ExcelUtils.getContent(src, i, 3); //物料编码
                 List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
                 if (mList.isEmpty()) {
                     continue;
                 }
-                String stock = ExcelUtils.getContent(src, i, 1); //数量
+                String stock = ExcelUtils.getContent(src, i, 5); //数量
+                String allocation = ExcelUtils.getContent(src, i, 9); //货位
+                String batchNumber = ExcelUtils.getContent(src, i, 6); //批次
                 BigDecimal number = BigDecimal.valueOf(Double.parseDouble(stock));
                 DepotItem depotItem = new DepotItem();
-                depotItem.setSnList("564");
-                depotItem.setBatchNumber("20240731");
-                depotItem.setDepotId(27L);  // 26-成品 27-半成品
+                depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
+                depotItem.setBatchNumber(batchNumber);
+                depotItem.setDepotId(28L);  // 26-成品 27-半成品 28-原材料
                 depotItem.setOperNumber(number);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
                 if (orderNumberToDepotItems.containsKey(headNumber)) {
@@ -1161,7 +1171,7 @@ public class DepotHeadService {
                     orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
                 }
                 counter += 1;
-                if (counter % 20 == 0) {
+                //if (counter % 1 == 0) {
                     importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
                     orderNumberToDepotItems = new HashMap<>();
                     orderNumberToDepotHead = new HashMap<>();
@@ -1169,11 +1179,11 @@ public class DepotHeadService {
                     depotHead.setNumber(headNumber);
                     depotHead.setDefaultNumber(headNumber);
                     orderNumberToDepotHead.put(headNumber, depotHead);
-                }
+                //}
             }
-            if (counter % 20 > 0) {
-                importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
-            }
+//            if (counter % 20 > 0) {
+//                importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
+//            }
             Long endTime = System.currentTimeMillis();
             logger.info("导入耗时：{}", endTime - beginTime);
             info.code = 200;
@@ -1466,38 +1476,41 @@ public class DepotHeadService {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
-//            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
-//            Map<String, String> allocationNameToId = new HashMap<>();
-//            for (DepotAllocation depotAllocation : allocationList) {
-//                allocationNameToId.put(depotAllocation.getAllocation(), depotAllocation.getId().toString());
-//            }
-            Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
-            Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
-            Date dateValue = new Date();
-            try {
-                dateValue = new SimpleDateFormat("M/d/yyyy HH:mm:ss").parse("1/1/2025 12:00:00");
-            } catch (Exception e) {}
-            DepotHead depotHead = new DepotHead();
-            String headNumber = "XSCK" + sequenceService.buildOnlyNumber();
-            depotHead.setType("出库");
-            depotHead.setSubType("销售");
-            depotHead.setNumber(headNumber);
-            depotHead.setDefaultNumber(headNumber);
-            depotHead.setCreateTime(dateValue);
-            depotHead.setOperTime(dateValue);
-            depotHead.setCreator(63L);
-            depotHead.setPayType("现付");
-            depotHead.setStatus("0");
-            depotHead.setPurchaseStatus("0");
-            depotHead.setDeleteFlag("0");
-            orderNumberToDepotHead.put(headNumber, depotHead);
+            List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+            Map<String, String> allocationNameToId = new HashMap<>();
+            for (DepotAllocation depotAllocation : allocationList) {
+                allocationNameToId.put(depotAllocation.getAllocation(), depotAllocation.getId().toString());
+            }
             for (int i = 1; i < rightRows; i++) {
-                String barCode = ExcelUtils.getContent(src, i, 0); //物料编码
+                Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
+                Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
+                Date dateValue = new Date();
+                try {
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(ExcelUtils.getContent(src, i, 8));
+                } catch (Exception e) {}
+                DepotHead depotHead = new DepotHead();
+                String headNumber = "QTCK" + sequenceService.buildOnlyNumber();
+                depotHead.setType("出库");
+                depotHead.setSubType("其它");
+                depotHead.setNumber(headNumber);
+                depotHead.setDefaultNumber(headNumber);
+                depotHead.setCreateTime(dateValue);
+                depotHead.setOperTime(dateValue);
+                depotHead.setCreator(63L);
+                depotHead.setPayType("现付");
+                depotHead.setStatus("0");
+                depotHead.setPurchaseStatus("0");
+                depotHead.setDeleteFlag("0");
+                depotHead.setRemark(ExcelUtils.getContent(src, i, 6) + ExcelUtils.getContent(src, i, 7));
+                orderNumberToDepotHead.put(headNumber, depotHead);
+                String barCode = ExcelUtils.getContent(src, i, 5); //物料编码
+                String batchNumber = ExcelUtils.getContent(src, i, 3); //批次
+                String allocation = ExcelUtils.getContent(src, i, 4); //货位
                 List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
                 if (mList.isEmpty()) {
                     continue;
                 }
-                String operNumber = ExcelUtils.getContent(src, i, 1); //数量
+                String operNumber = ExcelUtils.getContent(src, i, 9); //数量
                 BigDecimal operNumberValue;
                 try {
                     operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
@@ -1508,9 +1521,11 @@ public class DepotHeadService {
                     continue;
                 }
                 DepotItem depotItem = new DepotItem();
-                //depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
-                //depotItem.setBatchNumber(batchNumber);
-                depotItem.setDepotId(26L);
+                if (allocationNameToId.containsKey(allocation)) {
+                    depotItem.setSnList(allocationNameToId.get(allocation));
+                }
+                depotItem.setBatchNumber(batchNumber);
+                depotItem.setDepotId(28L);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
                 if (orderNumberToDepotItems.containsKey(headNumber)) {
@@ -1519,9 +1534,8 @@ public class DepotHeadService {
                     orderNumberToDepotItems.put(headNumber, new HashMap<>());
                     orderNumberToDepotItems.get(headNumber).put(barCode, depotItem);
                 }
+                importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
             }
-            importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
-            logger.info("XXXXX depotHead number " + depotHead.getNumber());
             Long endTime = System.currentTimeMillis();
             logger.info("导入耗时：{}", endTime - beginTime);
             info.code = 200;
@@ -1568,25 +1582,33 @@ public class DepotHeadService {
                     nameToId.put(e.getName(), e.getId());
                 }
             });
-
+            List<Depot> depotList = depotService.getAllList();
+            Map<String, Long> depotToId = new HashMap<>();
+            depotList.stream().forEach(e -> {
+                if (!depotToId.containsKey(e.getName())) {
+                    depotToId.put(e.getName(), e.getId());
+                }
+            });
             Map<String, Map<String, DepotItem>> orderNumberToDepotItems = new HashMap<>();
             Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
             for (int i = 1; i < rightRows; i++) {
-                String date = ExcelUtils.getContent(src, i, 1); //日期
+                String date = ExcelUtils.getContent(src, i, 2); //日期
                 Date dateValue;
                 try {
-                    dateValue = new SimpleDateFormat("M/d/yy").parse(date);
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(date);
                 } catch (Exception e) {
                     continue;
                 }
-                String applicationNumber = ExcelUtils.getContent(src, i, 0); //采购单号
+                String uniqueId = ExcelUtils.getContent(src, i, 0); //记录ID
+                String applicationNumber = ExcelUtils.getContent(src, i, 1); //采购单号
                 String barCode = ExcelUtils.getContent(src, i, 5); //物料编码
-                String applicant = ExcelUtils.getContent(src, i, 2); //申请人
+                String destination = ExcelUtils.getContent(src, i, 7); //收货地
+                String applicant = ExcelUtils.getContent(src, i, 6); //申请人
                 List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
                 if (mList.isEmpty()) {
                     continue;
                 }
-                String operNumber = ExcelUtils.getContent(src, i, 3); //数量
+                String operNumber = ExcelUtils.getContent(src, i, 4); //数量
                 BigDecimal operNumberValue;
                 try {
                     operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
@@ -1605,8 +1627,12 @@ public class DepotHeadService {
                 depotHead.setDefaultNumber(headNumber);
                 depotHead.setDiscountLastMoney(BigDecimal.ONE);
                 depotHead.setTotalPrice(BigDecimal.ZERO.subtract(BigDecimal.ONE));
-                depotHead.setRemark(applicationNumber + "；到货地点：" + ExcelUtils.getContent(src, i, 6)
-                        + "；到货时间：" + ExcelUtils.getContent(src, i, 4));
+                if (!orderNumberToDepotHead.containsKey(applicationNumber)) {
+                    depotHead.setRemark(applicationNumber + ";到货时间:" + ExcelUtils.getContent(src, i, 3) + ";" + uniqueId);
+                } else {
+                    orderNumberToDepotHead.get(applicationNumber).setRemark(
+                            orderNumberToDepotHead.get(applicationNumber).getRemark() + ";" + uniqueId);
+                }
 
                 depotHead.setSalesMan(String.valueOf(nameToId.getOrDefault(applicant, 295L)));
                 depotHead.setCreateTime(dateValue);
@@ -1620,6 +1646,7 @@ public class DepotHeadService {
                 DepotItem depotItem = new DepotItem();
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
+                depotItem.setAnotherDepotId(depotToId.getOrDefault(destination,34L));
 
                 if (!orderNumberToDepotItems.containsKey(applicationNumber)) {
                     orderNumberToDepotItems.put(applicationNumber, new HashMap<>());
@@ -1797,23 +1824,25 @@ public class DepotHeadService {
             Map<String, DepotHead> orderNumberToDepotHead = new HashMap<>();
             List<Supplier> supplierList = supplierService.getSupplier();
             for (int i = 1; i < rightRows; i++) {
-                String date = ExcelUtils.getContent(src, i, 2); //日期
+                String date = ExcelUtils.getContent(src, i, 4); //日期
                 Date dateValue;
                 try {
-                    dateValue = new SimpleDateFormat("M/d/yy").parse(date);
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(date);
                 } catch (Exception e) {
                     continue;
                 }
-                String orderNumber = ExcelUtils.getContent(src, i, 0); //采购单号
-                String applicationNumber = ExcelUtils.getContent(src, i, 1); //申请单号
-                String barCode = ExcelUtils.getContent(src, i, 7); //物料编码
-                String applicant = ExcelUtils.getContent(src, i, 3); //采购人
+                String identifier = ExcelUtils.getContent(src, i, 0); //采购记录id
+                String orderNumber = ExcelUtils.getContent(src, i, 2); //采购单号
+                String applicationNumber = ExcelUtils.getContent(src, i, 3); //申请单号
+                String barCode = ExcelUtils.getContent(src, i, 8); //物料编码
+                String applicant = "管盛"; //采购人
                 List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
                 if (mList.isEmpty()) {
                     continue;
                 }
-                String supplierName = ExcelUtils.getContent(src, i, 8); //供应商
-                String operNumber = ExcelUtils.getContent(src, i, 4); //数量
+                String supplierName = ExcelUtils.getContent(src, i, 6); //供应商
+                String key = date + orderNumber + supplierName;
+                String operNumber = ExcelUtils.getContent(src, i, 5); //数量
                 BigDecimal operNumberValue;
                 try {
                     operNumberValue = BigDecimal.valueOf(Double.parseDouble(operNumber));
@@ -1832,7 +1861,12 @@ public class DepotHeadService {
                 depotHead.setDefaultNumber(headNumber);
                 depotHead.setDiscountLastMoney(BigDecimal.ONE);
                 depotHead.setTotalPrice(BigDecimal.ZERO.subtract(BigDecimal.ONE));
-                depotHead.setRemark(orderNumber);
+                if (!orderNumberToDepotHead.containsKey(key)) {
+                    depotHead.setRemark(key + ";" + identifier);
+                } else {
+                    orderNumberToDepotHead.get(key).setRemark(
+                            orderNumberToDepotHead.get(key).getRemark() + ";" + identifier);
+                }
 
                 for (Supplier supplier : supplierList) {
                     if ("供应商".equals(supplier.getType()) && supplierName.equals(supplier.getSupplier())) {
@@ -1861,13 +1895,13 @@ public class DepotHeadService {
                     depotHead.setLinkNumber(list.get(0).getNumber());
                 }
 
-                if (!orderNumberToDepotItems.containsKey(orderNumber)) {
-                    orderNumberToDepotItems.put(orderNumber, new HashMap<>());
+                if (!orderNumberToDepotItems.containsKey(key)) {
+                    orderNumberToDepotItems.put(key, new HashMap<>());
                 }
-                orderNumberToDepotItems.get(orderNumber).put(barCode, depotItem);
+                orderNumberToDepotItems.get(key).put(barCode, depotItem);
 
-                if (!orderNumberToDepotHead.containsKey(orderNumber)) {
-                    orderNumberToDepotHead.put(orderNumber, depotHead);
+                if (!orderNumberToDepotHead.containsKey(key)) {
+                    orderNumberToDepotHead.put(key, depotHead);
                 }
             }
             importDepotHeadAndDetail(orderNumberToDepotItems, orderNumberToDepotHead);
@@ -1921,12 +1955,12 @@ public class DepotHeadService {
 
             List<DepotHead> allDepotHeads = getDepotHead();
             for (int i = 1; i < rightRows; i++) {
-                String purchaseOrderId = ExcelUtils.getContent(src, i, 0); //采购订单
+                String purchaseOrderId = ExcelUtils.getContent(src, i, 1); //采购订单
                 String linkNumber = "";
                 Long organId = 0L;
                 List<DepotItem> poItems = new ArrayList<>();
                 for (DepotHead head : allDepotHeads) {
-                    if (purchaseOrderId.equals(head.getRemark())) {
+                    if (head.getRemark() != null && head.getRemark().contains(purchaseOrderId)) {
                         linkNumber = head.getNumber();
                         organId = head.getOrganId();
                         poItems = depotItemService.getListByHeaderId(head.getId());
@@ -1936,22 +1970,22 @@ public class DepotHeadService {
                     continue;
                 }
 
-                String date = ExcelUtils.getContent(src, i, 1); //日期
+                String date = ExcelUtils.getContent(src, i, 2); //日期
                 Date dateValue;
                 try {
-                    dateValue = new SimpleDateFormat("M/d/yy").parse(date);
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(date);
                 } catch (Exception e) {
                     continue;
                 }
 
-                String barCode = ExcelUtils.getContent(src, i, 2); //物料编码
+                String barCode = ExcelUtils.getContent(src, i, 3); //物料编码
                 List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
                 if (mList.isEmpty()) {
                     continue;
                 }
 
                 String batchNumber = ExcelUtils.getContent(src, i, 6); //批号
-                String allocation = ExcelUtils.getContent(src, i, 3); //货位
+                String allocation = ExcelUtils.getContent(src, i, 9); //货位
                 String operNumber = ExcelUtils.getContent(src, i, 5); //数量
                 BigDecimal operNumberValue;
                 try {
@@ -1981,7 +2015,7 @@ public class DepotHeadService {
 
                 DepotItem depotItem = new DepotItem();
                 depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
-                depotItem.setDepotId(null);
+                depotItem.setDepotId(28L);
                 depotItem.setBatchNumber(batchNumber);
                 depotItem.setOperNumber(operNumberValue);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());

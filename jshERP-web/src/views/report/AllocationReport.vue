@@ -122,7 +122,13 @@
       myHandleDetail(record) {
         getAllocationDetail({ allocationId: record.id }).then((res) => {
           if (res && res.code === 200) {
-            this.$refs.allocationStock.show(res.data.rows);
+            let dataToShow = []
+            for(let i of res.data.rows){
+              if(i.totalNum != 0){
+                dataToShow.push(i)
+              }
+            }
+            this.$refs.allocationStock.show(dataToShow);
             this.$refs.allocationStock.title="货位明细";
           }
         })

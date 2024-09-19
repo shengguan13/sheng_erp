@@ -120,7 +120,7 @@ export const BillModalMixin = {
             if(key === 'batchNumber') {
               if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK'
                   || this.prefixNo === 'DBCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK'
-                  || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK') {
+                  || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK' || this.prefixNo === 'CYRK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //输入
@@ -140,7 +140,7 @@ export const BillModalMixin = {
             } else if(key === 'snList') {
               if (this.prefixNo === 'QTRK' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' ||
                 this.prefixNo === 'XSTH' || this.prefixNo === 'DBCK' || this.prefixNo === 'FXRK' ||
-                this.prefixNo === 'CYRK' || this.prefixNo === 'TLRK') {
+                this.prefixNo === 'TLRK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
@@ -425,17 +425,31 @@ export const BillModalMixin = {
           param = {
             barCode: row.barCode,
             depotId: row.depotId,
-            batchNumber: value,
-            name: '',
             depotItemId: '',
+            name: '',
           }
+          if(row.id.length<=19) {
+            param.depotItemId = row.id-0
+          }
+          var batchArr = value.split('饕')
+          console.log("batchArr len " + batchArr.length)
+          target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
           getBatchNumberList(param).then((res) => {
             if (res && res.code === 200) {
+              console.log("getBatchNumberList")
               let batchList = res.data.rows
               for (let i = 0; i < batchList.length; i++) {
                 let batchInfo = batchList[i]
-                target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
-                target.recalcAllStatisticsColumns()
+                console.log("batchNumber " + i + ": " + batchInfo.batchNumber)
+                console.log("batchArr[0]: " + batchArr[0])
+                if (batchInfo.batchNumber === batchArr[0]) {
+                  target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
+                  console.log("match success")
+                  if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
+                    target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
+                  }
+                  target.recalcAllStatisticsColumns()
+                }
               }
             }
           });

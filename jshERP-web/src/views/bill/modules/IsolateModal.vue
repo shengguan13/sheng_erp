@@ -151,7 +151,7 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '4%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '5%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -185,8 +185,6 @@
       editAfter() {
         this.billStatus = '0'
         this.changeColumnHide()
-        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
-        this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []

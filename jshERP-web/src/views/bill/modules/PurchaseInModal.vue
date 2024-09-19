@@ -211,7 +211,7 @@
             { title: '已入库', key: 'finishNumber', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '库位', key: 'snList', width: '8%', type: FormTypes.popupJsh, kind: 'allocation', multi: false },
-            { title: '批号', key: 'batchNumber', width: '5%', type: FormTypes.input },
+            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.input },
             { title: '入库数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -326,9 +326,9 @@
         if(billMain.accountId === 0) {
           billMain.accountId = ''
         }
-        this.accountMoneyList = changeListFmtMinus(this.accountMoneyList)
-        billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
-        billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
+        //this.accountMoneyList = changeListFmtMinus(this.accountMoneyList)
+        //billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
+        //billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {

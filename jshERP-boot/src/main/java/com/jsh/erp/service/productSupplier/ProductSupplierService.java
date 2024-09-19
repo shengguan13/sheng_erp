@@ -205,24 +205,36 @@ public class ProductSupplierService {
             }
 
             for (int i = 1; i < rightRows; i++) {
-                String supplierName = ExcelUtils.getContent(src, i, 0);
-                String barCode = ExcelUtils.getContent(src, i, 2);
-                String type = ExcelUtils.getContent(src, i, 7);
-                String unit = ExcelUtils.getContent(src, i, 6);
-                String model = ExcelUtils.getContent(src, i, 3);
-                String pack = ExcelUtils.getContent(src, i, 4);
-                String purchaseCycle = ExcelUtils.getContent(src, i, 8);
-
-                if (!supplierNameToId.containsKey(supplierName)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.SUPPLIER_NAME_NOT_EXIST_CODE,
-                            String.format(ExceptionConstants.SUPPLIER_NAME_NOT_EXIST_MSG, supplierName));
+                String supplierName = ExcelUtils.getContent(src, i, 1);
+                String manufactory = ExcelUtils.getContent(src, i, 2);
+                String barCode = ExcelUtils.getContent(src, i, 3);
+                String type = ExcelUtils.getContent(src, i, 8);
+                String unit = "";
+                String model = ExcelUtils.getContent(src, i, 4);
+                String pack = ExcelUtils.getContent(src, i, 5);
+                String purchaseCycle = ExcelUtils.getContent(src, i, 9);
+                //不允许为空
+                if(StringUtil.isEmpty(supplierName) || StringUtil.isEmpty(barCode) || StringUtil.isEmpty(type)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.PRODUCT_SUPPLIER_INFO_MISSING_CODE,
+                            String.format(ExceptionConstants.PRODUCT_SUPPLIER_INFO_MISSING_MSG, i+1));
                 }
 
+                if (!supplierNameToId.containsKey(supplierName)) {
+//                    throw new BusinessRunTimeException(ExceptionConstants.SUPPLIER_NAME_NOT_EXIST_CODE,
+//                            String.format(ExceptionConstants.SUPPLIER_NAME_NOT_EXIST_MSG, supplierName));
+                    continue;
+                }
+                ProductSupplierExample example = new ProductSupplierExample();
+                example.createCriteria().andSupplierIdEqualTo(supplierNameToId.get(supplierName))
+                        .andBarCodeEqualTo(barCode).andSupplierTypeEqualTo(type);
+                List<ProductSupplier> list = productSupplierMapper.selectByExample(example);
+
                 // 批量校验excel中有无重复
-                batchCheckExistProductSupplierByParam(productSupplierList, supplierName,
-                        supplierNameToId.get(supplierName), barCode, type, model, pack);
+//                batchCheckExistProductSupplierByParam(productSupplierList, supplierName,
+//                        supplierNameToId.get(supplierName), barCode, type, model, pack);
                 ProductSupplier productSupplier = new ProductSupplier();
                 productSupplier.setSupplierId(supplierNameToId.get(supplierName));
+                productSupplier.setManufactory(manufactory);
                 productSupplier.setSupplierType(type);
                 productSupplier.setBarCode(barCode);
                 productSupplier.setUnit(unit);
@@ -231,15 +243,12 @@ public class ProductSupplierService {
                 productSupplier.setPurchaseCycle(purchaseCycle);
                 productSupplier.setDeleteFlag("0");
                 productSupplierList.add(productSupplier);
-
-                //不允许为空
-                if(StringUtil.isEmpty(supplierName) || StringUtil.isEmpty(barCode) || StringUtil.isEmpty(type)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.PRODUCT_SUPPLIER_INFO_MISSING_CODE,
-                            String.format(ExceptionConstants.PRODUCT_SUPPLIER_INFO_MISSING_MSG, i+1));
+                if (list.size() > 0) {
+                    productSupplier.setId(list.get(0).getId());
+                    productSupplierMapper.updateByPrimaryKeySelective(productSupplier);
+                } else {
+                    productSupplierMapper.insertSelective(productSupplier);
                 }
-            }
-            for (ProductSupplier productSupplier : productSupplierList) {
-                productSupplierMapper.insertSelective(productSupplier);
             }
             logService.insertLog("客商档案",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT)

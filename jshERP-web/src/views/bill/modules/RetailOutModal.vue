@@ -242,7 +242,7 @@
             { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '5%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '6%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },

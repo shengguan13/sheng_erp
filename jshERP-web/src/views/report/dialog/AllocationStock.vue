@@ -60,6 +60,9 @@
         defColumns: [
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
+          { title: '型号', dataIndex: 'model'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '数量', dataIndex: 'totalNum'},
         ]
       }
     },

@@ -164,6 +164,76 @@ public class ProductSupplierExample {
             return (Criteria) this;
         }
 
+        public Criteria andSupplierIdIsNull() {
+            addCriterion("supplier_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdIsNotNull() {
+            addCriterion("supplier_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdEqualTo(Long value) {
+            addCriterion("supplier_id =", value, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdNotEqualTo(Long value) {
+            addCriterion("supplier_id <>", value, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdGreaterThan(Long value) {
+            addCriterion("supplier_id >", value, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("supplier_id >=", value, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdLessThan(Long value) {
+            addCriterion("supplier_id <", value, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdLessThanOrEqualTo(Long value) {
+            addCriterion("supplier_id <=", value, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdIn(List<Long> values) {
+            addCriterion("supplier_id in", values, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdNotIn(List<Long> values) {
+            addCriterion("supplier_id not in", values, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdBetween(Long value1, Long value2) {
+            addCriterion("supplier_id between", value1, value2, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierIdNotBetween(Long value1, Long value2) {
+            addCriterion("supplier_id not between", value1, value2, "supplierId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBarCodeEqualTo(String value) {
+            addCriterion("bar_code =", value, "barCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupplierTypeEqualTo(String value) {
+            addCriterion("supplier_type =", value, "supplierType");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

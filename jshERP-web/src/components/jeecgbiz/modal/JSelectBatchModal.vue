@@ -197,13 +197,13 @@
         let that = this;
         this.getSelectRows();
         let positive = true;
-        for (let num of that.selectStocks) {
-          if (num < 0) {
-            positive = false;
-            that.$message.warning("无法选择库存为负数的批次");
-            that.close()
-          }
-        }
+        //for (let num of that.selectStocks) {
+          //if (num < 0) {
+          //  positive = false;
+          //  that.$message.warning("无法选择库存为负数的批次");
+          //  that.close()
+          //}
+        //}
         if (positive) {
           that.$emit('ok', that.selectRows, that.selectIds);
           that.searchReset(0)
@@ -220,7 +220,7 @@
           if (this.selectedRowKeys.includes(dataSource[i].id)) {
             this.selectRows.push(dataSource[i]);
             this.selectStocks.push(dataSource[i].totalNum)
-            ids = ids + "," + dataSource[i].batchNumber
+            ids = ids + "," + dataSource[i].id
           }
         }
         this.selectIds = ids.substring(1);
@@ -230,18 +230,7 @@
         this.selectionRows = selectionRows;
       },
       onSearch() {
-        if(this.dataSource && this.dataSource.length===1) {
-          if(this.queryParam.name === this.dataSource[0].batchNumber) {
-            let arr = []
-            arr.push(this.dataSource[0].id)
-            this.selectedRowKeys = arr
-            this.handleSubmit()
-          } else {
-            this.loadData(1)
-          }
-        } else {
-          this.loadData(1)
-        }
+        this.loadData(1)
       },
       modalFormOk() {
         this.loadData();
