@@ -319,7 +319,7 @@
         this.$refs.productionOrderLinkList.show('其它', '生产单', '客户', "1,2,3")
         this.$refs.productionOrderLinkList.title = "选择生产单（已审核的单据才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
         this.orderStatusStr = ''
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)

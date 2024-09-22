@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1250"
+      :width="1600"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
@@ -134,6 +134,7 @@
         showType: 'basic',
         selectType: 'list',
         linkNumber: '',
+        payType: '',
         organId: '',
         salesMan: '',
         discountMoney: '',
@@ -240,6 +241,7 @@
           if(this.selectBillRows && this.selectBillRows.length>0) {
             let record = this.selectBillRows[0]
             this.linkNumber = record.number
+            this.payType = record.payType
             this.organId = record.organId
             this.salesMan = record.salesMan
             this.discountMoney = record.discountMoney
@@ -250,7 +252,7 @@
         } else {
           if(this.selectedDetailRowKeys.length) {
             this.getSelectBillDetailRows()
-            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.salesMan, this.discountMoney, this.deposit, this.remark)
+            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.payType, this.organId, this.salesMan, this.discountMoney, this.deposit, this.remark)
             this.close()
           } else {
             this.$message.warning('抱歉，请选择单据明细！')

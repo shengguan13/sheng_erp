@@ -332,7 +332,7 @@
         this.$refs.linkBillList.show('出库', '销售', '客户', "1")
         this.$refs.linkBillList.title = "选择销售出库（已审核的销售出库才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)

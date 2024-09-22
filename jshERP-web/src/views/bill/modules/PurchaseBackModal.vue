@@ -320,7 +320,7 @@
         this.$refs.linkBillList.show('入库', '采购', '供应商', "1")
         this.$refs.linkBillList.title = "选择采购入库（已审核的采购入库才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)

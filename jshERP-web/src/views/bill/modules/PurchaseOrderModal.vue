@@ -23,7 +23,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单" data-step="3" data-title="关联申请"
               data-intro="">
-              <a-input-search placeholder="请选择采购申请" v-decorator="[ 'linkNumber', validatorRules.linkNumber ]" @search="onSearchLinkNumber" :readOnly="true"/>
+              <a-input-search placeholder="请选择采购申请" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -35,6 +35,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="2" data-title="单据编号"
               data-intro="单据编号自动生成、自动累加、开头是单据类型的首字母缩写，累加的规则是每次打开页面会自动占用一个新的编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合同编号" data-step="2" data-title="合同编号"
+              data-intro="">
+              <a-input placeholder="请输入合同编号" v-decorator.trim="[ 'payType' ]"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -242,7 +248,7 @@
           }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model, 'operTime', 'linkNumber', 'number', 'remark', 'discountLastMoney','accountId'))
+            this.form.setFieldsValue(pick(this.model, 'operTime', 'payType', 'linkNumber', 'number', 'remark', 'discountLastMoney','accountId'))
           });
           // 加载子表数据
           let params = {
@@ -302,10 +308,10 @@
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('其它', '采购申请', '供应商', "1,3")
+        this.$refs.linkBillList.show('其它', '采购申请', '供应商', "0,11,12,1,3")
         this.$refs.linkBillList.title = "选择采购申请（已审批的采购申请才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
         this.materialTable.columns[1].type = FormTypes.normal
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           let listEx = []

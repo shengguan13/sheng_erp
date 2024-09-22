@@ -315,7 +315,7 @@
         this.$refs.salesManBasedLinkBillList.show('出库', '领料', '客户', "1,3")
         this.$refs.salesManBasedLinkBillList.title = "选择领料出库（已审核的领料出库才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, salesMan, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, salesMan, discountMoney, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)

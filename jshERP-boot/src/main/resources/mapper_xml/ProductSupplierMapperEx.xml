@@ -5,10 +5,14 @@
         <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
         <result column="material_name" jdbcType="VARCHAR" property="materialName" />
         <result column="material_model" jdbcType="VARCHAR" property="materialModel" />
+        <result column="color" jdbcType="VARCHAR" property="color" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
+        <result column="other_field5" jdbcType="VARCHAR" property="otherField5" />
     </resultMap>
 
     <select id="selectProductSupplier"  resultMap="ResultAndInfoMap">
-        select ps.*, m.name material_name, m.model material_model, s.supplier supplier_name from jsh_product_supplier ps
+        select ps.*, m.name material_name, m.model material_model, s.supplier supplier_name, m.color, m.color_code, m.other_field5
+        from jsh_product_supplier ps
         left join jsh_supplier s on ps.supplier_id=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.bar_code=ps.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
@@ -28,7 +32,8 @@
     </select>
 
     <select id="selectProductSupplierByBarCode"  resultMap="ResultAndInfoMap">
-        select ps.*, m.name material_name, m.model material_model, s.supplier supplier_name from jsh_product_supplier ps
+        select ps.*, m.name material_name, m.model material_model, s.supplier supplier_name, m.color, m.color_code, m.other_field5
+        from jsh_product_supplier ps
         left join jsh_supplier s on ps.supplier_id=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.bar_code=ps.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'

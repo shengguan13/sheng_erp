@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1250"
+      :width="1600"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
@@ -110,6 +110,7 @@
             <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">完成生产</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">完成生产</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '采购申请'" color="blue">部分下单</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分生产</a-tag>
@@ -169,6 +170,7 @@
         selectType: 'list',
         linkNumber: '',
         organId: '',
+        payType: '',
         discountMoney: '',
         deposit: '',
         remark: '',
@@ -194,6 +196,7 @@
           { title: '单据编号', dataIndex: 'number',width:120,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
+          { title: '合同编号', dataIndex: 'payType',width:120, ellipsis:true},
           { title: '产品信息', dataIndex: 'materialsList',width:280, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -246,6 +249,9 @@
         } else {
           this.columns[0].title = organType
         }
+        if(subType !== '采购订单') {
+          this.columns[2].width = 0
+        }
         this.model = Object.assign({}, {});
         this.visible = true;
         this.loadData(1)
@@ -262,6 +268,9 @@
           this.columns[0].width = 0
         } else {
           this.columns[0].title = organType
+        }
+        if(subType !== '采购订单') {
+          this.columns[2].width = 0
         }
         this.model = Object.assign({}, {});
         this.visible = true;
@@ -298,6 +307,7 @@
           if(this.selectBillRows && this.selectBillRows.length>0) {
             let record = this.selectBillRows[0]
             this.linkNumber = record.number
+            this.payType = record.payType
             this.organId = record.organId
             this.discountMoney = record.discountMoney
             this.deposit = record.changeAmount - record.finishDeposit
@@ -307,7 +317,7 @@
         } else {
           if(this.selectedDetailRowKeys.length) {
             this.getSelectBillDetailRows()
-            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discountMoney, this.deposit, this.remark)
+            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.payType, this.organId, this.discountMoney, this.deposit, this.remark)
             this.close()
           } else {
             this.$message.warning('抱歉，请选择单据明细！')

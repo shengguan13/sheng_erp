@@ -1525,6 +1525,43 @@ public class DepotItemService {
         return count;
     }
 
+    public List<DepotItemVoBatchNumberList> getBatchNumberListZero(String number, String name, Long depotId, String barCode, String batchNumber) throws Exception {
+        List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
+        List<DepotAllocation> allocations = depotAllocationService.getDepotAllocation();
+        Map<String, String> allocationIdToName = new HashMap<>();
+        allocations.stream().forEach(e -> allocationIdToName.put(e.getId().toString(), e.getType() + "-" + e.getAllocation()));
+        // 使用的时候注意batch可能有负数的
+        List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberListWithoutMergingAllocation(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
+        for(DepotItemVoBatchNumberList bn: list) {
+            //if(bn.getTotalNum() != null && bn.getTotalNum().compareTo(BigDecimal.ZERO) > 0) {
+            if(bn.getTotalNum() != null) {
+                bn.setExpirationDateStr(Tools.parseDateToStr(bn.getExpirationDate()));
+                if(bn.getUnitId()!=null) {
+                    Unit unit = unitService.getUnit(bn.getUnitId());
+                    String commodityUnit = bn.getCommodityUnit();
+                    bn.setTotalNum(unitService.parseStockByUnit(bn.getTotalNum(), unit, commodityUnit));
+                }
+                bn.setId(bn.getBatchNumber() + "饕" + (bn.getSnList() == null ? "" : bn.getSnList()));
+                if(bn.getSnList() != null && !"".equals(bn.getSnList())) {
+                    try {
+                        StringBuilder sb = new StringBuilder();
+                        String[] allocationIds = bn.getSnList().split(",");
+                        for (String allocationId : allocationIds) {
+                            if (sb.length() == 0) {
+                                sb.append(allocationIdToName.getOrDefault(allocationId, ""));
+                            } else {
+                                sb.append("," + allocationIdToName.getOrDefault(allocationId, ""));
+                            }
+                        }
+                        bn.setSnListStr(sb.toString());
+                    } catch (Exception e) {}
+                }
+                reslist.add(bn);
+            }
+        }
+        return reslist;
+    }
+
     public List<DepotItemVoBatchNumberList> getBatchNumberList(String number, String name, Long depotId, String barCode, String batchNumber) throws Exception {
         List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
         List<DepotAllocation> allocations = depotAllocationService.getDepotAllocation();

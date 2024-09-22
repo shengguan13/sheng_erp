@@ -113,6 +113,7 @@ const getProductSupplierList = (params)=>getAction("/productSupplier/getProductS
 const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
 const getBatchNumberList = (params)=>getAction("/depotItem/getBatchNumberList",params);
+const getBatchNumberListZero = (params)=>getAction("/depotItem/getBatchNumberListZero",params);
 const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailByNumber",params);
 const getAccountItemList = (params)=>getAction("/accountItem/getDetailList",params);
 //货位相关
@@ -209,6 +210,7 @@ export {
   findBillDetailByNumber,
   findStockByDepotAndBarCode,
   getBatchNumberList,
+  getBatchNumberListZero,
   getAllocationList,
   getAllocationDetail,
   getProductSupplierList,

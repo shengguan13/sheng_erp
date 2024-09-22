@@ -324,7 +324,7 @@
         this.$refs.productionPlanLinkList.show('其它', '生产计划', '客户', "1,3")
         this.$refs.productionPlanLinkList.title = "选择生产计划（已审核的生产计划才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)

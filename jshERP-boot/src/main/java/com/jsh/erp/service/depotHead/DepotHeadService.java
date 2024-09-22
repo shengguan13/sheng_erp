@@ -489,15 +489,6 @@ public class DepotHeadService {
             sb.append("[").append(depotHead.getNumber()).append("]");
             //只有未审核的单据才能被删除
             if ("0".equals(depotHead.getStatus())) {
-                //对于零售出库单据，更新会员的预收款信息
-                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                        && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())) {
-                    if (BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
-                        if (depotHead.getOrganId() != null) {
-                            supplierService.updateAdvanceIn(depotHead.getOrganId(), depotHead.getTotalPrice().abs());
-                        }
-                    }
-                }
                 List<DepotItem> list = depotItemService.getListByHeaderId(depotHead.getId());
                 //删除单据子表数据
                 depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{depotHead.getId()});
@@ -1004,7 +995,6 @@ public class DepotHeadService {
             depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         }
         depotHead.setPurchaseStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
-        depotHead.setPayType(depotHead.getPayType() == null ? "现付" : depotHead.getPayType());
         if (StringUtil.isNotEmpty(depotHead.getAccountIdList())) {
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
         }
@@ -1135,7 +1125,6 @@ public class DepotHeadService {
             depotHead.setNumber(headNumber);
             depotHead.setDefaultNumber(headNumber);
             depotHead.setCreator(63L); // 63-管盛 189-半成品 188-成品
-            depotHead.setPayType("现付");
             depotHead.setStatus("0");
             depotHead.setPurchaseStatus("0");
             depotHead.setDeleteFlag("0");
@@ -1426,7 +1415,6 @@ public class DepotHeadService {
                     depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
                     depotHead.setOperTime(new Timestamp(System.currentTimeMillis()));
                     depotHead.setCreator(63L);
-                    depotHead.setPayType("现付");
                     depotHead.setStatus("1");
                     depotHead.setPurchaseStatus("0");
                     depotHead.setDeleteFlag("0");
@@ -1497,7 +1485,6 @@ public class DepotHeadService {
                 depotHead.setCreateTime(dateValue);
                 depotHead.setOperTime(dateValue);
                 depotHead.setCreator(63L);
-                depotHead.setPayType("现付");
                 depotHead.setStatus("0");
                 depotHead.setPurchaseStatus("0");
                 depotHead.setDeleteFlag("0");
@@ -1638,7 +1625,6 @@ public class DepotHeadService {
                 depotHead.setCreateTime(dateValue);
                 depotHead.setOperTime(dateValue);
                 depotHead.setCreator(63L);
-                depotHead.setPayType("现付");
                 depotHead.setStatus("1");
                 depotHead.setPurchaseStatus("0");
                 depotHead.setDeleteFlag("0");

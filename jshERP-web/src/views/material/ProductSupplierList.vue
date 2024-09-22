@@ -119,7 +119,10 @@
           {title: '物料名称', dataIndex: 'materialName', width: 100},
           {title: '客/供型号', dataIndex: 'model', width: 80},
           {title: '零件号', dataIndex: 'materialModel', width: 60},
-          {title: '标包', dataIndex: 'pack', width: 40}
+          {title: '标包', dataIndex: 'pack', width: 40},
+          {title: '颜色', dataIndex: 'color', width: 40},
+          {title: '颜色代码', dataIndex: 'colorCode', width: 40},
+          {title: '规格', dataIndex: 'otherField5', width: 40}
         ],
         url: {
           list: "/productSupplier/list",

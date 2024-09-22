@@ -7,6 +7,12 @@ public class ProductSupplierVo4Info extends ProductSupplier {
 
     private String materialModel;
 
+    private String color;
+
+    private String colorCode;
+
+    private String otherField5;
+
     public String getSupplierName() {
         return supplierName;
     }
@@ -29,5 +35,29 @@ public class ProductSupplierVo4Info extends ProductSupplier {
 
     public void setMaterialModel(String materialModel) {
         this.materialModel = materialModel;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColorCode() {
+        return colorCode;
+    }
+
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
+    }
+
+    public String getOtherField5() {
+        return otherField5;
+    }
+
+    public void setOtherField5(String otherField5) {
+        this.otherField5 = otherField5;
     }
 }

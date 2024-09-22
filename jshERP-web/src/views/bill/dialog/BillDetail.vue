@@ -595,6 +595,13 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合同编号">
+                {{model.payType}}
+              </a-form-item>
+            </a-col>
+          </a-row>
           <div :style="tableWidth">
             <a-table
               ref="table"
@@ -647,6 +654,13 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="采购订单">
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合同编号">
+                {{model.payType}}
               </a-form-item>
             </a-col>
           </a-row>

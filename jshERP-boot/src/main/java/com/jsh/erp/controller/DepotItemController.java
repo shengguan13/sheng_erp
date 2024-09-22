@@ -395,10 +395,10 @@ public class DepotItemController {
     @GetMapping(value = "/getDetailList")
     @ApiOperation(value = "单据明细列表")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
-                              @RequestParam("mpList") String mpList,
-                              @RequestParam(value = "linkType", required = false) String linkType,
-                              @RequestParam(value = "isReadOnly", required = false) String isReadOnly,
-                              HttpServletRequest request)throws Exception {
+                                          @RequestParam("mpList") String mpList,
+                                          @RequestParam(value = "linkType", required = false) String linkType,
+                                          @RequestParam(value = "isReadOnly", required = false) String isReadOnly,
+                                          HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
@@ -1096,6 +1096,40 @@ public class DepotItemController {
                 number = depotHeadService.getDepotHead(depotItem.getHeaderId()).getNumber();
             }
             List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(number, name, depotId, barCode, batchNumber);
+            map.put("rows", list);
+            map.put("total", list.size());
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 获取批次产品列表信息，库存为0的批次也展示
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getBatchNumberListZero")
+    @ApiOperation(value = "获取批次产品列表信息")
+    public BaseResponseInfo getBatchNumberListZero(@RequestParam("name") String name,
+                                                   @RequestParam("depotItemId") Long depotItemId,
+                                                   @RequestParam("depotId") Long depotId,
+                                                   @RequestParam("barCode") String barCode,
+                                                   @RequestParam(value = "batchNumber", required = false) String batchNumber,
+                                                   HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String number = "";
+            if(depotItemId != null) {
+                DepotItem depotItem = depotItemService.getDepotItem(depotItemId);
+                number = depotHeadService.getDepotHead(depotItem.getHeaderId()).getNumber();
+            }
+            List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberListZero(number, name, depotId, barCode, batchNumber);
             map.put("rows", list);
             map.put("total", list.size());
             res.code = 200;

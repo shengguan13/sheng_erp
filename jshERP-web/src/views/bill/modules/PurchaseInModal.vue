@@ -56,6 +56,14 @@
             </a-form-item>
           </a-col>
         </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合同编号" data-step="2" data-title="合同编号"
+              data-intro="">
+              <a-input placeholder="请输入合同编号" v-decorator.trim="[ 'payType' ]" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
         <j-editable-table id="billModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
@@ -287,7 +295,7 @@
           }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'payType', 'remark',
             'discountLastMoney','otherMoney','accountId','deposit','changeAmount','debt'))
           });
           // 加载子表数据
@@ -349,10 +357,10 @@
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('其它', '采购订单', '供应商', "1,3")
+        this.$refs.linkBillList.show('其它', '采购订单', '供应商', "0,1,3")
         this.$refs.linkBillList.title = "选择采购订单（已审核的采购订单才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
@@ -388,6 +396,7 @@
             this.form.setFieldsValue({
               'organId': organId,
               'linkNumber': linkNumber,
+              'payType': payType,
               'discountLastMoney': discountLastMoney,
               'deposit': deposit,
               'changeAmount': changeAmount,

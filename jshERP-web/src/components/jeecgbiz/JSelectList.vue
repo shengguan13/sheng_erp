@@ -1,9 +1,10 @@
 <template>
   <div>
     <a-input-search v-if="kind === 'material'" v-model="names" placeholder="编码|名称并回车" @pressEnter="onPressEnter" @search="onSearch"></a-input-search>
-    <a-input-search v-if="kind === 'supplier'||kind==='batch'||kind==='allocation'||kind === 'sn'||kind === 'snAdd'" v-model="names" placeholder="请点开弹窗" readOnly @search="onSearch"></a-input-search>
+    <a-input-search v-if="kind === 'supplier'||kind==='batch'||kind==='zeroBatch'||kind==='allocation'||kind === 'sn'||kind === 'snAdd'" v-model="names" placeholder="请点开弹窗" readOnly @search="onSearch"></a-input-search>
     <j-select-material-modal v-if="kind === 'material'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-batch-modal v-if="kind === 'batch'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
+    <j-select-zero-batch-modal v-if="kind === 'zeroBatch'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-allocation-modal v-if="kind === 'allocation'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-supplier-modal v-if="kind === 'supplier'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-sn-modal v-if="kind === 'sn'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
@@ -14,6 +15,7 @@
 <script>
   import JSelectMaterialModal from './modal/JSelectMaterialModal'
   import JSelectBatchModal from './modal/JSelectBatchModal'
+  import JSelectZeroBatchModal from './modal/JSelectZeroBatchModal'
   import JSelectAllocationModal from './modal/JSelectAllocationModal'
   import JSelectSupplierModal from './modal/JSelectSupplierModal'
   import { getMpListShort } from "@/utils/util"
@@ -22,7 +24,7 @@
 
   export default {
     name: 'JSelectList',
-    components: {JSelectMaterialModal, JSelectAllocationModal, JSelectBatchModal, JSelectSupplierModal},
+    components: {JSelectMaterialModal, JSelectAllocationModal, JSelectBatchModal, JSelectZeroBatchModal, JSelectSupplierModal},
     props: {
       value: {
         type: String,

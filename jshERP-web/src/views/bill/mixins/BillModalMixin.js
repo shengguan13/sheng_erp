@@ -1,6 +1,6 @@
 import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
-  getPersonByNumType, getAllPerson, getDepartment, getBatchNumberList, getCurrentSystemConfig} from '@/api/api'
+  getPersonByNumType, getAllPerson, getDepartment, getBatchNumberList, getBatchNumberListZero, getCurrentSystemConfig} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime, getCheckFlag } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
@@ -434,25 +434,47 @@ export const BillModalMixin = {
           var batchArr = value.split('饕')
           console.log("batchArr len " + batchArr.length)
           target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
-          getBatchNumberList(param).then((res) => {
-            if (res && res.code === 200) {
-              console.log("getBatchNumberList")
-              let batchList = res.data.rows
-              for (let i = 0; i < batchList.length; i++) {
-                let batchInfo = batchList[i]
-                console.log("batchNumber " + i + ": " + batchInfo.batchNumber)
-                console.log("batchArr[0]: " + batchArr[0])
-                if (batchInfo.batchNumber === batchArr[0]) {
-                  target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
-                  console.log("match success")
-                  if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
-                    target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
+          if (this.prefixNo === 'CYRK') {
+            getBatchNumberListZero(param).then((res) => {
+              if (res && res.code === 200) {
+                console.log("getBatchNumberListZero")
+                let batchList = res.data.rows
+                for (let i = 0; i < batchList.length; i++) {
+                  let batchInfo = batchList[i]
+                  console.log("batchNumber " + i + ": " + batchInfo.batchNumber)
+                  console.log("batchArr[0]: " + batchArr[0])
+                  if (batchInfo.batchNumber === batchArr[0]) {
+                    target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
+                    console.log("match success")
+                    if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
+                      target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
+                    }
+                    target.recalcAllStatisticsColumns()
                   }
-                  target.recalcAllStatisticsColumns()
                 }
               }
-            }
-          });
+            })
+          } else {
+            getBatchNumberList(param).then((res) => {
+              if (res && res.code === 200) {
+                console.log("getBatchNumberList")
+                let batchList = res.data.rows
+                for (let i = 0; i < batchList.length; i++) {
+                  let batchInfo = batchList[i]
+                  console.log("batchNumber " + i + ": " + batchInfo.batchNumber)
+                  console.log("batchArr[0]: " + batchArr[0])
+                  if (batchInfo.batchNumber === batchArr[0]) {
+                    target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
+                    console.log("match success")
+                    if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
+                      target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
+                    }
+                    target.recalcAllStatisticsColumns()
+                  }
+                }
+              }
+            })
+          }
           break;
         case "barCode":
           param = {
