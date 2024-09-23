@@ -136,7 +136,7 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '产品类型',key: 'mType',width:'7%', type: FormTypes.normal },
+            { title: '产品类型',key: 'materialType',width:'7%', type: FormTypes.normal },
             { title: '仓库名称', key: 'depotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },

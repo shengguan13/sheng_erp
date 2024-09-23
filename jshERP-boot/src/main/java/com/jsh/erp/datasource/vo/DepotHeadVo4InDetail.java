@@ -44,6 +44,16 @@ public class DepotHeadVo4InDetail {
 
     private Long tenantId;
 
+    private String batchNumber;
+
+    private String snList;
+
+    private String snListStr;
+
+    private String newSnList;
+
+    private String newSnListStr;
+
     public String getNumber() {
         return Number;
     }
@@ -194,5 +204,45 @@ public class DepotHeadVo4InDetail {
 
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public String getBatchNumber() {
+        return batchNumber;
+    }
+
+    public void setBatchNumber(String batchNumber) {
+        this.batchNumber = batchNumber;
+    }
+
+    public String getSnList() {
+        return snList;
+    }
+
+    public void setSnList(String snList) {
+        this.snList = snList;
+    }
+
+    public String getSnListStr() {
+        return snListStr;
+    }
+
+    public void setSnListStr(String snListStr) {
+        this.snListStr = snListStr;
+    }
+
+    public String getNewSnList() {
+        return newSnList;
+    }
+
+    public void setNewSnList(String newSnList) {
+        this.newSnList = newSnList;
+    }
+
+    public String getNewSnListStr() {
+        return newSnListStr;
+    }
+
+    public void setNewSnListStr(String newSnListStr) {
+        this.newSnListStr = newSnListStr;
     }
 }

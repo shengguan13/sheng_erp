@@ -803,8 +803,8 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("taxLastMoney"))) {
                     depotItem.setTaxLastMoney(rowObj.getBigDecimal("taxLastMoney"));
                 }
-                if (StringUtil.isExist(rowObj.get("mType"))) {
-                    depotItem.setMaterialType(rowObj.getString("mType"));
+                if (StringUtil.isExist(rowObj.get("materialType"))) {
+                    depotItem.setMaterialType(rowObj.getString("materialType"));
                 }
                 if (StringUtil.isExist(rowObj.get("remark"))) {
                     depotItem.setRemark(rowObj.getString("remark"));
@@ -1167,8 +1167,8 @@ public class DepotItemService {
             if(rowArr.size() > 1) {
                 JSONObject firstRowObj = JSONObject.parseObject(rowArr.getString(0));
                 JSONObject secondRowObj = JSONObject.parseObject(rowArr.getString(1));
-                String firstMaterialType = firstRowObj.getString("mType");
-                String secondMaterialType = secondRowObj.getString("mType");
+                String firstMaterialType = firstRowObj.getString("materialType");
+                String secondMaterialType = secondRowObj.getString("materialType");
                 if(!"组合件".equals(firstMaterialType) || !"普通子件".equals(secondMaterialType)) {
                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE,
                             String.format(ExceptionConstants.DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG));

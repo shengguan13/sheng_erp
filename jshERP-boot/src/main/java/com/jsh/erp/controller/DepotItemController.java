@@ -450,6 +450,7 @@ public class DepotItemController {
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
                     item.put("snList", diEx.getSnList());
+                    item.put("materialType", diEx.getMaterialType());
                     if (diEx.getSnList() != null && !"".equals(diEx.getSnList())) {
                         try {
                             StringBuilder sb = new StringBuilder();
@@ -462,6 +463,20 @@ public class DepotItemController {
                                 }
                             }
                             item.put("snListStr", sb.toString());
+                        } catch (Exception e) {}
+                    }
+                    if (diEx.getMaterialType() != null && !"".equals(diEx.getMaterialType())) {
+                        try {
+                            StringBuilder sb = new StringBuilder();
+                            String[] allocationIds = diEx.getMaterialType().split(",");
+                            for (String allocationId : allocationIds) {
+                                if (sb.length() == 0) {
+                                    sb.append(allocationIdToName.getOrDefault(allocationId, ""));
+                                } else {
+                                    sb.append("," + allocationIdToName.getOrDefault(allocationId, ""));
+                                }
+                            }
+                            item.put("materialTypeStr", sb.toString());
                         } catch (Exception e) {}
                     }
                     item.put("batchNumber", diEx.getBatchNumber());
@@ -492,7 +507,6 @@ public class DepotItemController {
                     item.put("depotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());
                     item.put("anotherDepotId", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotId());
                     item.put("anotherDepotName", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotName());
-                    item.put("mType", diEx.getMaterialType());
                     item.put("op", 1);
                     dataArray.add(item);
                     //合计数据汇总

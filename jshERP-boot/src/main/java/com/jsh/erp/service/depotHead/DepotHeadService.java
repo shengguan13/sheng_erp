@@ -691,10 +691,22 @@ public class DepotHeadService {
 
     public List<DepotHeadVo4InDetail> findInOutDetail(String beginTime, String endTime, String type, String[] creatorArray,
                                                       String[] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
-                                                      String remark, Integer offset, Integer rows) throws Exception {
+                                                      String remark, String batchNumber, Integer offset, Integer rows) throws Exception {
         List<DepotHeadVo4InDetail> list = null;
+        List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+        Map<String, String> allocationIdToName = new HashMap<>();
+        allocationList.stream().forEach(e -> allocationIdToName.put(e.getId().toString(), e.getType() + "-" + e.getAllocation()));
         try {
-            list = depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark, offset, rows);
+            list = depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray,
+                    materialParam, depotList, oId, number, remark, batchNumber, offset, rows);
+            for (DepotHeadVo4InDetail detail : list) {
+                if (detail.getSnList() != null && allocationIdToName.containsKey(detail.getSnList())) {
+                    detail.setSnListStr(allocationIdToName.get(detail.getSnList()));
+                }
+                if (detail.getNewSnList() != null && allocationIdToName.containsKey(detail.getNewSnList())) {
+                    detail.setNewSnListStr(allocationIdToName.get(detail.getNewSnList()));
+                }
+            }
         } catch (Exception e) {
             JshException.readFail(logger, e);
         }
@@ -712,11 +724,12 @@ public class DepotHeadService {
     }
 
     public int findInOutDetailCount(String beginTime, String endTime, String type, String[] creatorArray,
-                                    String[] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
-                                    String remark) throws Exception {
+                                    String[] organArray, String materialParam, List<Long> depotList, Integer oId,
+                                    String number, String remark, String batchNumber) throws Exception {
         int result = 0;
         try {
-            result = depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark);
+            result = depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray,
+                    organArray, materialParam, depotList, oId, number, remark, batchNumber);
         } catch (Exception e) {
             JshException.readFail(logger, e);
         }
@@ -755,11 +768,22 @@ public class DepotHeadService {
 
     public List<DepotHeadVo4InDetail> findAllocationDetail(String beginTime, String endTime, String subType, String number,
                                                            String[] creatorArray, String materialParam, List<Long> depotList, List<Long> depotFList,
-                                                           String remark, Integer offset, Integer rows) throws Exception {
+                                                           String remark, String batchNumber, Integer offset, Integer rows) throws Exception {
         List<DepotHeadVo4InDetail> list = null;
+        List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
+        Map<String, String> allocationIdToName = new HashMap<>();
+        allocationList.stream().forEach(e -> allocationIdToName.put(e.getId().toString(), e.getType() + "-" + e.getAllocation()));
         try {
             list = depotHeadMapperEx.findAllocationDetail(beginTime, endTime, subType, number, creatorArray,
-                    materialParam, depotList, depotFList, remark, offset, rows);
+                    materialParam, depotList, depotFList, remark, batchNumber, offset, rows);
+            for (DepotHeadVo4InDetail detail : list) {
+                if (detail.getSnList() != null && allocationIdToName.containsKey(detail.getSnList())) {
+                    detail.setSnListStr(allocationIdToName.get(detail.getSnList()));
+                }
+                if (detail.getNewSnList() != null && allocationIdToName.containsKey(detail.getNewSnList())) {
+                    detail.setNewSnListStr(allocationIdToName.get(detail.getNewSnList()));
+                }
+            }
         } catch (Exception e) {
             JshException.readFail(logger, e);
         }
@@ -768,11 +792,11 @@ public class DepotHeadService {
 
     public int findAllocationDetailCount(String beginTime, String endTime, String subType, String number,
                                          String[] creatorArray, String materialParam, List<Long> depotList, List<Long> depotFList,
-                                         String remark) throws Exception {
+                                         String remark, String batchNumber) throws Exception {
         int result = 0;
         try {
             result = depotHeadMapperEx.findAllocationDetailCount(beginTime, endTime, subType, number, creatorArray,
-                    materialParam, depotList, depotFList, remark);
+                    materialParam, depotList, depotFList, remark, batchNumber);
         } catch (Exception e) {
             JshException.readFail(logger, e);
         }
@@ -2091,7 +2115,7 @@ public class DepotHeadService {
                 row.createCell(2).setCellValue(map.get(barCode).getModel());
                 row.createCell(3).setCellValue(map.get(barCode).getName());
                 List<DepotHeadVo4InDetail> list = findInOutDetail(beginTime, endTime, type, null, null,
-                        barCode, new ArrayList<>(), null, null, null, null, null);
+                        barCode, new ArrayList<>(), null, null, null, null, null, null);
                 for (DepotHeadVo4InDetail detail : list) {
                     if (detail.getNumber().startsWith(prefix)) {
                         LocalDate date = LocalDate.parse(detail.getOperTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

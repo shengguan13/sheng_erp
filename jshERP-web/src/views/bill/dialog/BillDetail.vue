@@ -1632,6 +1632,7 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
+          { title: '新货位', dataIndex: 'materialTypeStr'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '备注', dataIndex: 'remark'}
         ],

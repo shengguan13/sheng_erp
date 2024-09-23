@@ -21,6 +21,8 @@ public class DepotItemVoBatchNumberList {
     private String snListStr;
     private BigDecimal totalNum;
 
+    private  String type;
+
     public String getId() {
         return id;
     }
@@ -131,6 +133,14 @@ public class DepotItemVoBatchNumberList {
 
     public void setTotalNum(BigDecimal totalNum) {
         this.totalNum = totalNum;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

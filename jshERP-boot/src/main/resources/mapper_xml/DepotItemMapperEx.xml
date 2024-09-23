@@ -1216,18 +1216,10 @@
     </select>
 
     <select id="getBatchNumberList" resultMap="batchNumberListMap">
-        select id, bar_code, name, color_code, model, unit_id, oper_time, GROUP_CONCAT(distinct(NULLIF(sn,''))) as sn_list,
+        select id, bar_code, name, color_code, model, unit_id, oper_time,
         commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
         (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
          me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time,
-        case
-            when (dh.type='入库'
-                <if test="depotId != null">
-                or (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离') and di.another_depot_id= #{depotId})
-                </if>) then di.sn_list
-            when dh.type='出库' then ''
-        end
-        as sn,
          di.basic_number*(case
             <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
             when (dh.type='入库'
@@ -1264,7 +1256,7 @@
         commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
         (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
         me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time,
-        di.sn_list,
+        (case when (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离') and di.another_depot_id= #{depotId}) then di.material_type else di.sn_list end) as sn_list,
         di.basic_number*(case
         <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
         when (dh.type='入库'

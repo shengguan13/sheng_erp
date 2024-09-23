@@ -432,20 +432,16 @@ export const BillModalMixin = {
             param.depotItemId = row.id-0
           }
           var batchArr = value.split('饕')
-          console.log("batchArr len " + batchArr.length)
-          target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
           if (this.prefixNo === 'CYRK') {
+            target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
             getBatchNumberListZero(param).then((res) => {
               if (res && res.code === 200) {
                 console.log("getBatchNumberListZero")
                 let batchList = res.data.rows
                 for (let i = 0; i < batchList.length; i++) {
                   let batchInfo = batchList[i]
-                  console.log("batchNumber " + i + ": " + batchInfo.batchNumber)
-                  console.log("batchArr[0]: " + batchArr[0])
                   if (batchInfo.batchNumber === batchArr[0]) {
                     target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
-                    console.log("match success")
                     if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
                       target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
                     }
@@ -454,18 +450,22 @@ export const BillModalMixin = {
                 }
               }
             })
-          } else {
+          } else if (this.prefixNo === 'CGTH' || this.prefixNo === 'XSCK'
+                     || this.prefixNo === 'DBCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK'
+                     || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK') {
+            target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
             getBatchNumberList(param).then((res) => {
               if (res && res.code === 200) {
                 console.log("getBatchNumberList")
+                console.log("value: " + value)
+                console.log("batchArr[0]: " + batchArr[0])
+                console.log("batchArr[1]: " + batchArr[1])
                 let batchList = res.data.rows
                 for (let i = 0; i < batchList.length; i++) {
                   let batchInfo = batchList[i]
-                  console.log("batchNumber " + i + ": " + batchInfo.batchNumber)
-                  console.log("batchArr[0]: " + batchArr[0])
+                  console.log("batchInfo: " + batchInfo.batchNumber)
                   if (batchInfo.batchNumber === batchArr[0]) {
                     target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
-                    console.log("match success")
                     if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
                       target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
                     }

@@ -69,6 +69,11 @@
                     <a-input placeholder="请输入备注" v-model="queryParam.remark"></a-input>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="批次" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入批次" v-model="queryParam.batchNumber"></a-input>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -150,6 +155,7 @@
           endTime: moment().format('YYYY-MM-DD'),
           roleType: Vue.ls.get('roleType'),
           type: "入库",
+          batchNumber: '',
           remark: '',
         },
         ipagination:{
@@ -182,6 +188,8 @@
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber},
           {title: '往来单位', dataIndex: 'sname'},
           {title: '仓库', dataIndex: 'dname'},
+          {title: '批号', dataIndex: 'batchNumber'},
+          {title: '货位', dataIndex: 'snListStr'},
           {title: '入库日期', dataIndex: 'operTime'},
           {title: '备注', dataIndex: 'newRemark'}
         ],

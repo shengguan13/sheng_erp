@@ -129,6 +129,7 @@ public class DepotHeadController {
                                             @RequestParam(value = "roleType", required = false) String roleType,
                                             @RequestParam("type") String type,
                                             @RequestParam("remark") String remark,
+                                            @RequestParam("batchNumber") String batchNumber,
                                             HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -151,9 +152,9 @@ public class DepotHeadController {
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray,
-                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, (currentPage-1)*pageSize, pageSize);
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, batchNumber, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray,
-                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark);
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, batchNumber);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -256,6 +257,7 @@ public class DepotHeadController {
                                                  @RequestParam("subType") String subType,
                                                  @RequestParam(value = "roleType", required = false) String roleType,
                                                  @RequestParam("remark") String remark,
+                                                 @RequestParam("batchNumber") String batchNumber,
                                                  HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -286,9 +288,9 @@ public class DepotHeadController {
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, StringUtil.toNull(number),
-                    creatorArray, StringUtil.toNull(materialParam), depotList, depotFList, remark, (currentPage-1)*pageSize, pageSize);
+                    creatorArray, StringUtil.toNull(materialParam), depotList, depotFList, remark, batchNumber,(currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, StringUtil.toNull(number),
-                    creatorArray, StringUtil.toNull(materialParam), depotList, depotFList, remark);
+                    creatorArray, StringUtil.toNull(materialParam), depotList, depotFList, remark, batchNumber);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;

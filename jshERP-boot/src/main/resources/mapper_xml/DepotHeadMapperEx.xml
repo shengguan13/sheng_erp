@@ -29,6 +29,9 @@
         <result column="DName" jdbcType="VARCHAR" property="DName" />
         <result column="OperTime" jdbcType="VARCHAR" property="OperTime" />
         <result column="NewType" jdbcType="VARCHAR" property="NewType" />
+        <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
+        <result column="sn_list" jdbcType="VARCHAR" property="snList" />
+        <result column="new_sn_list" jdbcType="VARCHAR" property="newSnList" />
     </resultMap>
 
     <resultMap id="ResultInOutMaterialCount" type="com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount">
@@ -315,7 +318,7 @@
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select dh.number,me.bar_code, m.`name` MName,m.model,m.color_code,di.unit_price,di.material_unit as mUnit, ps.models_combined supplier_model,
         di.oper_number,di.all_price, ifnull(di.tax_rate,0) tax_rate, ifnull(di.tax_money,0) tax_money, ifnull(di.tax_last_money,0) tax_last_money,
-        s.supplier SName,d.dName DName, date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType,
+        s.supplier SName,d.dName DName, date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, di.batch_number, di.sn_list,
         concat_ws('  ',dh.remark,di.remark) as newRemark
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
@@ -365,6 +368,10 @@
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+        </if>
+        <if test="batchNumber != null and batchNumber !=''">
+            <bind name="bindBatch" value="'%'+batchNumber+'%'"/>
+            and di.batch_number like #{bindBatch}
         </if>
         and dh.sub_type!='调拨'
         and dh.sub_type!='隔离'
@@ -425,6 +432,10 @@
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+        </if>
+        <if test="batchNumber != null and batchNumber !=''">
+            <bind name="bindBatch" value="'%'+batchNumber+'%'"/>
+            and di.batch_number like #{bindBatch}
         </if>
         and dh.sub_type!='调拨'
         and dh.sub_type!='隔离'
@@ -546,7 +557,8 @@
 
     <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select dh.number,me.bar_code, m.`name` MName,m.model,m.color_code,di.unit_price,di.material_unit as mUnit,di.oper_number,di.all_price,SName, d.dName DName,
-        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark
+        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark,
+        di.batch_number, di.sn_list, di.material_type as new_sn_list
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
@@ -590,6 +602,10 @@
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+        </if>
+        <if test="batchNumber != null and batchNumber !=''">
+            <bind name="bindBatch" value="'%'+batchNumber+'%'"/>
+            and di.batch_number like #{bindBatch}
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
@@ -641,6 +657,10 @@
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+        </if>
+        <if test="batchNumber != null and batchNumber !=''">
+            <bind name="bindBatch" value="'%'+batchNumber+'%'"/>
+            and di.batch_number like #{bindBatch}
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
