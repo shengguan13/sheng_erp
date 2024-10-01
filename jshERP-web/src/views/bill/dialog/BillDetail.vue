@@ -1434,6 +1434,7 @@
           { title: '退料数量', dataIndex: 'finishNumber'},
           { title: '领料批号', dataIndex: 'batchNumber'},
           { title: '领料货位', dataIndex: 'snListStr'},
+          { title: '供应商', dataIndex: 'supplier'},
           { title: '备注', dataIndex: 'remark'}
         ],
         materialReturnColumns: [
@@ -1448,6 +1449,9 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '退料数量', dataIndex: 'operNumber'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '货位', dataIndex: 'snListStr'},
+          { title: '供应商', dataIndex: 'supplier'},
           { title: '备注', dataIndex: 'remark'}
         ],
         productionInColumns: [
@@ -1474,7 +1478,7 @@
           { title: '编码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
           { title: '零件号', dataIndex: 'model'},
-          { title: '供应商', dataIndex: 'supplier'},
+          { title: '供应商', dataIndex: 'applicationSupplier'},
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '类别', dataIndex: 'categoryName'},
           { title: '颜色', dataIndex: 'color'},
@@ -1518,6 +1522,7 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
+          { title: '供应商', dataIndex: 'supplier'},
           { title: '入库数量', dataIndex: 'operNumber'},
           { title: '退货数量', dataIndex: 'finishNumber'},
           { title: '备注', dataIndex: 'remark'}
@@ -1536,6 +1541,7 @@
           { title: '退货数量', dataIndex: 'operNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
+          { title: '供应商', dataIndex: 'supplier'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOrderColumns: [
@@ -1634,6 +1640,7 @@
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '新货位', dataIndex: 'materialTypeStr'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '供应商', dataIndex: 'supplier'},
           { title: '备注', dataIndex: 'remark'}
         ],
         diffInColumns: [
@@ -1650,6 +1657,7 @@
           { title: '货位', dataIndex: 'snListStr'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '供应商', dataIndex: 'supplier'},
           { title: '备注', dataIndex: 'remark'}
         ],
         otherInColumns: [

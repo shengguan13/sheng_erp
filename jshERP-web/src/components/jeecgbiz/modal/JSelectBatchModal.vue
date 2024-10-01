@@ -77,6 +77,7 @@
         columns: [
           {dataIndex: 'batchNumber', title: '批号', width: 60, align: 'left', ellipsis:true},
           {dataIndex: 'snListStr', title: '货位', width: 100, ellipsis:true},
+          {dataIndex: 'organId', title: '供应商', width: 100, ellipsis:true},
           {dataIndex: 'barCode', title: '编码', width: 60, ellipsis:true},
           {dataIndex: 'name', title: '名称', width: 100, ellipsis:true},
           {dataIndex: 'totalNum', title: '库存', width: 60},

@@ -246,7 +246,7 @@ public class DepotHeadController {
      */
     @GetMapping(value = "/findAllocationDetail")
     @ApiOperation(value = "调拨明细统计")
-    public BaseResponseInfo findallocationDetail(@RequestParam("currentPage") Integer currentPage,
+    public BaseResponseInfo findAllocationDetail(@RequestParam("currentPage") Integer currentPage,
                                                  @RequestParam("pageSize") Integer pageSize,
                                                  @RequestParam("number") String number,
                                                  @RequestParam("materialParam") String materialParam,

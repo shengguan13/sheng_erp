@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotAllocation.DepotAllocationService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
@@ -27,16 +28,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
-import static com.jsh.erp.utils.Tools.getCenternTime;
 import static java.math.RoundingMode.CEILING;
 
 /**
@@ -434,7 +431,7 @@ public class DepotItemController {
                     if (diEx.getSupplierId() != null) {
                         try {
                             Supplier supplier = supplierService.getSupplier(diEx.getSupplierId());
-                            item.put("supplier", supplier.getSupplier());
+                            item.put("applicationSupplier", supplier.getSupplier());
                         } catch (Exception e) {}
                     }
                     item.put("color", diEx.getMColor());
@@ -480,6 +477,24 @@ public class DepotItemController {
                         } catch (Exception e) {}
                     }
                     item.put("batchNumber", diEx.getBatchNumber());
+                    if (diEx.getBatchNumber() != null && !"".equals(diEx.getBatchNumber())) {
+                        String organIdGroup = depotItemService.getSupplierIdGroup(diEx.getBatchNumber(), diEx.getBarCode());
+                        if(organIdGroup!=null && !"".equals(organIdGroup)) {
+                            String[] organs = organIdGroup.split(",");
+                            Set<String> organSet = new HashSet<>();
+                            for (String organ : organs) {
+                                if (!"".equals(organ)) {
+                                    organSet.add(organ);
+                                }
+                            }
+                            if (organSet.size() == 1) {
+                                try {
+                                    Supplier supplier = supplierService.getSupplier(Long.parseLong(new ArrayList<>(organSet).get(0)));
+                                    item.put("supplier", supplier.getSupplier());
+                                } catch (Exception e) {}
+                            }
+                        }
+                    }
                     item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
                     item.put("sku", diEx.getSku());
                     item.put("operNumber", diEx.getOperNumber());
@@ -530,7 +545,7 @@ public class DepotItemController {
             res.code = 200;
             res.data = outer;
         } catch (Exception e) {
-            e.printStackTrace();
+            JshException.writeFail(logger, e);
             res.code = 500;
             res.data = "获取数据失败";
         }

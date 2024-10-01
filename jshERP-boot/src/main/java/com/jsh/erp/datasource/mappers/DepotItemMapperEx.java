@@ -276,4 +276,7 @@ public interface DepotItemMapperEx {
 
     List<DepotItem> getDepotItemByBatchNumber(
             @Param("batchNumber") String batchNumber);
+
+    String getSupplierIdGroup(@Param("batchNumber") String batchNumber,
+                              @Param("barCode") String barCode);
 }

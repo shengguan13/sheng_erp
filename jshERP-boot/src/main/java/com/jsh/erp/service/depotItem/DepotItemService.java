@@ -1585,6 +1585,25 @@ public class DepotItemService {
                     String commodityUnit = bn.getCommodityUnit();
                     bn.setTotalNum(unitService.parseStockByUnit(bn.getTotalNum(), unit, commodityUnit));
                 }
+                if(bn.getOrganId()!=null && !"".equals(bn.getOrganId())) {
+                    String[] organs = bn.getOrganId().split(",");
+                    Set<String> organSet = new HashSet<>();
+                    for (String organ : organs) {
+                        if (!"".equals(organ)) {
+                            organSet.add(organ);
+                        }
+                    }
+                    if (organSet.size() == 1) {
+                        try {
+                            Supplier supplier = supplierService.getSupplier(Long.parseLong(new ArrayList<>(organSet).get(0)));
+                            bn.setOrganId(supplier.getSupplier());
+                        } catch (Exception e) {
+                            bn.setOrganId(null);
+                        }
+                    } else {
+                        bn.setOrganId(null);
+                    }
+                }
                 bn.setId(bn.getBatchNumber() + "饕" + (bn.getSnList() == null ? "" : bn.getSnList()));
                 if(bn.getSnList() != null && !"".equals(bn.getSnList())) {
                     try {
@@ -1608,5 +1627,9 @@ public class DepotItemService {
 
     public Long getCountByMaterialAndDepot(Long mId, Long depotId) {
         return depotItemMapperEx.getCountByMaterialAndDepot(mId, depotId);
+    }
+
+    public String getSupplierIdGroup(String batchNumber, String barCode) {
+        return depotItemMapperEx.getSupplierIdGroup(batchNumber, barCode);
     }
 }

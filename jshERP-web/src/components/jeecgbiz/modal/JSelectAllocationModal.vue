@@ -48,9 +48,11 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
+            :pagination="ipagination"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type: getType}"
             :loading="loading"
-            :customRow="rowAction">
+            :customRow="rowAction"
+            @change="handleTableChange">
           </a-table>
         </div>
       </a-col>
@@ -88,6 +90,7 @@
           {dataIndex: 'id', title: '编号', width: 100, ellipsis:true},
           {dataIndex: 'allocation', title: '名称', width: 100, ellipsis:true},
           {dataIndex: 'type', title: '类型', width: 100, ellipsis:true},
+          {dataIndex: 'totalNumber', title: '货物总数', width: 100, ellipsis:true},
         ],
         scrollTrigger: {},
         dataSource: [],
@@ -95,8 +98,19 @@
         selectRows: [],
         selectIds: [],
         title: '选择货位',
+        ipagination: {
+          current: 1,
+          pageSize: 10,
+          pageSizeOptions: ['10', '20', '30'],
+          showTotal: (total, range) => {
+            return range[0] + '-' + range[1] + ' 共' + total + '条'
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
         isorter: {
-          column: 'createTime',
+          column: 'totalNumber',
           order: 'desc'
         },
         departTree: [],
@@ -156,6 +170,8 @@
       },
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
+        param.currentPage = this.ipagination.current;
+        param.pageSize = this.ipagination.pageSize;
         return param;
       },
       getQueryField() {
@@ -180,6 +196,14 @@
       close() {
         this.searchReset(0);
         this.visible = false;
+      },
+      handleTableChange(pagination, filters, sorter) {
+        if (Object.keys(sorter).length > 0) {
+          this.isorter.column = sorter.field;
+          this.isorter.order = 'ascend' === sorter.order ? 'asc' : 'desc';
+        }
+        this.ipagination = pagination;
+        this.loadData();
       },
       handleSubmit() {
         let that = this;

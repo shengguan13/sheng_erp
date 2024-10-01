@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,13 +70,21 @@ public class DepotAllocationController {
     @ApiOperation(value = "获取货位信息")
     public BaseResponseInfo getAllocationList(@RequestParam("name") String name,
                                               @RequestParam("type") String type,
+                                              @RequestParam("currentPage") Integer currentPage,
+                                              @RequestParam("pageSize") Integer pageSize,
                                               HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
-            List<DepotAllocationVo4Depot> list = depotAllocationService.select(null, type, name, null, null);
+            List<DepotAllocationVo4Depot> list = depotAllocationService.select(null, type, name, (currentPage-1)*pageSize, pageSize);
+            Long count = depotAllocationService.countDepotAllocation(null, type, name);
+            if (list.size() <= 30) {
+                for (DepotAllocationVo4Depot allocation : list) {
+                    allocation.setTotalNumber(depotAllocationService.getAllocationSum(allocation.getId()));
+                }
+            }
             map.put("rows", list);
-            map.put("total", list.size());
+            map.put("total", count);
             res.code = 200;
             res.data = map;
         } catch (Exception e) {

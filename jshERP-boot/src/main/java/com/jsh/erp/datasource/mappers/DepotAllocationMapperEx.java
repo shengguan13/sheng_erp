@@ -4,6 +4,7 @@ import com.jsh.erp.datasource.entities.DepotAllocationVo4Depot;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface DepotAllocationMapperEx {
@@ -20,6 +21,8 @@ public interface DepotAllocationMapperEx {
 
     List<DepotItemVoBatchNumberList> getAllocationDetail(@Param("allocationId") Long allocationId,
                                                          @Param("depotId") Long depotId);
+
+    BigDecimal getAllocationSum(@Param("allocationId") Long allocationId);
 
     int batchDeleteDepotAllocationByIds(@Param("ids") String[] ids);
 }

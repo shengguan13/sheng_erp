@@ -126,6 +126,7 @@
         <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
         <result column="oper_time" jdbcType="TIMESTAMP" property="operTime" />
         <result column="sn_list" jdbcType="VARCHAR" property="snList" />
+        <result column="organ_id" jdbcType="VARCHAR" property="organId" />
         <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
         <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
     </resultMap>
@@ -1174,6 +1175,17 @@
         )
     </select>
 
+    <select id="getSupplierIdGroup" resultType="java.lang.String">
+        select GROUP_CONCAT(ifnull(dh.organ_id, '') SEPARATOR ',') from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag, '0') != '1'
+        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
+        where dh.type = '入库'
+        and me.bar_code = #{barCode}
+        and di.batch_number = #{batchNumber}
+        and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
     <select id="getSecondLevelRealFinishNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) from jsh_depot_item di
         where di.material_extend_id=#{meId}
@@ -1252,11 +1264,17 @@
     </select>
 
     <select id="getBatchNumberListWithoutMergingAllocation" resultMap="batchNumberListMap">
-        select id, bar_code, name, color_code, model, unit_id, oper_time, sn_list,
+        select id, bar_code, name, color_code, model, unit_id, oper_time, sn_list, GROUP_CONCAT(organ SEPARATOR ',') as organ_id,
         commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
         (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
         me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time,
-        (case when (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离') and di.another_depot_id= #{depotId}) then di.material_type else di.sn_list end) as sn_list,
+        (case when (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离') and di.another_depot_id= #{depotId})
+        then di.material_type
+        else di.sn_list
+        end) as sn_list,
+        (case when dh.type='入库' then dh.organ_id
+        else ''
+        end) as organ,
         di.basic_number*(case
         <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
         when (dh.type='入库'

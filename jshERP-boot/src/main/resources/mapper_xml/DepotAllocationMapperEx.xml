@@ -4,6 +4,7 @@
 
     <resultMap extends="com.jsh.erp.datasource.mappers.DepotAllocationMapper.BaseResultMap" id="ResultAndInfoMap" type="com.jsh.erp.datasource.entities.DepotAllocationVo4Depot">
         <result column="depot_name" jdbcType="VARCHAR" property="depotName" />
+        <result column="total_number" jdbcType="DECIMAL" property="totalNumber" />
     </resultMap>
 
     <resultMap id="batchNumberListMap" type="com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList">
@@ -81,6 +82,19 @@
         and di.delete_flag!=1) tb
         group by bar_code, batch_number, type
         order by oper_time asc
+    </select>
+
+    <select id="getAllocationSum" resultType="java.math.BigDecimal">
+        select sum(basic_number) from
+        (select di.basic_number*(case
+        <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
+        when ((dh.type='入库' and di.sn_list = #{allocationId}) or (dh.type='出库' and di.material_type = #{allocationId})) then 1
+        when (dh.type='出库' and di.sn_list = #{allocationId}) then -1
+        end) as basic_number
+        from jsh_depot_item di
+        left join jsh_depot_head dh on dh.id=di.header_id and ifnull(dh.delete_flag, '0') != '1'
+        where (di.sn_list = #{allocationId} or di.material_type = #{allocationId})
+        and ifnull(di.delete_flag, '0') != '1') tb
     </select>
 
     <update id="batchDeleteDepotAllocationByIds">

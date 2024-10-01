@@ -609,7 +609,6 @@ export const BillModalMixin = {
         categoryName: mInfo.categoryName,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
-        operNumber: 1,
         taxRate: 0,
         taxMoney: 0,
         taxLastMoney: 0
@@ -747,7 +746,7 @@ export const BillModalMixin = {
                 if(detail.barCode) {
                   //如果条码重复，就在给原来的数量加1
                   if(detail.barCode === this.scanBarCode) {
-                    detail.operNumber = (detail.operNumber-0)+1
+                    detail.operNumber = (detail.operNumber-0)
                     hasFinished = true
                   }
                   newDetailArr.push(detail)
@@ -773,7 +772,6 @@ export const BillModalMixin = {
                     item.stock = mInfo.stock
                     item.unit = mInfo.commodityUnit
                     item.sku = mInfo.sku
-                    item.operNumber = 1
                     if (map.size > 0) {
                       item.operNumber = map.get(mInfo.mBarCode)
                     }

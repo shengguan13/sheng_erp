@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,6 +125,18 @@ public class DepotAllocationService {
             }
         }
         return detailList;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BigDecimal getAllocationSum(long allocationId) throws Exception {
+        BigDecimal result = null;
+        try{
+            result = depotAllocationMapperEx.getAllocationSum(allocationId);
+        } catch (Exception e) {
+            JshException.writeFail(logger, e);
+            return null;
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

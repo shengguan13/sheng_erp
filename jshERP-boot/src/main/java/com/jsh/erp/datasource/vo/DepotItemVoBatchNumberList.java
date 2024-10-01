@@ -23,6 +23,8 @@ public class DepotItemVoBatchNumberList {
 
     private  String type;
 
+    private String organId;
+
     public String getId() {
         return id;
     }
@@ -141,6 +143,14 @@ public class DepotItemVoBatchNumberList {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getOrganId() {
+        return organId;
+    }
+
+    public void setOrganId(String organId) {
+        this.organId = organId;
     }
 
     @Override

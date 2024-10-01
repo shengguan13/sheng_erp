@@ -137,39 +137,6 @@ public class DepotController {
     }
 
     /**
-     * 获取所有的库位
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/findAllocation")
-    @ApiOperation(value = "获取所有的库位")
-    public BaseResponseInfo findAllocation(HttpServletRequest request) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            JSONArray arr = new JSONArray();
-            Long count = depotAllocationService.countDepotAllocation(null, null, null);
-            List<DepotAllocationVo4Depot> depotAllocationList = depotAllocationService.select(
-                    null, null, null, 0, count.intValue());
-            for (int i = 0; i < depotAllocationList.size(); i++) {
-                JSONObject item = new JSONObject();
-                item.put("allocation", depotAllocationList.get(i).getAllocation());
-                item.put("type", depotAllocationList.get(i).getType());
-                item.put("depotId", depotAllocationList.get(i).getDepotId());
-                item.put("id", depotAllocationList.get(i).getId());
-                arr.add(item);
-            }
-            res.code = 200;
-            res.data = arr;
-        } catch (Exception e) {
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 更新默认仓库
      * @param object
      * @param request
