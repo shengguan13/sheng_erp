@@ -1,6 +1,7 @@
 import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
-  getPersonByNumType, getAllPerson, getDepartment, getBatchNumberList, getBatchNumberListZero, getCurrentSystemConfig} from '@/api/api'
+  getPersonByNumType, getAllPerson, getDepartment, getBatchNumberList, getBatchNumberListZero, getCurrentSystemConfig,
+  getDepotAllocation} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime, getCheckFlag } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
@@ -421,6 +422,21 @@ export const BillModalMixin = {
             that.getStockByDepotBarCode(row, target)
           }
           break;
+        case "snList":
+            param = {
+              id: row.snList,
+            }
+            if (this.prefixNo === 'CGRK' || this.prefixNo === 'TLRK' || this.prefixNo === 'QTRK'
+              || this.prefixNo === 'FXRK' || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH') {
+              getDepotAllocation(param).then((res) => {
+                if (res && res.code === 200) {
+                  target.setValues([{rowKey: row.id, values: {snListStr: res.data.allocation}}])
+                }
+              })
+              target.autoSelectBySpecialKey('operNumber', row.orderNum)
+              target.autoSelectBySpecialKey('batchNumber', row.orderNum)
+            }
+            break;
         case "batchNumber":
           param = {
             barCode: row.barCode,
@@ -437,6 +453,7 @@ export const BillModalMixin = {
             getBatchNumberListZero(param).then((res) => {
               if (res && res.code === 200) {
                 console.log("getBatchNumberListZero")
+                console.log("value: " + value)
                 let batchList = res.data.rows
                 for (let i = 0; i < batchList.length; i++) {
                   let batchInfo = batchList[i]
@@ -458,8 +475,6 @@ export const BillModalMixin = {
               if (res && res.code === 200) {
                 console.log("getBatchNumberList")
                 console.log("value: " + value)
-                console.log("batchArr[0]: " + batchArr[0])
-                console.log("batchArr[1]: " + batchArr[1])
                 let batchList = res.data.rows
                 for (let i = 0; i < batchList.length; i++) {
                   let batchInfo = batchList[i]

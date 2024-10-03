@@ -198,7 +198,8 @@
             { title: '已领料', key: 'preNumber', width: '5%', type: FormTypes.normal },
             { title: '已退料', key: 'finishNumber', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '库位', key: 'snList', width: '8%', type: FormTypes.popupJsh, kind: 'allocation', multi: false },
+            { title: '货位', key: 'snList', width: '6%', type: FormTypes.popupJsh, kind: 'allocation', multi: false },
+            { title: '货位', key: 'snListStr', width: '8%', type: FormTypes.normal},
             { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.input },
             { title: '退料数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]

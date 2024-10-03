@@ -119,6 +119,7 @@ const getAccountItemList = (params)=>getAction("/accountItem/getDetailList",para
 //货位相关
 const getAllocationList = (params)=>getAction("/depotAllocation/getAllocationList",params);
 const getAllocationDetail = (params)=>getAction("/depotAllocation/getAllocationDetail",params);
+const getDepotAllocation = (params)=>getAction("/depotAllocation/getDepotAllocation",params);
 
 export {
   getBuyAndSaleStatistics,
@@ -213,6 +214,7 @@ export {
   getBatchNumberListZero,
   getAllocationList,
   getAllocationDetail,
+  getDepotAllocation,
   getProductSupplierList,
   findFinancialDetailByNumber,
   getAccountItemList
