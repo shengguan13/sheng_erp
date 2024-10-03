@@ -1,5 +1,6 @@
 package com.jsh.erp.controller;
 
+import com.jsh.erp.datasource.entities.DepotAllocation;
 import com.jsh.erp.datasource.entities.DepotAllocationVo4Depot;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
@@ -107,6 +108,23 @@ public class DepotAllocationController {
             map.put("total", list.size());
             res.code = 200;
             res.data = map;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/getDepotAllocation")
+    @ApiOperation(value = "获取货位")
+    public BaseResponseInfo getDepotAllocation(@RequestParam("id") Long id,
+                                               HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            DepotAllocation allocation = depotAllocationService.getDepotAllocation(id);
+            res.code = 200;
+            res.data = allocation;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             res.code = 500;
