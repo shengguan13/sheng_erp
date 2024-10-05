@@ -1156,25 +1156,26 @@ public class DepotHeadService {
             for (int i = 1; i < rightRows; i++) {
                 Date dateValue = new Date();
                 try {
-                    dateValue = new SimpleDateFormat("yyyy/M/d").parse(ExcelUtils.getContent(src, i, 2));
-                    //dateValue = new SimpleDateFormat("yyyy/M/d").parse("2024/1/1");
+                    //dateValue = new SimpleDateFormat("yyyy/M/d").parse(ExcelUtils.getContent(src, i, 2));
+                    dateValue = new SimpleDateFormat("yyyy/M/d").parse("2024/10/1");
                 } catch (Exception e) {}
                 depotHead.setCreateTime(dateValue);
                 depotHead.setOperTime(dateValue);
-                depotHead.setRemark("退库");
-                String barCode = ExcelUtils.getContent(src, i, 3); //物料编码
+                depotHead.setRemark("导入");
+                String barCode = ExcelUtils.getContent(src, i, 1); //物料编码
                 List<MaterialVo4Unit> mList = materialService.getMaterialByBarCode(barCode);
                 if (mList.isEmpty()) {
+                    logger.info("XXXXX 未找到编码： " + barCode);
                     continue;
                 }
-                String stock = ExcelUtils.getContent(src, i, 5); //数量
-                String allocation = ExcelUtils.getContent(src, i, 9); //货位
-                String batchNumber = ExcelUtils.getContent(src, i, 6); //批次
+                String stock = ExcelUtils.getContent(src, i, 2); //数量
+                String allocation = ExcelUtils.getContent(src, i, 0); //货位
+                String batchNumber = ExcelUtils.getContent(src, i, 3); //批次
                 BigDecimal number = BigDecimal.valueOf(Double.parseDouble(stock));
                 DepotItem depotItem = new DepotItem();
                 depotItem.setSnList(allocationNameToId.getOrDefault(allocation, "564"));
                 depotItem.setBatchNumber(batchNumber);
-                depotItem.setDepotId(28L);  // 26-成品 27-半成品 28-原材料
+                depotItem.setDepotId(27L);  // 26-成品 27-半成品 28-原材料
                 depotItem.setOperNumber(number);
                 depotItem.setMaterialUnit(mList.get(0).getUnit());
                 if (orderNumberToDepotItems.containsKey(headNumber)) {

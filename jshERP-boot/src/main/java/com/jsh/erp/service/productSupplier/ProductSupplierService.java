@@ -205,9 +205,9 @@ public class ProductSupplierService {
             }
 
             for (int i = 1; i < rightRows; i++) {
-                String supplierName = ExcelUtils.getContent(src, i, 1);
-                String manufactory = ExcelUtils.getContent(src, i, 2);
-                String barCode = ExcelUtils.getContent(src, i, 3);
+                String supplierName = ExcelUtils.getContent(src, i, 2);
+                String manufactory = ExcelUtils.getContent(src, i, 3);
+                String barCode = ExcelUtils.getContent(src, i, 1);
                 String type = ExcelUtils.getContent(src, i, 8);
                 String unit = "";
                 String model = ExcelUtils.getContent(src, i, 4);
@@ -225,8 +225,13 @@ public class ProductSupplierService {
                     continue;
                 }
                 ProductSupplierExample example = new ProductSupplierExample();
-                example.createCriteria().andSupplierIdEqualTo(supplierNameToId.get(supplierName))
-                        .andBarCodeEqualTo(barCode).andSupplierTypeEqualTo(type);
+                if (StringUtil.isEmpty(model)) {
+                    example.createCriteria().andSupplierIdEqualTo(supplierNameToId.get(supplierName))
+                            .andBarCodeEqualTo(barCode).andModelIsNull().andSupplierTypeEqualTo(type);
+                } else {
+                    example.createCriteria().andSupplierIdEqualTo(supplierNameToId.get(supplierName))
+                            .andBarCodeEqualTo(barCode).andModelEqualTo(model).andSupplierTypeEqualTo(type);
+                }
                 List<ProductSupplier> list = productSupplierMapper.selectByExample(example);
 
                 // 批量校验excel中有无重复

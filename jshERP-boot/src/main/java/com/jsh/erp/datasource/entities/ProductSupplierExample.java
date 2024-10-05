@@ -234,6 +234,16 @@ public class ProductSupplierExample {
             return (Criteria) this;
         }
 
+        public Criteria andModelEqualTo(String value) {
+            addCriterion("model =", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelIsNull() {
+            addCriterion("model is null");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;
