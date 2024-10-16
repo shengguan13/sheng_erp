@@ -140,8 +140,7 @@ export const BillModalMixin = {
               }
             } else if(key === 'snList') {
               if (this.prefixNo === 'QTRK' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' ||
-                this.prefixNo === 'XSTH' || this.prefixNo === 'DBCK' || this.prefixNo === 'FXRK' ||
-                this.prefixNo === 'TLRK') {
+                this.prefixNo === 'XSTH' || this.prefixNo === 'FXRK' || this.prefixNo === 'TLRK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
@@ -415,7 +414,7 @@ export const BillModalMixin = {
     onValueChange(event) {
       let that = this
       const { type, row, column, value, target } = event
-      let param,snList,snListStr,batchNumber,operNumber,unitPrice,allPrice,taxRate,taxMoney,taxLastMoney
+      let param,snList,snListStr,materialType,materialTypeStr,batchNumber,operNumber,unitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
         case "depotId":
           if(row.barCode){
@@ -431,6 +430,20 @@ export const BillModalMixin = {
               getDepotAllocation(param).then((res) => {
                 if (res && res.code === 200) {
                   target.setValues([{rowKey: row.id, values: {snListStr: res.data.allocation}}])
+                }
+              })
+              target.autoSelectBySpecialKey('operNumber', row.orderNum)
+              target.autoSelectBySpecialKey('batchNumber', row.orderNum)
+            }
+            break;
+        case "materialType":
+            param = {
+              id: row.materialType,
+            }
+            if (this.prefixNo === 'DBCK') {
+              getDepotAllocation(param).then((res) => {
+                if (res && res.code === 200) {
+                  target.setValues([{rowKey: row.id, values: {materialTypeStr: res.data.allocation}}])
                 }
               })
               target.autoSelectBySpecialKey('operNumber', row.orderNum)

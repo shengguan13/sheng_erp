@@ -279,15 +279,16 @@
               let listEx = []
               for(let j=0; j<list.length; j++){
                 let info = list[j];
-                if(info.preNumber !== info.finishNumber) {
+                //if(info.preNumber !== info.finishNumber) {
                   //去掉已经全部转换的明细
-                  listEx.push(info)
-                } else {
-                  if(this.queryParam.subType === '采购' || this.queryParam.subType === '销售' || this.queryParam.subType === '零售') {
+                  //listEx.push(info)
+                //} else {
+                  //if(this.queryParam.subType === '采购' || this.queryParam.subType === '销售' || this.queryParam.subType === '零售') {
                     //针对退货单，不过滤明细
-                    listEx.push(info)
-                  }
-                }
+                    //listEx.push(info)
+                  //}
+                //}
+                listEx.push(info)
               }
               this.dataSourceDetail = listEx
               this.ipagination.total = res.data.total;

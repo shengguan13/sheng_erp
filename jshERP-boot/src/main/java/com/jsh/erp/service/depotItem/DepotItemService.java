@@ -770,12 +770,13 @@ public class DepotItemService {
                 }
                 if(BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
                     if (StringUtil.isExist(rowObj.get("anotherDepotId"))) {
-                        if(rowObj.getLong("anotherDepotId").equals(rowObj.getLong("depotId"))) {
-                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_CODE,
-                                    String.format(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_MSG));
-                        } else {
-                            depotItem.setAnotherDepotId(rowObj.getLong("anotherDepotId"));
-                        }
+//                        if(rowObj.getLong("anotherDepotId").equals(rowObj.getLong("depotId"))) {
+//                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_CODE,
+//                                    String.format(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_MSG));
+//                        } else {
+//                            depotItem.setAnotherDepotId(rowObj.getLong("anotherDepotId"));
+//                        }
+                        depotItem.setAnotherDepotId(rowObj.getLong("anotherDepotId"));
                     } else {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_MSG));

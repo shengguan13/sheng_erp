@@ -1661,6 +1661,7 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
+          { title: '新货位', dataIndex: 'materialTypeStr'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单位', dataIndex: 'unit'},
           { title: '库存', dataIndex: 'stock'},
