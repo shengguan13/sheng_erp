@@ -818,8 +818,15 @@ public class DepotItemService {
                         if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
                             List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
                                     null, null, depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
-                            if (batchNumberList.size() != 1 || batchNumberList.get(0).getTotalNum().compareTo(depotItem.getOperNumber()) < 0) {
+                            if (batchNumberList.size() == 0) {
                                 throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
+                                        String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
+                            }
+                            for (DepotItemVoBatchNumberList batch : batchNumberList) {
+                                if (depotItem.getBatchNumber().equals(batch.getBatchNumber())
+                                        && batch.getSnList() != null && batch.getSnList().equals(depotItem.getSnList())
+                                        && batch.getTotalNum().compareTo(depotItem.getOperNumber()) < 0)
+                                    throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
                                         String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
                             }
                         }
