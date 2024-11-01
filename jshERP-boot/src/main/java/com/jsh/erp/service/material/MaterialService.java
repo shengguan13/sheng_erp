@@ -1128,22 +1128,22 @@ public class MaterialService {
                 throw new Exception();
             }
             for (int i = 0; i < length; i++) {
-                List<MaterialBomVo4Info> list = materialBomMapperEx.selectNextLevelBomByPrefix(prefixList.get(i), projectList.get(i));
-                for (MaterialBomVo4Info mb : list) {
-                    if (barCodeToAmountMap.containsKey(mb.getBarCode())) {
-                        BigDecimal usage = barCodeToAmountMap.get(mb.getBarCode()).getProcessUsage() == null ?
-                                BigDecimal.ZERO : barCodeToAmountMap.get(mb.getBarCode()).getProcessUsage();
-                        barCodeToAmountMap.get(mb.getBarCode()).setProcessUsage(
-                                usage.add(mb.getProcessUsage() == null ?
-                                        BigDecimal.ZERO :
-                                        mb.getProcessUsage().multiply(BigDecimal.valueOf(amountList.get(i)))));
-                    } else {
-                        mb.setProcessUsage(mb.getProcessUsage() == null ?
-                                BigDecimal.ZERO :
-                                mb.getProcessUsage().multiply(BigDecimal.valueOf(amountList.get(i))));
-                        barCodeToAmountMap.put(mb.getBarCode(), mb);
-                    }
-                }
+//                List<MaterialBomVo4Info> list = materialBomMapperEx.selectNextLevelBomByPrefix(prefixList.get(i), projectList.get(i));
+//                for (MaterialBomVo4Info mb : list) {
+//                    if (barCodeToAmountMap.containsKey(mb.getBarCode())) {
+//                        BigDecimal usage = barCodeToAmountMap.get(mb.getBarCode()).getProcessUsage() == null ?
+//                                BigDecimal.ZERO : barCodeToAmountMap.get(mb.getBarCode()).getProcessUsage();
+//                        barCodeToAmountMap.get(mb.getBarCode()).setProcessUsage(
+//                                usage.add(mb.getProcessUsage() == null ?
+//                                        BigDecimal.ZERO :
+//                                        mb.getProcessUsage().multiply(BigDecimal.valueOf(amountList.get(i)))));
+//                    } else {
+//                        mb.setProcessUsage(mb.getProcessUsage() == null ?
+//                                BigDecimal.ZERO :
+//                                mb.getProcessUsage().multiply(BigDecimal.valueOf(amountList.get(i))));
+//                        barCodeToAmountMap.put(mb.getBarCode(), mb);
+//                    }
+//                }
             }
             for (MaterialBomVo4Info mb : barCodeToAmountMap.values()) {
                 if (mb.getBarCode() != null && !"".equals(mb.getBarCode())) {

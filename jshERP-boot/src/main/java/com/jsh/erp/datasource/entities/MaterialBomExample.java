@@ -164,6 +164,46 @@ public class MaterialBomExample {
             return (Criteria) this;
         }
 
+        public Criteria andParentIsNull() {
+            addCriterion("parent is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsNotNull() {
+            addCriterion("parent is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentEqualTo(String value) {
+            addCriterion("parent =", value, "parent");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIn(List<String> values) {
+            addCriterion("parent in", values, "parent");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpperIsNull() {
+            addCriterion("upper is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpperIsNotNull() {
+            addCriterion("upper is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpperEqualTo(String value) {
+            addCriterion("upper =", value, "upper");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpperIn(List<String> values) {
+            addCriterion("upper in", values, "upper");
+            return (Criteria) this;
+        }
+
         public Criteria andBarCodeIsNull() {
             addCriterion("bar_code is null");
             return (Criteria) this;
@@ -221,66 +261,6 @@ public class MaterialBomExample {
 
         public Criteria andBarCodeNotBetween(String value1, String value2) {
             addCriterion("bar_code not between", value1, value2, "barCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessIsNull() {
-            addCriterion("process is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessIsNotNull() {
-            addCriterion("process is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessEqualTo(String value) {
-            addCriterion("process =", value, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessNotEqualTo(String value) {
-            addCriterion("process <>", value, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessGreaterThan(String value) {
-            addCriterion("process >", value, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessGreaterThanOrEqualTo(String value) {
-            addCriterion("process >=", value, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessLessThan(String value) {
-            addCriterion("process <", value, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessLessThanOrEqualTo(String value) {
-            addCriterion("process <=", value, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessIn(List<String> values) {
-            addCriterion("process in", values, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessNotIn(List<String> values) {
-            addCriterion("process not in", values, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessBetween(String value1, String value2) {
-            addCriterion("process between", value1, value2, "process");
-            return (Criteria) this;
-        }
-
-        public Criteria andProcessNotBetween(String value1, String value2) {
-            addCriterion("process not between", value1, value2, "process");
             return (Criteria) this;
         }
 

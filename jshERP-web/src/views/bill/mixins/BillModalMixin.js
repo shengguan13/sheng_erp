@@ -222,11 +222,23 @@ export const BillModalMixin = {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if(res.code === 200){
           let arr = res.data
+          let assembly = false
+          let assemblyId = ''
           for (let i = 0; i < arr.length; i++) {
+            console.log("仓库：" + JSON.stringify(arr[i]))
             if(arr[i].isDefault){
+              if(arr[i].depotName == '成品库') {
+                assembly = true
+                assemblyId = arr[i].id
+              }
               that.defaultDepotId = arr[i].id
             }
           }
+          console.log("优先考虑成品库：" + assembly)
+          if (assembly) {
+            that.defaultDepotId = assemblyId
+          }
+          console.log("默认仓库id：" + that.defaultDepotId)
           for(let item of that.materialTable.columns){
             if(item.key == 'depotId' || item.key == 'anotherDepotId') {
               item.options = []
@@ -400,10 +412,19 @@ export const BillModalMixin = {
                 }
               }
             } else {
+              let assembly = false
+              let assemblyId = ''
               for (let i = 0; i < arr.length; i++) {
                 if(arr[i].isDefault){
+                  if(arr[i].depotName == "成品库") {
+                    assembly = true
+                    assemblyId = arr[i].id
+                  }
                   target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
                 }
+              }
+              if (assembly) {
+                target.setValues([{rowKey: row.id, values: {depotId: assemblyId+''}}])
               }
             }
           }

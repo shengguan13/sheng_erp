@@ -4,7 +4,8 @@
     <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.MaterialBom">
         <id column="id" jdbcType="BIGINT" property="id" />
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
-        <result column="process" jdbcType="VARCHAR" property="process" />
+        <result column="upper" jdbcType="VARCHAR" property="upper" />
+        <result column="parent" jdbcType="VARCHAR" property="parent" />
         <result column="project" jdbcType="VARCHAR" property="project" />
         <result column="part_no" jdbcType="VARCHAR" property="partNo" />
         <result column="department" jdbcType="VARCHAR" property="department" />
@@ -74,7 +75,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        id, process, project, part_no, department, source, process_usage, unit, remark, tenant_id, delete_flag
+        id, upper, parent, bar_code, project, part_no, department, source, process_usage, unit, remark, tenant_id, delete_flag
     </sql>
     <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialBomExample" resultMap="BaseResultMap">
         select
@@ -107,9 +108,10 @@
         </if>
     </delete>
     <insert id="insert" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
-        insert into jsh_material_bom (id, bar_code, process, project, part_no, department,
+        insert into jsh_material_bom (id, bar_code, upper, parent, project, part_no, department,
         source, process_usage, unit, remark, tenant_id, delete_flag)
-        values (#{id,jdbcType=BIGINT}, #{barCode,jdbcType=VARCHAR}, #{process,jdbcType=VARCHAR},
+        values (#{id,jdbcType=BIGINT}, #{barCode,jdbcType=VARCHAR}, #{upper,jdbcType=VARCHAR},
+        #{parent,jdbcType=VARCHAR},
         #{project,jdbcType=VARCHAR}, #{partNo,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR},
         #{source,jdbcType=VARCHAR}, #{processUsage,jdbcType=DECIMAL}, #{unit,jdbcType=VARCHAR},
         #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
@@ -123,8 +125,11 @@
             <if test="barCode != null">
                 bar_code,
             </if>
-            <if test="process != null">
-                process,
+            <if test="upper != null">
+                upper,
+            </if>
+            <if test="parent != null">
+                parent,
             </if>
             <if test="project != null">
                 project,
@@ -161,8 +166,11 @@
             <if test="barCode != null">
                 #{barCode,jdbcType=VARCHAR},
             </if>
-            <if test="process != null">
-                #{process,jdbcType=VARCHAR},
+            <if test="upper != null">
+                #{upper,jdbcType=VARCHAR},
+            </if>
+            <if test="parent != null">
+                #{parent,jdbcType=VARCHAR},
             </if>
             <if test="project != null">
                 #{project,jdbcType=VARCHAR},
@@ -208,8 +216,11 @@
             <if test="record.barCode != null">
                 bar_code = #{record.barCode,jdbcType=VARCHAR},
             </if>
-            <if test="record.process != null">
-                process = #{record.process,jdbcType=VARCHAR},
+            <if test="record.upper != null">
+                upper = #{record.upper,jdbcType=VARCHAR},
+            </if>
+            <if test="record.parent != null">
+                parent = #{record.parent,jdbcType=VARCHAR},
             </if>
             <if test="record.project != null">
                 project = #{record.project,jdbcType=VARCHAR},
@@ -247,7 +258,8 @@
         update jsh_material_bom
         set id = #{record.id,jdbcType=BIGINT},
         bar_code = #{record.barCode,jdbcType=VARCHAR},
-        process = #{record.process,jdbcType=VARCHAR},
+        upper = #{record.upper,jdbcType=VARCHAR},
+        parent = #{record.parent,jdbcType=VARCHAR},
         project = #{record.project,jdbcType=VARCHAR},
         part_no = #{record.partNo,jdbcType=VARCHAR},
         department = #{record.department,jdbcType=VARCHAR},
@@ -267,8 +279,11 @@
             <if test="barCode != null">
                 bar_code = #{barCode,jdbcType=VARCHAR},
             </if>
-            <if test="process != null">
-                process = #{process,jdbcType=VARCHAR},
+            <if test="upper != null">
+                upper = #{upper,jdbcType=VARCHAR},
+            </if>
+            <if test="parent != null">
+                parent = #{parent,jdbcType=VARCHAR},
             </if>
             <if test="project != null">
                 project = #{project,jdbcType=VARCHAR},
@@ -303,7 +318,8 @@
     <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.MaterialBom">
         update jsh_material_bom
         set bar_code = #{barCode,jdbcType=VARCHAR},
-        process = #{process,jdbcType=VARCHAR},
+        upper = #{upper,jdbcType=VARCHAR},
+        parent = #{parent,jdbcType=VARCHAR},
         project = #{project,jdbcType=VARCHAR},
         part_no = #{partNo,jdbcType=VARCHAR},
         department = #{department,jdbcType=VARCHAR},

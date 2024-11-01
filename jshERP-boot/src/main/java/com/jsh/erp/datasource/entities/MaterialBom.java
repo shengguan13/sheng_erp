@@ -8,7 +8,9 @@ public class MaterialBom {
 
     private String barCode;
 
-    private String process;
+    private String parent;
+
+    private String upper;
 
     private String project;
 
@@ -44,12 +46,20 @@ public class MaterialBom {
         this.barCode = barCode;
     }
 
-    public String getProcess() {
-        return process;
+    public String getParent() {
+        return parent;
     }
 
-    public void setProcess(String process) {
-        this.process = process;
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
+
+    public String getUpper() {
+        return upper;
+    }
+
+    public void setUpper(String upper) {
+        this.upper = upper;
     }
 
     public String getProject() {

@@ -83,6 +83,7 @@
         </if>
         order by sort asc
     </select>
+
     <insert id="addMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategory"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
        insert into jsh_material_category

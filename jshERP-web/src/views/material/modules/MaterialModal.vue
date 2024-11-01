@@ -79,7 +79,7 @@
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="类别"
                   data-step="8" data-title="类别" data-intro="类别需要在【产品类别】页面进行录入，录入之后在此处进行调用">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-                                 :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
+                                 :treeData="categoryTree" v-decorator="[ 'categoryId', validatorRules.categoryId ]" placeholder="请选择类别">
                   </a-tree-select>
                 </a-form-item>
               </a-col>
@@ -349,6 +349,11 @@
           colorCode:{
             rules: [
               { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
+            ]
+          },
+          categoryId:{
+            rules: [
+              { required: true, message: '请选择物料类别!' }
             ]
           },
           model:{

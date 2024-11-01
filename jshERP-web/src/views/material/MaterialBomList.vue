@@ -94,7 +94,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <material-bom-view-modal ref="bomViewModalForm"></material-bom-view-modal>
-        <material-bom-modal ref="modalForm"></material-bom-modal>
+        <material-bom-modal ref="modalForm" @ok="modalFormOk"></material-bom-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
@@ -150,8 +150,8 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['action','project','barCode','process','name','partNo','colorCode','model','color',
-          'category','processUsage','unit','department','source','remark'],
+        settingColumns:['action','project','barCode','parent','name','colorCode','model','color',
+          'category','unit','source','remark'],
         // 默认的列
         defColumns: [
           {
@@ -163,16 +163,13 @@
           },
           {title: '项目', dataIndex: 'project', width: 70},
           {title: '物料编码', dataIndex: 'barCode', width: 90},
-          {title: '工艺流程', dataIndex: 'process', width: 80},
+          {title: '总成', dataIndex: 'parent', width: 80},
           {title: '名称', dataIndex: 'name', width: 120},
-          {title: '零件号', dataIndex: 'partNo', width: 80},
           {title: '零件号', dataIndex: 'model', width: 80},
           {title: '颜色', dataIndex: 'color', width: 40},
           {title: '类别', dataIndex: 'category', width: 50},
-          {title: '用量', dataIndex: 'processUsage', width: 50},
           {title: '单位', dataIndex: 'unit', width: 50},
-          {title: '负责部门', dataIndex: 'department', width: 50},
-          {title: '物料来源', dataIndex: 'source', width: 50},
+          {title: '状态', dataIndex: 'source', width: 50},
           {title: '备注', dataIndex: 'remark', width: 60}
         ],
         url: {
@@ -236,7 +233,6 @@
       handleDetail: function (record) {
         this.$refs.bomViewModalForm.edit(record);
         this.$refs.bomViewModalForm.title = "详情";
-        this.$refs.bomViewModalForm.disableSubmit = false;
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.bomViewModalForm.isReadOnly = true
         }

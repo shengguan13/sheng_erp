@@ -69,8 +69,10 @@ const getMaterialAttributeNameList = (params)=>getAction("/materialAttribute/get
 const getMaterialAttributeValueListById = (params)=>getAction("/materialAttribute/getValueListById",params);
 //产品BOM
 const addMaterialBom = (params)=>postAction("/materialBom/add",params);
+const addBomChild = (params)=>getAction("/materialBom/addBomChild",params);
 const editMaterialBom = (params)=>putAction("/materialBom/update",params);
-const findComposite = (params)=>getAction("/materialBom/findComposite",params);
+const getMaterialBomTree = (params)=>getAction("/materialBom/getMaterialBomTree",params);
+const selectMaterialBomWithUpper = (params)=>getAction("/materialBom/selectMaterialBomWithUpper",params);
 //产品用量
 const addMaterialUsage = (params)=>postAction("/materialUsage/add",params);
 const editMaterialUsage = (params)=>putAction("/materialUsage/update",params);
@@ -109,6 +111,7 @@ const findBySelectOrgan = (params)=>postAction("/supplier/findBySelect_organ",pa
 const addProductSupplier = (params)=>postAction("/productSupplier/add",params);
 const editProductSupplier = (params)=>putAction("/productSupplier/update",params);
 const getProductSupplierList = (params)=>getAction("/productSupplier/getProductSupplierList",params);
+const listProductSupplier = (params)=>getAction("/productSupplier/listProductSupplier",params);
 //单据相关
 const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
@@ -160,6 +163,7 @@ export {
   editDepotAllocation,
   addProductSupplier,
   editProductSupplier,
+  listProductSupplier,
   editMaterialProperty,
   queryMaterialCategoryTreeList,
   queryMaterialCategoryById,
@@ -175,6 +179,9 @@ export {
   batchUpdateMaterial,
   addMaterialBom,
   editMaterialBom,
+  addBomChild,
+  getMaterialBomTree,
+  selectMaterialBomWithUpper,
   addMaterialUsage,
   editMaterialUsage,
   addMaterialAttribute,

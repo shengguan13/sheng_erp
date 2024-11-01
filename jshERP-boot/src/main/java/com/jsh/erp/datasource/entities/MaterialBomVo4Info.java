@@ -1,6 +1,21 @@
 package com.jsh.erp.datasource.entities;
 
+import java.util.List;
+
 public class MaterialBomVo4Info extends MaterialBom {
+
+    private Long key;
+
+    private Long value;
+
+    private String title;
+
+    private String state = "open";
+
+    private List<MaterialBomVo4Info> children;
+
+    private boolean checked;
+
     private String name;
 
     private String colorCode;
@@ -14,6 +29,38 @@ public class MaterialBomVo4Info extends MaterialBom {
     private Long meId;
 
     private Long materialId;
+
+    public Long getKey() {
+        return key;
+    }
+
+    public void setKey(Long key) {
+        this.key = key;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Long getValue() {
+        return value;
+    }
+
+    public void setValue(Long value) {
+        this.value = value;
+    }
+
+    public List<MaterialBomVo4Info> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<MaterialBomVo4Info> children) {
+        this.children = children;
+    }
 
     public String getName() {
         return name;

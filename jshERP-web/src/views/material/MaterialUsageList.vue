@@ -86,7 +86,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <material-usage-modal ref="modalForm"></material-usage-modal>
+        <material-usage-modal ref="modalForm" @ok="modalFormOk"></material-usage-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>

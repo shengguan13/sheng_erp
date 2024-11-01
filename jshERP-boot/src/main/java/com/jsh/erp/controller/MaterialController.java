@@ -526,13 +526,13 @@ public class MaterialController {
             List<Double> amountList = Arrays.stream(amountArray)
                     .map(e -> Double.valueOf(e))
                     .collect(Collectors.toList());
-            List<String> processList = new ArrayList<>();
+            List<String> parentList = new ArrayList<>();
             List<String> projectList = new ArrayList<>();
-            for (String bc : barcodeArray) {
-                processList.add(barCodeMap.get(bc).getProcess());
-                projectList.add(barCodeMap.get(bc).getProject());
-            }
-            List<MaterialBomVo4Info> materialPickList = materialService.getMaterialByProcessPrefix(processList, projectList, amountList);
+//            for (String bc : barcodeArray) {
+//                parentList.add(barCodeMap.get(bc).getProcess());
+//                projectList.add(barCodeMap.get(bc).getProject());
+//            }
+            List<MaterialBomVo4Info> materialPickList = materialService.getMaterialByProcessPrefix(parentList, projectList, amountList);
             Map<Long, BigDecimal> stockMap = materialService.getCurrentStockMapByMaterialId(
                     materialPickList.stream().map(e -> e.getMaterialId()).collect(Collectors.toList()));
 
@@ -546,10 +546,10 @@ public class MaterialController {
                 item.put("color", mb.getColor() == null ? "" : mb.getColor());
                 item.put("stock", stockMap.getOrDefault(mb.getMaterialId(), BigDecimal.ZERO).doubleValue());
                 item.put("unit", mb.getUnit() == null ? "" : mb.getUnit());
-                item.put("operNumber", Math.min(
-                        mb.getProcessUsage() == null ? 0.0 : mb.getProcessUsage().doubleValue(),
-                        stockMap.getOrDefault(mb.getMaterialId(), BigDecimal.ZERO).doubleValue()
-                ));
+//                item.put("operNumber", Math.min(
+//                        mb.getProcessUsage() == null ? 0.0 : mb.getProcessUsage().doubleValue(),
+//                        stockMap.getOrDefault(mb.getMaterialId(), BigDecimal.ZERO).doubleValue()
+//                ));
                 item.put("remark", mb.getRemark());
                 dataArray.add(item);
             }

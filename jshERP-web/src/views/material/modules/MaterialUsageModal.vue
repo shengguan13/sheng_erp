@@ -19,10 +19,13 @@
           关闭
         </a-button>
       </template>
+      <template>
+        <a-button @click="handleSelectMaterial"><a-icon type="setting"/>选择物料编码</a-button>
+      </template>
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料编码">
-            <a-input placeholder="请输入物料编码" v-decorator.trim="[ 'barCode', validatorRules.barCode ]" />
+            <a-input :readOnly="true" placeholder="请选择物料编码" v-decorator.trim="[ 'barCode', validatorRules.barCode ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
@@ -51,6 +54,7 @@
           </a-form-item>
         </a-form>
       </a-spin>
+      <select-material ref="selectMaterialForm" @ok="selectMaterialFormOk"></select-material>
     </a-modal>
   </div>
 </template>
@@ -58,9 +62,13 @@
   import pick from 'lodash.pick'
   import {addMaterialUsage,editMaterialUsage,checkMaterialAttribute,getAllPerson,getDepartment } from '@/api/api'
   import {mixinDevice} from '@/utils/mixin'
+  import SelectMaterial from '@/views/bill/dialog/SelectMaterial'
   export default {
     name: "MaterialUsageModal",
     mixins: [mixinDevice],
+    components: {
+      SelectMaterial
+    },
     data () {
       return {
         title:"操作",
@@ -119,6 +127,17 @@
     methods: {
       add () {
         this.edit({});
+      },
+      handleSelectMaterial () {
+        console.log("handleSelectMaterial")
+        this.$refs.selectMaterialForm.add();
+        this.$refs.selectMaterialForm.title = "选择物料编码";
+        this.$refs.selectMaterialForm.disableSubmit = false;
+      },
+      selectMaterialFormOk(ids) {
+        this.form.setFieldsValue({
+          'barCode': ids
+        })
       },
       initPerson() {
         getAllPerson().then((res)=>{

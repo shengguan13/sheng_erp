@@ -421,7 +421,7 @@ export default {
       this.iExpandedKeys = []
     },
     checkALL () {
-      this.checkStriccheckStrictlytly = false
+      this.checkStrictly = false
       this.checkedKeys = this.allTreeKeys
     },
     cancelCheckALL () {

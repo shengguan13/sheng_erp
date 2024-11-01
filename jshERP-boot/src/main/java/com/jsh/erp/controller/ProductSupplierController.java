@@ -69,4 +69,27 @@ public class ProductSupplierController {
         }
         return res;
     }
+
+    @GetMapping(value = "/listProductSupplier")
+    @ApiOperation(value = "获取供应商档案信息")
+    public BaseResponseInfo listProductSupplier(@RequestParam("supplierId") String supplierId,
+                                                @RequestParam("keyword") String keyword,
+                                                @RequestParam("currentPage") Integer currentPage,
+                                                @RequestParam("pageSize") Integer pageSize,
+                                                HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<ProductSupplierVo4Info> list = productSupplierService.select(supplierId, keyword, (currentPage-1)*pageSize, pageSize);
+            map.put("rows", list);
+            map.put("total", productSupplierService.countProductSupplier(supplierId, keyword));
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 }

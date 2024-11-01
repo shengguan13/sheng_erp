@@ -21,14 +21,55 @@ public class MaterialBomController {
     @Resource
     private MaterialBomService materialBomService;
 
-    @GetMapping(value = "/findComposite")
+    @GetMapping(value = "/getMaterialBomTree")
     @ApiOperation(value = "找到BOM中所有子部件")
-    public BaseResponseInfo findComposite(@RequestParam("process") String process,
-                                          @RequestParam("project") String project,
-                                          HttpServletRequest request) throws Exception{
+    public BaseResponseInfo getMaterialBomTree(@RequestParam(value = "parent", required = false) String parent,
+                                               @RequestParam(value = "upper", required = false) String upper,
+                                               @RequestParam(value = "barCode") String barCode,
+                                               @RequestParam(value = "project") String project,
+                                               HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            List<MaterialBomVo4Info> list = materialBomService.selectByPrefix(process, project);
+            List<MaterialBomVo4Info> list = materialBomService.getMaterialBomTree(parent, barCode, project);
+            res.code = 200;
+            res.data = list;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/addBomChild")
+    @ApiOperation(value = "新增BOM条目")
+    public BaseResponseInfo addBomChild(@RequestParam(value = "parent") String parent,
+                                        @RequestParam(value = "upper") String upper,
+                                        @RequestParam(value = "project") String project,
+                                        HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            materialBomService.addBomChild(parent, upper, project, request);
+            res.code = 200;
+            res.data = "导入成功";
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "添加失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/selectMaterialBomWithUpper")
+    @ApiOperation(value = "查找")
+    public BaseResponseInfo selectMaterialBomWithUpper(@RequestParam(value = "parent", required = false) String parent,
+                                                       @RequestParam(value = "upper", required = false) String upper,
+                                                       @RequestParam(value = "project", required = false) String project,
+                                                       @RequestParam(value = "materialParam", required = false) String materialParam,
+                                                       HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            List<MaterialBomVo4Info> list = materialBomService.selectMaterialBomWithUpper(parent, upper, project, materialParam);
             res.code = 200;
             res.data = list;
         } catch(Exception e){

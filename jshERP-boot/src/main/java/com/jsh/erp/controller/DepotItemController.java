@@ -360,9 +360,8 @@ public class DepotItemController {
                     item.put("model", m.getModel() == null ? "" : m.getModel());
                     item.put("color", m.getColor() == null ? "" : m.getColor());
                     item.put("unit", m.getUnit() == null ? "" : m.getUnit());
-                    item.put("process", m.getProcess() == null ? "" : m.getProcess());
-
-                    item.put("prepareNumber", m.getProcessUsage() == null ? 0.0 : m.getProcessUsage().doubleValue());
+//                    item.put("process", m.getProcess() == null ? "" : m.getProcess());
+//                    item.put("prepareNumber", m.getProcessUsage() == null ? 0.0 : m.getProcessUsage().doubleValue());
                     item.put("materialPick", materialPicked.getOrDefault(meId, 0.0));
                     item.put("materialReturn", materialReturned.getOrDefault(meId, 0.0));
                     dataArray.add(item);
