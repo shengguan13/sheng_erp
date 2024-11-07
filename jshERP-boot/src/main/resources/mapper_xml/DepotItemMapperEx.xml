@@ -1283,7 +1283,7 @@
         and (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离'))
         ) tb
         group by batch_number
-        order by oper_time asc
+        order by batch_number asc
     </select>
 
     <select id="getBatchNumberListWithoutMergingAllocation" resultMap="batchNumberListMap">
@@ -1348,7 +1348,7 @@
         and (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离'))
         ) tb
         group by batch_number, sn_list
-        order by oper_time asc
+        order by batch_number asc
     </select>
 
     <select id="getCountByMaterialAndDepot" resultType="java.lang.Long">

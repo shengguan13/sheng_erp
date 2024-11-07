@@ -119,11 +119,6 @@ public class DepotAllocationService {
     public List<DepotItemVoBatchNumberList> getAllocationDetail(long allocationId) throws Exception {
         DepotAllocation allocation = depotAllocationMapper.selectByPrimaryKey(allocationId);
         List<DepotItemVoBatchNumberList> detailList = depotAllocationMapperEx.getAllocationDetail(allocationId, allocation.getDepotId());
-        for (DepotItemVoBatchNumberList batch : detailList) {
-            if (batch.getType() != null && "隔离".equals(batch.getType())) {
-                batch.setBatchNumber(batch.getBatchNumber() + "(隔离)");
-            }
-        }
         return detailList;
     }
 

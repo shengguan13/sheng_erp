@@ -64,23 +64,21 @@
 
     <select id="getAllocationDetail" resultMap="batchNumberListMap">
         select id, bar_code, name, color_code, model, unit_id, oper_time, commodity_unit, batch_number,
-        expiration_date, type, sum(basic_number) total_num from
+        expiration_date, sum(basic_number) total_num from
         (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
         me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time, di.sn_list,
         di.basic_number*(case
         <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
         when ((dh.type='入库' and di.sn_list = #{allocationId}) or (dh.type='出库' and di.material_type = #{allocationId})) then 1
         when (dh.type='出库' and di.sn_list = #{allocationId}) then -1
-        end) as basic_number,
-        <!-- 从隔离库正常出库的默认也就是隔离 -->
-        (case when (di.sn_list = #{allocationId} and di.depot_id != 24) then '正常' else '隔离' end) as type
+        end) as basic_number
         from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag, '0') != '1'
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
         where (di.sn_list = #{allocationId} or di.material_type = #{allocationId})
         and di.delete_flag!=1) tb
-        group by bar_code, batch_number, type
+        group by bar_code, batch_number
         order by oper_time asc
     </select>
 

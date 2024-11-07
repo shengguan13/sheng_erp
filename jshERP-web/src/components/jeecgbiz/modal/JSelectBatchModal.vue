@@ -58,7 +58,7 @@
     props: ['rows', 'multi', 'barCode'],
     data() {
       return {
-        modalWidth: 1100,
+        modalWidth: 1400,
         queryParam: {
           name: "",
           depotItemId: '',
@@ -75,7 +75,7 @@
         },
         categoryTree:[],
         columns: [
-          {dataIndex: 'batchNumber', title: '批号', width: 60, align: 'left', ellipsis:true},
+          {dataIndex: 'batchNumber', title: '批号', width: 120, align: 'left', ellipsis:true},
           {dataIndex: 'snListStr', title: '货位', width: 100, ellipsis:true},
           {dataIndex: 'organId', title: '供应商', width: 100, ellipsis:true},
           {dataIndex: 'barCode', title: '编码', width: 60, ellipsis:true},

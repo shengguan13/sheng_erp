@@ -813,22 +813,19 @@ public class DepotItemService {
                 List<DepotItemVoBatchNumberList> sortedByBatchNumber = null;
                 // 出库时判断库存是否充足
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
-                    // 当出库类型为调拨时，检查对应批号的库存是否足够
-                    if (BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
-                        if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
-                            List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
-                                    null, null, depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
-                            if (batchNumberList.size() == 0) {
+                    if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
+                        List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
+                                null, null, depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
+                        if (batchNumberList.size() == 0) {
+                            throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
+                        }
+                        for (DepotItemVoBatchNumberList batch : batchNumberList) {
+                            if (depotItem.getBatchNumber().equals(batch.getBatchNumber())
+                                    && batch.getSnList() != null && batch.getSnList().equals(depotItem.getSnList())
+                                    && batch.getTotalNum().compareTo(depotItem.getOperNumber()) < 0)
                                 throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
                                         String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
-                            }
-                            for (DepotItemVoBatchNumberList batch : batchNumberList) {
-                                if (depotItem.getBatchNumber().equals(batch.getBatchNumber())
-                                        && batch.getSnList() != null && batch.getSnList().equals(depotItem.getSnList())
-                                        && batch.getTotalNum().compareTo(depotItem.getOperNumber()) < 0)
-                                    throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
-                                        String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
-                            }
                         }
                     }
                     //当出库类型不是调拨时，根据先入先出自动填充批号
