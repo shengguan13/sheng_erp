@@ -411,17 +411,21 @@
       },
       handleAdd() {
         let params = {};
-        params.parent = this.record.parent;
-        params.upper = this.record.barCode;
-        params.project = this.record.project;
-        getAction(this.url.addBomChild, params).then((res) => {
-          if (res.code == 200) {
-            this.$message.success('新增成功!')
-            this.loadTree()
-          } else {
-            this.$message.warning(res.data.message)
-          }
-        })
+        if (this.selectedKeys.length != 1) {
+          this.$message.warning("必须选中一个零件，作为新增零件的上级！")
+        } else {
+          params.parent = this.record.parent;
+          params.upper = this.currSelected.barCode;
+          params.project = this.record.project;
+          getAction(this.url.addBomChild, params).then((res) => {
+            if (res.code == 200) {
+              this.$message.success('新增成功!')
+              this.loadTree()
+            } else {
+              this.$message.warning(res.data.message)
+            }
+          })
+        }
       },
       nodeSettingFormSubmit() {
         this.form.validateFields((err, values) => {

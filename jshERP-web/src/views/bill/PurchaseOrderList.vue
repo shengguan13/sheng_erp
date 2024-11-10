@@ -81,6 +81,7 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(3)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" type="primary" icon="download" @click="handleExportXls('采购订单')">导出</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -218,7 +219,8 @@
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
           batchSetStatusUrl: "/depotHead/batchSetStatus",
-          importExcelUrl: "/depotHead/importPurchaseOrderExcel"
+          importExcelUrl: "/depotHead/importPurchaseOrderExcel",
+          exportXlsUrl: "/depotHead/exportPurchaseOrderExcel"
         }
       }
     },

@@ -6,41 +6,36 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.DepotHeadVo4Body;
-import com.jsh.erp.datasource.entities.Supplier;
+import com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
-import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.exception.BusinessRunTimeException;
-import com.jsh.erp.service.accountHead.AccountHeadService;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.redis.RedisService;
-import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
-import static com.jsh.erp.utils.Tools.getNow3;
 
 /**
  * @author ji-sheng-hua 752*718*920
@@ -53,6 +48,9 @@ public class DepotHeadController {
 
     @Resource
     private DepotHeadService depotHeadService;
+
+    @Resource
+    private DepotItemService depotItemService;
 
     @Resource
     private DepotService depotService;
@@ -352,6 +350,60 @@ public class DepotHeadController {
             e.printStackTrace();
         }
         return res;
+    }
+
+    @GetMapping(value = "/exportPurchaseOrderExcel")
+    @ApiOperation(value = "生成excel表格")
+    public void exportExcel(@RequestParam(value = "number", required = false) String number,
+                            @RequestParam(value = "materialParam", required = false) String materialParam,
+                            @RequestParam(value = "type", required = false) String type,
+                            @RequestParam(value = "subType", required = false) String subType,
+                            @RequestParam(value = "roleType", required = false) String roleType,
+                            @RequestParam(value = "beginTime", required = false) String beginTime,
+                            @RequestParam(value = "endTime", required = false) String endTime,
+                            @RequestParam(value = "organId", required = false) String organId,
+                            @RequestParam(value = "creator", required = false) String creator,
+                            @RequestParam(value = "status", required = false) String status,
+                            @RequestParam(value = "remark", required = false) String remark,
+                            HttpServletRequest request, HttpServletResponse response) {
+        try {
+            List<DepotHeadVo4List> headList = depotHeadService.select(type, subType, roleType,
+                    null, status, null, number, null, beginTime ,endTime, null, materialParam,
+                    StringUtil.isEmpty(organId) ? null : Long.parseLong(organId), StringUtil.isEmpty(creator) ? null : Long.parseLong(creator),
+                    null, null, remark, 0, 99999);
+            String[] names = {"供应商", "日期", "单据编号", "编码", "零件号", "供应商型号", "名称", "颜色", "数量", "单位", "价税合计", "收货地", "到货日期", "备注"};
+            String title = "采购订单";
+            List<String[]> objects = new ArrayList<>();
+            if (null != headList) {
+                for (DepotHeadVo4List head : headList) {
+                    List<DepotItemVo4WithInfoEx> itemList = depotItemService.getDetailList(head.getId());
+                    if (null != itemList) {
+                        for (DepotItemVo4WithInfoEx item : itemList) {
+                            String[] objs = new String[100];
+                            objs[0] = head.getOrganName();
+                            objs[1] = head.getOperTimeStr();
+                            objs[2] = head.getNumber();
+                            objs[3] = item.getBarCode();
+                            objs[4] = item.getMModel();
+                            objs[5] = item.getSupplierModel();
+                            objs[6] = item.getMName();
+                            objs[7] = item.getMColor();
+                            objs[8] = item.getOperNumber() == null ? "" : item.getOperNumber().toString();
+                            objs[9] = item.getMaterialUnit();
+                            objs[10] = item.getTaxLastMoney() == null ? "" : item.getTaxLastMoney().toString();
+                            objs[11] = item.getAnotherDepotName();
+                            objs[12] = item.getExpirationDate() == null ? "" : item.getExpirationDate().toString();
+                            objs[13] = item.getRemark();
+                            objects.add(objs);
+                        }
+                    }
+                }
+            }
+            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+            ExportExecUtil.showExec(file, file.getName(), response);
+        } catch (Exception e) {
+            JshException.writeFail(logger, e);
+        }
     }
 
     @PostMapping(value = "/importPurchaseOrderExcel")
