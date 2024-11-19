@@ -29,7 +29,7 @@ export const JeecgListMixin = {
       ipagination:{
         current: 1,
         pageSize: 10,
-        pageSizeOptions: ['10', '30', '50', '100'],
+        pageSizeOptions: ['10', '50', '100', '200'],
         showTotal: (total, range) => {
           return range[0] + "-" + range[1] + " 共" + total + "条"
         },
@@ -330,7 +330,30 @@ export const JeecgListMixin = {
       if(!fileName || typeof fileName != "string"){
         fileName = "导出文件"
       }
+      if(fileName == "货位明细") {
+        if(JSON.stringify(this.queryParam) == '{}' ||
+          ((this.queryParam.depotId == null || this.queryParam.depotId == '')
+          && (this.queryParam.type == null || this.queryParam.type == ''))) {
+          this.$message.warning("选择仓库名称或者货位分类以进行导出！")
+          return
+        }
+      }
+      if(fileName == "采购订单") {
+        if(JSON.stringify(this.queryParam) == '{}' ||
+          ((this.queryParam.materialParam == null || this.queryParam.materialParam == '')
+          && (this.queryParam.beginTime == null || this.queryParam.beginTime == '')
+          && (this.queryParam.endTime == null || this.queryParam.endTime == '')
+          && (this.queryParam.organId == null || this.queryParam.organId == '')
+          && (this.queryParam.creator == null || this.queryParam.creator == ''))) {
+          this.$message.warning("至少输入产品信息、起始时间、供应商或制单人中的一个筛选条件进行导出！")
+          return
+        }
+      }
       let param = {...this.queryParam};
+      if(fileName == "货位明细") {
+        param['currentPage'] = this.ipagination.current;
+        param['pageSize'] = this.ipagination.pageSize;
+      }
       if(this.selectedRowKeys && this.selectedRowKeys.length>0){
         param['selections'] = this.selectedRowKeys.join(",")
       }

@@ -53,7 +53,8 @@
       <a-button v-if="billType === '调拨出库'" @click="allocationOutExportExcel()">导出</a-button>
       <a-button v-if="billType === '组装单'||billType === '拆卸单'" @click="assembleExportExcel()">导出</a-button>
       <a-button v-if="billType === '盘点复盘'" @click="stockCheckReplayExportExcel()">导出</a-button>
-      <!--反审核-->
+      <!--审核/反审核-->
+      <a-button v-if="checkFlag && isCanBackCheck && model.status==='0'" @click="handleCheck()">审核</a-button>
       <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
       <!--发起多级审核-->
@@ -759,11 +760,6 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
-                {{model.salesManStr}}
-              </a-form-item>
-            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -817,6 +813,13 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户订单号">
+                {{model.payType}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -1899,6 +1902,27 @@
           onOk: function () {
             that.loading = true
             postAction(that.url.batchSetStatusUrl, {status: '0', ids: that.model.id}).then((res) => {
+              if(res.code === 200){
+                that.$emit('ok')
+                that.loading = false
+                that.close()
+              } else {
+                that.$message.warning(res.data.message)
+                that.loading = false
+              }
+            }).finally(() => {
+            })
+          }
+        })
+      },
+      handleCheck() {
+        let that = this
+        this.$confirm({
+          title: "确认操作",
+          content: "是否对该单据进行审核?",
+          onOk: function () {
+            that.loading = true
+            postAction(that.url.batchSetStatusUrl, {status: '1', ids: that.model.id}).then((res) => {
               if(res.code === 200){
                 that.$emit('ok')
                 that.loading = false

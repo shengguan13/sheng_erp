@@ -855,6 +855,49 @@ public class DepotItemService {
                                 String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, material.getName()));
                     }
                 }
+                if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
+                    if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
+                        List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
+                                null, null, depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
+                        if (batchNumberList.size() == 0) {
+                            throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
+                        }
+                        for (DepotItemVoBatchNumberList batch : batchNumberList) {
+                            if (depotItem.getBatchNumber().equals(batch.getBatchNumber())
+                                    && batch.getSnList() != null && batch.getSnList().equals(depotItem.getSnList())
+                                    && batch.getTotalNum().compareTo(depotItem.getOperNumber()) < 0)
+                                throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
+                                        String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
+                        }
+                    }
+                    //当出库类型不是调拨时，根据先入先出自动填充批号
+                    else if (depotItem.getBatchNumber() == null || "".equals(depotItem.getBatchNumber())) {
+                        List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
+                                null, null, depotItem.getDepotId(), barCode, null);
+                        if (batchNumberList.size() == 0) {
+                            throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
+                        }
+                        Optional<BigDecimal> total = batchNumberList.stream()
+                                .map(e -> e.getTotalNum())
+                                .reduce((a,b)->a.add(b));
+                        if (!total.isPresent() || total.get().compareTo(depotItem.getOperNumber()) < 0) {
+                            throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
+                        }
+                        sortedByBatchNumber = batchNumberList.stream()
+                                .filter(b -> b.getTotalNum().compareTo(BigDecimal.ZERO) > 0)
+                                .sorted(Comparator.comparing(DepotItemVoBatchNumberList::getOperTime))
+                                .collect(Collectors.toList());
+                    }
+                    BigDecimal stock = getStockByParam(depotItem.getDepotId(), depotItem.getMaterialId(), null, null);
+                    BigDecimal thisBasicNumber = depotItem.getBasicNumber() == null ? BigDecimal.ZERO : depotItem.getBasicNumber();
+                    if (!systemConfigService.getMinusStockFlag() && stock.compareTo(thisBasicNumber) < 0) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
+                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, material.getName()));
+                    }
+                }
                 if (sortedByBatchNumber == null) {
                     this.insertDepotItemWithObj(depotItem);
                 } else {

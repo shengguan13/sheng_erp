@@ -56,6 +56,12 @@
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户订单号" data-step="2" data-title="客户订单号"
+              data-intro="">
+              <a-input placeholder="请输入客户订单号" v-decorator.trim="[ 'payType' ]"/>
+            </a-form-item>
+          </a-col>
         </a-row>
         <j-editable-table id="billModal"
           :ref="refKeys[0]"
@@ -312,7 +318,7 @@
           }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark', 'payType',
               'discountLastMoney','otherMoney','accountId','deposit','changeAmount','debt'))
           });
           // 加载子表数据

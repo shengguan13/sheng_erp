@@ -24,6 +24,8 @@
               <a-col :md="6" :sm="24">
                 <a-form-item label="货位分类" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择货位分类" showSearch optionFilterProp="children" v-model="queryParam.type">
+                    <a-select-option value="总成">总成</a-select-option>
+                    <a-select-option value="半成品">半成品</a-select-option>
                     <a-select-option value="原材料">原材料</a-select-option>
                     <a-select-option value="辅料">辅料</a-select-option>
                     <a-select-option value="隔离">隔离</a-select-option>
@@ -38,6 +40,7 @@
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a-button style="margin-left: 8px" type="primary" icon="download" @click="handleExportXls('货位明细')">导出</a-button>
                 </a-col>
               </span>
             </a-row>
@@ -104,7 +107,8 @@
           {title: '仓库', dataIndex: 'depotName', width: 100}
         ],
         url: {
-          list: "/depotAllocation/list"
+          list: "/depotAllocation/list",
+          exportXlsUrl: "/depotAllocation/exportAllocationReportExcel"
         }
       }
     },

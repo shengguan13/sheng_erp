@@ -330,7 +330,7 @@
         }
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('出库', '销售', '客户', "1")
+        this.$refs.linkBillList.show('出库', '销售', '客户', "0,1,3")
         this.$refs.linkBillList.title = "选择销售出库（已审核的销售出库才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {

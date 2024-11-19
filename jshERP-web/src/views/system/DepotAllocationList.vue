@@ -26,6 +26,8 @@
                 <a-form-item label="货位分类" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择货位分类" showSearch optionFilterProp="children" v-model="queryParam.type">
                     <a-select-option value="原材料">原材料</a-select-option>
+                    <a-select-option value="总成">总成</a-select-option>
+                    <a-select-option value="半成品">半成品</a-select-option>
                     <a-select-option value="辅料">辅料</a-select-option>
                     <a-select-option value="隔离">隔离</a-select-option>
                     <a-select-option value="供应商">供应商</a-select-option>

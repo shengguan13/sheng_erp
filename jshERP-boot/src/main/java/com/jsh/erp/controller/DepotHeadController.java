@@ -370,7 +370,7 @@ public class DepotHeadController {
             List<DepotHeadVo4List> headList = depotHeadService.select(type, subType, roleType,
                     null, status, null, number, null, beginTime ,endTime, null, materialParam,
                     StringUtil.isEmpty(organId) ? null : Long.parseLong(organId), StringUtil.isEmpty(creator) ? null : Long.parseLong(creator),
-                    null, null, remark, 0, 99999);
+                    null, null, remark, 0, 9999);
             String[] names = {"供应商", "日期", "单据编号", "编码", "零件号", "供应商型号", "名称", "颜色", "数量", "单位", "价税合计", "收货地", "到货日期", "备注"};
             String title = "采购订单";
             List<String[]> objects = new ArrayList<>();

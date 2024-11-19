@@ -316,7 +316,7 @@
         }
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('入库', '采购', '供应商', "1")
+        this.$refs.linkBillList.show('入库', '采购', '供应商', "0,1,3")
         this.$refs.linkBillList.title = "选择采购入库（已审核的采购入库才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
