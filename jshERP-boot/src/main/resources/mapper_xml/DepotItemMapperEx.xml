@@ -127,6 +127,7 @@
         <result column="oper_time" jdbcType="TIMESTAMP" property="operTime" />
         <result column="sn_list" jdbcType="VARCHAR" property="snList" />
         <result column="organ_id" jdbcType="VARCHAR" property="organId" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
         <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
         <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
     </resultMap>
@@ -1230,10 +1231,10 @@
     </select>
 
     <select id="getBatchNumberList" resultMap="batchNumberListMap">
-        select id, bar_code, name, color_code, model, unit_id, oper_time,
+        select id, bar_code, name, color_code, model, unit_id, oper_time, ifnull(sku, '') as sku,
         commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
         (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
-         me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time,
+         me.commodity_unit, di.batch_number, di.expiration_date, dh.oper_time, di.sku,
          di.basic_number*(case
             when dh.type='入库' then 1
             when dh.type='出库' then -1
@@ -1259,7 +1260,7 @@
         and di.delete_flag!=1
         union all
         select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
-        me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time,
+        me.commodity_unit, di.batch_number, di.expiration_date, dh.oper_time, di.sku,
         di.basic_number
         from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id
@@ -1282,16 +1283,16 @@
         and di.delete_flag!=1
         and (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离'))
         ) tb
-        group by batch_number
+        group by batch_number, sku
         order by batch_number asc
     </select>
 
     <select id="getBatchNumberListWithoutMergingAllocation" resultMap="batchNumberListMap">
-        select id, bar_code, name, color_code, model, unit_id, oper_time, sn_list, GROUP_CONCAT(organ SEPARATOR ',') as organ_id,
+        select id, bar_code, name, color_code, model, unit_id, oper_time, sn_list, ifnull(sku, '') as sku,
+        GROUP_CONCAT(organ SEPARATOR ',') as organ_id,
         commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
-        (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
-        me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time,
-        di.sn_list,
+        (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id, me.commodity_unit,
+        di.batch_number, di.expiration_date, dh.oper_time, di.sn_list, di.sku,
         (case when dh.type='入库' then dh.organ_id
         else ''
         end) as organ,
@@ -1319,9 +1320,8 @@
         </if>
         and di.delete_flag!=1
         union all
-        select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
-        me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time,
-        di.material_type,
+        select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id, me.commodity_unit,
+        di.batch_number,di.expiration_date, dh.oper_time, di.material_type sn_list, di.sku,
         (case when dh.type='入库' then dh.organ_id
         else ''
         end) as organ,
@@ -1347,7 +1347,7 @@
         and di.delete_flag!=1
         and (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离'))
         ) tb
-        group by batch_number, sn_list
+        group by batch_number, sku, sn_list
         order by batch_number asc
     </select>
 

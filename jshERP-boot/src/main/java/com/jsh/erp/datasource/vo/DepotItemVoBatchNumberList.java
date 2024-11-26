@@ -20,10 +20,10 @@ public class DepotItemVoBatchNumberList {
     private String snList;
     private String snListStr;
     private BigDecimal totalNum;
-
-    private  String type;
-
+    private String type;
     private String organId;
+    private String sku;
+    private String packStr;
 
     public String getId() {
         return id;
@@ -151,6 +151,22 @@ public class DepotItemVoBatchNumberList {
 
     public void setOrganId(String organId) {
         this.organId = organId;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getPackStr() {
+        return packStr;
+    }
+
+    public void setPackStr(String packStr) {
+        this.packStr = packStr;
     }
 
     @Override

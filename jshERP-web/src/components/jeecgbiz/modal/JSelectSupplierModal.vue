@@ -73,8 +73,8 @@
         },
         categoryTree:[],
         columns: [
-          {dataIndex: 'id', title: '供应商代码', width: 50, align: 'left', ellipsis:true},
-          {dataIndex: 'supplierName', title: '供应商', width: 120, align: 'left', ellipsis:true},
+          {dataIndex: 'id', title: '客/供代码', width: 50, align: 'left', ellipsis:true},
+          {dataIndex: 'supplierName', title: '客户/供应商', width: 120, align: 'left', ellipsis:true},
           {dataIndex: 'pack', title: '标包', width: 50, ellipsis:true},
           {dataIndex: 'model', title: '零件号', width: 100, ellipsis:true},
           {dataIndex: 'unit', title: '单位', width: 50, ellipsis:true},
@@ -112,9 +112,7 @@
         }
       },
     },
-    created() {
-      this.loadData()
-    },
+    created() {},
     methods: {
       initBarCode() {
         if (this.barCode) {
@@ -128,21 +126,21 @@
         if(this.rows) {
           if(JSON.parse(this.rows).barCode){
             this.queryParam.barCode = JSON.parse(this.rows).barCode
+            if (arg === 1) {
+              this.ipagination.current = 1;
+            }
+            this.loading = true
+            let params = this.getQueryParams()//查询条件
+            getProductSupplierList(params).then((res) => {
+              if (res && res.code === 200) {
+                this.dataSource = res.data.rows
+                this.ipagination.total = res.data.total
+              }
+            }).finally(() => {
+              this.loading = false
+            })
           }
         }
-        if (arg === 1) {
-          this.ipagination.current = 1;
-        }
-        this.loading = true
-        let params = this.getQueryParams()//查询条件
-        getProductSupplierList(params).then((res) => {
-          if (res && res.code === 200) {
-            this.dataSource = res.data.rows
-            this.ipagination.total = res.data.total
-          }
-        }).finally(() => {
-          this.loading = false
-        })
       },
       showModal() {
         this.visible = true

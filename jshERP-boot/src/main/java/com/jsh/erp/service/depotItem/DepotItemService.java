@@ -17,6 +17,7 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
+import com.jsh.erp.service.productSupplier.ProductSupplierService;
 import com.jsh.erp.service.qrCode.QrCodeUtil;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
@@ -62,6 +63,8 @@ public class DepotItemService {
     private DepotHeadMapperEx depotHeadMapperEx;
     @Resource
     private SupplierService supplierService;
+    @Resource
+    private ProductSupplierService productSupplierService;
     @Resource
     private UserService userService;
     @Resource
@@ -823,49 +826,7 @@ public class DepotItemService {
                         for (DepotItemVoBatchNumberList batch : batchNumberList) {
                             if (depotItem.getBatchNumber().equals(batch.getBatchNumber())
                                     && batch.getSnList() != null && batch.getSnList().equals(depotItem.getSnList())
-                                    && batch.getTotalNum().compareTo(depotItem.getOperNumber()) < 0)
-                                throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
-                                        String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
-                        }
-                    }
-                    //当出库类型不是调拨时，根据先入先出自动填充批号
-                    else if (depotItem.getBatchNumber() == null || "".equals(depotItem.getBatchNumber())) {
-                        List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
-                                null, null, depotItem.getDepotId(), barCode, null);
-                        if (batchNumberList.size() == 0) {
-                            throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
-                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
-                        }
-                        Optional<BigDecimal> total = batchNumberList.stream()
-                                .map(e -> e.getTotalNum())
-                                .reduce((a,b)->a.add(b));
-                        if (!total.isPresent() || total.get().compareTo(depotItem.getOperNumber()) < 0) {
-                            throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
-                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
-                        }
-                        sortedByBatchNumber = batchNumberList.stream()
-                                .filter(b -> b.getTotalNum().compareTo(BigDecimal.ZERO) > 0)
-                                .sorted(Comparator.comparing(DepotItemVoBatchNumberList::getOperTime))
-                                .collect(Collectors.toList());
-                    }
-                    BigDecimal stock = getStockByParam(depotItem.getDepotId(), depotItem.getMaterialId(), null, null);
-                    BigDecimal thisBasicNumber = depotItem.getBasicNumber() == null ? BigDecimal.ZERO : depotItem.getBasicNumber();
-                    if (!systemConfigService.getMinusStockFlag() && stock.compareTo(thisBasicNumber) < 0) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
-                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, material.getName()));
-                    }
-                }
-                if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
-                    if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
-                        List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
-                                null, null, depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
-                        if (batchNumberList.size() == 0) {
-                            throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
-                                    String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
-                        }
-                        for (DepotItemVoBatchNumberList batch : batchNumberList) {
-                            if (depotItem.getBatchNumber().equals(batch.getBatchNumber())
-                                    && batch.getSnList() != null && batch.getSnList().equals(depotItem.getSnList())
+                                    && batch.getSku() != null && batch.getSku().equals(depotItem.getSku())
                                     && batch.getTotalNum().compareTo(depotItem.getOperNumber()) < 0)
                                 throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
                                         String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
@@ -1573,6 +1534,9 @@ public class DepotItemService {
         return count;
     }
 
+    /**
+     * 总数为0的batch也包括，用于差异入库
+     */
     public List<DepotItemVoBatchNumberList> getBatchNumberListZero(String number, String name, Long depotId, String barCode, String batchNumber) throws Exception {
         List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
         List<DepotAllocation> allocations = depotAllocationService.getDepotAllocation();
@@ -1589,7 +1553,7 @@ public class DepotItemService {
                     String commodityUnit = bn.getCommodityUnit();
                     bn.setTotalNum(unitService.parseStockByUnit(bn.getTotalNum(), unit, commodityUnit));
                 }
-                bn.setId(bn.getBatchNumber() + "饕" + (bn.getSnList() == null ? "" : bn.getSnList()));
+                bn.setId(bn.getBatchNumber() + "饕" + (bn.getSnList() == null ? "" : bn.getSnList()) + "饕" + (bn.getSku() == null ? "" : bn.getSku()));
                 if(bn.getSnList() != null && !"".equals(bn.getSnList())) {
                     try {
                         StringBuilder sb = new StringBuilder();
@@ -1620,6 +1584,7 @@ public class DepotItemService {
         List<DepotItemVoBatchNumberList> mergedByBatchNumber =  depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
         Set<String> nonZeroBatches = new HashSet<>();
         for (DepotItemVoBatchNumberList di : mergedByBatchNumber) {
+            logger.info("XXXXX " + di.getBatchNumber() + di.getSku());
             if (di.getTotalNum() != null && di.getTotalNum().compareTo(BigDecimal.ZERO) != 0) {
                 nonZeroBatches.add(di.getBatchNumber());
             }
@@ -1652,7 +1617,18 @@ public class DepotItemService {
                         bn.setOrganId(null);
                     }
                 }
-                bn.setId(bn.getBatchNumber() + "饕" + (bn.getSnList() == null ? "" : bn.getSnList()));
+                if(bn.getSku() != null && !"".equals(bn.getSku())) {
+                    try {
+                        ProductSupplier ps = productSupplierService.getProductSupplier(Long.parseLong(bn.getSku()));
+                        bn.setPackStr(ps.getPack());
+                    } catch (Exception e) {}
+                } else {
+                    List<ProductSupplierVo4Info> psList = productSupplierService.getProductSupplierList(null, barCode);
+                    Set<String> packSet = psList.stream().map(e -> e.getPack() == null ? "" : e.getPack()).collect(Collectors.toSet());
+                    packSet.remove("");
+                    bn.setPackStr("（未指定）" + String.join("-", packSet));
+                }
+                bn.setId(bn.getBatchNumber() + "饕" + (bn.getSnList() == null ? "" : bn.getSnList()) + "饕" + (bn.getSku() == null ? "" : bn.getSku()));
                 if(bn.getSnList() != null && !"".equals(bn.getSnList())) {
                     try {
                         StringBuilder sb = new StringBuilder();

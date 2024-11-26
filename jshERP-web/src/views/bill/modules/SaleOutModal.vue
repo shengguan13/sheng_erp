@@ -59,7 +59,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户订单号" data-step="2" data-title="客户订单号"
               data-intro="">
-              <a-input placeholder="请输入客户订单号" v-decorator.trim="[ 'payType' ]"/>
+              <a-input placeholder="请输入客户订单号" v-decorator="[ 'payType', validatorRules.payType ]"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -233,6 +233,7 @@
             { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '货位', key: 'snList', width: '6%', type: FormTypes.hidden},
             { title: '货位', key: 'snListStr', width: '8%', type: FormTypes.normal},
+            { title: '客/供代码', key: 'sku', width: '6%', type: FormTypes.hidden},
             { title: '出库数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -260,6 +261,11 @@
           linkNumber:{
             rules: [
               { required: true, message: '请选择销售订单！' }
+            ]
+          },
+          payType: {
+            rules: [
+              { required: true, message: '请输入客户订单号！' }
             ]
           },
           changeAmount:{

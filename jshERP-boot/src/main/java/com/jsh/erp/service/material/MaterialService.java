@@ -419,7 +419,7 @@ public class MaterialService {
                 List<MaterialCategory> categories = materialCategoryService.getMaterialCategory();
                 if ("lihongjun".equals(user.getLoginName())) {
                     for (MaterialCategory category : categories) {
-                        if ("半成品".equals(category.getName()) || "项目".equals(category.getName())) {
+                        if ("半成品".equals(category.getName()) || "总成".equals(category.getName()) || "项目".equals(category.getName())) {
                             idList.add(category.getId());
                         }
                     }
@@ -454,7 +454,7 @@ public class MaterialService {
                 List<MaterialCategory> categories = materialCategoryService.getMaterialCategory();
                 if ("lihongjun".equals(user.getLoginName())) {
                     for (MaterialCategory category : categories) {
-                        if ("半成品".equals(category.getName()) || "项目".equals(category.getName())) {
+                        if ("半成品".equals(category.getName()) || "总成".equals(category.getName()) || "项目".equals(category.getName())) {
                             idList.add(category.getId());
                         }
                     }

@@ -127,7 +127,8 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.input //输入
               }
             } else if(key === 'sku') {
-              if(this.prefixNo === 'CGDD' || this.prefixNo === 'CGSQ') {
+              if(this.prefixNo === 'CGDD' || this.prefixNo === 'CGSQ' || this.prefixNo === 'QTRK'
+                || this.prefixNo === 'FXRK' || this.prefixNo === 'SCRK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
@@ -443,11 +444,44 @@ export const BillModalMixin = {
           }
           break;
         case "snList":
-            param = {
-              id: row.snList,
-            }
-            if (this.prefixNo === 'CGRK' || this.prefixNo === 'TLRK' || this.prefixNo === 'QTRK'
-              || this.prefixNo === 'FXRK' || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH') {
+          if (this.prefixNo === 'CGRK' || this.prefixNo === 'TLRK' || this.prefixNo === 'QTRK'
+            || this.prefixNo === 'FXRK' || this.prefixNo === 'SCRK' || this.prefixNo === 'XSTH') {
+            if (row.snList.indexOf(',') > -1) {
+              let allocationArr = row.snList.split(",")
+              //多个货位
+              this.$refs.materialDataTable.getValues((error, values) => {
+                let toRemove = {}
+                let j = 0
+                for (; j < values.length; j++) {
+                  if (values[j].id == row.id) {
+                    toRemove = values[j]
+                  }
+                }
+                values = values.filter(item => item.id != row.id)
+                let mArr = values
+                for (let i = 0; i < allocationArr.length; i++) {
+                  let allocationId = allocationArr[i]
+                  console.log("allocationId: " + allocationId)
+                  param = {
+                    id: allocationId,
+                  }
+                  getDepotAllocation(param).then((res) => {
+                    if (res && res.code === 200) {
+                      let mObj = JSON.parse(JSON.stringify(toRemove))
+                      mObj.snListStr = res.data.allocation
+                      mObj.snList = allocationId
+                      delete mObj.id
+                      console.log("row: " + JSON.stringify(mObj))
+                      mArr.push(mObj)
+                    }
+                  })
+                }
+                this.materialTable.dataSource = mArr
+              })
+            } else {
+              param = {
+                id: row.snList,
+              }
               getDepotAllocation(param).then((res) => {
                 if (res && res.code === 200) {
                   target.setValues([{rowKey: row.id, values: {snListStr: res.data.allocation}}])
@@ -456,21 +490,22 @@ export const BillModalMixin = {
               target.autoSelectBySpecialKey('operNumber', row.orderNum)
               target.autoSelectBySpecialKey('batchNumber', row.orderNum)
             }
-            break;
+          }
+          break;
         case "materialType":
-            param = {
-              id: row.materialType,
-            }
-            if (this.prefixNo === 'DBCK') {
-              getDepotAllocation(param).then((res) => {
-                if (res && res.code === 200) {
-                  target.setValues([{rowKey: row.id, values: {materialTypeStr: res.data.allocation}}])
-                }
-              })
-              target.autoSelectBySpecialKey('operNumber', row.orderNum)
-              target.autoSelectBySpecialKey('batchNumber', row.orderNum)
-            }
-            break;
+          param = {
+            id: row.materialType,
+          }
+          if (this.prefixNo === 'DBCK') {
+            getDepotAllocation(param).then((res) => {
+              if (res && res.code === 200) {
+                target.setValues([{rowKey: row.id, values: {materialTypeStr: res.data.allocation}}])
+              }
+            })
+            target.autoSelectBySpecialKey('operNumber', row.orderNum)
+            target.autoSelectBySpecialKey('batchNumber', row.orderNum)
+          }
+          break;
         case "batchNumber":
           param = {
             barCode: row.barCode,
@@ -495,6 +530,9 @@ export const BillModalMixin = {
                     target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
                     if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
                       target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
+                      if (batchInfo.sku != null && batchArr.length > 2 && batchInfo.sku === batchArr[2]) {
+                        target.setValues([{rowKey: row.id, values: {sku: batchInfo.sku}}])
+                      }
                     }
                     target.recalcAllStatisticsColumns()
                   }
@@ -517,6 +555,9 @@ export const BillModalMixin = {
                     target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
                     if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
                       target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
+                      if (batchInfo.sku != null && batchArr.length > 2 && batchInfo.sku === batchArr[2]) {
+                        target.setValues([{rowKey: row.id, values: {sku: batchInfo.sku}}])
+                      }
                     }
                     target.recalcAllStatisticsColumns()
                   }

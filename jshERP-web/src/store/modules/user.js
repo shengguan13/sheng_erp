@@ -46,9 +46,9 @@ const user = {
           if(response.success){
             const result = response.result
             const userInfo = result.userInfo
-            Vue.ls.set(ACCESS_TOKEN, result.token, 10 * 60 * 60 * 1000)
-            Vue.ls.set(USER_NAME, userInfo.username, 10 * 60 * 60 * 1000)
-            Vue.ls.set(USER_INFO, userInfo, 10 * 60 * 60 * 1000)
+            Vue.ls.set(ACCESS_TOKEN, result.token, 16 * 60 * 60 * 1000)
+            Vue.ls.set(USER_NAME, userInfo.username, 16 * 60 * 60 * 1000)
+            Vue.ls.set(USER_INFO, userInfo, 16 * 60 * 60 * 1000)
             commit('SET_TOKEN', result.token)
             commit('SET_INFO', userInfo)
             commit('SET_NAME', { username: userInfo.username,realname: userInfo.realname, welcome: welcome() })
@@ -69,10 +69,10 @@ const user = {
           if(response.code ==200){
             if(response.data.msgTip == 'user can login'){
               const result = response.data
-              Vue.ls.set(USER_ID, result.user.id, 10 * 60 * 60 * 1000);
-              Vue.ls.set(USER_LOGIN_NAME, result.user.loginName, 10 * 60 * 60 * 1000);
-              Vue.ls.set(ACCESS_TOKEN, result.token, 10 * 60 * 60 * 1000)
-              Vue.ls.set(USER_INFO, result.user, 10 * 60 * 60 * 1000)
+              Vue.ls.set(USER_ID, result.user.id, 16 * 60 * 60 * 1000);
+              Vue.ls.set(USER_LOGIN_NAME, result.user.loginName, 16 * 60 * 60 * 1000);
+              Vue.ls.set(ACCESS_TOKEN, result.token, 16 * 60 * 60 * 1000)
+              Vue.ls.set(USER_INFO, result.user, 16 * 60 * 60 * 1000)
               commit('SET_TOKEN', result.token)
             }
             commit('SET_INFO', userInfo)
@@ -129,9 +129,9 @@ const user = {
           if(response.code =='200'){
             const result = response.result
             const userInfo = result.userInfo
-            Vue.ls.set(ACCESS_TOKEN, result.token, 10 * 60 * 60 * 1000)
-            Vue.ls.set(USER_NAME, userInfo.username, 10 * 60 * 60 * 1000)
-            Vue.ls.set(USER_INFO, userInfo, 10 * 60 * 60 * 1000)
+            Vue.ls.set(ACCESS_TOKEN, result.token, 16 * 60 * 60 * 1000)
+            Vue.ls.set(USER_NAME, userInfo.username, 16 * 60 * 60 * 1000)
+            Vue.ls.set(USER_INFO, userInfo, 16 * 60 * 60 * 1000)
             commit('SET_TOKEN', result.token)
             commit('SET_INFO', userInfo)
             commit('SET_NAME', { username: userInfo.username,realname: userInfo.realname, welcome: welcome() })

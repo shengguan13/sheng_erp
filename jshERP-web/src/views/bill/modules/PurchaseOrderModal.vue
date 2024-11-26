@@ -40,7 +40,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合同编号" data-step="2" data-title="合同编号"
               data-intro="">
-              <a-input placeholder="请输入合同编号" v-decorator.trim="[ 'payType' ]"/>
+              <a-input placeholder="请输入合同编号" v-decorator="[ 'payType',  validatorRules.payType]"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -190,7 +190,7 @@
             { title: '税率', key: 'taxRate', width: '4%', type: FormTypes.inputNumber,placeholder: '%'},
             { title: '税额', key: 'taxMoney', width: '5%', type: FormTypes.inputNumber, readonly: true, statistics: true },
             { title: '价税合计', key: 'taxLastMoney', width: '7%', type: FormTypes.inputNumber, statistics: true },
-            { title: '供应商代码', key: 'sku', width: '6%', type: FormTypes.popupJsh, kind: 'supplier', multi: false,
+            { title: '客/供代码', key: 'sku', width: '6%', type: FormTypes.popupJsh, kind: 'supplier', multi: false,
               validateRules: [{ required: true, message: '${title}不能为空' }]},
             { title: '到货日期', key: 'expirationDate',width: '6%', type: FormTypes.date },
             { title: '收货地', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
@@ -211,7 +211,12 @@
             rules: [
               { required: true, message: '请选择采购订单！' }
             ]
-          }
+          },
+          payType:{
+            rules: [
+              { required: true, message: '请输入合同编号!' }
+            ]
+          },
         },
         url: {
           add: '/depotHead/addDepotHeadAndDetail',
