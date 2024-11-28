@@ -816,6 +816,7 @@ public class DepotItemService {
                 List<DepotItemVoBatchNumberList> sortedByBatchNumber = null;
                 // 出库时判断库存是否充足
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
+                    logger.info("XXXXX out batch/sn/sku: " + depotItem.getBatchNumber() + "/" + depotItem.getSnList() + "/" + depotItem.getSku());
                     if (depotItem.getBatchNumber() != null && !"".equals(depotItem.getBatchNumber())) {
                         List<DepotItemVoBatchNumberList> batchNumberList = getBatchNumberList(
                                 null, null, depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
@@ -824,9 +825,10 @@ public class DepotItemService {
                                     String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
                         }
                         for (DepotItemVoBatchNumberList batch : batchNumberList) {
+                            logger.info("XXXXX existing batch/sn/sku: " + batch.getBatchNumber() + "/" + batch.getSnList() + "/" + batch.getSku());
                             if (depotItem.getBatchNumber().equals(batch.getBatchNumber())
-                                    && batch.getSnList() != null && batch.getSnList().equals(depotItem.getSnList())
-                                    && batch.getSku() != null && batch.getSku().equals(depotItem.getSku())
+                                    && ifEmpty(batch.getSnList()).equals(ifEmpty(depotItem.getSnList()))
+                                    && ifEmpty(batch.getSku()).equals(ifEmpty(depotItem.getSku()))
                                     && batch.getTotalNum().compareTo(depotItem.getOperNumber()) < 0)
                                 throw new BusinessRunTimeException(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_CODE,
                                         String.format(ExceptionConstants.BATCH_STOCK_NOT_ENOUGH_MSG, barCode, depotItem.getBatchNumber()));
@@ -1001,6 +1003,10 @@ public class DepotItemService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_MSG));
         }
+    }
+
+    private String ifEmpty(String input) {
+        return input == null ? "" : input;
     }
     /**
      * 判断父单据的状态

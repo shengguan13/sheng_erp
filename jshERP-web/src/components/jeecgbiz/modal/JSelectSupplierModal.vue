@@ -75,6 +75,7 @@
         columns: [
           {dataIndex: 'id', title: '客/供代码', width: 50, align: 'left', ellipsis:true},
           {dataIndex: 'supplierName', title: '客户/供应商', width: 120, align: 'left', ellipsis:true},
+          {dataIndex: 'manufactory', title: '制造商', width: 120, align: 'left', ellipsis:true},
           {dataIndex: 'pack', title: '标包', width: 50, ellipsis:true},
           {dataIndex: 'model', title: '零件号', width: 100, ellipsis:true},
           {dataIndex: 'unit', title: '单位', width: 50, ellipsis:true},

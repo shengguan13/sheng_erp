@@ -217,11 +217,9 @@
         let dataSource = this.dataSource;
         let ids = "";
         this.selectRows = [];
-        for (let i = 0, len = dataSource.length; i < len; i++) {
-          if (this.selectedRowKeys.includes(dataSource[i].id)) {
-            this.selectRows.push(dataSource[i]);
-            ids = ids + "," + dataSource[i].id
-          }
+        console.log("selectedRowKeys: " + JSON.stringify(this.selectedRowKeys))
+        for (let i = 0, len = this.selectedRowKeys.length; i < len; i++) {
+          ids = ids + "," + this.selectedRowKeys[i]
         }
         this.selectIds = ids.substring(1);
       },

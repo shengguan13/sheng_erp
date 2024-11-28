@@ -19,6 +19,9 @@
           关闭
         </a-button>
       </template>
+      <template>
+        <a-button @click="handleSelectMaterial"><a-icon type="setting"/>选择物料编码</a-button>
+      </template>
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item label="客商名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -51,7 +54,7 @@
         </a-form>
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料编码">
-            <a-input placeholder="物料编码" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
+            <a-input :readOnly="true" placeholder="物料编码" v-decorator.trim="[ 'barCode', validatorRules.barCode]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
@@ -62,11 +65,6 @@
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="标包">
             <a-input placeholder="标包" v-decorator.trim="[ 'pack' ]" />
-          </a-form-item>
-        </a-form>
-        <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
-            <a-input placeholder="单位" v-decorator.trim="[ 'unit', validatorRules.unit ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
@@ -81,6 +79,7 @@
         </a-form>
       </a-spin>
     </a-modal>
+    <select-material ref="selectMaterialForm" @ok="selectMaterialFormOk"></select-material>
   </div>
 </template>
 <script>
@@ -88,8 +87,12 @@
   import {addProductSupplier,editProductSupplier } from '@/api/api'
   import {mixinDevice} from '@/utils/mixin'
   import { postAction } from '@api/manage'
+  import SelectMaterial from '@/views/bill/dialog/SelectMaterial'
   export default {
     name: "ProductSupplierModal",
+    components: {
+      SelectMaterial
+    },
     mixins: [mixinDevice],
     data () {
       return {
@@ -128,11 +131,6 @@
             rules: [
               { required: true, message: '请输入物料编码!' }
             ]
-          },
-          unit:{
-            rules: [
-              { required: true, message: '请输入单位!' }
-            ]
           }
         }
       }
@@ -152,8 +150,19 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'supplierId', 'supplierType', 'model',
-          'barCode', 'purchaseCycle', 'manufactory', 'pack', 'unit', 'priceNoTax', 'taxRate'))
+          'barCode', 'purchaseCycle', 'manufactory', 'pack', 'priceNoTax', 'taxRate'))
         });
+      },
+      selectMaterialFormOk(ids) {
+        this.form.setFieldsValue({
+          'barCode': ids
+        })
+      },
+      handleSelectMaterial () {
+        console.log("handleSelectMaterial")
+        this.$refs.selectMaterialForm.add();
+        this.$refs.selectMaterialForm.title = "选择物料编码";
+        this.$refs.selectMaterialForm.disableSubmit = false;
       },
       close () {
         this.$emit('close');
