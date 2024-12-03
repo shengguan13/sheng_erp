@@ -68,18 +68,20 @@
         </span>
         <template slot="customRenderStatus" slot-scope="text, record">
           <template v-if="!queryParam.purchaseStatus">
-          <!-- TODO: 添加领料出库的状态，领料出库只需要两个状态：有退料、无退料 -->
+          <!-- 领料出库只需要两个状态：有退料、无退料 -->
             <a-tag v-if="record.status === '0'" color="red">未审核</a-tag>
             <a-tag v-if="record.status === '1'" color="green">已审核</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">完成采购</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">完成生产</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">完成生产</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">已入库</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '采购申请'" color="cyan">已下单</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">已出库</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">已下单</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">已入库</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分生产</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分生产</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '采购申请'" color="blue">部分下单</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分入库</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分出库</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分下单</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分入库</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
           </template>
           <!-- 销售转采购 -->
@@ -117,7 +119,7 @@
   import { getAction } from '@/api/manage'
   import Vue from 'vue'
   export default {
-    name: 'LinkBillList',
+    name: 'SalesManBasedLinkBillList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
       BillDetail
@@ -157,7 +159,6 @@
         },
         // 表头
         columns: [
-          { title: '', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:130,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
@@ -169,6 +170,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
+          { title: '领料人', dataIndex: 'salesManStr',width:70},
           { title: '制单人', dataIndex: 'userName',width:70},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
@@ -176,11 +178,14 @@
           }
         ],
         columnsDetail: [
-          { title: '编码', dataIndex: 'barCode',width:120},
+          { title: '编码', dataIndex: 'barCode',width:50},
           { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
-          { title: '零件号', dataIndex: 'model',width:150, ellipsis:true},
-          { title: '数量', dataIndex: 'operNumber',width:80},
-          { title: '单位', dataIndex: 'unit',width:50},
+          { title: '客/供型号', dataIndex: 'supplierModel',width:100, ellipsis:true},
+          { title: '零件号', dataIndex: 'model',width:100, ellipsis:true},
+          { title: '扩展信息', dataIndex: 'materialOther',width:50, ellipsis:true},
+          { title: '数量', dataIndex: 'operNumber',width:50},
+          { title: '已退料', dataIndex: 'finishNumber',width:60},
+          { title: '单位', dataIndex: 'unit',width:40},
           { title: '备注', dataIndex: 'remark',width:100, ellipsis:true},
         ],
         dataSource:[],
@@ -205,7 +210,6 @@
         this.queryParam.subType = subType
         this.queryParam.roleType = Vue.ls.get('roleType')
         this.queryParam.status = status
-        this.columns[0].title = organType
         this.model = Object.assign({}, {});
         this.visible = true;
         this.loadData(1)

@@ -27,13 +27,8 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退料人">
-              <a-select placeholder="选择领料人" v-decorator="[ 'salesMan', validatorRules.salesMan ]"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
-                  {{ item.text }}
-                </a-select-option>
-              </a-select>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="领料人">
+              <a-input placeholder="领料人" v-decorator.trim="[ 'salesMan' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">

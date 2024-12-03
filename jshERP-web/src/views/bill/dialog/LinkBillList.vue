@@ -63,17 +63,17 @@
                   <a-select placeholder="选择单据状态" v-model="queryParam.status">
                     <a-select-option value="0">未审核</a-select-option>
                     <a-select-option value="1">已审核</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '采购订单'" value="3">部分采购</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '采购申请'" value="3">部分采购</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '销售订单'" value="3">部分采购</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '生产计划'" value="3">部分采购</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '生产单'" value="3">部分采购</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '采购订单'" value="3">部分到货</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '采购申请'" value="3">部分下单</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '销售订单'" value="3">部分出库</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '生产计划'" value="3">部分下单</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '生产单'" value="3">部分入库</a-select-option>
                     <a-select-option v-if="queryParam.subType === '领料'" value="3">有退料</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '采购订单'" value="2">完成采购</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '采购订单'" value="2">已到货</a-select-option>
                     <a-select-option v-if="queryParam.subType === '采购申请'" value="2">已下单</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '销售订单'" value="2">完成销售</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '生产计划'" value="2">完成生产</a-select-option>
-                    <a-select-option v-if="queryParam.subType === '生产单'" value="2">完成生产</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '销售订单'" value="2">已出库</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '生产计划'" value="2">已下单</a-select-option>
+                    <a-select-option v-if="queryParam.subType === '生产单'" value="2">已入库</a-select-option>
                     <a-select-option v-if="queryParam.subType === '领料'" value="2">有退料</a-select-option>
                   </a-select>
                 </a-form-item>
@@ -104,17 +104,17 @@
           <!-- 领料出库只需要两个状态：有退料、无退料 -->
             <a-tag v-if="record.status === '0'" color="red">未审核</a-tag>
             <a-tag v-if="record.status === '1'" color="green">已审核</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">完成采购</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">已入库</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '采购申请'" color="cyan">已下单</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">完成生产</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">完成生产</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">已出库</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">已下单</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">已入库</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '采购申请'" color="blue">部分下单</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分生产</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分生产</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分入库</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分出库</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分下单</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分入库</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
           </template>
           <!-- 销售转采购 -->

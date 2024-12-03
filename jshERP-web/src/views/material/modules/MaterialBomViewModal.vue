@@ -84,6 +84,12 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料编码">
                   <a-input :readOnly="true" placeholder="请选择物料编码" v-decorator="['barCode', validatorRules.barCode]"/>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
+                  <a-input :readOnly="true" placeholder="名称" v-decorator="['name']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零件号">
+                  <a-input :readOnly="true" placeholder="零件号" v-decorator="['model']"/>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级物料编码">
                   <a-input placeholder="请输入上级物料编码" v-decorator="['upper', validatorRules.upper]"/>
                 </a-form-item>
@@ -123,8 +129,11 @@
   import pick from 'lodash.pick'
   import { mixinDevice } from '@/utils/mixin'
   import { getAction, httpAction, deleteAction } from '@/api/manage'
+  import { getMaterialByBarCode } from '@/api/api'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import { getMpListShort } from "@/utils/util"
   import SelectMaterial from '@/views/bill/dialog/SelectMaterial'
+  import Vue from 'vue'
   export default {
     name: "MaterialBomViewModal",
     components: {
@@ -212,8 +221,21 @@
         this.$refs.selectMaterialForm.disableSubmit = false;
       },
       selectMaterialFormOk(ids) {
-        this.form.setFieldsValue({
-          'barCode': ids
+        let param = {
+          barCode: ids,
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList'))
+        }
+        getMaterialByBarCode(param).then((res) => {
+          if (res && res.code === 200) {
+            let mList = res.data
+            let mInfo = mList[0]
+            console.log("mInfo: " + JSON.stringify(mInfo))
+            this.form.setFieldsValue({
+              'barCode': ids,
+              'name': mInfo.name,
+              'model': mInfo.model
+            })
+          }
         })
       },
       close () {
@@ -352,6 +374,8 @@
             record.processUsage = res.data[0].processUsage;
             record.source = res.data[0].source;
             record.barCode = res.data[0].barCode;
+            record.name = res.data[0].name;
+            record.model = res.data[0].model;
             console.log('onSelect-record', JSON.stringify(record))
             this.currSelected = Object.assign({}, record)
             this.model = this.currSelected
@@ -363,7 +387,7 @@
       // 触发onSelect事件时,为类别树右侧的form表单赋值
       setValuesToForm(record) {
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(record, 'barCode', 'upper', 'unit', 'source', 'remark', 'project', 'processUsage'))
+          this.form.setFieldsValue(pick(record, 'barCode', 'name', 'model', 'upper', 'unit', 'source', 'remark', 'project', 'processUsage'))
         })
       },
       getCurrSelectedTitle() {

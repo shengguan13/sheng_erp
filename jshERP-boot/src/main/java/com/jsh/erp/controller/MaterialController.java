@@ -192,6 +192,7 @@ public class MaterialController {
                                    @RequestParam(value = "q", required = false) String q,
                                    @RequestParam(value = "mpList", required = false) String mpList,
                                    @RequestParam(value = "depotId", required = false) Long depotId,
+                                   @RequestParam(value = "upper", required = false) String upper,
                                    @RequestParam("page") Integer currentPage,
                                    @RequestParam("rows") Integer pageSize,
                                    HttpServletRequest request) throws Exception{
@@ -202,8 +203,8 @@ public class MaterialController {
                 mpArr= mpList.split(",");
             }
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(
-                    categoryId, q,(currentPage-1)*pageSize, pageSize);
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
+                    categoryId, q, upper, (currentPage-1)*pageSize, pageSize);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, upper);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组

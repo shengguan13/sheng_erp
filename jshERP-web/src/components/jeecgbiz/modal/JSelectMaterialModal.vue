@@ -61,6 +61,9 @@
             :loading="loading"
             :customRow="rowAction"
             @change="handleTableChange">
+            <span slot="action" slot-scope="text, record">
+              <a @click="handleChildren(record)">下级</a>
+            </span>
             <template slot="customBarCode" slot-scope="text, record">
               {{record.mBarCode}}
               <a-popover placement="right" trigger="click">
@@ -98,7 +101,7 @@
     props: ['rows', 'multi', 'barCode'],
     data() {
       return {
-        modalWidth: 1450,
+        modalWidth: 1550,
         queryParam: {
           q: '',
           categoryId: '',
@@ -114,6 +117,12 @@
         },
         categoryTree:[],
         columns: [
+          {
+            title: '操作',
+            dataIndex: 'action',
+            align:"center", width: 50,
+            scopedSlots: { customRender: 'action' },
+          },
           {dataIndex: 'mBarCode', title: '编码', scopedSlots: { customRender: 'customBarCode' }},
           {dataIndex: 'name', title: '名称', scopedSlots: { customRender: 'customName' }},
           {dataIndex: 'supplierModel', title: '客/供型号'},
@@ -229,7 +238,7 @@
       // 触发屏幕自适应
       resetScreenSize() {
         let realScreenWidth = window.screen.width
-        this.modalWidth = realScreenWidth<1600?'1200px':'1450px'
+        this.modalWidth = realScreenWidth<1600?'1400px':'1550px'
         let screenWidth = document.body.clientWidth;
         if (screenWidth < 500) {
           this.scrollTrigger = {x: 800};
@@ -300,6 +309,24 @@
         that.$emit('ok', that.selectMaterialRows, that.selectMaterialIds);
         that.searchReset(0)
         that.close();
+      },
+      handleChildren(record) {
+        let that = this;
+        that.ipagination.current = 1;
+        that.loading = true
+        let params = this.getQueryParams()//查询条件
+        params.upper = record.mBarCode
+        params.categoryId = ''
+        getMaterialBySelect(params).then((res) => {
+          if (res) {
+            that.dataSource = res.rows
+            that.ipagination.total = res.total
+            that.title = '选择产品'
+          }
+        }).finally(() => {
+          that.loading = false
+        })
+        //that.searchReset(0)
       },
       //获取选择信息
       getSelectMaterialRows(rowId) {

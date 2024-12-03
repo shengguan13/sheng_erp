@@ -58,7 +58,7 @@
     </resultMap>
 
     <select id="selectByConditionDepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
-        select distinct dh.*, s.supplier OrganName, u.username userName, a.name AccountName
+        select distinct dh.*, s.supplier OrganName, u.username userName, p.name salesManName
         from jsh_depot_head dh
         left join (
             select di.*, me.bar_code,
@@ -78,7 +78,7 @@
         on dh.id = di2.header_id and ifnull(di2.delete_flag,'0') !='1'
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
-        left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
+        left join jsh_person p on dh.sales_man=p.id and ifnull(p.delete_flag,'0') !='1'
         left join jsh_material m on di2.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
         <if test="type != null">
@@ -116,7 +116,8 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="salesMan != null">
-            and dh.sales_man like #{salesMan}
+            <bind name="bindSalesMan" value="'%'+salesMan+'%'"/>
+            and p.name like #{bindSalesMan}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -196,6 +197,7 @@
             where ifnull(di.delete_flag,'0') !='1') di2
         on dh.id = di2.header_id and ifnull(di2.delete_flag,'0') !='1'
         left join jsh_material m on di2.material_id = m.Id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_person p on dh.sales_man=p.id and ifnull(p.delete_flag,'0') !='1'
         WHERE 1=1
         <if test="type != null">
             and dh.type=#{type}
@@ -232,7 +234,8 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="salesMan != null">
-            and dh.sales_man like #{salesMan}
+            <bind name="bindSalesMan" value="'%'+salesMan+'%'"/>
+            and p.name like #{bindSalesMan}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>

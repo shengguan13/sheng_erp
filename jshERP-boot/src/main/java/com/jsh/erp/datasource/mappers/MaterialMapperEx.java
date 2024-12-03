@@ -56,6 +56,14 @@ public interface MaterialMapperEx {
     int findBySelectWithBarCodeCount(@Param("idList") List<Long> idList,
                                      @Param("q") String q);
 
+    List<MaterialVo4Unit> findByUpper(@Param("idList") List<Long> idList,
+                                      @Param("q") String q,
+                                      @Param("offset") Integer offset,
+                                      @Param("rows") Integer rows);
+
+    int findByUpperCount(@Param("idList") List<Long> idList,
+                         @Param("q") String q);
+
     List<MaterialVo4Unit> exportExcel(
             @Param("materialParam") String materialParam,
             @Param("color") String color,

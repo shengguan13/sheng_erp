@@ -51,12 +51,17 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="领料人" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择领料人" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                  <a-form-item label="制单人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择制单人" showSearch optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
                         {{ item.userName }}
                       </a-select-option>
                     </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="领料人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入领料人" v-model="queryParam.salesMan"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
@@ -167,6 +172,7 @@
           organId: "",
           depotId: "",
           creator: "",
+          salesMan: "",
           linkNumber: "",
           accountId: "",
           hasDebt: "",
@@ -207,6 +213,7 @@
             }
           },
           { title: '数量', dataIndex: 'materialCount',width:60},
+          { title: '领料人', dataIndex: 'salesManStr',width:80, ellipsis:true},
           { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }

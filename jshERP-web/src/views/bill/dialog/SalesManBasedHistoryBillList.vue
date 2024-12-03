@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1250"
+      :width="1450"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
@@ -21,12 +21,8 @@
         <a-form layout="inline" @keyup.enter.native="searchQuery">
           <a-row :gutter="24">
             <a-col :md="4" :sm="24">
-              <a-form-item :label="salesManLabel" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParam.salesMan" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                  <a-select-option v-for="(item,index) in salesManList" :key="index" :value="item.value">
-                    {{ item.text }}
-                  </a-select-option>
-                </a-select>
+              <a-form-item :label="领料人" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-input placeholder="请输入领料人" v-model="queryParam.salesMan"></a-input>
               </a-form-item>
             </a-col>
             <a-col :md="5" :sm="24">
@@ -113,8 +109,6 @@
         title: "历史单据",
         visible: false,
         disableMixinCreated: true,
-        salesManLabel: '',
-        salesManList: [],
         queryParam: {
           salesMan: "",
           number: "",
@@ -179,34 +173,9 @@
         this.queryParam.type = type
         this.queryParam.subType = subType
         this.columns[1].title = salesManType
-        this.salesManLabel = salesManType
         this.model = Object.assign({}, {})
         this.visible = true
-        this.loadSalesMan(salesManType, salesMan)
         this.loadData(1)
-      },
-      loadSalesMan(salesManType, salesMan) {
-        if (salesManType === "销售人员") {
-          getPersonByNumType({type:1}).then((res)=>{
-            if(res) {
-              this.salesManList = res
-              if(salesMan) {
-                this.queryParam.salesMan = salesMan
-                this.loadData(1)
-              }
-            }
-          })
-        } else if (salesManType === "领料人员") {
-          getPersonByNumType({type:2}).then((res)=>{
-            if(res) {
-              this.salesManList = res
-              if(salesMan) {
-                this.queryParam.salesMan = salesMan
-                this.loadData(1)
-              }
-            }
-          })
-        }
       },
       close () {
         this.$emit('close');

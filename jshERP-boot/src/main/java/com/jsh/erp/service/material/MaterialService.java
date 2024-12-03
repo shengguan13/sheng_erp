@@ -406,7 +406,7 @@ public class MaterialService {
         return idList;
     }
 
-    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q,
+    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String upper,
                                                          Integer offset, Integer rows)throws Exception{
         List<MaterialVo4Unit> list =null;
         try{
@@ -435,14 +435,18 @@ public class MaterialService {
                 q = q.replace("'", "");
                 q = q.trim();
             }
-            list=  materialMapperEx.findBySelectWithBarCode(idList, q, offset, rows);
+            if (StringUtil.isEmpty(upper)) {
+                list=  materialMapperEx.findBySelectWithBarCode(idList, q, offset, rows);
+            } else {
+                list=  materialMapperEx.findByUpper(idList, upper, offset, rows);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findBySelectWithBarCodeCount(Long categoryId, String q)throws Exception{
+    public int findBySelectWithBarCodeCount(Long categoryId, String q, String upper)throws Exception{
         int result=0;
         try{
             List<Long> idList = new ArrayList<>();
@@ -469,7 +473,11 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
             }
-            result = materialMapperEx.findBySelectWithBarCodeCount(idList, q);
+            if (StringUtil.isEmpty(upper)) {
+                result = materialMapperEx.findBySelectWithBarCodeCount(idList, q);
+            } else {
+                result = materialMapperEx.findByUpperCount(idList, upper);
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
