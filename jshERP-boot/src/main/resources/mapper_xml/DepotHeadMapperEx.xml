@@ -66,7 +66,7 @@
                     WHEN di.sku IS NOT NULL THEN ps.model
                     ELSE
                     (
-                    SELECT GROUP_CONCAT(ps2.model SEPARATOR ', ')
+                    SELECT GROUP_CONCAT(ps2.model SEPARATOR ';')
                     FROM jsh_product_supplier ps2
                     WHERE ps2.bar_code = me.bar_code
                     )
@@ -186,7 +186,7 @@
                     WHEN di.sku IS NOT NULL THEN ps.model
                     ELSE
                     (
-                    SELECT GROUP_CONCAT(ps2.model SEPARATOR ', ')
+                    SELECT GROUP_CONCAT(ps2.model SEPARATOR ';')
                     FROM jsh_product_supplier ps2
                     WHERE ps2.bar_code = me.bar_code
                     )
@@ -328,7 +328,7 @@
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
-        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ', ') as models_combined from
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ';') as models_combined from
         jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         left join (select id,name as dName,delete_Flag from jsh_depot ) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
@@ -392,7 +392,7 @@
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
-        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ', ') as models_combined from
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ';') as models_combined from
         jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         left join (select id,name as dName,delete_Flag from jsh_depot) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
@@ -457,7 +457,7 @@
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id=mc.Id and ifnull(mc.delete_flag,'0') !='1'
-        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ', ') as models_combined from
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ';') as models_combined from
         jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where me.default_flag=1
         and dh.type=#{type} and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
@@ -513,7 +513,7 @@
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
         left join jsh_material_category mc on m.category_id=mc.Id and ifnull(mc.delete_flag,'0') !='1'
-        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ', ') as models_combined from
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ';') as models_combined from
         jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where me.default_flag=1
         and dh.type=#{type} and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}

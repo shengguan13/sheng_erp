@@ -204,10 +204,6 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
-          { title: '金额合计', dataIndex: 'totalPrice',width:90},
-          { title: '已提交定金', dataIndex: 'changeAmount',width:90},
-          { title: '已提交收款', dataIndex: 'discount',width:90},
-          { title: '已申请退款', dataIndex: 'otherMoney',width:90},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

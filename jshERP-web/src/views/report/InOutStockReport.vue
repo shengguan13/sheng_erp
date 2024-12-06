@@ -21,6 +21,13 @@
                   </a-select>
                 </a-form-item>
               </a-col>
+              <a-col :md="3" :sm="24">
+                <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                       :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
+                  </a-tree-select>
+                </a-form-item>
+              </a-col>
               <a-col :md="4" :sm="24">
                 <a-form-item label="月份" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)"
@@ -37,11 +44,6 @@
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item>
-                  <span>总结存金额：{{totalCountMoneyStr}}</span>
-                </a-form-item>
               </a-col>
             </a-row>
           </a-form>
@@ -92,6 +94,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction } from '@/api/manage'
   import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import {queryMaterialCategoryTreeList} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -115,17 +118,18 @@
         },
         queryParam: {
           depotId:'',
+          categoryId:'',
           monthTime: moment().format('YYYY-MM'),
           materialParam:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
           pageSize: 11,
-          pageSizeOptions: ['11', '21', '31', '101', '201']
+          pageSizeOptions: ['11', '51', '101', '201', '501']
         },
         depotSelected:[],
         depotList: [],
-        totalCountMoneyStr: '0元',
+        categoryTree:[],
         // 表头
         columns: [
           {
@@ -137,7 +141,8 @@
           {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
           {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
           {title: '型号', dataIndex: 'materialModel'},
-          {title: '扩展信息', dataIndex: 'materialOther'},
+          {title: '客/供零件号', dataIndex: 'supplierModel'},
+          {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'unitName'},
           {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum},
           {title: '入库数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum},
@@ -148,14 +153,13 @@
         ],
         url: {
           list: "/depotItem/findByAll",
-          totalCountMoney: "/depotItem/totalCountMoney",
           exportXlsUrl: "/depotItem/exportExcel"
         }
       }
     },
     created() {
       this.getDepotData()
-      this.getTotalCountMoney()
+      this.loadTreeData()
     },
     mounted () {
       this.scroll.x = 1400
@@ -182,19 +186,17 @@
           }
         })
       },
-      getTotalCountMoney(){
-        let param = Object.assign({}, this.queryParam, this.isorter);
-        if(this.depotSelected && this.depotSelected.length>0) {
-          param.depotIds = this.depotSelected.join()
-        }
-        param.monthTime = this.queryParam.monthTime;
-        getAction(this.url.totalCountMoney, param).then((res)=>{
-          if(res && res.code === 200) {
-            let count = res.data.totalCount.toString();
-            if (count.lastIndexOf('.') > -1) {
-              count = count.substring(0, count.lastIndexOf('.') + 3);
+      loadTreeData(){
+        let that = this;
+        let params = {};
+        params.id='';
+        queryMaterialCategoryTreeList(params).then((res)=>{
+          if(res){
+            that.categoryTree = [];
+            for (let i = 0; i < res.length; i++) {
+              let temp = res[i];
+              that.categoryTree.push(temp);
             }
-            this.totalCountMoneyStr = count + "元";
           }
         })
       },
@@ -206,14 +208,13 @@
           this.$message.warning('请选择月份！')
         } else {
           this.loadData(1);
-          this.getTotalCountMoney();
         }
       },
       exportExcel() {
-        let aoa = [['编码', '名称', '型号', '规格', '扩展信息', '单位', '单价', '上月结存数量', '入库数量', '出库数量', '本月结存数量', '结存金额']]
+        let aoa = [['编码', '名称', '型号', '客/供零件号', '类别', '单位', '上月结存数量', '入库数量', '出库数量', '本月结存数量', '结存金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.materialName, ds.materialColorCode, ds.materialModel, ds.materialOther, ds.unitName, ds.unitPrice,
+          let item = [ds.barCode, ds.materialName, ds.materialModel, ds.supplierModel, ds.categoryName, ds.unitName,
             ds.prevSum, ds.inSum, ds.outSum, ds.thisSum, ds.thisAllPrice]
           aoa.push(item)
         }

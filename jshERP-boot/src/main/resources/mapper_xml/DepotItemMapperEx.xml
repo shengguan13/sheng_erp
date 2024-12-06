@@ -73,6 +73,8 @@
         <result column="MOtherField8" jdbcType="VARCHAR" property="MOtherField8" />
         <result column="MOtherField9" jdbcType="VARCHAR" property="MOtherField9" />
         <result column="MOtherField10" jdbcType="VARCHAR" property="MOtherField10" />
+        <result column="MCategoryName" jdbcType="VARCHAR" property="MCategoryName" />
+        <result column="supplier_model" jdbcType="VARCHAR" property="supplierModel" />
         <result column="unit_id" jdbcType="BIGINT" property="unitId" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
@@ -489,7 +491,7 @@
         WHEN di.sku IS NOT NULL THEN ps.model
         ELSE
         (
-        SELECT GROUP_CONCAT(ps2.model SEPARATOR ', ')
+        SELECT GROUP_CONCAT(ps2.model SEPARATOR ';')
         FROM jsh_product_supplier ps2
         WHERE ps2.bar_code = me.bar_code
         )
@@ -532,12 +534,15 @@
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,
+        m.other_field10 MOtherField10, mc.name MCategoryName, ps.models_combined supplier_model,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit,
         m.color MColor, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ';') as models_combined from
+        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where 1=1 and me.default_flag=1
@@ -546,6 +551,9 @@
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or m.mat like #{bindKey})
+        </if>
+        <if test="categoryId != null and categoryId != ''">
+            and m.category_id = #{categoryId}
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
@@ -570,6 +578,9 @@
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or m.mat like #{bindKey})
+        </if>
+        <if test="categoryId != null and categoryId != ''">
+            and m.category_id = #{categoryId}
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}

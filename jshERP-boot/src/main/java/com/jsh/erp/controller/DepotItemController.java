@@ -610,6 +610,7 @@ public class DepotItemController {
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam(value = "depotIds",required = false) String depotIds,
+                                      @RequestParam(value = "categoryId",required = false) String categoryId,
                                       @RequestParam("monthTime") String monthTime,
                                       @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
@@ -621,9 +622,9 @@ public class DepotItemController {
             String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
             List<Long> depotList = parseListByDepotIds(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
-                    timeB,(currentPage-1)*pageSize, pageSize);
+                    StringUtil.toNull(categoryId), timeB,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(StringUtil.toNull(materialParam), timeB);
+            int total = depotItemService.findByAllCount(StringUtil.toNull(materialParam), StringUtil.toNull(categoryId), timeB);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -635,6 +636,8 @@ public class DepotItemController {
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialColorCode", diEx.getMColorCode());
+                    item.put("categoryName", diEx.getMCategoryName());
+                    item.put("supplierModel", diEx.getSupplierModel());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
@@ -689,23 +692,7 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
-            String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
-            List<Long> depotList = parseListByDepotIds(depotIds);
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
-                    endTime, null, null);
-            BigDecimal thisAllPrice = BigDecimal.ZERO;
-            if (null != dataList) {
-                for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    Long mId = diEx.getMId();
-                    BigDecimal thisSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,endTime);
-                    BigDecimal unitPrice = diEx.getPurchaseDecimal();
-                    if(unitPrice == null) {
-                        unitPrice = BigDecimal.ZERO;
-                    }
-                    thisAllPrice = thisAllPrice.add(thisSum.multiply(unitPrice));
-                }
-            }
-            map.put("totalCount", thisAllPrice);
+
             res.code = 200;
             res.data = map;
         } catch (BusinessRunTimeException e) {

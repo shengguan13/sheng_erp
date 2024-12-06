@@ -8,7 +8,6 @@
     switchHelp
     switchFullscreen
     @ok="handleOk"
-    :ok-button-props="{ style: { display: 'none' } }"
     @cancel="handleCancel"
     cancelText="关闭"
     :id="prefixNo"
@@ -25,30 +24,30 @@
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称" data-step="1" data-title="名称" data-intro="名称必填，可以重复">
-                  <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name ]"/>
+                  <a-input :readOnly="true" placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name ]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零件号" data-step="2" data-title="零件号" data-intro="零件号">
-                  <a-input placeholder="请输入零件号" v-decorator.trim="[ 'model', validatorRules.model ]" />
+                  <a-input :readOnly="true" placeholder="请输入零件号" v-decorator.trim="[ 'model', validatorRules.model ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色" data-step="3" data-title="颜色"
                              data-intro="请填写零件的颜色">
-                  <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
+                  <a-input :readOnly="true" placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色代码" data-step="4" data-title="颜色代码" data-intro="颜色代码">
-                  <a-input placeholder="请输入颜色代码" v-decorator.trim="[ 'colorCode', validatorRules.colorCode ]"/>
+                  <a-input :readOnly="true" placeholder="请输入颜色代码" v-decorator.trim="[ 'colorCode', validatorRules.colorCode ]"/>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位" data-step="5" data-title="单位" data-intro="请输入单位">
-                  <a-input placeholder="输入单位" v-if="!unitChecked" v-decorator.trim="[ 'unit', validatorRules.unit ]" @change="onlyUnitOnChange" />
+                  <a-input :readOnly="true" placeholder="输入单位" v-if="!unitChecked" v-decorator.trim="[ 'unit', validatorRules.unit ]" @change="onlyUnitOnChange" />
                   <a-select :value="unitList" placeholder="选择多单位" v-decorator="[ 'unitId', validatorRules.unitId ]" @change="manyUnitOnChange"
                     showSearch optionFilterProp="children" v-if="unitChecked" :dropdownMatchSelectWidth="false">
                     <div slot="dropdownRender" slot-scope="menu">
@@ -67,20 +66,20 @@
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="重量" data-step="6" data-title="重量"
                   data-intro="请填写重量">
-                  <a-input-number style="width: 100%" placeholder="请输入重量(kg)" v-decorator.trim="[ 'weight' ]" />
+                  <a-input :readOnly="true" placeholder="请输入重量(kg)" v-decorator.trim="[ 'weight' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期/月" data-step="7" data-title="保质期/月"
                   data-intro="保质期指的是产品的保质期(月)，主要针对带生产日期的，此类产品一般有批号">
-                  <a-input-number style="width: 100%" placeholder="请输入保质期(月)" v-decorator.trim="[ 'expiryNum' ]" />
+                  <a-input :readOnly="true" placeholder="请输入保质期(月)" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="类别"
                   data-step="8" data-title="类别" data-intro="类别需要在【产品类别】页面进行录入，录入之后在此处进行调用">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-                                 :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
+                                 :treeData="categoryTree" v-decorator="[ 'categoryId', validatorRules.categoryId ]" placeholder="请选择类别">
                   </a-tree-select>
                 </a-form-item>
               </a-col>
@@ -88,7 +87,7 @@
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材质" data-step="9" data-title="材质" data-intro="名称必填，可以重复">
-                  <a-input placeholder="请输入材质" v-decorator.trim="[ 'mat' ]"/>
+                  <a-input :readOnly="true" placeholder="请输入材质" v-decorator.trim="[ 'mat' ]"/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -102,8 +101,8 @@
                 :minWidth="1000"
                 :maxHeight="300"
                 :rowNumber="false"
-                :rowSelection="true"
-                :actionButton="true"
+                :rowSelection="false"
+                :actionButton="false"
                 @valueChange="onValueChange"
                 @added="onAdded"
                 @deleted="onDeleted">
@@ -114,7 +113,7 @@
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="24" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-                  <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+                  <a-textarea :readOnly="true" :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -123,70 +122,70 @@
             <a-row v-if="mpShort.otherField1.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">
-                  <a-input v-decorator.trim="[ 'otherField1' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField1' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField2.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField2.name">
-                  <a-input v-decorator.trim="[ 'otherField2' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField2' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-show="mpShort.otherField3.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField3.name">
-                  <a-input v-decorator.trim="[ 'otherField3' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField3' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField4.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField4.name">
-                  <a-input v-decorator.trim="[ 'otherField4' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField4' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField5.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField5.name">
-                  <a-input v-decorator.trim="[ 'otherField5' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField5' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField6.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField6.name">
-                  <a-input v-decorator.trim="[ 'otherField6' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField6' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField7.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField7.name">
-                  <a-input v-decorator.trim="[ 'otherField7' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField7' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField8.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField8.name">
-                  <a-input v-decorator.trim="[ 'otherField8' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField8' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField9.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField9.name">
-                  <a-input v-decorator.trim="[ 'otherField9' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField9' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField10.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField10.name">
-                  <a-input v-decorator.trim="[ 'otherField10' ]" />
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField10' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -309,13 +308,13 @@
           dataSource: [],
           columns: [
             {
-              title: '编码', key: 'barCode', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
+              title: '编码', key: 'barCode', width: '15%', type: FormTypes.normal, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' },
-                { pattern: /^[A-Z]+\.[a-z]+\.(0\d*|\d+)\.(0\d*|\d+)$/, message: '参考格式ZC.jj.01.007' },
+                //{ pattern: /^[A-Z]+\.[a-z]+\.(0\d*|\d+)\.(0\d*|\d+)$/, message: '参考格式ZC.jj.01.007' },
                 { handler: this.validateBarCode}]
             },
             {
-              title: '单位', key: 'commodityUnit', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
+              title: '单位', key: 'commodityUnit', width: '8%', type: FormTypes.normal, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             }
           ]
@@ -350,6 +349,11 @@
           colorCode:{
             rules: [
               { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
+            ]
+          },
+          categoryId:{
+            rules: [
+              { required: true, message: '请选择物料类别!' }
             ]
           },
           model:{
@@ -395,7 +399,6 @@
           operNumber: 1,
         }
       },
-
       // 获取所有的editableTable实例
       getAllTable() {
         return Promise.all([
@@ -428,7 +431,7 @@
           }, 5)
         }
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model, 'name', 'colorCode', 'unit', 'unitId', 'model', 'color', 'project',
+          this.form.setFieldsValue(pick(this.model, 'name', 'colorCode', 'unit', 'unitId', 'model', 'color',
             'categoryId','expiryNum','weight','remark','mat',
             'otherField1','otherField2','otherField3','otherField4','otherField5','otherField6','otherField7',
             'otherField8','otherField9','otherField10'))
@@ -540,7 +543,6 @@
           name: this.model.name,
           model: this.parseParam(this.model.model),
           color: this.parseParam(this.model.color),
-          project: this.parseParam(this.model.project),
           colorCode: this.parseParam(this.model.colorCode),
           mat: this.parseParam(this.model.mat),
           otherField1: this.parseParam(this.model.otherField1),

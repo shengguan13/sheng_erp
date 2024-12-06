@@ -710,7 +710,6 @@
           }
         })
       },
-
       getNumByField(field) {
         let num = 0
         if(this.form.getFieldValue(field)) {
