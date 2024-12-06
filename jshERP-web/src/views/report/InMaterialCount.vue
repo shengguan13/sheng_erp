@@ -58,6 +58,13 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="3" :sm="24">
+                  <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                         :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -103,7 +110,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectOrgan} from '@/api/api'
+  import {findBySelectOrgan, queryMaterialCategoryTreeList} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -127,6 +134,7 @@
           organId: '',
           materialParam:'',
           depotId: '',
+          categoryId:'',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           type: "入库",
@@ -141,6 +149,7 @@
         defaultTimeStr: '',
         organList: [],
         depotList: [],
+        categoryTree:[],
         tabKey: "1",
         // 表头
         columns: [
@@ -150,10 +159,11 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
-          {title: '名称', dataIndex: 'mName', width: 200, fixed: 'left'},
+          {title: '编码', dataIndex: 'barCode', width: 80, fixed: 'left'},
+          {title: '名称', dataIndex: 'mName', width: 150, fixed: 'left'},
           {title: '零件号', dataIndex: 'model'},
           {title: '客/供型号', dataIndex: 'supplierModel'},
+          {title: '项目', dataIndex: 'project'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'materialUnit'},
           {title: '入库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum}
@@ -165,6 +175,7 @@
     },
     created () {
       this.getDepotData()
+      this.loadTreeData()
       this.initSupplier()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
@@ -198,6 +209,20 @@
           }
         })
       },
+      loadTreeData(){
+        let that = this;
+        let params = {};
+        params.id='';
+        queryMaterialCategoryTreeList(params).then((res)=>{
+          if(res){
+            that.categoryTree = [];
+            for (let i = 0; i < res.length; i++) {
+              let temp = res[i];
+              that.categoryTree.push(temp);
+            }
+          }
+        })
+      },
       searchQuery() {
         if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
           this.$message.warning('请选择单据日期！')
@@ -206,10 +231,10 @@
         }
       },
       exportExcel() {
-        let aoa = [['编码', '名称', '型号', '规格', '类别', '单位', '入库数量', '入库金额']]
+        let aoa = [['编码', '名称', '型号', '客/供型号', '项目', '规格', '类别', '单位', '入库数量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.mName, ds.colorCode, ds.model, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum]
+          let item = [ds.barCode, ds.mName, ds.colorCode, ds.model, ds.supplierModel, ds.project, ds.categoryName, ds.materialUnit, ds.numSum]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '入库汇总')

@@ -638,6 +638,7 @@ public class DepotItemController {
                     item.put("materialColorCode", diEx.getMColorCode());
                     item.put("categoryName", diEx.getMCategoryName());
                     item.put("supplierModel", diEx.getSupplierModel());
+                    item.put("project", diEx.getMProject());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);

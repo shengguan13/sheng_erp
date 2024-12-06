@@ -7,9 +7,11 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="24">
-                <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
+              <a-col :md="3" :sm="24">
+                <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                       :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
+                  </a-tree-select>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -65,8 +67,8 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入备注" v-model="queryParam.remark"></a-input>
+                  <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
@@ -125,7 +127,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectOrgan, findBillDetailByNumber} from '@/api/api'
+  import {findBySelectOrgan, findBillDetailByNumber, queryMaterialCategoryTreeList} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -150,6 +152,7 @@
           organId: '',
           number: '',
           materialParam:'',
+          categoryId:'',
           depotId: '',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
@@ -160,13 +163,14 @@
         },
         ipagination:{
           pageSize: 11,
-          pageSizeOptions: ['11', '21', '31', '101', '201']
+          pageSizeOptions: ['11', '51', '101', '201']
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
         defaultTimeStr: '',
         organList: [],
         depotList: [],
+        categoryTree:[],
         tabKey: "1",
         // 表头
         columns: [
@@ -180,10 +184,12 @@
             title: '单据编号', dataIndex: 'number', width: 150, fixed: 'left',
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
-          {title: '名称', dataIndex: 'mname', width: 150, fixed: 'left'},
+          {title: '编码', dataIndex: 'barCode', width: 80, fixed: 'left'},
+          {title: '名称', dataIndex: 'mname', width: 120, fixed: 'left'},
           {title: '零件号', dataIndex: 'model'},
           {title: '客/供型号', dataIndex: 'supplierModel'},
+          {title: '类别', dataIndex: 'categoryName'},
+          {title: '项目', dataIndex: 'project'},
           {title: '单位', dataIndex: 'mUnit'},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber},
           {title: '往来单位', dataIndex: 'sname'},
@@ -200,6 +206,7 @@
     },
     created () {
       this.getDepotData()
+      this.loadTreeData()
       this.initSupplier()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
@@ -236,6 +243,20 @@
           }
         })
       },
+      loadTreeData(){
+        let that = this;
+        let params = {};
+        params.id='';
+        queryMaterialCategoryTreeList(params).then((res)=>{
+          if(res){
+            that.categoryTree = [];
+            for (let i = 0; i < res.length; i++) {
+              let temp = res[i];
+              that.categoryTree.push(temp);
+            }
+          }
+        })
+      },
       myHandleDetail(record) {
         findBillDetailByNumber({ number: record.number }).then((res) => {
           if (res && res.code === 200) {
@@ -252,11 +273,11 @@
         }
       },
       exportExcel() {
-        let aoa = [['单据编号', '编码', '名称', '型号', '规格', '单位', '数量', '单价', '金额', '税率(%)', '税额', '往来单位', '仓库', '入库日期', '备注']]
+        let aoa = [['单据编号', '编码', '名称', '型号', '客/供型号', '类别', '项目', '单位', '数量', '往来单位', '仓库', '批号', '货位', '入库日期', '备注']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.number, ds.barCode, ds.mname, ds.colorCode, ds.model, ds.mUnit, ds.operNumber, ds.unitPrice,
-            ds.allPrice, ds.taxRate, ds.taxMoney, ds.sname, ds.dname, ds.operTime, ds.newRemark]
+          let item = [ds.number, ds.barCode, ds.mname, ds.model, ds.supplierModel, ds.categoryName, ds.project, ds.mUnit,
+            ds.operNumber, ds.sname, ds.dname, ds.batchNumber, ds.snListStr, ds.operTime, ds.newRemark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '入库明细')

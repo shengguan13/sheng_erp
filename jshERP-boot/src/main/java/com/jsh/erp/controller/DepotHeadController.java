@@ -122,6 +122,7 @@ public class DepotHeadController {
                                             @RequestParam("number") String number,
                                             @RequestParam("materialParam") String materialParam,
                                             @RequestParam(value = "depotId", required = false) Long depotId,
+                                            @RequestParam(value = "categoryId", required = false) String categoryId,
                                             @RequestParam("beginTime") String beginTime,
                                             @RequestParam("endTime") String endTime,
                                             @RequestParam(value = "roleType", required = false) String roleType,
@@ -150,9 +151,9 @@ public class DepotHeadController {
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray,
-                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, batchNumber, (currentPage-1)*pageSize, pageSize);
+                    StringUtil.toNull(materialParam), depotList, StringUtil.toNull(categoryId), oId, StringUtil.toNull(number), remark, batchNumber, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray,
-                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, batchNumber);
+                    StringUtil.toNull(materialParam), depotList, StringUtil.toNull(categoryId), oId, StringUtil.toNull(number), remark, batchNumber);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -191,6 +192,7 @@ public class DepotHeadController {
                                          @RequestParam(value = "organId", required = false) Integer oId,
                                          @RequestParam("materialParam") String materialParam,
                                          @RequestParam(value = "depotId", required = false) Long depotId,
+                                         @RequestParam(value = "categoryId", required = false) String categoryId,
                                          @RequestParam("beginTime") String beginTime,
                                          @RequestParam("endTime") String endTime,
                                          @RequestParam("type") String type,
@@ -213,9 +215,9 @@ public class DepotHeadController {
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, StringUtil.toNull(materialParam),
-                    depotList, oId, roleType, (currentPage-1)*pageSize, pageSize);
+                    depotList, StringUtil.toNull(categoryId), oId, roleType, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, StringUtil.toNull(materialParam),
-                    depotList, oId, roleType);
+                    depotList, StringUtil.toNull(categoryId), oId, roleType);
             map.put("total", total);
             map.put("rows", list);
             res.code = 200;

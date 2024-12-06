@@ -138,10 +138,11 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '编码', dataIndex: 'barCode', width: 100, fixed: 'left'},
-          {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
+          {title: '编码', dataIndex: 'barCode', width: 80, fixed: 'left'},
+          {title: '名称', dataIndex: 'materialName', width: 120, fixed: 'left'},
           {title: '型号', dataIndex: 'materialModel'},
-          {title: '客/供零件号', dataIndex: 'supplierModel'},
+          {title: '客/供型号', dataIndex: 'supplierModel'},
+          {title: '项目', dataIndex: 'project'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'unitName'},
           {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum},
@@ -211,11 +212,11 @@
         }
       },
       exportExcel() {
-        let aoa = [['编码', '名称', '型号', '客/供零件号', '类别', '单位', '上月结存数量', '入库数量', '出库数量', '本月结存数量', '结存金额']]
+        let aoa = [['编码', '名称', '型号', '客/供型号', '项目', '类别', '单位', '上月结存数量', '入库数量', '出库数量', '本月结存数量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.materialName, ds.materialModel, ds.supplierModel, ds.categoryName, ds.unitName,
-            ds.prevSum, ds.inSum, ds.outSum, ds.thisSum, ds.thisAllPrice]
+          let item = [ds.barCode, ds.materialName, ds.materialModel, ds.supplierModel, ds.project, ds.categoryName, ds.unitName,
+            ds.prevSum, ds.inSum, ds.outSum, ds.thisSum]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '进销存统计')

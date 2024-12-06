@@ -690,7 +690,7 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InDetail> findInOutDetail(String beginTime, String endTime, String type, String[] creatorArray,
-                                                      String[] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
+                                                      String[] organArray, String materialParam, List<Long> depotList, String categoryId, Integer oId, String number,
                                                       String remark, String batchNumber, Integer offset, Integer rows) throws Exception {
         List<DepotHeadVo4InDetail> list = null;
         List<DepotAllocation> allocationList = depotAllocationService.getDepotAllocation();
@@ -698,7 +698,7 @@ public class DepotHeadService {
         allocationList.stream().forEach(e -> allocationIdToName.put(e.getId().toString(), e.getType() + "-" + e.getAllocation()));
         try {
             list = depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray,
-                    materialParam, depotList, oId, number, remark, batchNumber, offset, rows);
+                    materialParam, depotList, categoryId, oId, number, remark, batchNumber, offset, rows);
             for (DepotHeadVo4InDetail detail : list) {
                 if (detail.getSnList() != null && allocationIdToName.containsKey(detail.getSnList())) {
                     detail.setSnListStr(allocationIdToName.get(detail.getSnList()));
@@ -724,12 +724,12 @@ public class DepotHeadService {
     }
 
     public int findInOutDetailCount(String beginTime, String endTime, String type, String[] creatorArray,
-                                    String[] organArray, String materialParam, List<Long> depotList, Integer oId,
+                                    String[] organArray, String materialParam, List<Long> depotList, String categoryId, Integer oId,
                                     String number, String remark, String batchNumber) throws Exception {
         int result = 0;
         try {
             result = depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray,
-                    organArray, materialParam, depotList, oId, number, remark, batchNumber);
+                    organArray, materialParam, depotList, categoryId, oId, number, remark, batchNumber);
         } catch (Exception e) {
             JshException.readFail(logger, e);
         }
@@ -737,13 +737,13 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, String materialParam,
-                                                                List<Long> depotList, Integer oId, String roleType, Integer offset, Integer rows) throws Exception {
+                                                                List<Long> depotList, String categoryId, Integer oId, String roleType, Integer offset, Integer rows) throws Exception {
         List<DepotHeadVo4InOutMCount> list = null;
         try {
             String[] creatorArray = getCreatorArray(roleType);
             // 查询进出库明细的时候，不需要指定客户/供应商，直接查询所有的出入库（包括生产入库、领料、退料、采购销售的退货等）
             String[] organArray = null;
-            list = depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, oId,
+            list = depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, categoryId, oId,
                     creatorArray, organArray, offset, rows);
         } catch (Exception e) {
             JshException.readFail(logger, e);
@@ -752,13 +752,13 @@ public class DepotHeadService {
     }
 
     public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, String materialParam,
-                                           List<Long> depotList, Integer oId, String roleType) throws Exception {
+                                           List<Long> depotList, String categoryId, Integer oId, String roleType) throws Exception {
         int result = 0;
         try {
             String[] creatorArray = getCreatorArray(roleType);
             String subType = "出库".equals(type) ? "销售" : "";
             String[] organArray = getOrganArray(subType, "");
-            result = depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotList, oId,
+            result = depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotList, categoryId, oId,
                     creatorArray, organArray);
         } catch (Exception e) {
             JshException.readFail(logger, e);
@@ -1938,7 +1938,7 @@ public class DepotHeadService {
                 row.createCell(2).setCellValue(map.get(barCode).getModel());
                 row.createCell(3).setCellValue(map.get(barCode).getName());
                 List<DepotHeadVo4InDetail> list = findInOutDetail(beginTime, endTime, type, null, null,
-                        barCode, new ArrayList<>(), null, null, null, null, null, null);
+                        barCode, new ArrayList<>(), null, null, null, null, null, null, null);
                 for (DepotHeadVo4InDetail detail : list) {
                     if (detail.getNumber().startsWith(prefix)) {
                         LocalDate date = LocalDate.parse(detail.getOperTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

@@ -135,7 +135,7 @@
         },
         ipagination:{
           pageSize: 11,
-          pageSizeOptions: ['11', '21', '31', '101', '201']
+          pageSizeOptions: ['11', '51', '101', '201']
         },
         depotSelected:[],
         depotList: [],
@@ -145,24 +145,24 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:60,
+            title: '#', dataIndex: 'rowIndex',
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '库存流水', dataIndex: 'action', width: 40,
+          {title: '流水', dataIndex: 'action', width: 50,
             scopedSlots: { customRender: 'action' }
           },
           {title: '编码', dataIndex: 'mBarCode', width: 80},
-          {title: '名称', dataIndex: 'name', width: 100},
-          {title: '零件号', dataIndex: 'model', width: 80},
-          {title: '客/供型号', dataIndex: 'supplierModel', width: 80},
-          {title: '颜色', dataIndex: 'color', width: 50},
-          {title: '颜色代码', dataIndex: 'colorCode', width: 60},
-          {title: '类别', dataIndex: 'categoryName', width: 50},
-          {title: '单位', dataIndex: 'unitName', width: 40},
-          {title: '初始库存', dataIndex: 'initialStock', width: 60, sorter: (a, b) => a.initialStock - b.initialStock},
-          {title: '库存', dataIndex: 'currentStock', width: 60, sorter: (a, b) => a.currentStock - b.currentStock,
+          {title: '名称', dataIndex: 'name', width: 120},
+          {title: '零件号', dataIndex: 'model'},
+          {title: '客/供型号', dataIndex: 'supplierModel'},
+          {title: '项目', dataIndex: 'project'},
+          {title: '颜色', dataIndex: 'color'},
+          {title: '颜色代码', dataIndex: 'colorCode'},
+          {title: '类别', dataIndex: 'categoryName'},
+          {title: '单位', dataIndex: 'unitName'},
+          {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock,
             scopedSlots: { customRender: 'customRenderStock' }
           }
         ],
@@ -247,11 +247,11 @@
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['编码', '名称', '零件号', '客/供型号', '颜色', '颜色代码', '类别', '单位', '初始库存', '库存']]
+        let aoa = [['编码', '名称', '零件号', '客/供型号', '项目', '颜色', '颜色代码', '类别', '单位', '库存']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.mBarCode, ds.name, ds.model, ds.supplierModel, ds.color, ds.colorCode, ds.categoryName,
-            ds.unitName, ds.initialStock, ds.currentStock]
+          let item = [ds.mBarCode, ds.name, ds.model, ds.supplierModel, ds.project, ds.color, ds.colorCode,
+            ds.categoryName, ds.unitName, ds.currentStock]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '产品库存')

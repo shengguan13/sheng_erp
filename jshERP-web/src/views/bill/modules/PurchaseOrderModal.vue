@@ -177,7 +177,7 @@
             },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
             { title: '型号', key: 'model', width: '10%', type: FormTypes.normal },
-            { title: '客/供零件号', key: 'supplierModel', width: '12%', type: FormTypes.normal },
+            { title: '客/供型号', key: 'supplierModel', width: '12%', type: FormTypes.normal },
             { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '4%', type: FormTypes.normal },

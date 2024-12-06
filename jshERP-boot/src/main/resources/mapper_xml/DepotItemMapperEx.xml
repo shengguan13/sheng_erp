@@ -535,11 +535,13 @@
         m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
         m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
         m.other_field10 MOtherField10, mc.name MCategoryName, ps.models_combined supplier_model,
-        concat_ws('', m.unit, u.basic_unit) MaterialUnit,
+        concat_ws('', m.unit, u.basic_unit) MaterialUnit, b.projects_combined MProject,
         m.color MColor, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(distinct(project)) as projects_combined from
+        jsh_material_bom where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) b on b.bar_code = me.bar_code
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ';') as models_combined from
         jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
