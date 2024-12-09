@@ -192,6 +192,7 @@
           {title: '项目', dataIndex: 'project'},
           {title: '单位', dataIndex: 'mUnit'},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber},
+          {title: '库存', dataIndex: 'stock'},
           {title: '往来单位', dataIndex: 'sname'},
           {title: '仓库', dataIndex: 'dname'},
           {title: '批号', dataIndex: 'batchNumber'},
@@ -273,11 +274,11 @@
         }
       },
       exportExcel() {
-        let aoa = [['单据编号', '编码', '名称', '型号', '客/供型号', '类别', '项目', '单位', '数量', '往来单位', '仓库', '批号', '货位', '出库日期', '备注']]
+        let aoa = [['单据编号', '编码', '名称', '型号', '客/供型号', '类别', '项目', '单位', '数量', '库存', '往来单位', '仓库', '批号', '货位', '出库日期', '备注']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.number, ds.barCode, ds.mname, ds.model, ds.supplierModel, ds.categoryName, ds.project, ds.mUnit,
-             ds.operNumber, ds.sname, ds.dname, ds.batchNumber, ds.snListStr, ds.operTime, ds.newRemark]
+             ds.operNumber, ds.stock, ds.sname, ds.dname, ds.batchNumber, ds.snListStr, ds.operTime, ds.newRemark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '出库明细')

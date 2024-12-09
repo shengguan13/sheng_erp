@@ -166,7 +166,8 @@
           {title: '项目', dataIndex: 'project'},
           {title: '类别', dataIndex: 'categoryName'},
           {title: '单位', dataIndex: 'materialUnit'},
-          {title: '入库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum}
+          {title: '入库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum},
+          {title: '库存', dataIndex: 'stock'},
         ],
         url: {
           list: "/depotHead/findInOutMaterialCount",
@@ -231,10 +232,11 @@
         }
       },
       exportExcel() {
-        let aoa = [['编码', '名称', '型号', '客/供型号', '项目', '规格', '类别', '单位', '入库数量']]
+        let aoa = [['编码', '名称', '型号', '客/供型号', '项目', '规格', '类别', '单位', '入库数量', '库存']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.mName, ds.colorCode, ds.model, ds.supplierModel, ds.project, ds.categoryName, ds.materialUnit, ds.numSum]
+          let item = [ds.barCode, ds.mName, ds.colorCode, ds.model, ds.supplierModel, ds.project, ds.categoryName,
+            ds.materialUnit, ds.numSum, ds.stock]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '入库汇总')

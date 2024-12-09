@@ -14,6 +14,7 @@
 
     <resultMap id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.DepotHeadVo4InDetail">
         <result column="Number" jdbcType="VARCHAR" property="Number" />
+        <result column="MaterialId" jdbcType="BIGINT" property="MaterialId" />
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
@@ -323,7 +324,7 @@
 
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select dh.number,me.bar_code, m.`name` MName,m.model,m.color_code,di.unit_price,di.material_unit as mUnit, ps.models_combined supplier_model,
-        di.oper_number,di.all_price, ifnull(di.tax_rate,0) tax_rate, ifnull(di.tax_money,0) tax_money, ifnull(di.tax_last_money,0) tax_last_money,
+        di.oper_number,di.all_price, ifnull(di.tax_rate,0) tax_rate, ifnull(di.tax_money,0) tax_money, ifnull(di.tax_last_money,0) tax_last_money, m.id MaterialId,
         s.supplier SName,d.dName DName, date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, di.batch_number, di.sn_list,
         concat_ws('  ',dh.remark,di.remark) as newRemark, b.projects_combined project, mc.name categoryName
         from jsh_depot_head dh
@@ -461,7 +462,7 @@
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
         select di.material_id, me.bar_code, m.name mName,m.Model,m.color_code,mc.name categoryName,ps.models_combined supplier_model,
-        concat_ws('', m.unit, u.basic_unit) materialUnit, b.projects_combined project,
+        concat_ws('', m.unit, u.basic_unit) materialUnit, b.projects_combined project, m.id MaterialId,
         sum(di.basic_number) numSum,
         sum(di.all_price) priceSum
         from jsh_depot_head dh
@@ -581,7 +582,7 @@
 
     <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select dh.number,me.bar_code, m.`name` MName,m.model,m.color_code,di.unit_price,di.material_unit as mUnit,di.oper_number,di.all_price,SName, d.dName DName,
-        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark,
+        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark, m.id MaterialId,
         di.batch_number, di.sn_list, di.material_type as new_sn_list
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'

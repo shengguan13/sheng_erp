@@ -145,7 +145,7 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex',
+            title: '#', dataIndex: 'rowIndex', width: 50,
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }

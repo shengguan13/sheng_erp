@@ -154,6 +154,11 @@ public class DepotHeadController {
                     StringUtil.toNull(materialParam), depotList, StringUtil.toNull(categoryId), oId, StringUtil.toNull(number), remark, batchNumber, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray,
                     StringUtil.toNull(materialParam), depotList, StringUtil.toNull(categoryId), oId, StringUtil.toNull(number), remark, batchNumber);
+            for(DepotHeadVo4InDetail detail : list) {
+                BigDecimal stock;
+                stock = depotItemService.getStockByParam(depotId, detail.getMaterialId(),null,null);
+                detail.setStock(stock);
+            }
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -218,6 +223,11 @@ public class DepotHeadController {
                     depotList, StringUtil.toNull(categoryId), oId, roleType, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, StringUtil.toNull(materialParam),
                     depotList, StringUtil.toNull(categoryId), oId, roleType);
+            for(DepotHeadVo4InOutMCount detail : list) {
+                BigDecimal stock;
+                stock = depotItemService.getStockByParam(depotId, detail.getMaterialId(),null,null);
+                detail.setStock(stock);
+            }
             map.put("total", total);
             map.put("rows", list);
             res.code = 200;

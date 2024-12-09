@@ -27,6 +27,8 @@ public class DepotHeadVo4InOutMCount {
 
     private BigDecimal priceSum;
 
+    private BigDecimal stock;
+
     private Long tenantId;
 
     public Long getMaterialId() {
@@ -115,6 +117,14 @@ public class DepotHeadVo4InOutMCount {
 
     public void setPriceSum(BigDecimal priceSum) {
         this.priceSum = priceSum;
+    }
+
+    public BigDecimal getStock() {
+        return stock;
+    }
+
+    public void setStock(BigDecimal stock) {
+        this.stock = stock;
     }
 
     public Long getTenantId() {

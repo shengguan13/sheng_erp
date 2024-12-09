@@ -12,6 +12,8 @@ public class DepotHeadVo4InDetail {
 
     private String MName;
 
+    private Long MaterialId;
+
     private String Model;
 
     private String supplierModel;
@@ -23,6 +25,8 @@ public class DepotHeadVo4InDetail {
     private String colorCode;
 
     private BigDecimal UnitPrice;
+
+    private BigDecimal stock;
 
     private String mUnit;
 
@@ -66,6 +70,14 @@ public class DepotHeadVo4InDetail {
         Number = number;
     }
 
+    public Long getMaterialId() {
+        return MaterialId;
+    }
+
+    public void setMaterialId(Long materialId) {
+        MaterialId = materialId;
+    }
+
     public String getBarCode() {
         return barCode;
     }
@@ -88,6 +100,14 @@ public class DepotHeadVo4InDetail {
 
     public void setModel(String model) {
         Model = model;
+    }
+
+    public BigDecimal getStock() {
+        return stock;
+    }
+
+    public void setStock(BigDecimal stock) {
+        this.stock = stock;
     }
 
     public String getSupplierModel() {
