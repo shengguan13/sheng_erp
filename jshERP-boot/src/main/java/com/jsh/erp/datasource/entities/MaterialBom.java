@@ -10,6 +10,8 @@ public class MaterialBom {
 
     private String parent;
 
+    private String parentStr;
+
     private String upper;
 
     private String project;
@@ -52,6 +54,14 @@ public class MaterialBom {
 
     public void setParent(String parent) {
         this.parent = parent;
+    }
+
+    public String getParentStr() {
+        return parentStr;
+    }
+
+    public void setParentStr(String parentStr) {
+        this.parentStr = parentStr;
     }
 
     public String getUpper() {

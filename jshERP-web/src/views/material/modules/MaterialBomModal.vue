@@ -34,11 +34,13 @@
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="项目">
             <a-input placeholder="请输入项目" v-decorator.trim="[ 'project', validatorRules.project ]" />
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
-            <a-input placeholder="请输入单位" v-decorator.trim="[ 'unit', validatorRules.unit ]" />
-          </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
-            <a-input placeholder="请输入状态" v-decorator.trim="[ 'source' ]" />
+            <a-select placeholder="请选择状态" v-decorator="[ 'source', validatorRules.source ]" >
+              <a-select-option value="项目">项目</a-select-option>
+              <a-select-option value="量产">量产</a-select-option>
+              <a-select-option value="沿用">沿用</a-select-option>
+              <a-select-option value="取消">取消</a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
             <a-input placeholder="请输入备注" v-decorator.trim="[ 'remark' ]" />
@@ -81,7 +83,7 @@
           parent: {rules: [{required: true, message: '请选择归属总成!'}]},
           barCode: {rules: [{required: true, message: '请输入物料编码!'}]},
           project: {rules: [{required: true, message: '请输入项目!'}]},
-          unit: {rules: [{required: true, message: '请输入单位!'}]}
+          source: {rules: [{required: true, message: '请选择状态!'}]}
         },
         confirmLoading: false,
         form: this.$form.createForm(this)
@@ -98,7 +100,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model, 'project', 'parent', 'barCode', 'unit', 'source', 'remark'))
+          this.form.setFieldsValue(pick(this.model, 'project', 'parent', 'barCode', 'source', 'remark'))
         });
       },
       close () {

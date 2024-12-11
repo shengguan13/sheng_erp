@@ -84,26 +84,49 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料编码">
                   <a-input :readOnly="true" placeholder="请选择物料编码" v-decorator="['barCode', validatorRules.barCode]"/>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级物料编码">
+                  <a-input placeholder="请输入上级物料编码" v-decorator="['upper', validatorRules.upper]"/>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
                   <a-input :readOnly="true" placeholder="名称" v-decorator="['name']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零件号">
                   <a-input :readOnly="true" placeholder="零件号" v-decorator="['model']"/>
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级物料编码">
-                  <a-input placeholder="请输入上级物料编码" v-decorator="['upper', validatorRules.upper]"/>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客/供型号">
+                  <a-input :readOnly="true" placeholder="客/供型号" v-decorator="['supplierModel']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格">
+                  <a-input :readOnly="true" placeholder="规格" v-decorator="['otherField5']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色">
+                  <a-input :readOnly="true" placeholder="颜色" v-decorator="['color']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色代码">
+                  <a-input :readOnly="true" placeholder="颜色代码" v-decorator="['colorCode']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材料标准">
+                  <a-input :readOnly="true" placeholder="材料标准" v-decorator="['material']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
+                  <a-input :readOnly="true" placeholder="类别" v-decorator="['category']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="项目">
                   <a-input :readOnly="true" placeholder="请输入项目" v-decorator="['project']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
-                  <a-input placeholder="请输入单位" v-decorator="[ 'unit', validatorRules.unit ]"/>
+                  <a-input :readOnly="true" v-decorator="[ 'unit', validatorRules.unit ]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用量">
                   <a-input placeholder="请输入用量" v-decorator="[ 'processUsage', validatorRules.processUsage ]" />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
-                  <a-input placeholder="请输入状态" v-decorator="[ 'source' ]" />
+                  <a-select placeholder="请选择状态" v-decorator="[ 'source', validatorRules.source ]" >
+                    <a-select-option value="项目">项目</a-select-option>
+                    <a-select-option value="量产">量产</a-select-option>
+                    <a-select-option value="沿用">沿用</a-select-option>
+                    <a-select-option value="取消">取消</a-select-option>
+                  </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
                   <a-input placeholder="请输入备注" v-decorator="[ 'remark' ]" />
@@ -187,7 +210,7 @@
               { pattern: /^(\+|-)?([1-9][0-9]*(\.\d+)?|(0\.(?!0+$)\d+))$/, message: '请输入非零的整数或者小数!' }
             ]
           },
-          unit: {rules: [{required: true, message: '请输入单位!'}]}
+          source: {rules: [{required: true, message: '请选择状态!'}]}
         },
         record: {},
         url: {
@@ -376,6 +399,13 @@
             record.barCode = res.data[0].barCode;
             record.name = res.data[0].name;
             record.model = res.data[0].model;
+            record.color = res.data[0].color;
+            record.unit = res.data[0].unit;
+            record.colorCode = res.data[0].colorCode;
+            record.supplierModel = res.data[0].supplierModel;
+            record.otherField5 = res.data[0].otherField5;
+            record.category = res.data[0].category;
+            record.material = res.data[0].material;
             console.log('onSelect-record', JSON.stringify(record))
             this.currSelected = Object.assign({}, record)
             this.model = this.currSelected
@@ -387,7 +417,8 @@
       // 触发onSelect事件时,为类别树右侧的form表单赋值
       setValuesToForm(record) {
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(record, 'barCode', 'name', 'model', 'upper', 'unit', 'source', 'remark', 'project', 'processUsage'))
+          this.form.setFieldsValue(pick(record, 'barCode', 'name', 'model', 'color', 'colorCode', 'supplierModel',
+            'otherField5', 'material', 'category', 'upper', 'unit', 'source', 'remark', 'project', 'processUsage'))
         })
       },
       getCurrSelectedTitle() {

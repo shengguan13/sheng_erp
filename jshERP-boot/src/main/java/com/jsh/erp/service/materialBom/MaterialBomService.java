@@ -11,6 +11,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.service.productSupplier.ProductSupplierService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ExcelUtils;
@@ -50,6 +51,9 @@ public class MaterialBomService {
     private MaterialService materialService;
 
     @Resource
+    private ProductSupplierService productSupplierService;
+
+    @Resource
     private UserService userService;
 
     public MaterialBom getMaterialBom(long id)throws Exception {
@@ -84,6 +88,20 @@ public class MaterialBomService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             list = materialBomMapperEx.selectMaterialBomNullUpper(parent, project, materialParam, idList, offset, rows);
+            for (MaterialBomVo4Info bom : list) {
+                bom.setUnit(bom.getmUnit());
+                if (bom.getParent() != null && !"".equals(bom.getParent())) {
+                    try {
+                        List<ProductSupplierVo4Info> psList = productSupplierService.selectByIds(bom.getParent());
+                        StringBuilder sb = new StringBuilder();
+                        for (ProductSupplierVo4Info ps : psList) {
+                            sb.append(ps.getModel() + ";");
+                        }
+                        String parentStr = sb.toString();
+                        bom.setParentStr(parentStr.substring(0, parentStr.length() - 1));
+                    } catch(Exception e) {}
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -95,6 +113,9 @@ public class MaterialBomService {
         List<MaterialBomVo4Info> list = new ArrayList<>();
         try{
             list = materialBomMapperEx.selectMaterialBomWithUpper(parent, upper, project, materialParam);
+            for (MaterialBomVo4Info bom : list) {
+                bom.setUnit(bom.getmUnit());
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -282,12 +303,24 @@ public class MaterialBomService {
                             .append("[" + bom.getBarCode() + "]").toString());
                     tree = materialBomMapperEx.getMaterialBomTreeWithUpper(bom.getParent(), bom.getUpper(), bom.getBarCode(), bom.getProject());
                 }
-                logger.info("XXXXX 尝试删除节点" + tree.size() + "个");
-                if (tree == null || tree.size() != 1) {
+                logger.info("XXXXX 找到匹配节点" + tree.size() + "个");
+                if (tree == null) {
                     throw new BusinessRunTimeException(500, "找不到要删除的BOM条目！");
                 }
-                logger.info("XXXXX 子节点" + (tree.get(0).getChildren() == null ? 0 : tree.get(0).getChildren().size()) + "个");
-                if (tree.get(0).getChildren() != null && tree.get(0).getChildren().size() > 0) {
+                boolean found = false;
+                MaterialBomVo4Info toDelete = new MaterialBomVo4Info();
+                for (MaterialBomVo4Info info : tree) {
+                    if (info.getId().longValue() == Long.parseLong(id)) {
+                        found = true;
+                        toDelete = info;
+                        break;
+                    }
+                }
+                if (!found) {
+                    throw new BusinessRunTimeException(500, "找不到要删除的BOM条目！");
+                }
+                logger.info("XXXXX 子节点" + (toDelete.getChildren() == null ? 0 : toDelete.getChildren().size()) + "个");
+                if (toDelete.getChildren() != null && toDelete.getChildren().size() > 0) {
                     throw new BusinessRunTimeException(500, "要删除的BOM条目含有下级，请先删除所有下级条目！");
                 }
             }
@@ -362,12 +395,6 @@ public class MaterialBomService {
                     }
                     bom.setProcessUsage(BigDecimal.valueOf(Double.valueOf(processUsage)));
                 }
-                //bom.setRemark(remark);
-                //校验产品编码
-//                if(!StringUtil.checkBarCodeEmptyAllowed(barCode)) {
-//                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
-//                            String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
-//                }
                 bomList.add(bom);
             }
             for (MaterialBom bom : bomList) {

@@ -22,6 +22,14 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     private String model;
 
+    private String otherField5;
+
+    private String supplierModel;
+
+    private String material;
+
+    private String mUnit;
+
     private String category;
 
     private String color;
@@ -76,6 +84,38 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     public void setColorCode(String colorCode) {
         this.colorCode = colorCode;
+    }
+
+    public String getOtherField5() {
+        return otherField5;
+    }
+
+    public void setOtherField5(String otherField5) {
+        this.otherField5 = otherField5;
+    }
+
+    public String getSupplierModel() {
+        return supplierModel;
+    }
+
+    public void setSupplierModel(String supplierModel) {
+        this.supplierModel = supplierModel;
+    }
+
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+
+    public String getmUnit() {
+        return mUnit;
+    }
+
+    public void setmUnit(String mUnit) {
+        this.mUnit = mUnit;
     }
 
     public String getModel() {

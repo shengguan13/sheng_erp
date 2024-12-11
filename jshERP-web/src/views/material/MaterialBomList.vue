@@ -150,7 +150,7 @@
         // 实际表头
         columns:[],
         // 初始化设置的表头
-        settingColumns:['action','project','barCode','parent','name','colorCode','model','color',
+        settingColumns:['action','project','barCode','parentStr','name','colorCode','model','color',
           'category','unit','source','remark'],
         // 默认的列
         defColumns: [
@@ -162,9 +162,9 @@
             scopedSlots: { customRender: 'action' },
           },
           {title: '项目', dataIndex: 'project', width: 70},
-          {title: '物料编码', dataIndex: 'barCode', width: 90},
-          {title: '总成', dataIndex: 'parent', width: 80},
-          {title: '名称', dataIndex: 'name', width: 120},
+          {title: '物料编码', dataIndex: 'barCode', width: 80},
+          {title: '总成', dataIndex: 'parentStr', width: 100},
+          {title: '名称', dataIndex: 'name', width: 100},
           {title: '零件号', dataIndex: 'model', width: 80},
           {title: '颜色', dataIndex: 'color', width: 40},
           {title: '类别', dataIndex: 'category', width: 50},

@@ -223,21 +223,32 @@ export const BillModalMixin = {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if(res.code === 200){
           let arr = res.data
-          let assembly = false
-          let assemblyId = ''
+          let chengPin = false
+          let chengPinId = ''
+          let banChengPin = false
+          let banChengPinId = ''
+          let finalId = ''
           for (let i = 0; i < arr.length; i++) {
             console.log("仓库：" + JSON.stringify(arr[i]))
             if(arr[i].isDefault){
               if(arr[i].depotName == '成品库') {
-                assembly = true
-                assemblyId = arr[i].id
+                chengPin = true
+                chengPinId = arr[i].id
+              } else if(arr[i].depotName == '半成品库') {
+                banChengPin = true
+                banChengPinId = arr[i].id
               }
-              that.defaultDepotId = arr[i].id
+              finalId = arr[i].id
             }
           }
-          console.log("优先考虑成品库：" + assembly)
-          if (assembly) {
-            that.defaultDepotId = assemblyId
+          console.log("优先考虑成品库：" + chengPin)
+          console.log("优先考虑半成品库：" + banChengPin)
+          if (chengPin) {
+            that.defaultDepotId = chengPinId
+          } else if (banChengPin) {
+            that.defaultDepotId = banChengPinId
+          } else {
+            that.defaultDepotId = finalId
           }
           console.log("默认仓库id：" + that.defaultDepotId)
           for(let item of that.materialTable.columns){
@@ -413,19 +424,32 @@ export const BillModalMixin = {
                 }
               }
             } else {
-              let assembly = false
-              let assemblyId = ''
+              let chengPin = false
+              let chengPinId = ''
+              let banChengPin = false
+              let banChengPinId = ''
+              let finalId = ''
               for (let i = 0; i < arr.length; i++) {
+                console.log("仓库：" + JSON.stringify(arr[i]))
                 if(arr[i].isDefault){
-                  if(arr[i].depotName == "成品库") {
-                    assembly = true
-                    assemblyId = arr[i].id
+                  if(arr[i].depotName == '成品库') {
+                    chengPin = true
+                    chengPinId = arr[i].id
+                  } else if(arr[i].depotName == '半成品库') {
+                    banChengPin = true
+                    banChengPinId = arr[i].id
                   }
-                  target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+                  finalId = arr[i].id
                 }
               }
-              if (assembly) {
-                target.setValues([{rowKey: row.id, values: {depotId: assemblyId+''}}])
+              console.log("优先考虑成品库：" + chengPin)
+              console.log("优先考虑半成品库：" + banChengPin)
+              if (chengPin) {
+                target.setValues([{rowKey: row.id, values: {depotId: chengPinId+''}}])
+              } else if (banChengPin) {
+                target.setValues([{rowKey: row.id, values: {depotId: banChengPinId+''}}])
+              } else {
+                target.setValues([{rowKey: row.id, values: {depotId: finalId+''}}])
               }
             }
           }
