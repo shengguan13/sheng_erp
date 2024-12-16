@@ -12,8 +12,6 @@
     <template slot="footer">
       <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
       <!--此处为解决缓存问题-->
-      <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
-      <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购申请'" v-print="'#purchaseApplicationPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'">普通打印</a-button>
@@ -38,7 +36,6 @@
       <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'">普通打印</a-button>
       <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
       <!--导出Excel-->
-      <a-button v-if="billType === '零售出库'||billType === '零售退货入库'" @click="retailExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购申请'" @click="applicationExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购订单'||billType === '销售订单'" @click="orderExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购入库'||billType === '采购退货出库'||billType === '销售出库'||billType === '销售退货入库'"
@@ -79,6 +76,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
                 {{model.number}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -153,6 +155,11 @@
                 {{model.workHour}}
               </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -212,6 +219,11 @@
                   {{model.workHour}}
                 </a-form-item>
               </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                  {{model.creatorName}}
+                </a-form-item>
+              </a-col>
             </a-row>
             <div :style="tableWidth">
               <a-table
@@ -257,6 +269,13 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -307,6 +326,13 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
+          </a-row>
           <div :style="tableWidth">
             <a-table
               ref="table"
@@ -353,6 +379,13 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
+          </a-row>
           <div :style="tableWidth">
             <a-table
               ref="table"
@@ -364,154 +397,6 @@
               :dataSource="dataSource">
             </a-table>
           </div>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </section>
-      </template>
-      <!--零售出库-->
-      <template v-else-if="billType === '零售出库'">
-        <section ref="print" id="retailOutPrint">
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.operTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.number}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款类型">
-                {{model.payType}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="18" :md="12" :sm="24">
-              <div :style="tableWidthRetail">
-                <a-table
-                  ref="table"
-                  size="middle"
-                  bordered
-                  rowKey="id"
-                  :pagination="false"
-                  :columns="columns"
-                  :dataSource="dataSource">
-                </a-table>
-              </div>
-            </a-col>
-            <a-col :span="6">
-              <a-row class="form-row" :gutter="24">
-                <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据金额">
-                    {{model.changeAmount}}
-                  </a-form-item>
-                </a-col>
-                <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
-                    {{model.getAmount}}
-                  </a-form-item>
-                </a-col>
-                <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                    {{model.backAmount}}
-                  </a-form-item>
-                </a-col>
-                <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-                    {{model.accountName}}
-                  </a-form-item>
-                </a-col>
-              </a-row>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </section>
-      </template>
-      <!--零售退货-->
-      <template v-else-if="billType === '零售退货入库'">
-        <section ref="print" id="retailBackPrint">
-          <a-row class="form-row" :gutter="24">
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.operTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.number}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="18" :md="12" :sm="24">
-              <div :style="tableWidthRetail">
-                <a-table
-                  ref="table"
-                  size="middle"
-                  bordered
-                  rowKey="id"
-                  :pagination="false"
-                  :columns="columns"
-                  :dataSource="dataSource">
-                </a-table>
-              </div>
-            </a-col>
-            <a-col :span="6">
-              <a-row class="form-row" :gutter="24">
-                <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据金额">
-                    {{model.changeAmount}}
-                  </a-form-item>
-                </a-col>
-                <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                    {{model.getAmount}}
-                  </a-form-item>
-                </a-col>
-                <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                    {{model.backAmount}}
-                  </a-form-item>
-                </a-col>
-                <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-                    {{model.accountName}}
-                  </a-form-item>
-                </a-col>
-              </a-row>
-            </a-col>
-          </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -538,6 +423,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申请人">
                 {{model.salesManStr}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -602,6 +492,11 @@
                 {{model.payType}}
               </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -664,6 +559,11 @@
                 {{model.payType}}
               </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -720,6 +620,13 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
+          </a-row>
           <div :style="tableWidth">
             <a-table
               ref="table"
@@ -758,6 +665,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
                 {{model.number}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -822,6 +734,11 @@
                 {{model.payType}}
               </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -878,6 +795,13 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
+          </a-row>
           <div :style="tableWidth">
             <a-table
               ref="table"
@@ -915,6 +839,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -957,6 +886,11 @@
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -995,6 +929,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -1037,6 +976,11 @@
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -1075,6 +1019,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -1124,6 +1073,13 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
+          </a-row>
           <div :style="tableWidth">
             <a-table
               ref="table"
@@ -1158,7 +1114,11 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :span="6"></a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
             <a-col :span="6"></a-col>
           </a-row>
           <div :style="tableWidth">
@@ -1195,7 +1155,11 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :span="6"></a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
             <a-col :span="6"></a-col>
           </a-row>
           <div :style="tableWidth">
@@ -1232,7 +1196,11 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :span="6"></a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
             <a-col :span="6"></a-col>
           </a-row>
           <div :style="tableWidth">
@@ -1274,7 +1242,11 @@
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
-            <a-col :span="6"></a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table
@@ -1984,20 +1956,6 @@
             this.$refs.modalWorkflow.title = "发起流程"
           }
         })
-      },
-      //零售出库|零售退货入库
-      retailExportExcel() {
-        let aoa = []
-        aoa = [['会员卡号：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '货位', '批号', '数量', '单价', '金额', '备注']
-        aoa.push(title)
-        for (let i = 0; i < this.dataSource.length; i++) {
-          let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
-          aoa.push(item)
-        }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
       },
       //生产计划
       productionPlanExportExcel() {

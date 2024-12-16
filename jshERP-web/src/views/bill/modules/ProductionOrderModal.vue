@@ -337,7 +337,7 @@
             if(info.finishNumber>0) {
               info.operNumber = info.preNumber - info.planOrderedNumber
             }
-            info.linkId = info.id
+            //info.linkId = info.id
             listEx.push(info)
             this.changeColumnShow(info)
           }

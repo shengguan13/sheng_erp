@@ -124,8 +124,14 @@
                   <a-select placeholder="请选择状态" v-decorator="[ 'source', validatorRules.source ]" >
                     <a-select-option value="项目">项目</a-select-option>
                     <a-select-option value="量产">量产</a-select-option>
+                    <a-select-option value="新增">新增</a-select-option>
+                    <a-select-option value="设变">设变</a-select-option>
+                    <a-select-option value="临时">临时</a-select-option>
                     <a-select-option value="沿用">沿用</a-select-option>
+                    <a-select-option value="屏蔽">屏蔽</a-select-option>
+                    <a-select-option value="指定">指定</a-select-option>
                     <a-select-option value="取消">取消</a-select-option>
+                    <a-select-option value="下线">下线</a-select-option>
                   </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">

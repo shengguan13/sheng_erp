@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1250"
+      :width="1600"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
@@ -68,18 +68,20 @@
         </span>
         <template slot="customRenderStatus" slot-scope="text, record">
           <template v-if="!queryParam.purchaseStatus">
-          <!-- TODO: 添加领料出库的状态，领料出库只需要两个状态：有退料、无退料 -->
+          <!-- 领料出库只需要两个状态：有退料、无退料 -->
             <a-tag v-if="record.status === '0'" color="red">未审核</a-tag>
             <a-tag v-if="record.status === '1'" color="green">已审核</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">完成采购</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">完成生产</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">完成生产</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">已入库</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '采购申请'" color="cyan">已下单</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">已出库</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">已下单</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">已入库</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分生产</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分生产</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '采购申请'" color="blue">部分下单</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分入库</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分出库</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分下单</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分入库</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
           </template>
           <!-- 销售转采购 -->
@@ -156,7 +158,7 @@
         // 表头
         columns: [
           { title: '', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:130,
+          { title: '单据编号', dataIndex: 'number',width:120,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           { title: '产品信息', dataIndex: 'materialsList',width:280, ellipsis:true,
@@ -179,9 +181,11 @@
           { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
           { title: '客/供型号', dataIndex: 'supplierModel',width:100, ellipsis:true},
           { title: '零件号', dataIndex: 'model',width:100, ellipsis:true},
-          { title: '扩展信息', dataIndex: 'materialOther',width:120, ellipsis:true},
-          { title: '单位', dataIndex: 'unit',width:50},
-          { title: '数量', dataIndex: 'operNumber',width:80},
+          { title: '扩展信息', dataIndex: 'materialOther',width:50, ellipsis:true},
+          { title: '单位', dataIndex: 'unit',width:40},
+          { title: '需求数', dataIndex: 'operNumber',width:60},
+          { title: '已下单', dataIndex: 'finishNumber',width:60},
+          { title: '库存', dataIndex: 'stock',width:50},
           { title: '备注', dataIndex: 'remark',width:100, ellipsis:true},
         ],
         dataSource:[],
@@ -285,21 +289,12 @@
             linkType: this.showType
           }
           this.loading = true;
-          getAction('/depotItem/getDetailList', param).then((res) => {
+          getAction('/depotItem/getNextLevelDetailListByBom', param).then((res) => {
             if (res.code===200) {
               let list = res.data.rows;
               let listEx = []
               for(let j=0; j<list.length; j++){
-                let info = list[j];
-                if(info.preNumber !== info.finishNumber) {
-                  //去掉已经全部转换的明细
-                  listEx.push(info)
-                } else {
-                  if(this.queryParam.subType === '采购' || this.queryParam.subType === '销售' || this.queryParam.subType === '零售') {
-                    //针对退货单，不过滤明细
-                    listEx.push(info)
-                  }
-                }
+                listEx.push(list[j])
               }
               this.dataSourceDetail = listEx
               for (let i = 0, len = this.dataSourceDetail.length; i < len; i++) {
@@ -355,6 +350,7 @@
               let arr = []
               arr.push(record.id)
               this.selectedRowKeys = arr
+              console.log("selectedRowKeys: " + JSON.stringify(this.selectedRowKeys))
             },
             dblclick: () => {
               let arr = []
