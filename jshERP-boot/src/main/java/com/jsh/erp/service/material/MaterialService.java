@@ -1125,45 +1125,6 @@ public class MaterialService {
         return result;
     }
 
-    public List<MaterialBomVo4Info> getMaterialByProcessPrefix(List<String> prefixList,
-                                                               List<String> projectList,
-                                                               List<Double> amountList) {
-        List<MaterialBomVo4Info> result = new ArrayList<MaterialBomVo4Info>();
-        Map<String, MaterialBomVo4Info> barCodeToAmountMap = new HashMap<>();
-        try{
-            int length = prefixList.size();
-            if (length == 0 || projectList.size() != length || amountList.size() != length) {
-                throw new Exception();
-            }
-            for (int i = 0; i < length; i++) {
-//                List<MaterialBomVo4Info> list = materialBomMapperEx.selectNextLevelBomByPrefix(prefixList.get(i), projectList.get(i));
-//                for (MaterialBomVo4Info mb : list) {
-//                    if (barCodeToAmountMap.containsKey(mb.getBarCode())) {
-//                        BigDecimal usage = barCodeToAmountMap.get(mb.getBarCode()).getProcessUsage() == null ?
-//                                BigDecimal.ZERO : barCodeToAmountMap.get(mb.getBarCode()).getProcessUsage();
-//                        barCodeToAmountMap.get(mb.getBarCode()).setProcessUsage(
-//                                usage.add(mb.getProcessUsage() == null ?
-//                                        BigDecimal.ZERO :
-//                                        mb.getProcessUsage().multiply(BigDecimal.valueOf(amountList.get(i)))));
-//                    } else {
-//                        mb.setProcessUsage(mb.getProcessUsage() == null ?
-//                                BigDecimal.ZERO :
-//                                mb.getProcessUsage().multiply(BigDecimal.valueOf(amountList.get(i))));
-//                        barCodeToAmountMap.put(mb.getBarCode(), mb);
-//                    }
-//                }
-            }
-            for (MaterialBomVo4Info mb : barCodeToAmountMap.values()) {
-                if (mb.getBarCode() != null && !"".equals(mb.getBarCode())) {
-                    result.add(mb);
-                }
-            }
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
-    }
-
     public List<String> getMaterialNameList() {
         return materialMapperEx.getMaterialNameList();
     }

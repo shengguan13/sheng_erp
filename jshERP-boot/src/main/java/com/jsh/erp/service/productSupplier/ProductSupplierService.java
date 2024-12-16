@@ -73,7 +73,7 @@ public class ProductSupplierService {
         return list;
     }
 
-    public List<ProductSupplierVo4Info> select(String supplierId, String keyword, int offset, int rows) throws Exception{
+    public List<ProductSupplierVo4Info> select(String supplierId, String keyword, Integer offset, Integer rows) throws Exception{
         List<ProductSupplierVo4Info> list = new ArrayList<>();
         try{
             list = productSupplierMapperEx.selectProductSupplier(supplierId, keyword, offset, rows);

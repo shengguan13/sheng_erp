@@ -340,12 +340,12 @@ public class MaterialController {
         try {
             String[] mpArr = new String[]{};
             if(StringUtil.isNotEmpty(mpList)){
-                mpArr= mpList.split(",");
+                mpArr = mpList.split(",");
             }
             List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
                     StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled),
                     StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"编码", "名称", "型号", "规格", "单位", "颜色", "净重量（kg）", "保质期/月", "类别",
+            String[] names = {"编码", "名称", "型号", "规格", "单位", "颜色", "颜色代码", "净重量（kg）", "保质期/月", "类别",
                     "材质", "状态", "备注"};
             String title = "产品信息";
             Map<String, String> meIdToBarCodeMap = new HashMap<>();
@@ -363,15 +363,16 @@ public class MaterialController {
                     objs[0] = m.getmBarCode(); //编码
                     objs[1] = m.getName(); //名称
                     objs[2] = m.getModel(); // 型号
-                    objs[3] = m.getColorCode(); //颜色代码
+                    objs[3] = m.getOtherField5(); //规格
                     objs[4] = m.getUnit(); //单位
                     objs[5] = m.getColor(); //颜色
-                    objs[6] = m.getWeight() == null ? "" : String.valueOf(m.getWeight()); //净重量（kg）
-                    objs[7] = m.getExpiryNum() == null ? "" : String.valueOf(m.getExpiryNum()); //保质期/月
-                    objs[8] = m.getCategoryName(); //类别
-                    objs[9] = m.getMat(); //材质
-                    objs[19] = m.getEnabled() ? "启用" : "禁用"; //状态
-                    objs[20] = m.getRemark(); //备注
+                    objs[6] = m.getColorCode(); //颜色代码
+                    objs[7] = m.getWeight() == null ? "" : String.valueOf(m.getWeight()); //净重量（kg）
+                    objs[8] = m.getExpiryNum() == null ? "" : String.valueOf(m.getExpiryNum()); //保质期/月
+                    objs[9] = m.getCategoryName(); //类别
+                    objs[10] = m.getMat(); //材质
+                    objs[11] = m.getEnabled() ? "启用" : "禁用"; //状态
+                    objs[12] = m.getRemark(); //备注
                     objects.add(objs);
                 }
             }
@@ -494,68 +495,6 @@ public class MaterialController {
             }
             res.code = 200;
             res.data = list;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    @GetMapping(value = "/getMaterialPickByBarCodeAndAmount")
-    @ApiOperation(value = "根据编码查询领料信息")
-    public BaseResponseInfo getMaterialPickByBarCodeAndAmount(@RequestParam("barCode") String barCode,
-                                                              @RequestParam("amount") String amount,
-                                                              HttpServletRequest request) throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            JSONArray dataArray = new JSONArray();
-
-            List<MaterialBomVo4Info> materialBomList = materialBomService.getMaterialBomByBarCode(barCode);
-            Map<String, MaterialBomVo4Info> barCodeMap = new HashMap<>();
-            Map<String, Double> amountMap = new HashMap<>();
-
-            String[] barcodeArray = barCode.split(",");
-            String[] amountArray = amount.split(",");
-            for (MaterialBomVo4Info mb : materialBomList) {
-                barCodeMap.put(mb.getBarCode(), mb);
-            }
-            for (int i = 0; i < barcodeArray.length; i++) {
-                amountMap.put(barcodeArray[i], Double.valueOf(amountArray[i]));
-            }
-
-            List<Double> amountList = Arrays.stream(amountArray)
-                    .map(e -> Double.valueOf(e))
-                    .collect(Collectors.toList());
-            List<String> parentList = new ArrayList<>();
-            List<String> projectList = new ArrayList<>();
-//            for (String bc : barcodeArray) {
-//                parentList.add(barCodeMap.get(bc).getProcess());
-//                projectList.add(barCodeMap.get(bc).getProject());
-//            }
-            List<MaterialBomVo4Info> materialPickList = materialService.getMaterialByProcessPrefix(parentList, projectList, amountList);
-            Map<Long, BigDecimal> stockMap = materialService.getCurrentStockMapByMaterialId(
-                    materialPickList.stream().map(e -> e.getMaterialId()).collect(Collectors.toList()));
-
-            for (MaterialBomVo4Info mb : materialPickList) {
-                JSONObject item = new JSONObject();
-                item.put("barCode", mb.getBarCode() == null ? "" : mb.getBarCode());
-                item.put("name", mb.getName() == null ? "" : mb.getName());
-                item.put("colorCode", mb.getColorCode() == null ? "" : mb.getColorCode());
-                item.put("model", mb.getModel() == null ? "" : mb.getModel());
-                item.put("categoryName", mb.getCategory() == null ? "" : mb.getCategory());
-                item.put("color", mb.getColor() == null ? "" : mb.getColor());
-                item.put("stock", stockMap.getOrDefault(mb.getMaterialId(), BigDecimal.ZERO).doubleValue());
-                item.put("unit", mb.getUnit() == null ? "" : mb.getUnit());
-//                item.put("operNumber", Math.min(
-//                        mb.getProcessUsage() == null ? 0.0 : mb.getProcessUsage().doubleValue(),
-//                        stockMap.getOrDefault(mb.getMaterialId(), BigDecimal.ZERO).doubleValue()
-//                ));
-                item.put("remark", mb.getRemark());
-                dataArray.add(item);
-            }
-            res.code = 200;
-            res.data = dataArray;
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;

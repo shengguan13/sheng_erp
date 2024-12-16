@@ -72,6 +72,8 @@ public class DepotItemService {
     @Resource
     private DepotService depotService;
     @Resource
+    private MaterialBomMapperEx materialBomMapperEx;
+    @Resource
     private DepotAllocationService depotAllocationService;
     @Resource
     private UnitService unitService;
@@ -381,22 +383,52 @@ public class DepotItemService {
         return list;
     }
 
-    public List<DepotItemVo4WithInfoEx> getDetailListForBOM(Long headerId)throws Exception {
-        List<DepotItemVo4WithInfoEx> filtered = null;
+    /**
+     * 获取当前单据下面所有明细以及他们的下级（直接）
+     * @param headerId
+     * @return
+     * @throws Exception
+     */
+    public List<DepotItemVo4WithInfoEx> getNextLevelDetailListByBom(Long headerId)throws Exception {
+        List<DepotItemVo4WithInfoEx> list =null;
         try{
-            List<DepotItemVo4WithInfoEx> list = depotItemMapperEx.getDetailListForBOM(headerId);
-            filtered = new ArrayList<>();
-            Set<String> seen = new HashSet<>();
-            for (DepotItemVo4WithInfoEx di : list) {
-                if (!seen.contains(di.getBarCode())) {
-                    filtered.add(di);
+            list = depotItemMapperEx.getDetailList(headerId);
+            List<DepotItemVo4WithInfoEx> toAdd = new ArrayList<>();
+            DepotHead dh = depotHeadService.getDepotHead(headerId);
+            logger.info("XXXXX organId: " + dh.getOrganId());
+            if (dh.getOrganId() != null && dh.getOrganId() != 0) {
+                for (DepotItemVo4WithInfoEx di : list) {
+                    List<ProductSupplierVo4Info> psList = productSupplierService.select(dh.getOrganId().toString(), di.getBarCode(), 0, 1);
+                    BigDecimal base = di.getOperNumber();
+                    logger.info("XXXXX psSize: " + (psList == null ? 0 : psList.size()));
+                    if (psList != null && psList.size() > 0) {
+                        // 返回物料名字、类别、库存
+                        List<MaterialBomVo4Info> childList = materialBomMapperEx.selectNextLevelBomByParent(psList.get(0).getId().toString(), di.getBarCode(), null);
+                        for (MaterialBomVo4Info mb : childList) {
+                            logger.info("XXXXX child: " + mb.getBarCode());
+                            DepotItemVo4WithInfoEx newDi = new DepotItemVo4WithInfoEx();
+                            newDi.setBarCode(mb.getBarCode());
+                            newDi.setMName(mb.getName());
+                            newDi.setMModel(mb.getModel());
+                            newDi.setSupplierModel(mb.getSupplierModel());
+                            newDi.setMColor(mb.getColor());
+                            newDi.setMColorCode(mb.getColorCode());
+                            newDi.setMaterialUnit(mb.getmUnit());
+                            newDi.setMaterialId(mb.getMaterialId());
+                            newDi.setRemark("BOM下级物料");
+                            if (base != null && mb.getProcessUsage() != null) {
+                                newDi.setOperNumber(mb.getProcessUsage().multiply(base));
+                            }
+                            toAdd.add(newDi);
+                        }
+                    }
                 }
-                seen.add(di.getBarCode());
             }
+            list.addAll(toAdd);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return filtered;
+        return list;
     }
 
     public List<DepotItemVo4WithInfoEx> findByAll(String materialParam, String categoryId, String endTime, Integer offset, Integer rows)throws Exception {

@@ -280,7 +280,6 @@ public class DepotItemController {
     /**
      * 备料明细列表
      * @param headerId
-     * @param mpList
      * @param request
      * @return
      * @throws Exception
@@ -288,19 +287,16 @@ public class DepotItemController {
     @GetMapping(value = "/getMaterialPrepareList")
     @ApiOperation(value = "备料明细列表")
     public BaseResponseInfo getMaterialPrepareList(@RequestParam("headerId") Long headerId,
-                                                   @RequestParam("mpList") String mpList,
-                                                   @RequestParam(value = "linkType", required = false) String linkType,
-                                                   @RequestParam(value = "isReadOnly", required = false) String isReadOnly,
                                                    HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
+            List<DepotItemVo4WithInfoEx> detailList = new ArrayList<DepotItemVo4WithInfoEx>();
             if(headerId != 0) {
-                dataList = depotItemService.getDetailListForBOM(headerId);
+                detailList = depotItemService.getDetailList(headerId);
             }
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if (null != dataList) {
+            if (null != detailList) {
                 // 找出已绑定的领料单、退料单
                 DepotHead depotHead = depotHeadService.getDepotHead(headerId);
                 List<DepotHead> linked = depotHeadService.getBillListByLinkNumber(depotHead.getNumber());
@@ -335,19 +331,8 @@ public class DepotItemController {
                         }
                     }
                 }
-                List<String> prefixList = new ArrayList<>();
-                List<String> projectList = new ArrayList<>();
-                List<Double> amountList = new ArrayList<>();
                 // 找出所有根据计划要领的料
-                for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    double toProduce = diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue();
-                    if (diEx.getMProcess() != null && !"".equals(diEx.getMProcess()) && toProduce > 0) {
-                        prefixList.add(diEx.getMProcess());
-                        projectList.add(diEx.getMProject());
-                        amountList.add(toProduce);
-                    }
-                }
-                List<MaterialBomVo4Info> toBePrepared = materialService.getMaterialByProcessPrefix(prefixList, projectList, amountList);
+                List<MaterialBomVo4Info> toBePrepared = new ArrayList<>();
                 // 整合备料和已领料，然后返回
                 for (MaterialBomVo4Info m : toBePrepared) {
                     JSONObject item = new JSONObject();
@@ -359,9 +344,7 @@ public class DepotItemController {
                     item.put("categoryName", m.getCategory() == null ? "" : m.getCategory());
                     item.put("model", m.getModel() == null ? "" : m.getModel());
                     item.put("color", m.getColor() == null ? "" : m.getColor());
-                    item.put("unit", m.getUnit() == null ? "" : m.getUnit());
-//                    item.put("process", m.getProcess() == null ? "" : m.getProcess());
-//                    item.put("prepareNumber", m.getProcessUsage() == null ? 0.0 : m.getProcessUsage().doubleValue());
+                    item.put("unit", m.getmUnit() == null ? "" : m.getmUnit());
                     item.put("materialPick", materialPicked.getOrDefault(meId, 0.0));
                     item.put("materialReturn", materialReturned.getOrDefault(meId, 0.0));
                     dataArray.add(item);
@@ -538,6 +521,64 @@ public class DepotItemController {
                     footItem.put("taxLastMoney", totalTaxLastMoney);
                     footItem.put("weight", totalWeight);
                     dataArray.add(footItem);
+                }
+            }
+            outer.put("rows", dataArray);
+            res.code = 200;
+            res.data = outer;
+        } catch (Exception e) {
+            JshException.writeFail(logger, e);
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/getNextLevelDetailListByBom")
+    @ApiOperation(value = "物料及其下级明细列表")
+    public BaseResponseInfo getNextLevelDetailListByBom(@RequestParam("headerId") Long headerId,
+                                                        @RequestParam("mpList") String mpList,
+                                                        @RequestParam(value = "linkType", required = false) String linkType,
+                                                        @RequestParam(value = "isReadOnly", required = false) String isReadOnly,
+                                                        HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
+            if(headerId != 0) {
+                dataList = depotItemService.getNextLevelDetailListByBom(headerId);
+            }
+            String[] mpArr = mpList.split(",");
+            JSONObject outer = new JSONObject();
+            outer.put("total", dataList.size());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (DepotItemVo4WithInfoEx diEx : dataList) {
+                    JSONObject item = new JSONObject();
+                    if (diEx.getId() != null) {
+                        item.put("id", diEx.getId());
+                    } else {
+                        item.put("id", UUID.randomUUID().toString());
+                    }
+                    item.put("barCode", diEx.getBarCode());
+                    item.put("name", diEx.getMName());
+                    item.put("colorCode", diEx.getMColorCode());
+                    item.put("categoryName", diEx.getMCategoryName());
+                    item.put("model", diEx.getMModel());
+                    item.put("supplierModel", diEx.getSupplierModel());
+                    item.put("color", diEx.getMColor());
+                    item.put("operNumber", diEx.getOperNumber());
+                    item.put("remark", diEx.getRemark());
+                    BigDecimal stock;
+                    Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
+                    String materialUnit = diEx.getMaterialUnit();
+                    stock = depotItemService.getStockByParam(null,diEx.getMaterialId(),null,null);
+                    if (StringUtil.isNotEmpty(unitInfo.getName())) {
+                        stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
+                    }
+                    item.put("stock", stock);
+                    item.put("unit", diEx.getMaterialUnit());
+                    dataArray.add(item);
                 }
             }
             outer.put("rows", dataArray);

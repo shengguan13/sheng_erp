@@ -31,7 +31,7 @@ public interface MaterialBomMapperEx {
             @Param("barCode") String barCode,
             @Param("project") String project);
 
-    List<MaterialBomVo4Info> selectNextLevelBomByPrefix(
+    List<MaterialBomVo4Info> selectNextLevelBomByParent(
             @Param("parent") String parent,
             @Param("upper") String upper,
             @Param("project") String project);

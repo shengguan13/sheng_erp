@@ -48,7 +48,6 @@
         <result column="MOtherField8" jdbcType="VARCHAR" property="MOtherField8" />
         <result column="MOtherField9" jdbcType="VARCHAR" property="MOtherField9" />
         <result column="MOtherField10" jdbcType="VARCHAR" property="MOtherField10" />
-        <result column="MProcess" jdbcType="VARCHAR" property="MProcess" />
         <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
         <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
         <result column="barCode" jdbcType="VARCHAR" property="barCode" />
@@ -509,26 +508,6 @@
         order by di.id asc
     </select>
 
-    <select id="getDetailListForBOM" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select di.*,m.name MName,m.model MModel,mc.name MCategoryName,m.unit MaterialUnit,m.color MColor,m.color_code MColorCode,
-        m.mat MMat,m.weight,m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        m.other_field4 MOtherField4,m.other_field5 MOtherField5,m.other_field6 MOtherField6,
-        m.other_field7 MOtherField7,m.other_field8 MOtherField8,m.other_field9 MOtherField9,
-        m.other_field10 MOtherField10,
-        dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal,
-        mb.project MProject, mb.process MProcess
-        from jsh_depot_item di
-        left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
-        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_depot dp1 on di.depot_id=dp1.id and ifnull(dp1.delete_Flag,'0') !='1'
-        left join jsh_depot dp2 on di.another_depot_id=dp2.id and ifnull(dp2.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left JOIN jsh_material_bom mb on mb.bar_code = me.bar_code and ifnull(mb.delete_flag,'0') !='1'
-        where di.header_id = #{headerId}
-        and ifnull(di.delete_flag,'0') !='1'
-        order by di.id asc
-    </select>
-
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mat MMat, m.model MModel, m.color_code MColorCode,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
@@ -543,7 +522,7 @@
         left join (select bar_code, delete_Flag, GROUP_CONCAT(distinct(project)) as projects_combined from
         jsh_material_bom where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) b on b.bar_code = me.bar_code
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left join (select bar_code, delete_Flag, GROUP_CONCAT(model SEPARATOR ';') as models_combined from
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(distinct(model) SEPARATOR ';') as models_combined from
         jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'

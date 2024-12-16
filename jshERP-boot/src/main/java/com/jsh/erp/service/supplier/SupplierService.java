@@ -98,7 +98,7 @@ public class SupplierService {
         return list;
     }
 
-    public List<Supplier> select(String supplier, String type, String phonenum, String telephone, int offset, int rows) throws Exception{
+    public List<Supplier> select(String supplier, String type, String phonenum, String telephone, Integer offset, Integer rows) throws Exception{
         List<Supplier> resList = new ArrayList<Supplier>();
         try{
             List<Supplier> list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, offset, rows);
