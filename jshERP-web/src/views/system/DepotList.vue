@@ -124,7 +124,7 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: 200,
+            width: 120,
             scopedSlots: { customRender: 'action' },
           },
           {title: '仓库名称', dataIndex: 'name', width: 200},

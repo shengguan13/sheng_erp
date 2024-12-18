@@ -193,21 +193,22 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 150,
+            align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
+          { title: '客户', dataIndex: 'organName',width:100, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:120},
-          { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
+          { title: '产品信息', dataIndex: 'materialsList',width:150, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
-          { title: '数量', dataIndex: 'materialCount',width:60},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:100},
+          { title: '计划日期', dataIndex: 'planStartTimeStr',width:80},
+          { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
+          { title: '数量', dataIndex: 'materialCount',width:50},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
@@ -235,7 +236,7 @@
     methods: {
       handleImportXls() {
         let importExcelUrl = this.url.importExcelUrl
-        let templateUrl = '/doc/goods_template.xls'
+        let templateUrl = '/doc/sale_template.xls'
         let templateName = '客户预测Excel模板[下载]'
         this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
         this.$refs.modalImportForm.title = "预测导入";

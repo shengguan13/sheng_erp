@@ -190,26 +190,25 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 180,
+            align:"center", width: 150,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '生产日期', dataIndex: 'planStartTimeStr',width:120},
-          { title: '生产单号', dataIndex: 'number',width:145,
+          { title: '生产日期', dataIndex: 'planStartTimeStr',width:80},
+          { title: '生产单号', dataIndex: 'number',width:120,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[关联]":text
               return text
             }
           },
-          { title: '客户', dataIndex: 'organName',width:60, ellipsis:true},
-          { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
+          { title: '客户', dataIndex: 'organName',width:100, ellipsis:true},
+          { title: '产品信息', dataIndex: 'materialsList',width:150, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
               }
             }
           },
-          { title: '下单日期', dataIndex: 'operTimeStr',width:145},
-          { title: '生产工时', dataIndex: 'workHour',width:60},
+          { title: '下单日期', dataIndex: 'operTimeStr',width:100},
           { title: '生产数量', dataIndex: 'materialCount',width:80},
           { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",

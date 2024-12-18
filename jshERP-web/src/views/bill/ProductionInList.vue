@@ -186,7 +186,7 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 180,
+            align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:120},

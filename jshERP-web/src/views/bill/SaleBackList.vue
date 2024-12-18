@@ -193,7 +193,7 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 160,
+            align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},

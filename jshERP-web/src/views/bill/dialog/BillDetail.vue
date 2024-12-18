@@ -22,6 +22,7 @@
       <a-button v-if="billType === '生产计划'" v-print="'#productionPlanPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产单'" v-print="'#productionOrderPrint'">普通打印</a-button>
       <a-button v-if="billType === '备料'" v-print="'#materialPreparePrint'">普通打印</a-button>
+      <a-button v-if="billType === '计划备料'" v-print="'#materialPreparePrint'">普通打印</a-button>
       <a-button v-if="billType === '领料出库'" v-print="'#materialPickPrint'">普通打印</a-button>
       <a-button v-if="billType === '退料入库'" v-print="'#materialReturnPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产入库'" v-print="'#productionInPrint'">普通打印</a-button>
@@ -38,11 +39,12 @@
       <!--导出Excel-->
       <a-button v-if="billType === '采购申请'" @click="applicationExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购订单'||billType === '销售订单'" @click="orderExportExcel()">导出</a-button>
-      <a-button v-if="billType === '采购入库'||billType === '采购退货出库'||billType === '销售出库'||billType === '销售退货入库'"
-                @click="purchaseSaleExportExcel()">导出</a-button>
+      <a-button v-if="billType === '采购入库'||billType === '销售出库'" @click="purchaseSaleExportExcel()">导出</a-button>
+      <a-button v-if="billType === '采购退货出库'||billType === '销售退货入库'" @click="purchaseSaleBackExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产计划'" @click="productionPlanExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产单'" @click="productionOrderExportExcel()">导出</a-button>
       <a-button v-if="billType === '备料'" @click="materialPrepareExportExcel()">导出</a-button>
+      <a-button v-if="billType === '计划备料'" @click="materialPreparePlanExportExcel()">导出</a-button>
       <a-button v-if="billType === '领料出库'" @click="materialPickExportExcel()">导出</a-button>
       <a-button v-if="billType === '退料入库'" @click="materialReturnExportExcel()">导出</a-button>
       <a-button v-if="billType === '生产入库'" @click="productionInExportExcel()">导出</a-button>
@@ -1355,8 +1357,9 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '计划数量', dataIndex: 'operNumber'},
-          { title: '已下生产单', dataIndex: 'planOrderedNumber'},
+          { title: '已下产单', dataIndex: 'planOrderedNumber'},
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单位', dataIndex: 'unit'},
           { title: '库存', dataIndex: 'stock'},
@@ -1369,6 +1372,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '产单数量', dataIndex: 'operNumber'},
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单位', dataIndex: 'unit'},
@@ -1382,11 +1386,25 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
-          { title: '备料数量', dataIndex: 'prepareNumber'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
+          { title: '需求', dataIndex: 'operNumber'},
+          { title: '库存', dataIndex: 'stock'},
           { title: '已领', dataIndex: 'materialPick'},
           { title: '已退', dataIndex: 'materialReturn'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '工艺流程', dataIndex: 'process'}
+          { title: '备注', dataIndex: 'remark'}
+        ],
+        materialPreparePlanColumns: [
+          { title: '编码', dataIndex: 'barCode'},
+          { title: '零件号', dataIndex: 'model'},
+          { title: '客/供型号', dataIndex: 'supplierModel'},
+          { title: '名称', dataIndex: 'name'},
+          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
+          { title: '需求', dataIndex: 'operNumber'},
+          { title: '库存', dataIndex: 'stock'},
+          { title: '单位', dataIndex: 'unit'},
+          { title: '备注', dataIndex: 'remark'}
         ],
         materialPickColumns: [
           { title: '供应商', dataIndex: 'supplier'},
@@ -1395,6 +1413,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '领料批号', dataIndex: 'batchNumber'},
           { title: '领料货位', dataIndex: 'snListStr'},
           { title: '领料数量', dataIndex: 'operNumber'},
@@ -1410,6 +1429,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '退料数量', dataIndex: 'operNumber'},
@@ -1424,6 +1444,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '入库数量', dataIndex: 'operNumber'},
@@ -1443,6 +1464,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '申请数量', dataIndex: 'operNumber'},
           { title: '已下单', dataIndex: 'finishNumber'},
           { title: '单位', dataIndex: 'unit'},
@@ -1457,6 +1479,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '下单数量', dataIndex: 'operNumber'},
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单位', dataIndex: 'unit'},
@@ -1473,6 +1496,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '入库数量', dataIndex: 'operNumber'},
@@ -1489,6 +1513,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '退货数量', dataIndex: 'operNumber'},
@@ -1503,6 +1528,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '销单数量', dataIndex: 'operNumber'},
           { title: '已出库', dataIndex: 'finishNumber'},
           { title: '单位', dataIndex: 'unit'},
@@ -1517,6 +1543,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '出库数量', dataIndex: 'operNumber'},
@@ -1532,6 +1559,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '退货数量', dataIndex: 'operNumber'},
@@ -1546,6 +1574,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1560,6 +1589,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1575,6 +1605,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '新货位', dataIndex: 'materialTypeStr'},
@@ -1591,6 +1622,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1605,6 +1637,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1620,6 +1653,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1634,6 +1668,7 @@
           { title: '客/供型号', dataIndex: 'supplierModel'},
           { title: '名称', dataIndex: 'name'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
           { title: '新货位', dataIndex: 'materialTypeStr'},
@@ -1677,6 +1712,8 @@
           this.defColumns = this.productionOrderColumns
         } else if (type === '备料') {
           this.defColumns = this.materialPrepareColumns
+        } else if (type === '计划备料') {
+          this.defColumns = this.materialPreparePlanColumns
         } else if (type === '领料出库') {
           this.defColumns = this.materialPickColumns
         } else if (type === '退料入库') {
@@ -1962,12 +1999,12 @@
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
         '', '开始生产时间（含）：', this.model.planStartTimeStr, '', '完成生产时间（含）：', this.model.planFinishTimeStr],[]]
-        let title = ['编码', '名称', '型号', '规格', '类别', '颜色', '项目', '当前库存', '已下生产单', '已入库', '计划生产数量', '单位', '备注']
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '计划数量', '已下产单', '已入库', '单位', '库存', '项目', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project,
-          ds.stock, ds.planOrderedNumber, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode, ds.operNumber,
+          ds.planOrderedNumber, ds.finishNumber, ds.unit, ds.stock, ds.project, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -1977,12 +2014,12 @@
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
         '', '开始日期：', this.model.planStartTimeStr, '', '生产工时：', this.model.workHour],[]]
-        let title = ['编码', '名称', '型号', '规格', '类别', '颜色', '项目', '当前库存', '已入库', '计划生产数量', '单位', '备注']
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '产单数量', '已入库', '单位', '库存', '项目', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project,
-          ds.stock, ds.finishNumber, ds.operNumber, ds.unit, ds.remark]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode, ds.operNumber,
+          ds.finishNumber, ds.unit, ds.stock, ds.project, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -1992,12 +2029,27 @@
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
         '', '开始日期：', this.model.planStartTimeStr, '', '生产工时：', this.model.workHour],[]]
-        let title = ['编码', '名称', '型号', '规格', '类别', '颜色', '项目', '备料数量', '已领', '已退', '单位']
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '需求', '库存', '已领', '已退', '单位', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project,
-          ds.prepareNumber, ds.materialPick, ds.materialReturn, ds.unit]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode, ds.operNumber,
+          ds.stock, ds.materialPick, ds.materialReturn, ds.unit, ds.remark]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+      },
+      //计划备料
+      materialPreparePlanExportExcel() {
+        let aoa = []
+        aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number,
+        '', '开始生产时间（含）：', this.model.planStartTimeStr, '', '完成生产时间（含）：', this.model.planFinishTimeStr],[]]
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '需求', '库存', '单位', '备注']
+        aoa.push(title)
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode, ds.operNumber,
+          ds.stock, ds.unit, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2006,12 +2058,13 @@
       materialPickExportExcel() {
         let aoa = []
         aoa = [['领料人员：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '库存', '领料数量', '退料数量', '单位', '备注']
+        let title = ['供应商', '编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码',
+          '领料批号', '领料货位', '领料数量', '单位', '库存', '仓库名称', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.stock,
-             ds.preNumber, ds.finishNumber, ds.unit, ds.remark]
+          let item = [ds.supplier, ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode,
+            ds.batchNumber, ds.snListStr, ds.operNumber, ds.unit, ds.stock, ds.depotName, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2020,12 +2073,13 @@
       materialReturnExportExcel() {
         let aoa = []
         aoa = [['领料人员：', this.model.salesManStr, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '库存', '退料数量', '单位', '备注']
+        let title = ['供应商', '编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码',
+          '批号', '货位', '退料数量', '单位', '库存', '仓库名称', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.stock,
-             ds.operNumber, ds.unit, ds.remark]
+          let item = [ds.supplier, ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode,
+            ds.batchNumber, ds.snListStr, ds.operNumber, ds.unit, ds.stock, ds.depotName, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2034,44 +2088,80 @@
       productionInExportExcel() {
         let aoa = []
         aoa = [['客户：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '批号', '数量', '单位', '备注']
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '批号', '货位', '入库数量', '单位', '库存', '仓库名称', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.stock,
-            ds.batchNumber, ds.operNumber, ds.unit, ds.remark]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode,
+            ds.batchNumber, ds.snListStr, ds.operNumber, ds.unit, ds.stock, ds.depotName, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
       },
       //采购申请
       applicationExportExcel() {
+        let aoa = []
+        aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '申请人：', this.model.salesManStr],[]]
+        let title = ['供应商', '编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码',
+          '申请数量', '已下单', '单位', '库存', '收货地', '到货日期', '备注']
+        aoa.push(title)
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode,
+            ds.operNumber, ds.finishNumber, ds.unit, ds.stock, ds.anotherDepotName, ds.expirationDate, ds.remark]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
       },
       //采购订单|销售订单
       orderExportExcel() {
         let aoa = []
         let finishType = ''
         let organType = ''
+        let location = ''
+        let expiration = ''
         if(this.billType === '采购订单') {
           finishType = '已入库'
           organType = '供应商：'
+          location = '收货地'
+          expiration = '到货日期'
         } else if(this.billType === '销售订单') {
           finishType = '已出库'
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '数量', finishType, '单价', '金额', '税率(%)', '税额', '价税合计', '备注']
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '数量', finishType, '单位', '库存', location, expiration, '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
-            ds.operNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode,
+            ds.operNumber, ds.finishNumber, ds.unit, ds.stock, ds.anotherDepotName, ds.expirationDate, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
       },
-      //采购入库|采购退货出库|销售出库|销售退货入库
+      //采购入库|销售出库
       purchaseSaleExportExcel() {
+        let aoa = []
+        let organType = ''
+        if(this.billType === '采购入库') {
+          organType = '供应商：'
+        } else if(this.billType === '销售出库' || this.billType === '销售退货入库') {
+          organType = '客户：'
+        }
+        aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单号：', this.model.linkNumber],[]]
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '批号', '货位', '数量', '退货数量', '单位', '库存', '仓库名称', '备注']
+        aoa.push(title)
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode,
+            ds.batchNumber, ds.snListStr, ds.operNumber, ds.finishNumber, ds.unit, ds.stock, ds.depotName, ds.remark]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+      },
+      //采购退货出库|销售退货入库
+      purchaseSaleBackExportExcel() {
         let aoa = []
         let organType = ''
         if(this.billType === '采购入库' || this.billType === '采购退货出库') {
@@ -2080,12 +2170,12 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单号：', this.model.linkNumber],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '货位', '批号', '数量', '单价', '金额', '税率(%)', '税额', '价税合计', '重量', '备注']
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '批号', '货位', '退货数量', '单位', '库存', '仓库名称', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.weight, ds.remark]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode,
+            ds.batchNumber, ds.snListStr, ds.operNumber, ds.unit, ds.stock, ds.depotName, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2100,12 +2190,12 @@
           organType = '客户：'
         }
         aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '货位', '批号', '数量', '单价', '金额', '备注']
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '批号', '货位', '数量', '单位', '库存', '仓库名称', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode,
+            ds.batchNumber, ds.snListStr, ds.operNumber, ds.unit, ds.stock, ds.depotName, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
@@ -2114,43 +2204,24 @@
       allocationOutExportExcel() {
         let aoa = []
         aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '调入仓库', '单位', '数量', '单价', '金额', '备注']
+        let title = ['编码', '零件号', '客/供型号', '名称', '颜色', '颜色代码', '批号', '货位', '新货位',
+          '数量', '单位', '库存', '调出仓库', '调入仓库', '备注']
         aoa.push(title)
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.anotherDepotName, ds.unit,
-             ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
+          let item = [ds.barCode, ds.model, ds.supplierModel, ds.name, ds.color, ds.colorCode, ds.batchNumber,
+            ds.snListStr, ds.materialTypeStr, ds.operNumber, ds.unit, ds.stock, ds.depotName, ds.anotherDepotName, ds.remark]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
       },
       //组装单|拆卸单
       assembleExportExcel() {
-        let aoa = []
-        aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['产品类型', '仓库名称', '编码', '名称', '型号', '规格', '类别', '颜色', '项目', '扩展信息', '库存', '单位', '数量', '单价', '金额', '备注']
-        aoa.push(title)
-        for (let i = 0; i < this.dataSource.length; i++) {
-          let ds = this.dataSource[i]
-          let item = [ds.mType, ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.color, ds.project, ds.materialOther, ds.stock, ds.unit,
-             ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
-          aoa.push(item)
-        }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+
       },
       //盘点复盘
       stockCheckReplayExportExcel() {
-        let aoa = []
-        aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单据：', this.model.linkNumber],[]]
-        let title = ['仓库名称', '编码', '名称', '型号', '规格', '类别', '扩展信息', '库存', '单位', '数量', '单价', '金额', '备注']
-        aoa.push(title)
-        for (let i = 0; i < this.dataSource.length; i++) {
-          let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.colorCode, ds.model, ds.categoryName, ds.materialOther, ds.stock, ds.unit,
-             ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
-          aoa.push(item)
-        }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+
       }
     }
   }

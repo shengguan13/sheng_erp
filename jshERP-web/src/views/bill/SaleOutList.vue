@@ -98,6 +98,8 @@
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="checkFlag && btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
               <a-menu-item key="3" v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
+              <a-menu-item key="4" v-if="checkFlag && btnEnableList.indexOf(1)>-1" @click="batchSetCheckStatus(1)"><a-icon type="check"/>结算</a-menu-item>
+              <a-menu-item key="5" v-if="checkFlag && btnEnableList.indexOf(1)>-1" @click="batchSetCheckStatus(0)"><a-icon type="stop"/>反结算</a-menu-item>
             </a-menu>
             <a-button>
               批量操作 <a-icon type="down" />
@@ -140,6 +142,7 @@
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
               <a-tag v-if="record.hasBackFlag" color="red">有退货</a-tag>
+              <a-tag v-if="record.billType == '1'" color="green">已结算</a-tag>
             </template>
           </a-table>
         </div>
@@ -197,7 +200,7 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 180,
+            align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
@@ -212,7 +215,7 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
-          { title: '状态', dataIndex: 'status', width: 80, align: "center",
+          { title: '状态', dataIndex: 'status', width: 100, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
         ],
@@ -220,7 +223,8 @@
           list: "/depotHead/list",
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
-          batchSetStatusUrl: "/depotHead/batchSetStatus"
+          batchSetStatusUrl: "/depotHead/batchSetStatus",
+          batchSetCheckStatusUrl: "/depotHead/batchSetCheckStatus"
         }
       }
     },

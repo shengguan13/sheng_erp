@@ -79,6 +79,21 @@ public class DepotHeadController {
         }
     }
 
+    @PostMapping(value = "/batchSetCheckStatus")
+    @ApiOperation(value = "批量设置状态-结算或者反结算")
+    public String batchSetCheckStatus(@RequestBody JSONObject jsonObject,
+                                      HttpServletRequest request) throws Exception{
+        Map<String, Object> objectMap = new HashMap<>();
+        String status = jsonObject.getString("status");
+        String ids = jsonObject.getString("ids");
+        int res = depotHeadService.batchSetCheckStatus(status, ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
     /**
      * 批量设置状态-发票签收或反签收
      * @param jsonObject

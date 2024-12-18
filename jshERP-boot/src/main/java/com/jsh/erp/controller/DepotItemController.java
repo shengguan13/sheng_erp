@@ -33,6 +33,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.jsh.erp.constants.BusinessConstants.SUB_TYPE_PRODUCTION_ORDER;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 import static java.math.RoundingMode.CEILING;
 
@@ -290,13 +291,10 @@ public class DepotItemController {
                                                    HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            List<DepotItemVo4WithInfoEx> detailList = new ArrayList<DepotItemVo4WithInfoEx>();
-            if(headerId != 0) {
-                detailList = depotItemService.getDetailList(headerId);
-            }
+            List<DepotItemVo4WithInfoEx> toBePrepared = depotItemService.getNextLevelDetailListOnly(headerId);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if (null != detailList) {
+            if (null != toBePrepared) {
                 // 找出已绑定的领料单、退料单
                 DepotHead depotHead = depotHeadService.getDepotHead(headerId);
                 List<DepotHead> linked = depotHeadService.getBillListByLinkNumber(depotHead.getNumber());
@@ -331,22 +329,27 @@ public class DepotItemController {
                         }
                     }
                 }
-                // 找出所有根据计划要领的料
-                List<MaterialBomVo4Info> toBePrepared = new ArrayList<>();
                 // 整合备料和已领料，然后返回
-                for (MaterialBomVo4Info m : toBePrepared) {
+                for (DepotItemVo4WithInfoEx m : toBePrepared) {
                     JSONObject item = new JSONObject();
-                    String meId = m.getMeId() == null ? "" : String.valueOf(m.getMeId());
+                    String meId = m.getMaterialExtendId() == null ? "" : String.valueOf(m.getMaterialExtendId());
                     item.put("materialExtendId", meId);
                     item.put("barCode", m.getBarCode() == null ? "" : m.getBarCode());
-                    item.put("name", m.getName() == null ? "" : m.getName());
-                    item.put("colorCode", m.getColorCode() == null ? "" : m.getColorCode());
-                    item.put("categoryName", m.getCategory() == null ? "" : m.getCategory());
-                    item.put("model", m.getModel() == null ? "" : m.getModel());
-                    item.put("color", m.getColor() == null ? "" : m.getColor());
-                    item.put("unit", m.getmUnit() == null ? "" : m.getmUnit());
-                    item.put("materialPick", materialPicked.getOrDefault(meId, 0.0));
-                    item.put("materialReturn", materialReturned.getOrDefault(meId, 0.0));
+                    item.put("name", m.getMName() == null ? "" : m.getMName());
+                    item.put("colorCode", m.getMColorCode() == null ? "" : m.getMColorCode());
+                    item.put("categoryName", m.getMCategoryName() == null ? "" : m.getMCategoryName());
+                    item.put("model", m.getMModel() == null ? "" : m.getMModel());
+                    item.put("color", m.getMColor() == null ? "" : m.getMColor());
+                    item.put("unit", m.getMaterialUnit() == null ? "" : m.getMaterialUnit());
+                    item.put("operNumber", m.getOperNumber());
+                    if (SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
+                        item.put("materialPick", materialPicked.getOrDefault(meId, 0.0));
+                        item.put("materialReturn", materialReturned.getOrDefault(meId, 0.0));
+                    }
+                    BigDecimal stock;
+                    stock = depotItemService.getStockByParam(null, m.getMaterialId(),null,null);
+                    item.put("stock", stock);
+                    item.put("remark", m.getRemark());
                     dataArray.add(item);
                 }
             }

@@ -639,6 +639,20 @@ public class DepotHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetCheckStatus(String status, String depotHeadIDs) throws Exception {
+        int result = 0;
+        List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
+        if (ids.size() > 0) {
+            DepotHead depotHead = new DepotHead();
+            depotHead.setBillType(status);
+            DepotHeadExample example = new DepotHeadExample();
+            example.createCriteria().andIdIn(ids);
+            result = depotHeadMapper.updateByExampleSelective(depotHead, example);
+        }
+        return result;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetPurchaseStatus(String status, String depotHeadIDs) throws Exception {
         int result = 0;
         List<Long> dhIds = new ArrayList<>();
@@ -1415,7 +1429,9 @@ public class DepotHeadService {
             }
             Map<String, Map<String, DepotItem>> customerToDepotItems = new HashMap<>();
             Map<String, DepotHead> customerToDepotHead = new HashMap<>();
+            int imported = 0, total = 0;
             for (int i = 1; i < rightRows; i++) {
+                total += 1;
                 String date = ExcelUtils.getContent(src, i, 0); //日期
                 Date dateValue;
                 try {
@@ -1428,7 +1444,7 @@ public class DepotHeadService {
                 String model = ExcelUtils.getContent(src, i, 2).trim(); //型号
                 String operNumber = ExcelUtils.getContent(src, i, 3); //数量
 
-                List<Supplier> organs = supplierService.select(customer, "客户", null, null, null, null);
+                List<Supplier> organs = supplierService.selectByExact(customer, "客户", null, null, null, null);
                 if (organs.size() != 1) {
                     errors.add("第" + i + "行名为【" + customer +  "】的客户未找到或者不止一个");
                     continue;
@@ -1457,11 +1473,12 @@ public class DepotHeadService {
                 depotHead.setDiscountLastMoney(BigDecimal.ONE);
                 depotHead.setTotalPrice(BigDecimal.ZERO.subtract(BigDecimal.ONE));
                 depotHead.setOrganId(organs.get(0).getId());
-                depotHead.setCreateTime(dateValue);
-                depotHead.setOperTime(dateValue);
+                depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                depotHead.setOperTime(new Timestamp(System.currentTimeMillis()));
+                depotHead.setPlanStartTime(dateValue);
                 depotHead.setCreator(63L);
                 depotHead.setPayType("现付");
-                depotHead.setStatus("1");
+                depotHead.setStatus("0");
                 depotHead.setPurchaseStatus("0");
                 depotHead.setDeleteFlag("0");
 
@@ -1476,6 +1493,10 @@ public class DepotHeadService {
                 if (!customerToDepotHead.containsKey(organs.get(0).getSupplier())) {
                     customerToDepotHead.put(organs.get(0).getSupplier(), depotHead);
                 }
+                imported += 1;
+            }
+            for (String error : errors) {
+                logger.info("XXXXX " + error);
             }
             for (DepotHead head : customerToDepotHead.values()) {
                 if (errors.size() > 0) {
@@ -1489,7 +1510,7 @@ public class DepotHeadService {
             Long endTime = System.currentTimeMillis();
             logger.info("导入耗时：{}", endTime - beginTime);
             info.code = 200;
-            info.data = errors.size() > 0 ? "部分成功" : "导入成功";
+            info.data = "一共" + total + "条；成功" + imported + "条";
         } catch (BusinessRunTimeException e) {
             throw e;
         } catch (Exception e) {

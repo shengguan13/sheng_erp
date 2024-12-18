@@ -111,6 +111,19 @@ public class SupplierService {
         return resList;
     }
 
+    public List<Supplier> selectByExact(String supplier, String type, String phonenum, String telephone, Integer offset, Integer rows) throws Exception{
+        List<Supplier> resList = new ArrayList<Supplier>();
+        try{
+            List<Supplier> list = supplierMapperEx.selectByExactSupplier(supplier, type, phonenum, telephone, offset, rows);
+            for(Supplier s : list) {
+                resList.add(s);
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return resList;
+    }
+
     public Long countSupplier(String supplier, String type, String phonenum, String telephone) throws Exception{
         Long result=null;
         try{

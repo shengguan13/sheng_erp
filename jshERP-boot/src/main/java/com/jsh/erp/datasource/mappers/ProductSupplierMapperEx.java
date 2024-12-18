@@ -8,8 +8,8 @@ import java.util.List;
 public interface ProductSupplierMapperEx {
     List<ProductSupplierVo4Info> selectProductSupplier(@Param("supplierId") String supplierId,
                                                        @Param("keyword") String keyword,
-                                                       @Param("offset") int offset,
-                                                       @Param("rows") int rows);
+                                                       @Param("offset") Integer offset,
+                                                       @Param("rows") Integer rows);
 
     List<ProductSupplierVo4Info> selectProductSupplierByBarCode(@Param("name") String name,
                                                                 @Param("barCode") String barCode);

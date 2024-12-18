@@ -389,8 +389,54 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
+    public List<DepotItemVo4WithInfoEx> getNextLevelDetailListOnly(Long headerId)throws Exception {
+        List<DepotItemVo4WithInfoEx> list, toAdd = new ArrayList<>();
+        try{
+            list = depotItemMapperEx.getDetailList(headerId);
+            DepotHead dh = depotHeadService.getDepotHead(headerId);
+            logger.info("XXXXX organId: " + dh.getOrganId());
+            if (dh.getOrganId() != null && dh.getOrganId() != 0) {
+                for (DepotItemVo4WithInfoEx di : list) {
+                    List<ProductSupplierVo4Info> psList = productSupplierService.select(dh.getOrganId().toString(), di.getBarCode(), 0, 1);
+                    BigDecimal base = di.getOperNumber();
+                    logger.info("XXXXX psSize: " + (psList == null ? 0 : psList.size()));
+                    if (psList != null && psList.size() > 0) {
+                        // 返回物料名字、类别、库存
+                        List<MaterialBomVo4Info> childList = materialBomMapperEx.selectNextLevelBomByParent(psList.get(0).getId().toString(), di.getBarCode(), null);
+                        for (MaterialBomVo4Info mb : childList) {
+                            logger.info("XXXXX child: " + mb.getBarCode());
+                            DepotItemVo4WithInfoEx newDi = new DepotItemVo4WithInfoEx();
+                            newDi.setBarCode(mb.getBarCode());
+                            newDi.setMName(mb.getName());
+                            newDi.setMModel(mb.getModel());
+                            newDi.setSupplierModel(mb.getSupplierModel());
+                            newDi.setMColor(mb.getColor());
+                            newDi.setMColorCode(mb.getColorCode());
+                            newDi.setMaterialUnit(mb.getmUnit());
+                            newDi.setMaterialId(mb.getMaterialId());
+                            newDi.setRemark("BOM下级物料");
+                            if (base != null && mb.getProcessUsage() != null) {
+                                newDi.setOperNumber(mb.getProcessUsage().multiply(base));
+                            }
+                            toAdd.add(newDi);
+                        }
+                    }
+                }
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return toAdd;
+    }
+
+    /**
+     * 获取当前单据下面所有明细以及他们的下级（直接）
+     * @param headerId
+     * @return
+     * @throws Exception
+     */
     public List<DepotItemVo4WithInfoEx> getNextLevelDetailListByBom(Long headerId)throws Exception {
-        List<DepotItemVo4WithInfoEx> list =null;
+        List<DepotItemVo4WithInfoEx> list = null;
         try{
             list = depotItemMapperEx.getDetailList(headerId);
             List<DepotItemVo4WithInfoEx> toAdd = new ArrayList<>();
@@ -734,7 +780,7 @@ public class DepotItemService {
 //                        Long preHeaderId = depotHeadService.getDepotHead(depotHead.getLinkNumber()).getId();
 //                        //原订单的数量
 //                        BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
-//                        //除去此单据之外的已入库|已出库|已下生产单（生产单不能多下，但是实际入库是可以超过生产单的）
+//                        //除去此单据之外的已入库|已出库|已下产单（生产单不能多下，但是实际入库是可以超过生产单的）
 //                        BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
 //                        if(!"生产单".equals(depotHead.getSubType()) && depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber) > 0) {
 //                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,

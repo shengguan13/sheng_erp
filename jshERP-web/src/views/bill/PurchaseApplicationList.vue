@@ -181,7 +181,7 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 140,
+            align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
           { title: '单据编号', dataIndex: 'number',width:120,

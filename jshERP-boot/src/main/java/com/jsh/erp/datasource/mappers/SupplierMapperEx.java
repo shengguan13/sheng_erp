@@ -17,6 +17,14 @@ public interface SupplierMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
+    List<Supplier> selectByExactSupplier(
+            @Param("supplier") String supplier,
+            @Param("type") String type,
+            @Param("phonenum") String phonenum,
+            @Param("telephone") String telephone,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
     Long countsBySupplier(
             @Param("supplier") String supplier,
             @Param("type") String type,
