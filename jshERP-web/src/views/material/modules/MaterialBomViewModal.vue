@@ -454,7 +454,7 @@
         this.form.validateFields((err, values) => {
           if (!err) {
             if (!this.currSelected.id) {
-              this.$message.warning('请点击选择要修改类别!')
+              this.$message.warning('请点击选择要修改BOM!')
               return
             }
             let formData = Object.assign(this.currSelected, values)
@@ -464,7 +464,7 @@
                 this.$message.success('保存成功!')
                 this.loadTree()
               } else {
-                this.$message.warning(res.data.message)
+                this.$message.warning('更新失败，检查BOM上级是否已有指定的物料！')
               }
             })
           }
@@ -483,7 +483,7 @@
               this.$message.success('新增成功!')
               this.loadTree()
             } else {
-              this.$message.warning(res.data.message)
+              this.$message.warning(res.data)
             }
           })
         }

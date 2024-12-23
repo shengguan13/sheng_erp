@@ -29,10 +29,9 @@ public class MaterialBomComponent implements ICommonQuery {
         String search = parameterMap.get(Constants.SEARCH);
         String categoryId = StringUtil.getInfo(search, "categoryId");
         String parent = StringUtil.getInfo(search, "parent");
-        String upper = StringUtil.getInfo(search, "upper");
         String project = StringUtil.getInfo(search, "project");
         String materialParam = StringUtil.getInfo(search, "materialParam");
-        return materialBomService.select(categoryId, parent, upper, project, materialParam,
+        return materialBomService.select(categoryId, parent, project, materialParam,
                 QueryUtils.offset(parameterMap), QueryUtils.rows(parameterMap));
     }
 

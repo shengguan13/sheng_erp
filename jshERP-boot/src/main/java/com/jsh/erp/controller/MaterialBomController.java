@@ -55,7 +55,7 @@ public class MaterialBomController {
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
-            res.data = "添加失败";
+            res.data = e.getMessage();
         }
         return res;
     }

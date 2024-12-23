@@ -203,19 +203,20 @@
             align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:160},
-          { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
+          { title: '客户', dataIndex: 'organName', width:120, ellipsis:true},
+          { title: '客户订单', dataIndex: 'payType', width:140},
+          { title: '单据编号', dataIndex: 'number', width:140},
+          { title: '产品信息', dataIndex: 'materialsList',width:180, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:130},
+          { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
-          { title: '状态', dataIndex: 'status', width: 100, align: "center",
+          { title: '状态', dataIndex: 'status', width: 60, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
         ],

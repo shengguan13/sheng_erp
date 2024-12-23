@@ -1484,7 +1484,6 @@
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单位', dataIndex: 'unit'},
           { title: '库存', dataIndex: 'stock'},
-          { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '收货地', dataIndex: 'anotherDepotName'},
           { title: '到货日期', dataIndex: 'expirationDate'},
           { title: '备注', dataIndex: 'remark'}

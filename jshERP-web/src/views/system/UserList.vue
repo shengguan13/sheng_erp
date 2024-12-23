@@ -130,7 +130,7 @@
             dataIndex: 'action',
             scopedSlots: {customRender: 'action'},
             align: "center",
-            width: 120
+            width: 160
           },
           { title: '登录名称', dataIndex: 'loginName', width: 100, align: "left"},
           { title: '用户姓名', dataIndex: 'username', width: 100, align: "left"},

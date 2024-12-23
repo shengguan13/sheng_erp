@@ -193,10 +193,14 @@
     </select>
 
     <select id="countMaterialBomNullUpper" resultType="java.lang.Long">
-        SELECT count(mb.id) from jsh_material_bom mb
+        SELECT count(1) from
+        (select mb.*, m.name, m.color_code, m.model, m.color, mc.name category, m.unit mUnit, ps.models_combined supplier_model
+        from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join (select bar_code, delete_Flag, GROUP_CONCAT(distinct(model) SEPARATOR ';') as models_combined from
+        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
         where 1=1
         and (mb.upper is null or mb.upper = '')
         <if test="parent != null and parent != ''">
@@ -208,8 +212,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
-            or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey})
+            and (mb.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
+            or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
+            or ps.models_combined like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -218,6 +223,7 @@
             </foreach>
         </if>
         and ifnull(mb.delete_flag,'0') !='1'
+        group by mb.bar_code, mb.parent, mb.upper, mb.project) a
     </select>
 
     <update id="batchDeleteMaterialBomByIds">

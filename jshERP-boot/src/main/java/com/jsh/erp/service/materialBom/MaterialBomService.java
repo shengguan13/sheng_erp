@@ -80,7 +80,7 @@ public class MaterialBomService {
     }
 
     public List<MaterialBomVo4Info> select(
-            String categoryId, String parent, String upper, String project, String materialParam, int offset, int rows) throws Exception{
+            String categoryId, String parent, String project, String materialParam, int offset, int rows) throws Exception{
         List<MaterialBomVo4Info> list = new ArrayList<>();
         try{
             List<Long> idList = new ArrayList<>();
@@ -205,6 +205,37 @@ public class MaterialBomService {
             List<MaterialVo4Unit> materials = materialService.select(
                     "BOM新增物料", null, null, null, null, null, null, null, null, 0, 10);
             m.setBarCode(materials.get(0).getmBarCode());
+            Set<String> toCheck = new HashSet<>();
+            toCheck.add(upper);
+            int count = 0;
+            while (true) {
+                count += 1;
+                if (count == 100) {
+                    throw new BusinessRunTimeException(500, "BOM存在太多相同物料，请联系管理员！");
+                }
+                Set<String> nextToCheck = new HashSet<>();
+                boolean found = false;
+                for (String code : toCheck) {
+                    List<MaterialBomVo4Info> list = selectMaterialBomWithUpper(parent, null, project, code);
+                    if (list != null) {
+                        for (MaterialBomVo4Info bom : list) {
+                            if (bom.getBarCode().equals(materials.get(0).getmBarCode())) {
+                                found = true;
+                                break;
+                            } else if (bom.getUpper() != null && !"".equals(bom.getUpper())) {
+                                nextToCheck.add(bom.getUpper());
+                            }
+                        }
+                    }
+                }
+                if (found) {
+                    throw new BusinessRunTimeException(500, "新增BOM的上级存在与新增BOM相同的物料，请先修改上级！");
+                } else if (nextToCheck.isEmpty()) {
+                    break;
+                } else {
+                    toCheck = new HashSet<>(nextToCheck);
+                }
+            }
             materialBomMapper.insertSelective(m);
             logService.insertLog("产品BOM",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD)
@@ -229,6 +260,39 @@ public class MaterialBomService {
         MaterialBom old = materialBomMapper.selectByPrimaryKey(materialBom.getId());
         List<MaterialBomVo4Info> oldChildren = getMaterialBomTree(old.getParent(), old.getBarCode(), old.getProject());
         try{
+            if(old.getUpper() != null && !"".equals(old.getUpper())) {
+                Set<String> toCheck = new HashSet<>();
+                toCheck.add(old.getUpper());
+                int count = 0;
+                while (true) {
+                    count += 1;
+                    if (count == 100) {
+                        throw new BusinessRunTimeException(500, "BOM存在太多相同物料，请联系管理员！");
+                    }
+                    Set<String> nextToCheck = new HashSet<>();
+                    boolean found = false;
+                    for (String code : toCheck) {
+                        List<MaterialBomVo4Info> list = selectMaterialBomWithUpper(old.getParent(), null, old.getProject(), code);
+                        if (list != null) {
+                            for (MaterialBomVo4Info bom : list) {
+                                if (bom.getBarCode().equals(materialBom.getBarCode())) {
+                                    found = true;
+                                    break;
+                                } else if (bom.getUpper() != null && !"".equals(bom.getUpper())) {
+                                    nextToCheck.add(bom.getUpper());
+                                }
+                            }
+                        }
+                    }
+                    if (found) {
+                        throw new BusinessRunTimeException(500, "新增BOM的上级存在与新增BOM相同的物料，请先修改上级！");
+                    } else if (nextToCheck.isEmpty()) {
+                        break;
+                    } else {
+                        toCheck = new HashSet<>(nextToCheck);
+                    }
+                }
+            }
             materialBomMapper.updateByPrimaryKeySelective(materialBom);
             String oldParent = old.getParent() == null ? "" : old.getParent();
             String newParent = materialBom.getParent() == null ? "" : materialBom.getParent();
@@ -259,7 +323,7 @@ public class MaterialBomService {
                             .append("[" + materialBom.getUpper() + "]")
                             .append("[" + materialBom.getBarCode() + "]").toString(), request);
             return 1;
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.writeFail(logger, e);
             return 0;
         }
