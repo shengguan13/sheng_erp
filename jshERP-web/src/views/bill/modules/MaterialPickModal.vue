@@ -139,7 +139,6 @@
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort,handleIntroJs } from "@/utils/util"
   import { getAction } from '@/api/manage'
-  import { getMaterialPickByBarCodeAndAmount, getMaterialByCompositePrefix } from '@/api/api'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -321,65 +320,24 @@
         this.$refs.productionOrderLinkList.title = "选择生产单（已审核的单据才能关联）"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
-        this.orderStatusStr = ''
-        this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
-        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
-
-        let productionMap = new Map()
-        let materialQueryArr = []
+        this.rowCanEdit = false
+        this.materialTable.columns[1].type = FormTypes.normal
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
+          let listEx = []
           for(let j=0; j<selectBillDetailRows.length; j++) {
-            if (j>0) {
-              this.orderStatusStr = this.orderStatusStr + "，"
-            }
             let info = selectBillDetailRows[j];
-            let toDoNumber = info.preNumber
-            this.orderStatusStr = this.orderStatusStr + "[" + info.name + "]" + info.preNumber + info.unit
-            if(info.finishNumber > 0) {
-              toDoNumber = info.preNumber - info.finishNumber
-            }
-            this.orderStatusStr = this.orderStatusStr + "（还需生产" + toDoNumber + info.unit + "）"
-            productionMap.set(info.barCode, toDoNumber)
+            //info.linkId = info.id
+            listEx.push(info)
+            this.changeColumnShow(info)
           }
-          // 读取所有生产单的零件barCode
-          let barCodeArr = []
-          let amountArr = []
-          for (let [key, value] of productionMap) {
-            barCodeArr.push(key)
-            amountArr.push(value)
-          }
-          let param = {
-            barCode: barCodeArr.toString(),
-            amount: amountArr.toString(),
-          }
-          // 读取所有生产单零件的composite
-          let res = getMaterialPickByBarCodeAndAmount(param).then((res) => {
-            if (res && res.code === 200) {
-              let listEx = []
-              let list = res.data
-              for (let i = 0; i < list.length; i++) {
-                let info = list[i]
-                info.depotId = this.defaultDepotId
-                listEx.push(info)
-                this.changeColumnShow(info)
-              }
-              this.materialTable.dataSource = listEx
-              this.$nextTick(() => {
-                this.form.setFieldsValue({
-                  'linkNumber': linkNumber,
-                  'remark': remark,
-                  'orderStatus': this.orderStatusStr,
-                })
-              })
-            } else {
-              this.form.setFieldsValue({
-                'linkNumber': linkNumber,
-                'remark': remark,
-                'orderStatus': this.orderStatusStr,
-              })
-            }
+          this.materialTable.dataSource = listEx
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'organId': organId,
+              'linkNumber': linkNumber,
+              'remark': remark
+            })
           })
-
         }
       },
     }

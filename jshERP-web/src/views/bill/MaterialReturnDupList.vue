@@ -1,3 +1,4 @@
+<!-- create j i s h e n g h u a -->
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
@@ -41,10 +42,10 @@
               </span>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择客户" showSearch optionFilterProp="children" v-model="queryParam.organId">
-                      <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
-                        {{ item.supplier }}
+                  <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择仓库" showSearch optionFilterProp="children" v-model="queryParam.depotId">
+                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                        {{ depot.depotName }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
@@ -59,8 +60,13 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="关联客户计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入计划编号" v-model="queryParam.linkNumber"></a-input>
+                  <a-form-item label="领料人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入领料人" v-model="queryParam.salesMan"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="关联领料出库" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联领料出库" v-model="queryParam.linkNumber"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
@@ -93,7 +99,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="生产单可以由客户计划生成，也可以单独创建。
+          <a-tooltip placement="left" title="退料入库必须关联领料出库，不可单独创建。
           勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
@@ -114,9 +120,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '生产单', prefixNo)">查看</a>
-              <a-divider type="vertical" />
-              <a @click="myHandleDetail(record, '备料', prefixNo)">备料</a>
+              <a @click="myHandleDetail(record, '退料入库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -129,33 +133,30 @@
             <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
-              <a-tag v-if="status == '2'" color="cyan">完成生产</a-tag>
-              <a-tag v-if="status == '3'" color="blue">部分生产</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
             </template>
           </a-table>
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <production-order-modal ref="modalForm" @ok="modalFormOk"></production-order-modal>
+        <material-return-modal ref="modalForm" @ok="modalFormOk"></material-return-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
   </a-row>
 </template>
-<!-- by ji sheng hua-->
 <script>
-  import ProductionOrderModal from './modules/ProductionOrderModal'
+  import MaterialReturnModal from './modules/MaterialReturnModal'
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "ProductionOrderList",
+    name: "MaterialReturnDupList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
-      ProductionOrderModal,
+      MaterialReturnModal,
       BillDetail,
       JDate
     },
@@ -165,19 +166,20 @@
         queryParam: {
           number: "",
           materialParam: "",
-          type: "其它",
-          subType: "生产单",
+          type: "入库",
+          subType: "退料",
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",
+          salesMan: "",
           linkNumber: "",
           accountId: "",
           hasDebt: "",
           status: "",
           remark: ""
         },
-        prefixNo: 'SCD',
+        prefixNo: 'TLRK',
         labelCol: {
           span: 5
         },
@@ -190,26 +192,28 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 150,
+            align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '生产日期', dataIndex: 'planStartTimeStr',width:80},
-          { title: '生产单号', dataIndex: 'number',width:120,
+          { title: '单据日期', dataIndex: 'operTimeStr',width:120},
+          // TODO: 领料出库需要增加批号等信息，可以参照出库单
+          // TODO: 显示绑定的领料出库单号
+          { title: '退料入库单号', dataIndex: 'number',width:120,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[关联]":text
               return text
             }
           },
-          { title: '客户', dataIndex: 'organName',width:100, ellipsis:true},
-          { title: '产品信息', dataIndex: 'materialsList',width:150, ellipsis:true,
+          { title: '对应领料出库', dataIndex: 'linkNumber',width:120},
+          { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
               }
             }
           },
-          { title: '下单日期', dataIndex: 'operTimeStr',width:100},
-          { title: '生产数量', dataIndex: 'materialCount',width:80},
+          { title: '数量', dataIndex: 'materialCount',width:60},
+          { title: '领料人', dataIndex: 'salesManStr',width:80, ellipsis:true},
           { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
@@ -225,10 +229,12 @@
     },
     computed: {
     },
-    created () {
+    created() {
       this.initSystemConfig()
       this.initCustomer()
+      this.getDepotData()
       this.initUser()
+      this.initAccount()
     },
     methods: {
     }

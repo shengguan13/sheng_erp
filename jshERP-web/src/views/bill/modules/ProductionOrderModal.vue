@@ -21,10 +21,9 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联生产计划" data-step="3" data-title="关联生产计划"
-              data-intro="生产单可以关联生产计划，选择之后会自动加载生产计划的内容，然后继续录入生产日期、数量等信息完成单据的提交，
-              提交之后原来的生产计划会对应的改变计划状态。">
-              <a-input-search placeholder="请选择生产计划" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联客户计划" data-step="3" data-title="关联客户计划"
+              data-intro="生产单可以关联客户计划，选择之后会自动加载客户计划的内容。">
+              <a-input-search placeholder="请选择客户计划" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -120,7 +119,7 @@
       </a-form>
     </a-spin>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
-    <production-plan-link-list ref="productionPlanLinkList" @ok="linkBillListOk"></production-plan-link-list>
+    <sale-order-link-list ref="saleOrderLinkList" @ok="linkBillListOk"></sale-order-link-list>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
@@ -130,7 +129,7 @@
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
-  import ProductionPlanLinkList from '../dialog/ProductionPlanLinkList'
+  import SaleOrderLinkList from '../dialog/SaleOrderLinkList'
   import CustomerModal from '../../system/modules/CustomerModal'
   import AccountModal from '../../system/modules/AccountModal'
   import HistoryBillList from '../dialog/HistoryBillList'
@@ -147,7 +146,7 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       ManyAccountModal,
-      ProductionPlanLinkList,
+      SaleOrderLinkList,
       CustomerModal,
       AccountModal,
       HistoryBillList,
@@ -229,7 +228,7 @@
           },
           workHour:{
             rules: [
-              { required: true, pattern: /^(([1-9])|(1\d)|(2[0-4]))$/, message: '有效工时为[1-24]小时',  }
+              { pattern: /^(([1-9])|(1\d)|(2[0-4]))$/, message: '有效工时为[1-24]小时',  }
             ]
           },
         },
@@ -266,7 +265,7 @@
           this.model.operTime = this.model.operTimeStr
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'planStartTime', 'workHour', 'number', 'linkNumber', 'remark'))
+            this.form.setFieldsValue(pick(this.model, 'organId', 'operTime', 'planStartTime', 'workHour', 'number', 'linkNumber', 'remark'))
           });
           // 加载子表数据
           let params = {
@@ -321,11 +320,11 @@
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.productionPlanLinkList.show('其它', '生产计划', '客户', "1,3")
-        this.$refs.productionPlanLinkList.title = "选择生产计划（已审核的生产计划才能关联）"
+        this.$refs.saleOrderLinkList.show('其它', '销售订单', '客户', "1,3")
+        this.$refs.saleOrderLinkList.title = "选择客户计划（已审核的客户计划才能关联）"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
-        this.rowCanEdit = false
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+        console.log("organId: " + organId)
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'planOrderedNumber', 1)

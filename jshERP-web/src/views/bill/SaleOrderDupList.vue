@@ -1,3 +1,4 @@
+<!-- create jishenghua-->
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
@@ -59,15 +60,12 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="关联客户计划" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入计划编号" v-model="queryParam.linkNumber"></a-input>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
                   <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
+                      <a-select-option value="3">部分送货</a-select-option>
+                      <a-select-option value="2">完成送货</a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
@@ -83,6 +81,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
+          <a-button v-if="btnEnableList.indexOf(3)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -93,7 +92,7 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          <a-tooltip placement="left" title="生产单可以由客户计划生成，也可以单独创建。
+          <a-tooltip placement="left" title="销售订单不涉及收款金额，销售订单可以转销售出库单，但需要先对销售订单进行审核。
           勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
@@ -114,9 +113,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '生产单', prefixNo)">查看</a>
-              <a-divider type="vertical" />
-              <a @click="myHandleDetail(record, '备料', prefixNo)">备料</a>
+              <a @click="myHandleDetail(record, '销售订单', prefixNo, true)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -126,37 +123,46 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <template slot="customRenderStatus" slot-scope="status">
+            <template slot="customRenderStatus" slot-scope="status, record">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
-              <a-tag v-if="status == '2'" color="cyan">完成生产</a-tag>
-              <a-tag v-if="status == '3'" color="blue">部分生产</a-tag>
+              <a-tag v-if="status == '2'" color="cyan">完成送货</a-tag>
+              <a-tag v-if="status == '3'" color="blue">部分送货</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
+              <a-tag v-if="record.hasFinancialFlag" color="red">有退货</a-tag>
+            </template>
+            <template slot="customRenderPurchaseStatus" slot-scope="purchaseStatus">
+              <a-tag v-if="purchaseStatus == '0'" color="red">未采购</a-tag>
+              <a-tag v-if="purchaseStatus == '2'" color="cyan">完成采购</a-tag>
+              <a-tag v-if="purchaseStatus == '3'" color="blue">部分采购</a-tag>
             </template>
           </a-table>
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <production-order-modal ref="modalForm" @ok="modalFormOk"></production-order-modal>
+        <sale-order-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></sale-order-modal>
+        <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
   </a-row>
 </template>
-<!-- by ji sheng hua-->
 <script>
-  import ProductionOrderModal from './modules/ProductionOrderModal'
+  import SaleOrderModal from './modules/SaleOrderModal'
   import BillDetail from './dialog/BillDetail'
+  import ImportFileModal from '@/components/tools/ImportFileModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
+  import { getCurrentSystemConfig } from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "ProductionOrderList",
+    name: "SaleOrderDupList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
-      ProductionOrderModal,
+      SaleOrderModal,
       BillDetail,
+      ImportFileModal,
       JDate
     },
     data () {
@@ -166,18 +172,15 @@
           number: "",
           materialParam: "",
           type: "其它",
-          subType: "生产单",
+          subType: "销售订单",
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",
-          linkNumber: "",
-          accountId: "",
-          hasDebt: "",
           status: "",
           remark: ""
         },
-        prefixNo: 'SCD',
+        prefixNo: 'XSDD',
         labelCol: {
           span: 5
         },
@@ -190,17 +193,11 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 150,
+            align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '生产日期', dataIndex: 'planStartTimeStr',width:80},
-          { title: '生产单号', dataIndex: 'number',width:120,
-            customRender:function (text,record,index) {
-              text = record.linkNumber?text+"[关联]":text
-              return text
-            }
-          },
           { title: '客户', dataIndex: 'organName',width:100, ellipsis:true},
+          { title: '单据编号', dataIndex: 'number',width:120},
           { title: '产品信息', dataIndex: 'materialsList',width:150, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -208,10 +205,11 @@
               }
             }
           },
-          { title: '下单日期', dataIndex: 'operTimeStr',width:100},
-          { title: '生产数量', dataIndex: 'materialCount',width:80},
-          { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
-          { title: '状态', dataIndex: 'status', width: 80, align: "center",
+          { title: '单据日期', dataIndex: 'operTimeStr',width:100},
+          { title: '计划日期', dataIndex: 'planStartTimeStr',width:80},
+          { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
+          { title: '数量', dataIndex: 'materialCount',width:50},
+          { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
         ],
@@ -219,18 +217,66 @@
           list: "/depotHead/list",
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
-          batchSetStatusUrl: "/depotHead/batchSetStatus"
+          batchSetStatusUrl: "/depotHead/batchSetStatus",
+          importExcelUrl: "/depotHead/importSaleOrderExcel"
         }
       }
     },
-    computed: {
-    },
-    created () {
+    created() {
       this.initSystemConfig()
       this.initCustomer()
       this.initUser()
+      this.getSystemConfig()
+    },
+    computed: {
+      importExcelUrl: function () {
+        return `${window._CONFIG['domianURL']}${this.url.importExcelUrl}`;
+      }
     },
     methods: {
+      handleImportXls() {
+        let importExcelUrl = this.url.importExcelUrl
+        let templateUrl = '/doc/sale_template.xls'
+        let templateName = '客户预测Excel模板[下载]'
+        this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
+        this.$refs.modalImportForm.title = "预测导入";
+      },
+      getSystemConfig() {
+        let statusIndex = 0
+        for(let i=0; i<this.columns.length; i++){
+          if(this.columns[i].dataIndex === 'purchaseStatus') {
+            statusIndex = i
+          }
+        }
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data){
+            let purchaseBySaleFlag = res.data.purchaseBySaleFlag
+            if(purchaseBySaleFlag === "0") {
+              if(statusIndex>0) {
+                //移除采购进度列
+                this.columns.splice(statusIndex, 1)
+              }
+            } else {
+              if(statusIndex===0) {
+                let purchaseStatusObj = { title: '采购进度', dataIndex: 'purchaseStatus', width: 70, align: "center",
+                  scopedSlots: { customRender: 'customRenderPurchaseStatus' }
+                }
+                //添加采购进度列
+                this.columns.splice(statusIndex-1, 0, purchaseStatusObj)
+              }
+            }
+          } else {
+            if(statusIndex>0) {
+              //移除采购进度列
+              this.columns.splice(statusIndex, 1)
+            }
+          }
+        })
+      },
+      searchQuery() {
+        this.loadData(1)
+        this.getSystemConfig()
+      },
     }
   }
 </script>

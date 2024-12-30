@@ -138,7 +138,7 @@
   import moment from 'moment'
   import Vue from 'vue'
   export default {
-    name: "AllocationDetail",
+    name: "IsolateDetail",
     mixins:[JeecgListMixin],
     components: {
       BillDetail,
@@ -163,7 +163,7 @@
           categoryId:'',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
-          subType: "调拨",
+          subType: "隔离",
           roleType: Vue.ls.get('roleType'),
           remark: '',
           batchNumber: ''
@@ -202,6 +202,7 @@
           {title: '老货位', dataIndex: 'snListStr'},
           {title: '新货位', dataIndex: 'newSnListStr'},
           {title: '隔离日期', dataIndex: 'operTime'},
+          {title: '批次不良率', dataIndex: 'project'},
           {title: '备注', dataIndex: 'newRemark'}
         ],
         url: {

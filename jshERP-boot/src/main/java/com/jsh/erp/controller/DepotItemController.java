@@ -301,15 +301,17 @@ public class DepotItemController {
                 Map<String, Double> materialPicked = new HashMap<>();
                 Map<String, Double> materialReturned = new HashMap<>();
                 for (DepotHead linkedHead : linked) {
+                    logger.info("XXXXX 绑定 " + linkedHead.getNumber() + "-" + linkedHead.getType() + "-" + linkedHead.getSubType());
                     if (linkedHead.getSubType().contains("领料")) {
                         List<DepotItemVo4WithInfoEx> materialPickDataList = depotItemService.getDetailList(linkedHead.getId());
                         if (null != materialPickDataList) {
                             for (DepotItemVo4WithInfoEx diEx : materialPickDataList) {
-                                if (materialPicked.containsKey(diEx.getMaterialExtendId())) {
-                                    double oldNum = materialPicked.get(diEx.getMaterialExtendId());
-                                    materialPicked.put(String.valueOf(diEx.getMaterialExtendId()), oldNum + (diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue()));
+                                logger.info("XXXXX 领料 " + diEx.getMaterialId() + "-" + diEx.getBarCode() + "-" + diEx.getOperNumber());
+                                if (materialPicked.containsKey(String.valueOf(diEx.getMaterialId()))) {
+                                    double oldNum = materialPicked.get(String.valueOf(diEx.getMaterialId()));
+                                    materialPicked.put(String.valueOf(diEx.getMaterialId()), oldNum + (diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue()));
                                 } else {
-                                    materialPicked.put(String.valueOf(diEx.getMaterialExtendId()), diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue());
+                                    materialPicked.put(String.valueOf(diEx.getMaterialId()), diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue());
                                 }
                             }
                         }
@@ -318,11 +320,11 @@ public class DepotItemController {
                             List<DepotItemVo4WithInfoEx> materialReturnDataList = depotItemService.getDetailList(returnHead.getId());
                             if (null != materialReturnDataList) {
                                 for (DepotItemVo4WithInfoEx diEx : materialReturnDataList) {
-                                    if (materialReturned.containsKey(diEx.getMaterialExtendId())) {
-                                        double oldNum = materialReturned.get(diEx.getMaterialExtendId());
-                                        materialReturned.put(String.valueOf(diEx.getMaterialExtendId()), oldNum + (diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue()));
+                                    if (materialReturned.containsKey(String.valueOf(diEx.getMaterialId()))) {
+                                        double oldNum = materialReturned.get(String.valueOf(diEx.getMaterialId()));
+                                        materialReturned.put(String.valueOf(diEx.getMaterialId()), oldNum + (diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue()));
                                     } else {
-                                        materialReturned.put(String.valueOf(diEx.getMaterialExtendId()), diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue());
+                                        materialReturned.put(String.valueOf(diEx.getMaterialId()), diEx.getOperNumber()==null?0:diEx.getOperNumber().doubleValue());
                                     }
                                 }
                             }
@@ -332,8 +334,8 @@ public class DepotItemController {
                 // 整合备料和已领料，然后返回
                 for (DepotItemVo4WithInfoEx m : toBePrepared) {
                     JSONObject item = new JSONObject();
-                    String meId = m.getMaterialExtendId() == null ? "" : String.valueOf(m.getMaterialExtendId());
-                    item.put("materialExtendId", meId);
+                    String mId = String.valueOf(m.getMaterialId());
+                    logger.info("XXXXX mId " + mId);
                     item.put("barCode", m.getBarCode() == null ? "" : m.getBarCode());
                     item.put("name", m.getMName() == null ? "" : m.getMName());
                     item.put("colorCode", m.getMColorCode() == null ? "" : m.getMColorCode());
@@ -343,8 +345,8 @@ public class DepotItemController {
                     item.put("unit", m.getMaterialUnit() == null ? "" : m.getMaterialUnit());
                     item.put("operNumber", m.getOperNumber());
                     if (SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
-                        item.put("materialPick", materialPicked.getOrDefault(meId, 0.0));
-                        item.put("materialReturn", materialReturned.getOrDefault(meId, 0.0));
+                        item.put("materialPick", materialPicked.getOrDefault(mId, 0.0));
+                        item.put("materialReturn", materialReturned.getOrDefault(mId, 0.0));
                     }
                     BigDecimal stock;
                     stock = depotItemService.getStockByParam(null, m.getMaterialId(),null,null);
@@ -487,8 +489,6 @@ public class DepotItemController {
                     item.put("preNumber", diEx.getOperNumber()); //原数量
                     item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(),
                             diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
-                    item.put("planOrderedNumber", depotItemService.getPlanOrderedNumber(diEx.getMaterialExtendId(),
-                            diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //生产计划中已下的生产单
                     item.put("purchaseDecimal", diEx.getPurchaseDecimal());  //采购价
                     if("basic".equals(linkType)) {
                         //正常情况显示金额，而以销定购的情况不能显示金额

@@ -260,7 +260,7 @@ public class DepotHeadService {
     }
 
     /**
-     * 根据单据类型获取仓库数组：只有[采购订单、采购申请、销售订单、生产计划、生产单]不涉及仓库
+     * 根据单据类型获取仓库数组：只有[采购订单、采购申请、销售订单、生产单]不涉及仓库
      *
      * @param subType
      * @return
@@ -271,7 +271,6 @@ public class DepotHeadService {
         if (!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType)
                 && !SUB_TYPE_PURCHASE_APPLICATION.equals(subType)
                 && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)
-                && !SUB_TYPE_PRODUCTION_PLAN.equals(subType)
                 && !SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
             String depotIds = depotService.findDepotStrByCurrentUser();
             depotArray = StringUtil.isNotEmpty(depotIds) ? depotIds.split(",") : null;
@@ -502,8 +501,6 @@ public class DepotHeadService {
                             BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))
                             || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
                             BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))
-                            || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&       // 生产单（关联生产计划）
-                            SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType()))
                             || (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&          // 生产入库（关联生产单）
                             BusinessConstants.SUB_TYPE_PRODUCTION.equals(depotHead.getSubType()))
                             || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&       // 采购订单（关联采购申请）
@@ -978,20 +975,6 @@ public class DepotHeadService {
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
         }
         String subType = depotHead.getSubType();
-        if (SUB_TYPE_PRODUCTION_PLAN.equals(subType)) {
-            // 计划开始时间要<=计划完成时间
-            if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG));
-            }
-            // 计划开始时间要>=现在时间，不知道为什么 00:00:00 truncate之后变成了前一天，需要手动加回来一天做比较
-            if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
-            }
-        }
         if (SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
             // 生产单开工时间要>=今天
             if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
@@ -2134,20 +2117,6 @@ public class DepotHeadService {
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
         }
         String subType = depotHead.getSubType();
-        if ("生产计划".equals(subType)) {
-            // 计划开始时间要<=计划完成时间
-            if (depotHead.getPlanStartTime().toInstant().truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(depotHead.getPlanFinishTime().toInstant().truncatedTo(ChronoUnit.DAYS)) > 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG));
-            }
-            // 计划开始时间要>=现在时间，不知道为什么 00:00:00 truncate之后变成了前一天，需要手动加回来一天做比较
-            if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
-                    .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG));
-            }
-        }
         if ("生产单".equals(subType)) {
             // 生产单开工时间要>=今天
             if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)

@@ -424,7 +424,6 @@ public class ExceptionConstants {
     //单据录入-产品编码XXX的数量需要修改下
     public static final int DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE = 85000014;
     public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG = "产品编码%s的数量需要修改下";
-    public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG_2 = "产品编码%s的生产单总量不能超过生产计划";
     //单据录入-产品的批号不能为空
     public static final int DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE = 8000015;
     public static final String DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG = "抱歉，产品编码:%s的批号不能为空";
@@ -434,12 +433,6 @@ public class ExceptionConstants {
     //单据录入-单据明细中必须要有组合件和普通子件
     public static final int DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE = 8000020;
     public static final String DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG = "抱歉，单据明细中必须要有组合件和普通子件";
-    //生产计划-开始日期要早于或等于完成日期
-    public static final int DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_CODE = 8000022;
-    public static final String DEPOT_HEAD_PLAN_TIME_RANGE_FAILED_MSG = "抱歉，生产计划开始日期要早于或等于完成日期";
-    //生产计划-开始日期要晚于当前日期
-    public static final int DEPOT_HEAD_PLAN_START_TIME_FAILED_CODE = 8000023;
-    public static final String DEPOT_HEAD_PLAN_START_TIME_FAILED_MSG = "抱歉，生产计划开始日期要晚于当前日期";
     //生产单-开工时间要晚于当前时间
     public static final int DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE = 8000026;
     public static final String DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_MSG = "抱歉，生产单开工时间要晚于当前时间";

@@ -69,10 +69,9 @@
                   <a-input :readOnly="true" placeholder="请输入重量(kg)" v-decorator.trim="[ 'weight' ]" />
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期/月" data-step="7" data-title="保质期/月"
-                  data-intro="保质期指的是产品的保质期(月)，主要针对带生产日期的，此类产品一般有批号">
-                  <a-input :readOnly="true" placeholder="请输入保质期(月)" v-decorator.trim="[ 'expiryNum' ]" />
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材料标准" data-title="材料标准">
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField6' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -88,6 +87,16 @@
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材质" data-step="9" data-title="材质" data-intro="名称必填，可以重复">
                   <a-input :readOnly="true" placeholder="请输入材质" v-decorator.trim="[ 'mat' ]"/>
+                </a-form-item>
+              </a-col>
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField5.name">
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField5' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料来源" data-title="物料来源">
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField7' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -144,27 +153,6 @@
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField4.name">
                   <a-input :readOnly="true" v-decorator.trim="[ 'otherField4' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-if="mpShort.otherField5.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField5.name">
-                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField5' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-if="mpShort.otherField6.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField6.name">
-                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField6' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-if="mpShort.otherField7.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField7.name">
-                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField7' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -432,7 +420,7 @@
         }
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'name', 'colorCode', 'unit', 'unitId', 'model', 'color',
-            'categoryId','expiryNum','weight','remark','mat',
+            'categoryId','weight','remark','mat',
             'otherField1','otherField2','otherField3','otherField4','otherField5','otherField6','otherField7',
             'otherField8','otherField9','otherField10'))
           autoJumpNextInput('materialHeadModal')

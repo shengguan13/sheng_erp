@@ -189,8 +189,6 @@
             { title: '颜色代码', key: 'colorCode', width: '5%', type: FormTypes.normal },
             { title: '项目', key: 'project', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '4%', type: FormTypes.normal },
-            { title: '生产数量', key: 'preNumber', width: '5%', type: FormTypes.normal },
-            { title: '已入库', key: 'finishNumber', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '货位', key: 'snList', width: '6%', type: FormTypes.popupJsh, kind: 'allocation', multi: true },
             { title: '货位', key: 'snListStr', width: '8%', type: FormTypes.normal},
@@ -234,8 +232,6 @@
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
-        this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
-        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         if (this.action === 'add') {
           this.depositStatus = false
           this.addInit(this.prefixNo)
@@ -313,8 +309,6 @@
       linkBillListOk(selectBillDetailRows, linkNumber, payType, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
-        this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
-        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           let listEx = []
           for(let j=0; j<selectBillDetailRows.length; j++) {

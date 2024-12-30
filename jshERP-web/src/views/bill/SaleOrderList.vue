@@ -64,8 +64,8 @@
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
-                      <a-select-option value="3">部分销售</a-select-option>
-                      <a-select-option value="2">完成销售</a-select-option>
+                      <a-select-option value="3">部分送货</a-select-option>
+                      <a-select-option value="2">完成送货</a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
@@ -126,8 +126,8 @@
             <template slot="customRenderStatus" slot-scope="status, record">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
-              <a-tag v-if="status == '2'" color="cyan">完成销售</a-tag>
-              <a-tag v-if="status == '3'" color="blue">部分销售</a-tag>
+              <a-tag v-if="status == '2'" color="cyan">完成送货</a-tag>
+              <a-tag v-if="status == '3'" color="blue">部分送货</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
               <a-tag v-if="record.hasFinancialFlag" color="red">有退货</a-tag>
             </template>

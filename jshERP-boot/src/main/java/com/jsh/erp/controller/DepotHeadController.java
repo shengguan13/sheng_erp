@@ -7,6 +7,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.DepotHeadVo4Body;
 import com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx;
+import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
@@ -30,10 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
@@ -51,6 +49,9 @@ public class DepotHeadController {
 
     @Resource
     private DepotItemService depotItemService;
+
+    @Resource
+    private DepotItemMapperEx depotItemMapperEx;
 
     @Resource
     private DepotService depotService;
@@ -316,6 +317,21 @@ public class DepotHeadController {
                     creatorArray, StringUtil.toNull(materialParam), depotList, depotFList, remark, batchNumber,(currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, StringUtil.toNull(number),
                     creatorArray, StringUtil.toNull(materialParam), depotList, depotFList, remark, batchNumber);
+            if ("隔离".equals(subType)) {
+                try {
+                    for (DepotHeadVo4InDetail detail : list) {
+                        List<DepotItemVo4WithInfoEx> source = depotItemMapperEx.getBatchNumberSource(detail.getBarCode(), detail.getBatchNumber());
+                        List<DepotItemVo4WithInfoEx> isolate = depotItemMapperEx.getBatchNumberIsolate(detail.getBarCode(), detail.getBatchNumber());
+                        Optional<Double> sourceSum = source.stream().map(e -> e.getOperNumber() == null ? 0.0 : e.getOperNumber().doubleValue()).reduce(Double::sum);
+                        Optional<Double> isolateSum = isolate.stream().map(e -> e.getOperNumber() == null ? 0.0 : e.getOperNumber().doubleValue()).reduce(Double::sum);
+                        if (sourceSum.isPresent() && sourceSum.get() > 0 && isolateSum.isPresent()) {
+                            detail.setProject(String.format("%.2f%%", isolateSum.get() / sourceSum.get() * 100));
+                        }
+                    }
+                } catch (Exception e) {
+
+                }
+            }
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;

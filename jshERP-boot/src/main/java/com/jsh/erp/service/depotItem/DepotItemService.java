@@ -89,7 +89,7 @@ public class DepotItemService {
         try{
             result=depotItemMapper.selectByPrimaryKey(id);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -101,7 +101,7 @@ public class DepotItemService {
         try{
             list=depotItemMapper.selectByExample(example);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -111,7 +111,7 @@ public class DepotItemService {
         try{
             list=depotItemMapperEx.selectByConditionDepotItem(name, type, remark, offset, rows);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -121,7 +121,7 @@ public class DepotItemService {
         try{
             result=depotItemMapperEx.countsByDepotItem(name, type, remark);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -133,7 +133,7 @@ public class DepotItemService {
         try{
             result=depotItemMapper.insertSelective(depotItem);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -145,7 +145,7 @@ public class DepotItemService {
         try{
             result=depotItemMapper.updateByPrimaryKeySelective(depotItem);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -182,7 +182,7 @@ public class DepotItemService {
         try{
             list=depotItemMapper.selectByExample(example);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list==null?0:list.size();
     }
@@ -197,7 +197,7 @@ public class DepotItemService {
         try{
             list = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdList(depotIdArray, sku, batchNumber, number, beginTime, endTime, mId, offset, rows);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -212,7 +212,7 @@ public class DepotItemService {
         try{
             result = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdCount(depotIdArray, sku, batchNumber, number, beginTime, endTime, mId);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -234,7 +234,7 @@ public class DepotItemService {
             list = depotItemMapperEx.findProductionInByDepotIdsAndMaterialIdList(
                     depotIdArray, productionOrderIdArray, sku, batchNumber, number, beginTime, endTime, mId, offset, rows);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -256,7 +256,7 @@ public class DepotItemService {
             result = depotItemMapperEx.findProductionInByDepotIdsAndMaterialIdCount(
                     depotIdArray, productionOrderIdArray, sku, batchNumber, number, beginTime, endTime, mId);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -274,7 +274,7 @@ public class DepotItemService {
         try{
             list = depotItemMapperEx.findMaterialUsageByProductionOrderIdList(productionOrderIdArray, offset, rows);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -289,7 +289,7 @@ public class DepotItemService {
         try{
             result = depotItemMapperEx.findMaterialUsageByProductionOrderIdCount(productionOrderIdArray);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -323,7 +323,7 @@ public class DepotItemService {
             example.createCriteria().andHeaderIdEqualTo(headerId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             list = depotItemMapper.selectByExample(example);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -345,7 +345,7 @@ public class DepotItemService {
                 depotItem = list.get(0);
             }
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return depotItem;
     }
@@ -368,7 +368,7 @@ public class DepotItemService {
                 depotItem = list.get(0);
             }
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return depotItem;
     }
@@ -378,7 +378,7 @@ public class DepotItemService {
         try{
             list = depotItemMapperEx.getDetailList(headerId);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -406,6 +406,7 @@ public class DepotItemService {
                         for (MaterialBomVo4Info mb : childList) {
                             logger.info("XXXXX child: " + mb.getBarCode());
                             DepotItemVo4WithInfoEx newDi = new DepotItemVo4WithInfoEx();
+                            newDi.setMaterialId(mb.getMaterialId());
                             newDi.setBarCode(mb.getBarCode());
                             newDi.setMName(mb.getName());
                             newDi.setMModel(mb.getModel());
@@ -424,7 +425,7 @@ public class DepotItemService {
                 }
             }
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return toAdd;
     }
@@ -457,6 +458,7 @@ public class DepotItemService {
                             newDi.setMName(mb.getName());
                             newDi.setMModel(mb.getModel());
                             newDi.setSupplierModel(mb.getSupplierModel());
+                            newDi.setMCategoryName(mb.getCategory());
                             newDi.setMColor(mb.getColor());
                             newDi.setMColorCode(mb.getColorCode());
                             newDi.setMaterialUnit(mb.getmUnit());
@@ -472,7 +474,7 @@ public class DepotItemService {
             }
             list.addAll(toAdd);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -482,7 +484,7 @@ public class DepotItemService {
         try{
             list = depotItemMapperEx.findByAll(materialParam, categoryId, endTime, offset, rows);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -492,7 +494,7 @@ public class DepotItemService {
         try{
             result = depotItemMapperEx.findByAllCount(materialParam, categoryId, endTime);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -503,7 +505,7 @@ public class DepotItemService {
         try{
             list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, creatorArray, offset, rows);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -514,7 +516,7 @@ public class DepotItemService {
         try{
             result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -540,7 +542,7 @@ public class DepotItemService {
         try{
             list = depotItemMapperEx.getMaterialListWithProductionOrder(materialParam, beginTime, endTime, creatorArray, offset, rows);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return list;
     }
@@ -562,7 +564,7 @@ public class DepotItemService {
         try{
             result = depotItemMapperEx.getMaterialListWithProductionOrderCount(materialParam, beginTime, endTime, creatorArray);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -573,7 +575,7 @@ public class DepotItemService {
         try{
             result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, creatorArray);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -584,7 +586,7 @@ public class DepotItemService {
         try {
             result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, creatorArray);
         } catch(Exception e) {
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -595,7 +597,7 @@ public class DepotItemService {
         try {
             result= depotItemMapperEx.buyOrSaleBackPrice(type, subType, MId, beginTime, endTime, creatorArray);
         } catch(Exception e) {
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -605,7 +607,7 @@ public class DepotItemService {
         try{
             result= depotItemMapperEx.productionInNumber(MId, productionOrderNumberArray);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
 
@@ -627,7 +629,7 @@ public class DepotItemService {
             String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
             result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime, creatorArray);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -649,7 +651,7 @@ public class DepotItemService {
             result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime, creatorArray);
             result = result.abs();
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -712,12 +714,6 @@ public class DepotItemService {
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("expirationDate"))) {
-//                    if (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType())
-//                            && BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
-//                            && rowObj.getDate("expirationDate").toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS).compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
-//                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_CODE,
-//                                String.format(ExceptionConstants.DEPOT_HEAD_PURCHASE_ARRIVAL_DATE_FAILED_MSG));
-//                    }
                     depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
                 }
                 if (StringUtil.isExist(rowObj.get("sku"))) {
@@ -820,15 +816,6 @@ public class DepotItemService {
                 // 有仓库号的就设置仓库号
                 if (StringUtil.isExist(rowObj.get("depotId"))) {
                     depotItem.setDepotId(rowObj.getLong("depotId"));
-//                    // 返修出库的仓库必须是隔离库
-//                    if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-//                            && BusinessConstants.SUB_TYPE_REPAIR.equals(depotHead.getSubType())) {
-//                        Depot depot = depotService.getDepot(rowObj.getLong("depotId"));
-//                        if (!depot.getName().equals("隔离库")) {
-//                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_CODE,
-//                                    String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_MSG));
-//                        }
-//                    }
                     // 隔离出库的仓库不能是隔离库
                     if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
                             && BusinessConstants.SUB_TYPE_ISOLATE.equals(depotHead.getSubType())) {
@@ -839,11 +826,10 @@ public class DepotItemService {
                         }
                     }
                 } else {
-                    // 只有[采购订单、采购申请、销售订单、生产计划、生产单]可以没有仓库号
+                    // 只有[采购订单、采购申请、销售订单、生产单]可以没有仓库号
                     if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_PURCHASE_APPLICATION.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())
-                            && !BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_MSG));
@@ -851,12 +837,6 @@ public class DepotItemService {
                 }
                 if(BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
                     if (StringUtil.isExist(rowObj.get("anotherDepotId"))) {
-//                        if(rowObj.getLong("anotherDepotId").equals(rowObj.getLong("depotId"))) {
-//                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_CODE,
-//                                    String.format(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_MSG));
-//                        } else {
-//                            depotItem.setAnotherDepotId(rowObj.getLong("anotherDepotId"));
-//                        }
                         depotItem.setAnotherDepotId(rowObj.getLong("anotherDepotId"));
                     } else {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_CODE,
@@ -980,55 +960,117 @@ public class DepotItemService {
                     }
                 }
                 StringBuilder contentSb = new StringBuilder();
-                if ("入库".equals(depotHead.getType()) && ("采购".equals(depotHead.getSubType()) || "生产".equals(depotHead.getSubType()))) {
-                    contentSb.append("物料名称：" + material.getName() + "\n");
-                    contentSb.append("物料规格：" + material.getModel() + "\n");
-                    contentSb.append("颜色/颜色代码：" + material.getColor() + "/" + material.getColorCode() + "\n");
-                    contentSb.append("入库批号：" + depotItem.getBatchNumber() + "\n\n");
-                    if ("采购".equals(depotHead.getSubType())) {
-                        if (depotHead.getLinkNumber() != null && !"".equals(depotHead.getLinkNumber())) {
-                            DepotHead po = depotHeadService.getDepotHead(depotHead.getLinkNumber());
-                            contentSb.append("采购订单：" + po.getNumber() + "\n");
-                            contentSb.append("采购订单日期：" + po.getOperTime() + "\n");
-                            if (depotHead.getOrganId() != null) {
-                                Supplier supplier = supplierService.getSupplier(depotHead.getOrganId());
-                                contentSb.append("供应商：" + supplier.getSupplier() + "\n");
-                            }
-                        }
-                    } else if ("生产".equals(depotHead.getSubType())) {
-                        if (depotHead.getLinkNumber() != null && !"".equals(depotHead.getLinkNumber())) {
-                            DepotHead order = depotHeadService.getDepotHead(depotHead.getLinkNumber());
-                            contentSb.append("生产单号：" + order.getNumber() + "\n");
-                            contentSb.append("生产设备：" + "\n");
-                            contentSb.append("生产负责人员：" + "\n");
-                            contentSb.append("质量负责人员：" + "\n");
-                            contentSb.append("生产日期：" + order.getPlanStartTime() + "\n\n");
-                            List<DepotHead> pickList = depotHeadService.getBillListByLinkNumber(order.getNumber());
-                            List<DepotItem> pickDetailList = new ArrayList<>();
-                            Map<String, DepotHead> pickIdToPickMap = new HashMap<>();
-                            for (DepotHead pick : pickList) {
-                                if ("出库".equals(pick.getType()) && "领料".equals(pick.getSubType())) {
-                                    pickIdToPickMap.put(pick.getId().toString(), pick);
-                                    pickDetailList.addAll(getListByHeaderId(pick.getId()));
+                try {
+                    if ("入库".equals(depotHead.getType()) && ("采购".equals(depotHead.getSubType()) || "生产".equals(depotHead.getSubType()))) {
+                        contentSb.append("物料名称：" + material.getName() + "\n");
+                        contentSb.append("物料规格：" + material.getModel() + "\n");
+                        contentSb.append("颜色/颜色代码：" + material.getColor() + "/" + material.getColorCode() + "\n");
+                        contentSb.append("入库批号：" + depotItem.getBatchNumber() + "\n");
+                        DepotAllocation allocation = depotAllocationService.getDepotAllocation(Long.valueOf(depotItem.getSnList()));
+                        contentSb.append("入库货位：" + allocation.getAllocation() + "\n\n");
+                        if ("采购".equals(depotHead.getSubType())) {
+                            if (depotHead.getLinkNumber() != null && !"".equals(depotHead.getLinkNumber())) {
+                                DepotHead po = depotHeadService.getDepotHead(depotHead.getLinkNumber());
+                                contentSb.append("采购订单：" + po.getNumber() + "\n");
+                                if (depotHead.getOrganId() != null) {
+                                    Supplier supplier = supplierService.getSupplier(depotHead.getOrganId());
+                                    contentSb.append("供应商：" + supplier.getSupplier() + "\n");
                                 }
                             }
-                            for (DepotItem pickDetail : pickDetailList) {
-                                List<MaterialVo4Unit> pickMaterialList = materialService.getMaterialByMeId(pickDetail.getMaterialExtendId());
-                                if (pickMaterialList.size() > 0) {
-                                    MaterialVo4Unit m = pickMaterialList.get(0);
-                                    contentSb.append("领料详情：" + m.getmBarCode() + "-" + m.getName() + "，批号：" + pickDetail.getBatchNumber() + "\n");
+                        } else if ("生产".equals(depotHead.getSubType())) {
+                            if (depotHead.getLinkNumber() != null && !"".equals(depotHead.getLinkNumber())) {
+                                DepotHead order = depotHeadService.getDepotHead(depotHead.getLinkNumber());
+                                contentSb.append("生产单号：" + order.getNumber() + "\n");
+                                contentSb.append("生产日期：" + order.getPlanStartTime() + "\n\n");
+                                List<DepotHead> pickList = depotHeadService.getBillListByLinkNumber(order.getNumber());
+                                List<DepotItem> pickDetailList = new ArrayList<>();
+                                Map<String, DepotHead> pickIdToPickMap = new HashMap<>();
+                                for (DepotHead pick : pickList) {
+                                    if ("出库".equals(pick.getType()) && "领料".equals(pick.getSubType())) {
+                                        pickIdToPickMap.put(pick.getId().toString(), pick);
+                                        pickDetailList.addAll(getListByHeaderId(pick.getId()));
+                                    }
+                                }
+                                for (DepotItem pickDetail : pickDetailList) {
+                                    List<MaterialVo4Unit> pickMaterialList = materialService.getMaterialByMeId(pickDetail.getMaterialExtendId());
+                                    if (pickMaterialList.size() > 0) {
+                                        MaterialVo4Unit m = pickMaterialList.get(0);
+                                        contentSb.append("领料详情：" + m.getmBarCode() + "-" + m.getName() + "，批号：" + pickDetail.getBatchNumber() + "\n");
+                                    }
                                 }
                             }
                         }
+                        File file = new File("/opt/jshERP/upload" + File.separator + "bill" + File.separator
+                                + depotHead.getNumber() + File.separator);
+                        QrCodeUtil.createCodeToFile(contentSb.toString(), file, barCode);
+                        if (i == 0) {
+                            fileListSb.append("bill" + File.separator + depotHead.getNumber() + File.separator + barCode + ".png");
+                        } else {
+                            fileListSb.append(",bill" + File.separator + depotHead.getNumber() + File.separator + barCode + ".png");
+                        }
                     }
-                    File file = new File("/opt/jshERP/upload" + File.separator + "bill" + File.separator
-                            + depotHead.getNumber() + File.separator);
-                    QrCodeUtil.createCodeToFile(contentSb.toString(), file, barCode + "-" + material.getName());
-                    if (i == 0) {
-                        fileListSb.append("bill" + File.separator + depotHead.getNumber() + File.separator + barCode + "-" + material.getName() + ".png");
-                    } else {
-                        fileListSb.append(",bill" + File.separator + depotHead.getNumber() + File.separator + barCode + "-" + material.getName() + ".png");
+                    if ("出库".equals(depotHead.getType()) && !"调拨".equals(depotHead.getSubType())) {
+                        logger.info("XXXXX qr code 1");
+                        contentSb.append("物料名称：" + material.getName() + "\n");
+                        contentSb.append("物料规格：" + material.getModel() + "\n");
+                        contentSb.append("颜色/颜色代码：" + material.getColor() + "/" + material.getColorCode() + "\n");
+                        contentSb.append("出库批号：" + depotItem.getBatchNumber() + "\n");
+                        DepotAllocation allocation = depotAllocationService.getDepotAllocation(Long.valueOf(depotItem.getSnList()));
+                        contentSb.append("出库货位：" + allocation.getAllocation() + "\n");
+                        List<DepotItemVo4WithInfoEx> sourceList = depotItemMapperEx.getBatchNumberSource(barCode, depotItem.getBatchNumber());
+                        logger.info("XXXXX qr code 2");
+                        if (sourceList != null && sourceList.size() > 0) {
+                            for (DepotItemVo4WithInfoEx di : sourceList) {
+                                logger.info("XXXXX qr code 3");
+                                DepotHead head = depotHeadService.getDepotHead(di.getHeaderId());
+                                if ("采购".equals(head.getSubType())) {
+                                    logger.info("XXXXX qr code 4");
+                                    contentSb.append("\n入库单号：" + head.getNumber() + "\n");
+                                    if (head.getLinkNumber() != null && !"".equals(head.getLinkNumber())) {
+                                        DepotHead po = depotHeadService.getDepotHead(head.getLinkNumber());
+                                        contentSb.append("采购单号：" + po.getNumber() + "\n");
+                                        if (head.getOrganId() != null) {
+                                            Supplier supplier = supplierService.getSupplier(head.getOrganId());
+                                            contentSb.append("供应商：" + supplier.getSupplier() + "\n");
+                                        }
+                                    }
+                                } else if ("生产".equals(head.getSubType())) {
+                                    logger.info("XXXXX qr code 5");
+                                    if (head.getLinkNumber() != null && !"".equals(head.getLinkNumber())) {
+                                        DepotHead order = depotHeadService.getDepotHead(head.getLinkNumber());
+                                        contentSb.append("\n生产单号：" + order.getNumber() + "\n");
+                                        contentSb.append("生产日期：" + order.getPlanStartTime() + "\n");
+                                        List<DepotHead> pickList = depotHeadService.getBillListByLinkNumber(order.getNumber());
+                                        List<DepotItem> pickDetailList = new ArrayList<>();
+                                        Map<String, DepotHead> pickIdToPickMap = new HashMap<>();
+                                        for (DepotHead pick : pickList) {
+                                            if ("出库".equals(pick.getType()) && "领料".equals(pick.getSubType())) {
+                                                pickIdToPickMap.put(pick.getId().toString(), pick);
+                                                pickDetailList.addAll(getListByHeaderId(pick.getId()));
+                                            }
+                                        }
+                                        for (DepotItem pickDetail : pickDetailList) {
+                                            List<MaterialVo4Unit> pickMaterialList = materialService.getMaterialByMeId(pickDetail.getMaterialExtendId());
+                                            if (pickMaterialList.size() > 0) {
+                                                MaterialVo4Unit m = pickMaterialList.get(0);
+                                                contentSb.append("领料详情：" + m.getmBarCode() + "-" + m.getName() + "；批号：" + pickDetail.getBatchNumber() + "\n");
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        File file = new File("/opt/jshERP/upload" + File.separator + "bill" + File.separator
+                                + depotHead.getNumber() + File.separator);
+                        QrCodeUtil.createCodeToFile(contentSb.toString(), file, barCode);
+                        if (i == 0) {
+                            fileListSb.append("bill" + File.separator + depotHead.getNumber() + File.separator + barCode + ".png");
+                        } else {
+                            fileListSb.append(",bill" + File.separator + depotHead.getNumber() + File.separator + barCode + ".png");
+                        }
                     }
+                } catch (Exception e) {
+
                 }
                 //更新当前库存
                 updateCurrentStock(depotItem);
@@ -1063,12 +1105,11 @@ public class DepotItemService {
                     JshException.writeFail(logger, e);
                 }
             }
-            //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产单（决定生产计划的状态）、生产入库（决定生产单的状态）、退料入库（决定领料出库的状态）
+            //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产入库（决定生产单的状态）、退料入库（决定领料出库的状态）
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType())
-                    || BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_PRODUCTION.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_MATERIAL_RETURN.equals(depotHead.getSubType())) {
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
@@ -1322,7 +1363,7 @@ public class DepotItemService {
         try{
             result =depotItemMapperEx.findStockWarningCountTotal(materialParam, depotList);
         }catch(Exception e){
-            JshException.readFail(logger, e);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -1500,10 +1541,6 @@ public class DepotItemService {
             if(BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_SALES_RETURN;
             }
-            // 生产计划转生产入库（生产计划先转生产单，生产单转生产入库）
-            if(BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
-                goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
-            }
             // 生产单转生产入库（注意，生产单不要转到领料出库去了）
             if(BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PRODUCTION;
@@ -1512,39 +1549,7 @@ public class DepotItemService {
         }
         BigDecimal count;
 
-        // 生产计划转生产入库（生产计划先转生产单，生产单转生产入库）的时候，需要计算二级的finishNumber，
-        // 因为实际生产计划完成的量等于各个子生产单下面所有生产入库的数量之和
-        if (!"purchase".equals(linkType) && BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
-            count = depotItemMapperEx.getSecondLevelFinishNumber(meId, linkId, linkNumber, goToType);
-        } else {
-            count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
-        }
-        //根据多单位情况进行数量的转换
-        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
-        }
-        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioTwo()),2,BigDecimal.ROUND_HALF_UP);
-        }
-        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioThree()),2,BigDecimal.ROUND_HALF_UP);
-        }
-        return count;
-    }
-
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getPlanOrderedNumber(Long meId, Long id, Long headerId, Unit unitInfo, String materialUnit, String linkType) {
-        Long linkId = id;
-        String goToType = "";
-        DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
-        String linkNumber = depotHead.getNumber(); //订单号
-        if(!"purchase".equals(linkType) && BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
-            goToType = BusinessConstants.SUB_TYPE_PRODUCTION_ORDER;
-        }
-        BigDecimal count = BigDecimal.ZERO;
-        if(!"purchase".equals(linkType) && BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
-            count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
-        }
+        count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
         //根据多单位情况进行数量的转换
         if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
             count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);

@@ -82,8 +82,13 @@ public interface DepotItemMapperEx {
     List<DepotItemVo4WithInfoEx> getDetailList(
             @Param("headerId") Long headerId);
 
-    List<DepotItemVo4WithInfoEx> getDetailListForBOM(
-            @Param("headerId") Long headerId);
+    List<DepotItemVo4WithInfoEx> getBatchNumberSource(
+            @Param("barCode") String barCode,
+            @Param("batchNumber") String batchNumber);
+
+    List<DepotItemVo4WithInfoEx> getBatchNumberIsolate(
+            @Param("barCode") String barCode,
+            @Param("batchNumber") String batchNumber);
 
     List<DepotItemVo4WithInfoEx> findByAll(
             @Param("materialParam") String materialParam,

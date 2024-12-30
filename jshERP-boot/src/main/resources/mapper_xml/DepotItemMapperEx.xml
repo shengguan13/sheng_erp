@@ -508,6 +508,30 @@
         order by di.id asc
     </select>
 
+    <select id="getBatchNumberSource" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select * from jsh_depot_item di
+        left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
+        where dh.type = '入库' and (dh.sub_type = '采购' or dh.sub_type = '生产')
+        and me.bar_code = #{barCode}
+        and di.batch_number = #{batchNumber}
+        and ifnull(di.delete_flag,'0') !='1'
+        order by di.id asc
+    </select>
+
+    <select id="getBatchNumberIsolate" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select * from jsh_depot_item di
+        left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
+        where dh.type = '出库' and dh.sub_type = '隔离'
+        and me.bar_code = #{barCode}
+        and di.batch_number = #{batchNumber}
+        and ifnull(di.delete_flag,'0') !='1'
+        order by di.id asc
+    </select>
+
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mat MMat, m.model MModel, m.color_code MColorCode,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
@@ -1088,7 +1112,7 @@
 
     Second Level的情况
         id	type	sub_type	number	            link_number	        delete_flag
-        1	其它	    生产计划	    000001				                    0
+        1	其它	    客户计划	    000001				                    0
         2	其它	    生产单	    000002		        000001	            0
         3	其它	    生产单	    000003		        000001              0
         4	入库	    生产入库	    000004		        000002	            0
@@ -1106,11 +1130,11 @@
     107	7	        621	        41	                155.000000	155.000000		19          103      	0
 
     goToType = 生产入库         // 这个很重要，不要把领料出库也算进去了
-    subType = 生产计划
+    subType = 客户计划
     link_id = 101
     link_number = 000001
 
-    根据生产计划搜索所有生产单，然后根据所有相关生产单搜索生产入库单（领料出库不会被算进去，一个是因为goToType不对，另外一个是因为物料也对不上） -->
+    根据客户计划搜索所有生产单，然后根据所有相关生产单搜索生产入库单（领料出库不会被算进去，一个是因为goToType不对，另外一个是因为物料也对不上） -->
     <select id="getSecondLevelFinishNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) from jsh_depot_item di
         where di.material_extend_id=#{meId}
@@ -1126,7 +1150,7 @@
             and di.header_id
             in
             (
-                <!-- 所有绑定生产计划的生产单的header_id -->
+                <!-- 所有绑定客户计划的生产单的header_id -->
                 select dh.id from jsh_depot_head dh
                 where dh.link_number=#{linkNumber}
                 and ifnull(dh.delete_flag,'0') !='1'
@@ -1140,7 +1164,7 @@
             and dh.link_number
             in
             (
-                <!-- 所有绑定生产计划的生产单的number -->
+                <!-- 所有绑定客户计划的生产单的number -->
                 select dh.number from jsh_depot_head dh
                 where dh.link_number=#{linkNumber}
                 and ifnull(dh.delete_flag,'0') !='1'
@@ -1196,7 +1220,7 @@
             and di.header_id
             in
             (
-                <!-- 所有绑定生产计划的生产单的header_id -->
+                <!-- 所有绑定客户计划的生产单的header_id -->
                 select dh.id from jsh_depot_head dh
                 where dh.link_number=#{linkNumber}
                 and ifnull(dh.delete_flag,'0') !='1'
@@ -1211,7 +1235,7 @@
             and dh.link_number
             in
             (
-                <!-- 所有绑定生产计划的生产单的number -->
+                <!-- 所有绑定客户计划的生产单的number -->
                 select dh.number from jsh_depot_head dh
                 where dh.link_number=#{linkNumber}
                 and ifnull(dh.delete_flag,'0') !='1'

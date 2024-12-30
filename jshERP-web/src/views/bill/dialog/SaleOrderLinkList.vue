@@ -73,14 +73,12 @@
             <a-tag v-if="record.status === '1'" color="green">已审核</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">已入库</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '采购申请'" color="cyan">已下单</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">已出库</a-tag>
-            <a-tag v-if="record.status === '2' && queryParam.subType === '生产计划'" color="cyan">已下单</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">已送货</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '生产单'" color="cyan">已入库</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '采购申请'" color="blue">部分下单</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分入库</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分出库</a-tag>
-            <a-tag v-if="record.status === '3' && queryParam.subType === '生产计划'" color="blue">部分下单</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分送货</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '生产单'" color="blue">部分入库</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '领料'" color="cyan">有退料</a-tag>
           </template>
@@ -119,7 +117,7 @@
   import { getAction } from '@/api/manage'
   import Vue from 'vue'
   export default {
-    name: 'ProductionPlanLinkList',
+    name: 'SaleOrderLinkList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
       BillDetail
@@ -168,25 +166,24 @@
               }
             }
           },
-          { title: '计划开始时间', dataIndex: 'planStartTimeStr',width:110},
-          { title: '计划完成时间', dataIndex: 'planFinishTimeStr',width:110},
-          { title: '制单人', dataIndex: 'userName',width:70},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:120},
+          { title: '制单人', dataIndex: 'userName',width:60},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
         ],
         columnsDetail: [
-          { title: '编码', dataIndex: 'barCode',width:120},
+          { title: '编码', dataIndex: 'barCode',width:60},
           { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
           { title: '客/供型号', dataIndex: 'supplierModel',width:100, ellipsis:true},
           { title: '零件号', dataIndex: 'model',width:100, ellipsis:true},
+          { title: '类别', dataIndex: 'categoryName',width:80, ellipsis:true},
           { title: '扩展信息', dataIndex: 'materialOther',width:50, ellipsis:true},
-          { title: '单位', dataIndex: 'unit',width:40},
-          { title: '需求数', dataIndex: 'operNumber',width:60},
-          { title: '已下单', dataIndex: 'finishNumber',width:60},
-          { title: '库存', dataIndex: 'stock',width:50},
-          { title: '备注', dataIndex: 'remark',width:100, ellipsis:true},
+          { title: '单位', dataIndex: 'unit',width:50},
+          { title: '库存', dataIndex: 'stock',width:60},
+          { title: '需求', dataIndex: 'operNumber',width:60},
+          { title: '备注', dataIndex: 'remark',width:80, ellipsis:true},
         ],
         dataSource:[],
         dataSourceDetail: [],

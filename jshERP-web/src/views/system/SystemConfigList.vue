@@ -155,7 +155,6 @@
           { 'key': 'CGDD', 'value': '采购订单' },
           { 'key': 'CGSQ', 'value': '采购申请' },
           { 'key': 'CGRK', 'value': '采购入库' },
-          { 'key': 'SCJH', 'value': '生产计划' },
           { 'key': 'SCD', 'value': '生产单' },
           { 'key': 'SCRK', 'value': '生产入库' },
           { 'key': 'LLCK', 'value': '领料出库' },
