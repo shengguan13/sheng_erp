@@ -68,13 +68,13 @@
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="未税单价">
-            <a-input placeholder="未税单价" v-decorator.trim="[ 'priceNoTax' ]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="起订量">
+            <a-input placeholder="起订量" v-decorator.trim="[ 'unit' ]" />
           </a-form-item>
         </a-form>
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="税率">
-            <a-input placeholder="税率" v-decorator.trim="[ 'taxRate' ]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期（月）">
+            <a-input placeholder="保质期（月）" v-decorator.trim="[ 'taxRate' ]" />
           </a-form-item>
         </a-form>
       </a-spin>
@@ -150,7 +150,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'supplierId', 'supplierType', 'model',
-          'barCode', 'purchaseCycle', 'manufactory', 'pack', 'priceNoTax', 'taxRate'))
+          'barCode', 'purchaseCycle', 'manufactory', 'pack', 'unit', 'taxRate'))
         });
       },
       selectMaterialFormOk(ids) {

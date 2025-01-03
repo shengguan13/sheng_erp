@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -205,14 +206,19 @@ public class ProductSupplierService {
             }
 
             for (int i = 1; i < rightRows; i++) {
+                String barCode = ExcelUtils.getContent(src, i, 1);
                 String supplierName = ExcelUtils.getContent(src, i, 2);
                 String manufactory = ExcelUtils.getContent(src, i, 3);
-                String barCode = ExcelUtils.getContent(src, i, 1);
-                String type = ExcelUtils.getContent(src, i, 8);
-                String unit = "";
                 String model = ExcelUtils.getContent(src, i, 4);
                 String pack = ExcelUtils.getContent(src, i, 5);
+                String taxRate = ExcelUtils.getContent(src, i, 7); // 保质期
+                String type = ExcelUtils.getContent(src, i, 8);
                 String purchaseCycle = ExcelUtils.getContent(src, i, 9);
+                String unit = ExcelUtils.getContent(src, i, 12); // 起订量
+                BigDecimal expir = BigDecimal.ZERO;
+                try {
+                    expir = BigDecimal.valueOf(Double.valueOf(taxRate));
+                } catch (Exception e) {}
                 //不允许为空
                 if(StringUtil.isEmpty(supplierName) || StringUtil.isEmpty(barCode) || StringUtil.isEmpty(type)) {
                     throw new BusinessRunTimeException(ExceptionConstants.PRODUCT_SUPPLIER_INFO_MISSING_CODE,
@@ -234,9 +240,6 @@ public class ProductSupplierService {
                 }
                 List<ProductSupplier> list = productSupplierMapper.selectByExample(example);
 
-                // 批量校验excel中有无重复
-//                batchCheckExistProductSupplierByParam(productSupplierList, supplierName,
-//                        supplierNameToId.get(supplierName), barCode, type, model, pack);
                 ProductSupplier productSupplier = new ProductSupplier();
                 productSupplier.setSupplierId(supplierNameToId.get(supplierName));
                 productSupplier.setManufactory(manufactory);
@@ -246,6 +249,7 @@ public class ProductSupplierService {
                 productSupplier.setModel(model);
                 productSupplier.setPack(pack);
                 productSupplier.setPurchaseCycle(purchaseCycle);
+                productSupplier.setTaxRate(expir);
                 productSupplier.setDeleteFlag("0");
                 productSupplierList.add(productSupplier);
                 if (list.size() > 0) {

@@ -33,6 +33,11 @@
                   <a-input placeholder="编码/名称/型号/规格/颜色" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
+              <a-col :md="4" :sm="24">
+                <a-form-item label="项目信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="项目" v-model="queryParam.project"></a-input>
+                </a-form-item>
+              </a-col>
               <a-col :md="3" :sm="24">
                 <a-form-item label="零库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select v-model="queryParam.zeroStock">
@@ -46,11 +51,6 @@
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item>
-                  <span>总库存：{{currentStock}}，总库存金额：{{currentStockPrice}}</span>
-                </a-form-item>
               </a-col>
             </a-row>
           </a-form>
@@ -130,6 +130,7 @@
         queryParam: {
           categoryId:'',
           materialParam:'',
+          project:'',
           zeroStock: '0',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
@@ -140,8 +141,6 @@
         depotSelected:[],
         depotList: [],
         categoryTree:[],
-        currentStock: '',
-        currentStockPrice: '',
         // 表头
         columns: [
           {
@@ -228,8 +227,6 @@
             this.dataSource = res.data.rows;
             this.ipagination.total = res.data.total;
             this.tableAddTotalRow(this.columns, this.dataSource)
-            this.currentStock = res.data.currentStock;
-            this.currentStockPrice = res.data.currentStockPrice;
           }
           if(res.code===510){
             this.$message.warning(res.data)

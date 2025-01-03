@@ -577,6 +577,7 @@ public class MaterialController {
                                              @RequestParam("mpList") String mpList,
                                              @RequestParam("column") String column,
                                              @RequestParam("order") String order,
+                                             @RequestParam("project") String project,
                                              HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
@@ -597,12 +598,9 @@ public class MaterialController {
                 }
             }
             List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(materialParam), zeroStock,
-                    StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
-            int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(materialParam), zeroStock);
-            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(materialParam));
+                    StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), StringUtil.toNull(project), (currentPage-1)*pageSize, pageSize);
+            int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(materialParam), zeroStock, StringUtil.toNull(project));
             map.put("total", total);
-            map.put("currentStock", materialVo4Unit.getCurrentStock());
-            map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice());
             map.put("rows", dataList);
             res.code = 200;
             res.data = map;

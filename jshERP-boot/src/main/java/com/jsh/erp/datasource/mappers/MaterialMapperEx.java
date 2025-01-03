@@ -112,6 +112,7 @@ public interface MaterialMapperEx {
             @Param("zeroStock") Integer zeroStock,
             @Param("column") String column,
             @Param("order") String order,
+            @Param("project") String project,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -119,12 +120,8 @@ public interface MaterialMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("idList") List<Long> idList,
             @Param("materialParam") String materialParam,
-            @Param("zeroStock") Integer zeroStock);
-
-    MaterialVo4Unit getTotalStockAndPrice(
-            @Param("depotList") List<Long> depotList,
-            @Param("idList") List<Long> idList,
-            @Param("materialParam") String materialParam);
+            @Param("zeroStock") Integer zeroStock,
+            @Param("project") String project);
 
     int checkIsExist(
             @Param("id") Long id,

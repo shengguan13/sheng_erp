@@ -95,6 +95,11 @@
                 </a-form-item>
               </a-col>
               <a-col :lg="6" :md="6" :sm="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="产能（时/件）" data-title="产能（时/件）">
+                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField8' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料来源" data-title="物料来源">
                   <a-input :readOnly="true" v-decorator.trim="[ 'otherField7' ]" />
                 </a-form-item>
@@ -153,13 +158,6 @@
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField4.name">
                   <a-input :readOnly="true" v-decorator.trim="[ 'otherField4' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-if="mpShort.otherField8.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField8.name">
-                  <a-input :readOnly="true" v-decorator.trim="[ 'otherField8' ]" />
                 </a-form-item>
               </a-col>
             </a-row>

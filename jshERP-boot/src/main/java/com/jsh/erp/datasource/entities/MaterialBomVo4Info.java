@@ -26,6 +26,8 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     private String otherField7;
 
+    private String otherField8;
+
     private String supplierModel;
 
     private String material;
@@ -102,6 +104,14 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     public void setOtherField7(String otherField7) {
         this.otherField7 = otherField7;
+    }
+
+    public String getOtherField8() {
+        return otherField8;
+    }
+
+    public void setOtherField8(String otherField8) {
+        this.otherField8 = otherField8;
     }
 
     public String getSupplierModel() {
