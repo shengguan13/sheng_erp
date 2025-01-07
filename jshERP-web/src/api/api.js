@@ -17,6 +17,8 @@ const addUser = (params)=>postAction("/user/addUser",params);
 const editUser = (params)=>putAction("/user/updateUser",params);
 const getUserList = (params)=>getAction("/user/getUserList",params);
 const queryPermissionsByUser = (params)=>postAction("/function/findMenuByPNumber",params);
+const listUser = (params)=>getAction("/user/listUser",params);
+const hasPriceRight = (params)=>getAction("/user/hasPriceRight",params);
 //机构管理
 const queryOrganizationTreeList = (params)=>getAction("/organization/getOrganizationTree",params);
 const queryOrganizationById = (params)=>getAction("/organization/findById",params);
@@ -122,6 +124,10 @@ const getAccountItemList = (params)=>getAction("/accountItem/getDetailList",para
 const getAllocationList = (params)=>getAction("/depotAllocation/getAllocationList",params);
 const getAllocationDetail = (params)=>getAction("/depotAllocation/getAllocationDetail",params);
 const getDepotAllocation = (params)=>getAction("/depotAllocation/getDepotAllocation",params);
+//项目相关
+const addProject = (params)=>postAction("/project/add",params);
+const editProject = (params)=>putAction("/project/update",params);
+const checkProject = (params)=>getAction("/project/checkIsNameExist",params);
 
 export {
   getBuyAndSaleStatistics,
@@ -137,6 +143,7 @@ export {
   editUser,
   getUserList,
   queryPermissionsByUser,
+  listUser,
   queryOrganizationTreeList,
   queryOrganizationById,
   checkOrganization,
@@ -222,7 +229,10 @@ export {
   getDepotAllocation,
   getProductSupplierList,
   findFinancialDetailByNumber,
-  getAccountItemList
+  getAccountItemList,
+  addProject,
+  editProject,
+  checkProject
 }
 
 

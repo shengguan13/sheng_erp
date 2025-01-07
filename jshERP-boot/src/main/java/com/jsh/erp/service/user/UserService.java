@@ -125,6 +125,26 @@ public class UserService {
         return list;
     }
 
+    public List<UserEx> selectByNameAndOrgan(String userName, String organ, int offset, int rows)throws Exception {
+        List<UserEx> list=null;
+        try{
+            list=userMapperEx.selectByNameAndOrgan(userName, organ, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public Long countsByNameAndOrgan(String userName, String organ)throws Exception {
+        Long result=null;
+        try{
+            result=userMapperEx.countsByNameAndOrgan(userName, organ);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     public Long countUser(String userName, String loginName)throws Exception {
         Long result=null;
         try{

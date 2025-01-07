@@ -12,6 +12,7 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.productSupplier.ProductSupplierService;
+import com.jsh.erp.service.project.ProjectService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ExcelUtils;
@@ -37,6 +38,8 @@ public class MaterialBomService {
 
     @Resource
     private LogService logService;
+    @Resource
+    private ProjectService projectService;
 
     @Resource
     private MaterialBomMapper materialBomMapper;
@@ -82,6 +85,11 @@ public class MaterialBomService {
     public List<MaterialBomVo4Info> select(
             String categoryId, String parent, String project, String materialParam, int offset, int rows) throws Exception{
         List<MaterialBomVo4Info> list = new ArrayList<>();
+        if (isBomUser()) {
+            if (StringUtil.isEmpty(project) || !getUserProjects().contains(project.trim().toLowerCase())) {
+                return list;
+            }
+        }
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){
@@ -108,6 +116,32 @@ public class MaterialBomService {
         return list;
     }
 
+    boolean isBomUser() throws Exception {
+        User user = userService.getCurrentUser();
+        List<UserEx> bomUser = userService.selectByNameAndOrgan(user.getUsername(), "BOM", 0, 1);
+        if (bomUser.size() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private Set<String> getUserProjects() throws Exception {
+        User user = userService.getCurrentUser();
+        List<Project> projects = projectService.getAllProject();
+        Set<String> pass = new HashSet<>();
+        for (Project p : projects) {
+            if (p.getUsers() != null && !"".equals(p.getUsers())) {
+                String[] userStr = p.getUsers().split(",");
+                for (String str : userStr) {
+                    if (Long.parseLong(str) == user.getId().longValue()) {
+                        pass.add(p.getName().toLowerCase().trim());
+                    }
+                }
+            }
+        }
+        return pass;
+    }
+
     public List<MaterialBomVo4Info> selectMaterialBomWithUpper(
             String parent, String upper, String project, String materialParam) throws Exception{
         List<MaterialBomVo4Info> list = new ArrayList<>();
@@ -132,8 +166,13 @@ public class MaterialBomService {
         return list;
     }
 
-    public Long countMaterialBom(String categoryId, String parent, String upper, String project, String materialParam) throws Exception{
+    public Long countMaterialBom(String categoryId, String parent, String project, String materialParam) throws Exception{
         Long result = null;
+        if (isBomUser()) {
+            if (StringUtil.isEmpty(project) || !getUserProjects().contains(project.trim().toLowerCase())) {
+                return (long) 0;
+            }
+        }
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){

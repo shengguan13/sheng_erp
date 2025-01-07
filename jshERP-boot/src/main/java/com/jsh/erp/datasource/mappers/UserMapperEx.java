@@ -23,6 +23,16 @@ public interface UserMapperEx {
             @Param("userName") String userName,
             @Param("loginName") String loginName);
 
+    List<UserEx> selectByNameAndOrgan(
+            @Param("userName") String userName,
+            @Param("organ") String organ,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    Long countsByNameAndOrgan(
+            @Param("userName") String userName,
+            @Param("organ") String organ);
+
     List<User> getUserListByUserNameOrLoginName(@Param("userName") String userName,
                                                 @Param("loginName") String loginName);
 

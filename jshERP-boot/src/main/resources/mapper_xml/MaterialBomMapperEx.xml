@@ -110,8 +110,11 @@
             and mb.parent = #{parent}
         </if>
         <if test="project != null and project != ''">
-            <bind name="bindProject" value="'%'+project+'%'"/>
-            and lower(mb.project) like lower(#{bindProject})
+            <bind name="bindTail" value="'%'+project"/>
+            <bind name="bindHead" value="project+',%'"/>
+            <bind name="bindBody" value="'%,'+project+',%'"/>
+            and (lower(mb.project)=lower(#{project}) or lower(mb.project) like lower(#{bindTail})
+                or lower(mb.project) like lower(#{bindHead}) or lower(mb.project) like lower(#{bindBody}))
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -213,8 +216,11 @@
             and mb.parent = #{parent}
         </if>
         <if test="project != null and project != ''">
-            <bind name="bindProject" value="'%'+project+'%'"/>
-            and lower(mb.project) like lower(#{bindProject})
+            <bind name="bindTail" value="'%'+project"/>
+            <bind name="bindHead" value="project+',%'"/>
+            <bind name="bindBody" value="'%,'+project+',%'"/>
+            and (lower(mb.project)=lower(#{project}) or lower(mb.project) like lower(#{bindTail})
+            or lower(mb.project) like lower(#{bindHead}) or lower(mb.project) like lower(#{bindBody}))
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>

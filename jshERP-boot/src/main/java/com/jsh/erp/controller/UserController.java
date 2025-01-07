@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.SysLoginModel;
-import com.jsh.erp.datasource.entities.Tenant;
-import com.jsh.erp.datasource.entities.User;
-import com.jsh.erp.datasource.entities.UserEx;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.log.LogService;
@@ -496,6 +493,48 @@ public class UserController {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/listUser")
+    @ApiOperation(value = "获取用户信息")
+    public BaseResponseInfo listUser(@RequestParam("name") String name,
+                                     @RequestParam("currentPage") Integer currentPage,
+                                     @RequestParam("pageSize") Integer pageSize,
+                                     HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<UserEx> list = userService.selectByNameAndOrgan(name, "BOM", (currentPage-1)*pageSize, pageSize);
+            map.put("rows", list);
+            map.put("total", userService.countsByNameAndOrgan(name, "BOM"));
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/hasPriceRight")
+    @ApiOperation(value = "获取用户信息")
+    public BaseResponseInfo hasPriceRight(HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            res.data = false;
+            User user = userService.getCurrentUser();
+            List<UserEx> userEx = userService.selectByNameAndOrgan(user.getUsername(), null, 0, 1);
+            if (userEx.size() == 1 && "采购".equals(userEx.get(0).getUserType())) {
+                res.data = true;
+            }
+            res.code = 200;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
         }
         return res;
     }

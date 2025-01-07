@@ -1445,7 +1445,6 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '库存', dataIndex: 'stock'},
           { title: '项目', dataIndex: 'project'},
-          { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOutColumns: [
