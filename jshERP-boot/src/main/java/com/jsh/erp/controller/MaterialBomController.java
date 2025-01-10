@@ -1,23 +1,35 @@
 package com.jsh.erp.controller;
 
 import com.jsh.erp.datasource.entities.MaterialBomVo4Info;
+import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.materialBom.MaterialBomService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ExcelUtils;
+import com.jsh.erp.utils.ExportExecUtil;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/materialBom")
 @Api(tags = {"BOM管理"})
 public class MaterialBomController {
+    private Logger logger = LoggerFactory.getLogger(MaterialBomController.class);
+
     @Resource
     private MaterialBomService materialBomService;
 
@@ -84,32 +96,51 @@ public class MaterialBomController {
     @ApiOperation(value = "生成excel表格")
     public void exportExcel(@RequestParam(value = "categoryId", required = false) String categoryId,
                             @RequestParam(value = "materialParam", required = false) String materialParam,
-                            @RequestParam(value = "color", required = false) String color,
                             @RequestParam(value = "project", required = false) String project,
-                            @RequestParam(value = "weight", required = false) String weight,
-                            @RequestParam(value = "expiryNum", required = false) String expiryNum,
-                            @RequestParam(value = "enabled", required = false) String enabled,
-                            @RequestParam(value = "remark", required = false) String remark,
-                            @RequestParam(value = "mpList", required = false) String mpList,
                             HttpServletRequest request, HttpServletResponse response) {
-
-    }
-
-    @PostMapping(value = "/importExcel")
-    @ApiOperation(value = "excel表格导入产品")
-    public BaseResponseInfo importExcel(MultipartFile file,
-                                        HttpServletRequest request, HttpServletResponse response) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
         try {
-            res = materialBomService.importExcel(file, request);
-        } catch (BusinessRunTimeException e) {
-            BaseResponseInfo info = new BaseResponseInfo();
-            info.code = e.getCode();
-            info.data = e.getMessage();
-            return info;
+            List<MaterialBomVo4Info> bomList = materialBomService.select(
+                    StringUtil.toNull(categoryId), null, StringUtil.toNull(project), StringUtil.toNull(materialParam), 0, 300);
+            logger.info("XXXXX bomList size " + bomList.size());
+            String[] names = {"总成编号", "级别", "编码", "名称", "型号", "规格", "颜色", "颜色代码", "材质", "用量", "单位", "类别"};
+            String title = project + " BOM";
+            List<String[]> objects = new ArrayList<>();
+            if (null != bomList) {
+                for (int i = 0; i < bomList.size(); i++) {
+                    MaterialBomVo4Info bom = bomList.get(i);
+                    List<MaterialBomVo4Info> tree = materialBomService.getMaterialBomTree(bom.getParent(), bom.getBarCode(), bom.getProject());
+                    flattenTree(tree, objects, i, 1);
+                }
+            }
+            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+            ExportExecUtil.showExec(file, file.getName(), response);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return res;
+    }
+
+    private void flattenTree(List<MaterialBomVo4Info> tree, List<String[]> objects, int parentCount, int level) {
+        if (tree == null || tree.size() == 0) {
+            return;
+        }
+        for (MaterialBomVo4Info bom : tree) {
+            String[] objs = new String[100];
+            objs[0] = String.valueOf(parentCount);
+            objs[1] = String.valueOf(level);
+            objs[2] = bom.getBarCode();
+            objs[3] = bom.getName() == null ? "" : bom.getName();
+            objs[4] = bom.getModel() == null ? "" : bom.getModel();
+            objs[5] = bom.getOtherField5() == null ? "" : bom.getOtherField5();
+            objs[6] = bom.getColor() == null ? "" : bom.getColor();
+            objs[7] = bom.getColorCode() == null ? "" : bom.getColorCode();
+            objs[8] = bom.getMaterial() == null ? "" : bom.getMaterial();
+            objs[9] = bom.getProcessUsage() == null ? "" : bom.getProcessUsage().toString();
+            objs[10] = bom.getmUnit() == null ? "" : bom.getmUnit();
+            objs[11] = bom.getCategory() == null ? "" : bom.getCategory();
+            objects.add(objs);
+            if (bom.getChildren() != null && bom.getChildren().size() > 0) {
+                flattenTree(bom.getChildren(), objects, parentCount, level + 1);
+            }
+        }
     }
 }

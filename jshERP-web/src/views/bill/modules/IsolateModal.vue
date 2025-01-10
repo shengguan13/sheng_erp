@@ -27,7 +27,16 @@
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24"></a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申报人">
+              <a-select placeholder="选择领料人" v-decorator="[ 'salesMan' ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
+                  {{ item.text }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <a-col :lg="6" :md="12" :sm="24"></a-col>
         </a-row>
         <j-editable-table id="billModal"
@@ -218,6 +227,7 @@
         }
         this.initSystemConfig()
         this.initDepot()
+        this.initPerson()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

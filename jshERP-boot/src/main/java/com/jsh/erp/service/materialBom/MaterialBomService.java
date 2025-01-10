@@ -84,6 +84,7 @@ public class MaterialBomService {
 
     public List<MaterialBomVo4Info> select(
             String categoryId, String parent, String project, String materialParam, int offset, int rows) throws Exception{
+        logger.info("XXXXX bom select " + categoryId + "-" + parent + "-" + project + "-" + materialParam);
         List<MaterialBomVo4Info> list = new ArrayList<>();
         if (isBomUser()) {
             if (StringUtil.isEmpty(project) || !getUserProjects().contains(project.trim().toLowerCase())) {
@@ -434,91 +435,6 @@ public class MaterialBomService {
             JshException.writeFail(logger, e);
             return 0;
         }
-    }
-
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BaseResponseInfo importExcel(MultipartFile file, HttpServletRequest request) throws Exception {
-        BaseResponseInfo info = new BaseResponseInfo();
-        try {
-            Long beginTime = System.currentTimeMillis();
-            //文件扩展名只能为xls
-            String fileName = file.getOriginalFilename();
-            if(StringUtil.isNotEmpty(fileName)) {
-                String fileExt = fileName.substring(fileName.indexOf(".")+1);
-                if(!"xls".equals(fileExt)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
-                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
-                }
-            }
-            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
-            Sheet src = workbook.getSheet(0);
-            //获取真实的行数，剔除掉空白行
-            int rightRows = ExcelUtils.getRightRows(src);
-            User user = userService.getCurrentUser();
-            //单次导入超出5000条
-            if(rightRows > 5001) {
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
-                        String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
-            }
-            List<MaterialBom> bomList = new ArrayList<>();
-            for (int i = 1; i < rightRows; i++) {
-                String parentCode = ExcelUtils.getContent(src, i, 0); //总成
-                String upperCode = ExcelUtils.getContent(src, i, 1); //总成
-                if (StringUtil.isEmpty(parentCode)) {
-                    continue;
-                }
-                String barCode = ExcelUtils.getContent(src, i, 1); //编码
-                String partNo = ExcelUtils.getContent(src, i, 2); //零件号
-                String project = ExcelUtils.getContent(src, i, 3); //项目
-                String department = ExcelUtils.getContent(src, i, 4); //部门
-                String source = ExcelUtils.getContent(src, i, 5); //物料来源
-                String processUsage = ExcelUtils.getContent(src, i, 6); //用量
-                String unit = ExcelUtils.getContent(src, i, 7); //单位
-
-                // 批量校验excel中有无重复BOM
-                MaterialBom bom = new MaterialBom();
-                bom.setParent("");
-                bom.setUpper("");
-                bom.setPartNo(partNo);
-                bom.setBarCode(barCode);
-                bom.setProject(project);
-                bom.setDepartment(department);
-                bom.setSource(source);
-                //单位为空
-                if(StringUtil.isEmpty(unit)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
-                            String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
-                }
-                bom.setUnit(unit);
-                if(StringUtil.isNotEmpty(processUsage)) {
-                    //校验用量是否为数字
-                    if(!StringUtil.isBigDecimal(processUsage)) {
-                        throw new BusinessRunTimeException(ExceptionConstants.BOM_USAGE_ERROR_CODE,
-                                String.format(ExceptionConstants.BOM_USAGE_ERROR_MSG, i+1));
-                    }
-                    bom.setProcessUsage(BigDecimal.valueOf(Double.valueOf(processUsage)));
-                }
-                bomList.add(bom);
-            }
-            for (MaterialBom bom : bomList) {
-                materialBomMapper.insertSelective(bom);
-            }
-            logService.insertLog("产品BOM",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(bomList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            Long endTime = System.currentTimeMillis();
-            logger.info("导入耗时：{}", endTime-beginTime);
-            info.code = 200;
-            info.data = "导入成功";
-        } catch (BusinessRunTimeException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage(), e);
-            info.code = 500;
-            info.data = "导入失败";
-        }
-        return info;
     }
 
     /**

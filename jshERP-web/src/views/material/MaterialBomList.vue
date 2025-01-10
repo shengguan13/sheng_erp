@@ -37,8 +37,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
-          <a-button v-if="btnEnableList.indexOf(3)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
-          <a-button v-if="btnEnableList.indexOf(3)>-1" type="primary" icon="download" @click="handleExportXls('产品信息')">导出</a-button>
+          <a-button v-if="btnEnableList.indexOf(3)>-1" type="primary" icon="download" @click="handleExportXls('BOM')">导出</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -95,7 +94,6 @@
         <!-- 表单区域 -->
         <material-bom-view-modal ref="bomViewModalForm"></material-bom-view-modal>
         <material-bom-modal ref="modalForm" @ok="modalFormOk"></material-bom-modal>
-        <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
     </a-col>
@@ -104,7 +102,6 @@
 <script>
   import MaterialBomViewModal from './modules/MaterialBomViewModal'
   import MaterialBomModal from './modules/MaterialBomModal'
-  import ImportFileModal from '@/components/tools/ImportFileModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
   import { postAction, getFileAccessHttpUrl } from '@/api/manage'
@@ -120,7 +117,6 @@
     components: {
       MaterialBomViewModal,
       MaterialBomModal,
-      ImportFileModal,
       BatchSetInfoModal,
       JEllipsis,
       JDate
@@ -176,7 +172,6 @@
           list: "/materialBom/list",
           delete: "/materialBom/delete",
           deleteBatch: "/materialBom/deleteBatch",
-          importExcelUrl: "/materialBom/importExcel",
           exportXlsUrl: "/materialBom/exportExcel"
         }
       }
@@ -187,9 +182,6 @@
       this.loadTreeData();
     },
     computed: {
-      importExcelUrl: function () {
-        return `${window._CONFIG['domianURL']}${this.url.importExcelUrl}`;
-      }
     },
     methods: {
       //加载初始化列
@@ -244,13 +236,6 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
-      },
-      handleImportXls() {
-        let importExcelUrl = this.url.importExcelUrl
-        let templateUrl = '/doc/bom_template.xls'
-        let templateName = '项目BOM模板[下载]'
-        this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
-        this.$refs.modalImportForm.title = "项目BOM导入";
       },
       searchReset() {
         this.queryParam = {

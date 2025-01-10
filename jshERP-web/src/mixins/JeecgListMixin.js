@@ -382,6 +382,14 @@ export const JeecgListMixin = {
           return
         }
       }
+      if(fileName == "BOM") {
+        if(JSON.stringify(this.queryParam) == '{}' ||
+          ((this.queryParam.materialParam == null || this.queryParam.materialParam == '')
+          && (this.queryParam.project == null || this.queryParam.project == ''))) {
+          this.$message.warning("必须输入项目进行导出！")
+          return
+        }
+      }
       let param = {...this.queryParam};
       if(fileName == "货位明细") {
         param['currentPage'] = this.ipagination.current;

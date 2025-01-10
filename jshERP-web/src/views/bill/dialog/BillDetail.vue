@@ -868,8 +868,9 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="申报人">
+                <a-input v-decorator="['id']" hidden/>
+                {{model.salesManStr}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
@@ -913,8 +914,9 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="盘点人">
+                <a-input v-decorator="['id']" hidden/>
+                {{model.salesManStr}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
