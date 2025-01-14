@@ -53,9 +53,9 @@
       <!--审核/反审核-->
       <a-button v-if="checkFlag && isCanBackCheck && model.status==='0'" @click="handleCheck()">审核</a-button>
       <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
+      <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleReceipt()">结算</a-button>
+      <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleBackReceipt()">反结算</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
-      <!--发起多级审核-->
-      <a-button v-if="!checkFlag && model.status==='0'" @click="handleWorkflow()" type="primary">提交流程</a-button>
     </template>
     <a-form :form="form">
       <!--生产单-->
@@ -1261,6 +1261,7 @@
         purchaseBySaleFlag: false,
         linkNumberList: [],
         financialBillNoList: [],
+        btnEnableList: '',
         /* 原始反审核是否开启 */
         checkFlag: true,
         tableWidth: {
@@ -1283,7 +1284,8 @@
         url: {
           detailList: '/depotItem/getDetailList',
           materialPrepareList: '/depotItem/getMaterialPrepareList',
-          batchSetStatusUrl: "/depotHead/batchSetStatus"
+          batchSetStatusUrl: "/depotHead/batchSetStatus",
+          batchSetCheckStatusUrl: "/depotHead/batchSetCheckStatus"
         },
         //表头
         columns:[],
@@ -1795,11 +1797,29 @@
             let url = type === '备料' ? this.url.materialPrepareList : this.url.detailList;
             this.requestSubTableData(item, type, url, params);
             this.initPlatform()
+            this.initActiveBtnStr()
             this.getSystemConfig()
             this.getBillListByLinkNumber(this.model.number)
             this.getFinancialBillNoByBillId(this.model.id)
           }
         })
+      },
+      initActiveBtnStr() {
+        let btnStrList = Vue.ls.get('winBtnStrList'); //按钮功能列表 JSON字符串
+        this.btnEnableList = ""; //按钮列表
+        let pathName = location.pathname
+        if(pathName.indexOf('/plugins')>-1) {
+          pathName = '/system' + pathName
+        }
+        if (pathName && btnStrList) {
+          for (let i = 0; i < btnStrList.length; i++) {
+            if (btnStrList[i].url === pathName) {
+              if (btnStrList[i].btnStr) {
+                this.btnEnableList = btnStrList[i].btnStr;
+              }
+            }
+          }
+        }
       },
       requestSubTableData(record, type, url, params, success) {
         this.loading = true
@@ -1855,6 +1875,48 @@
           }
         })
       },
+      handleBackReceipt() {
+        let that = this
+        this.$confirm({
+          title: "确认操作",
+          content: "是否对该单据进行反结算?",
+          onOk: function () {
+            that.loading = true
+            postAction(that.url.batchSetCheckStatusUrl, {status: '0', ids: that.model.id}).then((res) => {
+              if(res.code === 200){
+                that.$emit('ok')
+                that.loading = false
+                that.close()
+              } else {
+                that.$message.warning(res.data.message)
+                that.loading = false
+              }
+            }).finally(() => {
+            })
+          }
+        })
+      },
+      handleReceipt() {
+        let that = this
+        this.$confirm({
+          title: "确认操作",
+          content: "是否对该单据进行结算?",
+          onOk: function () {
+            that.loading = true
+            postAction(that.url.batchSetCheckStatusUrl, {status: '1', ids: that.model.id}).then((res) => {
+              if(res.code === 200){
+                that.$emit('ok')
+                that.loading = false
+                that.close()
+              } else {
+                that.$message.warning(res.data.message)
+                that.loading = false
+              }
+            }).finally(() => {
+            })
+          }
+        })
+      },
       handleCancel() {
         this.close()
       },
@@ -1891,16 +1953,6 @@
             let billPrintHeight = this.dataSource.length*50 + 600
             this.$refs.modalDetail.show(this.model, billPrintUrl, billPrintHeight)
             this.$refs.modalDetail.title = this.billType + "-三联打印预览"
-          }
-        })
-      },
-      //发起流程
-      handleWorkflow() {
-        getPlatformConfigByKey({"platformKey": "send_workflow_url"}).then((res)=> {
-          if (res && res.code === 200) {
-            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.number + '&type=1'
-            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
-            this.$refs.modalWorkflow.title = "发起流程"
           }
         })
       },

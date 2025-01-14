@@ -29,7 +29,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="盘点人">
-              <a-select placeholder="选择领料人" v-decorator="[ 'salesMan' ]"
+              <a-select placeholder="选择盘点人" v-decorator="[ 'salesMan' ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in personList.options" :key="index" :value="item.value">
                   {{ item.text }}

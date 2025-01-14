@@ -80,7 +80,8 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, columnWidth:'2%'}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="handleDetail(record)">查看</a>
+              <a v-if="btnEnableList.indexOf(1)<0" @click="handleDetailReadOnly(record)">查看</a>
+              <a v-if="btnEnableList.indexOf(1)>-1" @click="handleDetail(record)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="handleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -93,6 +94,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <material-bom-view-modal ref="bomViewModalForm"></material-bom-view-modal>
+        <material-bom-read-only-modal ref="readOnlyModalForm"></material-bom-read-only-modal>
         <material-bom-modal ref="modalForm" @ok="modalFormOk"></material-bom-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
@@ -101,6 +103,7 @@
 </template>
 <script>
   import MaterialBomViewModal from './modules/MaterialBomViewModal'
+  import MaterialBomReadOnlyModal from './modules/MaterialBomViewModal'
   import MaterialBomModal from './modules/MaterialBomModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
@@ -117,6 +120,7 @@
     components: {
       MaterialBomViewModal,
       MaterialBomModal,
+      MaterialBomReadOnlyModal,
       BatchSetInfoModal,
       JEllipsis,
       JDate
@@ -227,6 +231,13 @@
         this.$refs.bomViewModalForm.title = "详情";
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.bomViewModalForm.isReadOnly = true
+        }
+      },
+      handleDetailReadOnly: function (record) {
+        this.$refs.readOnlyModalForm.edit(record);
+        this.$refs.readOnlyModalForm.title = "详情";
+        if(this.btnEnableList.indexOf(1)===-1) {
+          this.$refs.readOnlyModalForm.isReadOnly = true
         }
       },
       handleEdit: function (record) {

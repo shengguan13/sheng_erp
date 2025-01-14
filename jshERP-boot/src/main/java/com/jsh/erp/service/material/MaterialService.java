@@ -132,16 +132,11 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            long t1 = System.currentTimeMillis();
             list= materialMapperEx.selectByConditionMaterial(materialParam, color,
                     materialOther, weight, expiryNum, enabled, remark, idList, mpList, offset, rows);
-            long t2 = System.currentTimeMillis();
             if (null != list && list.size()>0) {
-                Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
                     m.setMaterialOther(getMaterialOtherByParam(mpArr, m));
-                    m.setStock(currentStockMap.get(m.getId())!=null? currentStockMap.get(m.getId()): BigDecimal.ZERO);
-                    m.setBigUnitStock(getBigUnitStock(m.getStock(), m.getUnitId()));
                     resList.add(m);
                 }
             }

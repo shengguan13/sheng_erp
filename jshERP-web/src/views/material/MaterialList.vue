@@ -66,10 +66,6 @@
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-              <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
-              <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
-              <a-menu-item key="4" v-if="btnEnableList.indexOf(1)>-1" @click="batchEdit()"><a-icon type="edit"/>批量编辑</a-menu-item>
-              <a-menu-item key="5" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentStock()"><a-icon type="stock"/>修正库存</a-menu-item>
             </a-menu>
             <a-button>
               批量操作 <a-icon type="down" />
@@ -128,11 +124,6 @@
             </template>
             <template slot="customName" slot-scope="text, record">
               {{record.name}}
-            </template>
-            <template slot="customRenderStock" slot-scope="text, record">
-              <a-tooltip :title="record.bigUnitStock">
-                {{text}}
-              </a-tooltip>
             </template>
           </a-table>
         </div>
@@ -202,7 +193,7 @@
         columns:[],
         // 初始化设置的表头
         settingColumns:['mBarCode','name','colorCode','model','project','color','categoryName','materialOther',
-          'unit', 'stock','enabled','action','weight','remark'],
+          'unit', 'supplierModel','action','weight','remark'],
         // 默认的列
         defColumns: [
           {
@@ -212,10 +203,11 @@
             width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '产品编码', dataIndex: 'mBarCode', width: 100, scopedSlots: { customRender: 'customBarCode' }},
-          {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
+          {title: '产品编码', dataIndex: 'mBarCode', width: 80, scopedSlots: { customRender: 'customBarCode' }},
+          {title: '名称', dataIndex: 'name', width: 100, scopedSlots: { customRender: 'customName' }},
           {title: '材质', dataIndex: 'mat', width: 40},
-          {title: '零件号', dataIndex: 'model', width: 120},
+          {title: '零件号', dataIndex: 'model', width: 100},
+          {title: '客/供零件号', dataIndex: 'supplierModel', width: 100},
           {title: '颜色', dataIndex: 'color', width: 40},
           {title: '颜色代码', dataIndex: 'colorCode', width: 50},
           {title: '类别', dataIndex: 'categoryName', width: 50, ellipsis:true},
@@ -229,9 +221,6 @@
             }
           },
           {title: '保质期/月', dataIndex: 'expiryNum', width: 60},
-          {title: '库存', dataIndex: 'stock', width: 50,
-            scopedSlots: { customRender: 'customRenderStock' }
-          },
           {title: '备注', dataIndex: 'remark', width: 80}
         ],
         url: {

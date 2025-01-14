@@ -79,6 +79,9 @@
             <template>
               <a-button @click="handleSelectMaterial"><a-icon type="setting"/>选择物料编码</a-button>
             </template>
+            <template>
+              <a-button @click="handleSelectProductSupplier"><a-icon type="setting"/>选择客商档案</a-button>
+            </template>
             <a-card :bordered="false" v-if="selectedKeys.length>0">
               <a-form :form="form">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料编码">
@@ -92,6 +95,9 @@
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零件号">
                   <a-input :readOnly="true" placeholder="零件号" v-decorator="['model']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客商档案">
+                  <a-input :readOnly="true" placeholder="客商档案" v-decorator="['department']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客/供型号">
                   <a-input :readOnly="true" placeholder="客/供型号" v-decorator="['supplierModel']"/>
@@ -158,6 +164,7 @@
         </a-row>
     </a-modal>
     <select-material ref="selectMaterialForm" @ok="selectMaterialFormOk"></select-material>
+    <select-product-supplier ref="selectProductSupplierForm" @ok="selectProductSupplierFormOk"></select-product-supplier>
   </div>
 </template>
 <script>
@@ -168,11 +175,13 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getMpListShort } from "@/utils/util"
   import SelectMaterial from '@/views/bill/dialog/SelectMaterial'
+  import SelectProductSupplier from '@/views/bill/dialog/SelectProductSupplier'
   import Vue from 'vue'
   export default {
     name: "MaterialBomViewModal",
     components: {
-      SelectMaterial
+      SelectMaterial,
+      SelectProductSupplier
     },
     mixins: [mixinDevice, JeecgListMixin],
     data () {
@@ -218,8 +227,8 @@
           barCode: {rules: [{required: true, message: '请输入物料编码!'}]},
           processUsage: {
             rules: [
-              {required: true, message: '请输入用量!'},
-              { pattern: /^(\+|-)?([1-9][0-9]*(\.\d+)?|(0\.(?!0+$)\d+))$/, message: '请输入非零的整数或者小数!' }
+              { required: true, message: '请输入用量!' },
+              { pattern: /^(0|([1-9][0-9]*))(\.[\d]+)?$/, message: '请输入非负的整数或者小数!' }
             ]
           },
           source: {rules: [{required: true, message: '请选择状态!'}]}
@@ -254,6 +263,17 @@
         this.$refs.selectMaterialForm.add();
         this.$refs.selectMaterialForm.title = "选择物料编码";
         this.$refs.selectMaterialForm.disableSubmit = false;
+      },
+      selectProductSupplierFormOk(ids) {
+        this.form.setFieldsValue({
+          'department': ids
+        })
+      },
+      handleSelectProductSupplier () {
+        console.log("handleSelectProductSupplier")
+        this.$refs.selectProductSupplierForm.add();
+        this.$refs.selectProductSupplierForm.title = "选择客商档案";
+        this.$refs.selectProductSupplierForm.disableSubmit = false;
       },
       selectMaterialFormOk(ids) {
         let param = {
@@ -409,6 +429,7 @@
             record.processUsage = res.data[0].processUsage;
             record.source = res.data[0].source;
             record.barCode = res.data[0].barCode;
+            record.department = res.data[0].department;
             record.name = res.data[0].name;
             record.model = res.data[0].model;
             record.color = res.data[0].color;
@@ -433,7 +454,7 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(record, 'barCode', 'name', 'model', 'color', 'colorCode', 'supplierModel',
             'otherField5', 'otherField7', 'otherField8', 'material', 'category', 'upper', 'unit', 'source', 'remark',
-            'project', 'processUsage'))
+            'project', 'processUsage', 'department'))
         })
       },
       getCurrSelectedTitle() {
