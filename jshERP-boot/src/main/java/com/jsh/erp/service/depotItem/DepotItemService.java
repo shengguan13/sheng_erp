@@ -1070,7 +1070,6 @@ public class DepotItemService {
                         }
                     }
                 } catch (Exception e) {
-
                 }
                 //更新当前库存
                 updateCurrentStock(depotItem);
@@ -1101,8 +1100,7 @@ public class DepotItemService {
                 example.createCriteria().andNumberEqualTo(depotHead.getNumber());
                 try{
                     depotHeadMapper.updateByExampleSelective(depotHeadFileList, example);
-                }catch(Exception e){
-                    JshException.writeFail(logger, e);
+                } catch (Exception e){
                 }
             }
             //如果关联单据号非空则更新订单的状态,单据类型：采购入库、销售出库、盘点复盘、生产入库（决定生产单的状态）、退料入库（决定领料出库的状态）

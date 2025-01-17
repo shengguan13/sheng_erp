@@ -521,7 +521,6 @@ public class MaterialService {
             Sheet src = workbook.getSheet(0);
             //获取真实的行数，剔除掉空白行
             int rightRows = ExcelUtils.getRightRows(src);
-            List<Depot> depotList= depotService.getDepot();
             User user = userService.getCurrentUser();
             List<MaterialWithInitStock> mList = new ArrayList<>();
             //单次导入超出5000条
@@ -567,11 +566,6 @@ public class MaterialService {
                 String other4 = ""; //浇口重量
                 String enabled = "1"; //状态
                 String remark = ""; //备注
-//                名称为空
-//                if(StringUtil.isEmpty(name)) {
-//                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
-//                            String.format(ExceptionConstants.MATERIAL_NAME_EMPTY_MSG, i+1));
-//                }
                 if(StringUtil.isEmpty(unit)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
@@ -598,23 +592,6 @@ public class MaterialService {
                 if(null!=categoryId){
                     m.setCategoryId(categoryId);
                 }
-//                if(StringUtil.isNotEmpty(expiryNum)) {
-//                    //校验保质期是否是正整数
-//                    if(!StringUtil.isPositiveLong(expiryNum)) {
-//                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXPIRY_NUM_NOT_INTEGER_CODE,
-//                                String.format(ExceptionConstants.MATERIAL_EXPIRY_NUM_NOT_INTEGER_MSG, i+1));
-//                    }
-//                    m.setExpiryNum(Integer.parseInt(expiryNum));
-//                }
-//                校验编码的格式
-//                if(!StringUtil.checkBarCode(barCode)) {
-//                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_ERROR_CODE,
-//                            String.format(ExceptionConstants.MATERIAL_BARCODE_ERROR_MSG, barCode));
-//                }
-//                批量校验excel中有无重复产品，是指名称、型号、规格、颜色、单位
-//                batchCheckExistMaterialListByParam(mList, name, other1, other2, mat, colorCode,
-//                        model, color, other4, unit, categoryId, other9);
-
                 //批量校验excel中有无重复编码
                 batchCheckExistBarCodeByParam(mList, barCode);
                 JSONObject materialExObj = new JSONObject();
@@ -636,12 +613,10 @@ public class MaterialService {
                 // 判断该产品是否存在，如果不存在就新增，如果存在就更新
                 Long mId = 0L;
                 String barCode = getBarCode(m);
-//                TODO: 目前产品一样的情况下也新增，除非物料编码一样才更新
-//                List<Material> materials = getMaterialListByParam(m.getName(), m.getColorCode(),
-//                        m.getModel(), m.getColor(), m.getUnit(), m.getUnitId(), barCode);
                 List<Material> materials = getMaterialListByBarCode(barCode);
                 if(materials.size() == 0) {
-                    materialMapperEx.insertSelectiveEx(m);
+                    // TODO： 要导入的时候去掉注释
+                    // materialMapperEx.insertSelectiveEx(m);
                     mId = m.getId();
                     logger.info("XXXXX insert " + barCode);
                 } else {
@@ -649,13 +624,17 @@ public class MaterialService {
                     String materialJson = JSON.toJSONString(m);
                     Material material = JSONObject.parseObject(materialJson, Material.class);
                     material.setId(mId);
-                    materialMapper.updateByPrimaryKeySelective(material);
+                    // TODO： 要导入的时候去掉注释
+                    // materialMapper.updateByPrimaryKeySelective(material);
                     logger.info("XXXXX update " + barCode);
                 }
                 //给产品新增或更新编码等相关信息
                 JSONObject materialExObj = m.getMaterialExObj();
-                insertOrUpdateMaterialExtend(materialExObj, "1", mId, user);
-
+                // TODO： 要导入的时候去掉注释
+                //insertOrUpdateMaterialExtend(materialExObj, "1", mId, user);
+                if (mId == null) {
+                    continue;
+                }
                 if (m.getCategoryId().longValue() == 48L) {
                     // 总成 - 成品库
                     MaterialCurrentStockExample example = new MaterialCurrentStockExample();
@@ -883,7 +862,6 @@ public class MaterialService {
     }
 
     public String getBarCode(MaterialWithInitStock m) {
-        JSONObject materialExObj = m.getMaterialExObj();
         MaterialExtend materialExtend = JSONObject.parseObject(m.getMaterialExObj().toString(), MaterialExtend.class);
         return materialExtend.getBarCode();
     }
