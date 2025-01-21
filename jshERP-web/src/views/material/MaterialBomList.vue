@@ -139,7 +139,7 @@
         },
         // 查询条件
         queryParam: {
-          categoryId:'',
+          categoryId: 48,
           materialParam:'',
           project:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
@@ -250,6 +250,7 @@
       },
       searchReset() {
         this.queryParam = {
+          categoryId: 48,
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         }
         this.loadData(1);

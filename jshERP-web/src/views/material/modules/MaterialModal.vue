@@ -238,7 +238,7 @@
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode,
     queryMaterialCategoryTreeList } from '@/api/api'
-  import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort } from '@/utils/util'
+  import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort, randomString } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -305,7 +305,7 @@
             {
               title: '编码', key: 'barCode', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' },
-                //{ pattern: /^[A-Z]+\.[a-z]+\.(0\d*|\d+)\.(0\d*|\d+)$/, message: '参考格式ZC.jj.01.007' },
+                // { pattern: /^[A-Z]+\.[a-z]+\.(0\d*|\d+)\.(0\d*|\d+)$/, message: '参考格式ZC.jj.01.007' },
                 { handler: this.validateBarCode}]
             },
             {
@@ -415,6 +415,29 @@
         this.$nextTick(() => {
           handleIntroJs('material', 11)
         })
+        let random = randomString(8)
+        let params = {
+          barCode: random,
+          id: 0
+        };
+        checkMaterialBarCode(params).then((res)=>{
+          if(res && res.code === 200 && res.data.status) {
+            random = randomString(8)
+          }
+        });
+        console.log("random barcode: " + random)
+        this.getAllTable().then(editableTables => {
+          editableTables[0].getValues((error, values) => {
+             let mArr = values
+             for (let i = 0; i < mArr.length; i++) {
+               let mInfo = mArr[i]
+               mInfo.barCode = random
+             }
+             this.meTable.dataSource = mArr
+           })
+        })
+        let randomModel = randomString(12)
+        this.form.setFieldsValue({'model': randomModel})
       },
       edit (record) {
         this.form.resetFields();
