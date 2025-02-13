@@ -100,6 +100,9 @@
     methods: {
       add () {
         this.edit({});
+        this.$nextTick(() => {
+          this.form.setFieldsValue({'source': '新增'})
+        });
       },
       edit (record) {
         this.form.resetFields();

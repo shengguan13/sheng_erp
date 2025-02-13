@@ -84,6 +84,9 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零件号">
                   <a-input :readOnly="true" placeholder="零件号" v-decorator="['model']"/>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客商档案">
+                  <a-input :readOnly="true" placeholder="客商档案" v-decorator="['department']"/>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客/供型号">
                   <a-input :readOnly="true" placeholder="客/供型号" v-decorator="['supplierModel']"/>
                 </a-form-item>
@@ -102,8 +105,11 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色代码">
                   <a-input :readOnly="true" placeholder="颜色代码" v-decorator="['colorCode']"/>
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材料标准">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材料">
                   <a-input :readOnly="true" placeholder="材料标准" v-decorator="['material']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材料标准">
+                  <a-input :readOnly="true" placeholder="材料标准" v-decorator="['otherField6']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
                   <a-input :readOnly="true" placeholder="类别" v-decorator="['category']"/>

@@ -117,8 +117,11 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色代码">
                   <a-input :readOnly="true" placeholder="颜色代码" v-decorator="['colorCode']"/>
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材料标准">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材料">
                   <a-input :readOnly="true" placeholder="材料标准" v-decorator="['material']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="材料标准">
+                  <a-input :readOnly="true" placeholder="材料标准" v-decorator="['otherField6']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
                   <a-input :readOnly="true" placeholder="类别" v-decorator="['category']"/>
@@ -437,6 +440,7 @@
             record.colorCode = res.data[0].colorCode;
             record.supplierModel = res.data[0].supplierModel;
             record.otherField5 = res.data[0].otherField5;
+            record.otherField6 = res.data[0].otherField6;
             record.otherField7 = res.data[0].otherField7;
             record.otherField8 = res.data[0].otherField8;
             record.category = res.data[0].category;
@@ -453,8 +457,8 @@
       setValuesToForm(record) {
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(record, 'barCode', 'name', 'model', 'color', 'colorCode', 'supplierModel',
-            'otherField5', 'otherField7', 'otherField8', 'material', 'category', 'upper', 'unit', 'source', 'remark',
-            'project', 'processUsage', 'department'))
+            'otherField5', 'otherField6', 'otherField7', 'otherField8', 'material', 'category', 'upper', 'unit', 'source',
+            'remark', 'project', 'processUsage', 'department'))
         })
       },
       getCurrSelectedTitle() {

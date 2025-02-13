@@ -240,6 +240,7 @@ public class MaterialBomService {
         m.setParent(parent);
         m.setUpper(upper);
         m.setProject(project);
+        m.setSource("新增");
         m.setDeleteFlag("0");
         try{
             List<MaterialVo4Unit> materials = materialService.select(

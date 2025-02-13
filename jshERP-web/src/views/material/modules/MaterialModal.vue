@@ -238,7 +238,7 @@
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialByBarCode,
     queryMaterialCategoryTreeList } from '@/api/api'
-  import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort, randomString } from '@/utils/util'
+  import { removeByVal, autoJumpNextInput, handleIntroJs, getMpListShort, randomString, randomNumber } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -434,10 +434,10 @@
                mInfo.barCode = random
              }
              this.meTable.dataSource = mArr
+             let randomModel = randomNumber(8)
+             this.form.setFieldsValue({'model': randomModel})
            })
         })
-        let randomModel = randomString(12)
-        this.form.setFieldsValue({'model': randomModel})
       },
       edit (record) {
         this.form.resetFields();
