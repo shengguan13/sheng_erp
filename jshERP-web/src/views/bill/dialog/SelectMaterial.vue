@@ -29,21 +29,32 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="8">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库">
-                    <a-select placeholder="选择仓库" v-model="queryParam.depotId" @change="onDepotChange"
-                      :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
-                      <a-select-option v-for="(item,index) in depotList" :key="index" :value="item.id">
-                        {{ item.depotName }}
-                      </a-select-option>
-                    </a-select>
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料来源">
+                    <a-input ref="material" placeholder="包覆/采购/..." v-model="queryParam.source"></a-input>
                   </a-form-item>
                 </a-col>
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-col :md="12" :sm="24">
                     <a-button type="primary" @click="loadData(1)">查询</a-button>
                     <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
+                    <a @click="handleToggleSearch" style="margin-left: 8px">
+                      {{ toggleSearchStatus ? '收起' : '展开' }}
+                      <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                    </a>
                   </a-col>
                 </span>
+                <template v-if="toggleSearchStatus">
+                  <a-col :md="6" :sm="24">
+                    <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库">
+                      <a-select placeholder="选择仓库" v-model="queryParam.depotId" @change="onDepotChange"
+                        :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
+                        <a-select-option v-for="(item,index) in depotList" :key="index" :value="item.id">
+                          {{ item.depotName }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </a-col>
+                </template>
               </a-row>
             </a-form>
             <a-table
@@ -85,6 +96,7 @@
         modalWidth: 1600,
         queryParam: {
           q: '',
+          source: '',
           categoryId: '',
           depotId: ''
         },

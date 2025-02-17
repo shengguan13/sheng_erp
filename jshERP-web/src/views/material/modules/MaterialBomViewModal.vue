@@ -99,6 +99,9 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客商档案">
                   <a-input :readOnly="true" placeholder="客商档案" v-decorator="['department']"/>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户/供应商">
+                  <a-input :readOnly="true" placeholder="客户/供应商" v-decorator="['supplierName']"/>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客/供型号">
                   <a-input :readOnly="true" placeholder="客/供型号" v-decorator="['supplierModel']"/>
                 </a-form-item>
@@ -439,6 +442,7 @@
             record.unit = res.data[0].unit;
             record.colorCode = res.data[0].colorCode;
             record.supplierModel = res.data[0].supplierModel;
+            record.supplierName = res.data[0].supplierName;
             record.otherField5 = res.data[0].otherField5;
             record.otherField6 = res.data[0].otherField6;
             record.otherField7 = res.data[0].otherField7;
@@ -457,8 +461,8 @@
       setValuesToForm(record) {
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(record, 'barCode', 'name', 'model', 'color', 'colorCode', 'supplierModel',
-            'otherField5', 'otherField6', 'otherField7', 'otherField8', 'material', 'category', 'upper', 'unit', 'source',
-            'remark', 'project', 'processUsage', 'department'))
+            'supplierName', 'otherField5', 'otherField6', 'otherField7', 'otherField8', 'material', 'category',
+            'upper', 'unit', 'source', 'remark', 'project', 'processUsage', 'department'))
         })
       },
       getCurrSelectedTitle() {

@@ -32,6 +32,8 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     private String supplierModel;
 
+    private String supplierName;
+
     private String material;
 
     private String mUnit;
@@ -130,6 +132,14 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     public void setSupplierModel(String supplierModel) {
         this.supplierModel = supplierModel;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 
     public String getMaterial() {

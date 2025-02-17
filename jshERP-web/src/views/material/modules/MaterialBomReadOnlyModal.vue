@@ -70,13 +70,16 @@
             <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
           </a-col>
           <a-col :md="12" :sm="24">
+            <template>
+              <a-button @click="handleSelectProductSupplier"><a-icon type="setting"/>选择客商档案</a-button>
+            </template>
             <a-card :bordered="false" v-if="selectedKeys.length>0">
               <a-form :form="form">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料编码">
                   <a-input :readOnly="true" placeholder="请选择物料编码" v-decorator="['barCode', validatorRules.barCode]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级物料编码">
-                  <a-input placeholder="请输入上级物料编码" v-decorator="['upper', validatorRules.upper]"/>
+                  <a-input :readOnly="true" placeholder="请输入上级物料编码" v-decorator="['upper', validatorRules.upper]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
                   <a-input :readOnly="true" placeholder="名称" v-decorator="['name']"/>
@@ -86,6 +89,9 @@
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客商档案">
                   <a-input :readOnly="true" placeholder="客商档案" v-decorator="['department']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户/供应商">
+                  <a-input :readOnly="true" placeholder="客户/供应商" v-decorator="['supplierName']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客/供型号">
                   <a-input :readOnly="true" placeholder="客/供型号" v-decorator="['supplierModel']"/>
@@ -121,26 +127,18 @@
                   <a-input :readOnly="true" v-decorator="[ 'unit', validatorRules.unit ]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用量">
-                  <a-input placeholder="请输入用量" v-decorator="[ 'processUsage', validatorRules.processUsage ]" />
+                  <a-input :readOnly="true" placeholder="请输入用量" v-decorator="[ 'processUsage', validatorRules.processUsage ]" />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
-                  <a-select placeholder="请选择状态" v-decorator="[ 'source', validatorRules.source ]" >
-                    <a-select-option value="项目">项目</a-select-option>
-                    <a-select-option value="量产">量产</a-select-option>
-                    <a-select-option value="新增">新增</a-select-option>
-                    <a-select-option value="设变">设变</a-select-option>
-                    <a-select-option value="临时">临时</a-select-option>
-                    <a-select-option value="沿用">沿用</a-select-option>
-                    <a-select-option value="屏蔽">屏蔽</a-select-option>
-                    <a-select-option value="指定">指定</a-select-option>
-                    <a-select-option value="取消">取消</a-select-option>
-                    <a-select-option value="下线">下线</a-select-option>
-                  </a-select>
+                  <a-input :readOnly="true" v-decorator="[ 'source' ]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-                  <a-input placeholder="请输入备注" v-decorator="[ 'remark' ]" />
+                  <a-input :readOnly="true" placeholder="请输入备注" v-decorator="[ 'remark' ]" />
                 </a-form-item>
               </a-form>
+              <div class="anty-form-btn">
+                <a-button v-if="currSelected.id!=record.id" @click="submitCurrForm" type="primary" htmlType="button" icon="form">保存</a-button>
+              </div>
             </a-card>
             <a-card v-else >
               <a-empty>
@@ -150,7 +148,7 @@
           </a-col>
         </a-row>
     </a-modal>
-    <select-material ref="selectMaterialForm" @ok="selectMaterialFormOk"></select-material>
+    <select-product-supplier ref="selectProductSupplierForm" @ok="selectProductSupplierFormOk"></select-product-supplier>
   </div>
 </template>
 <script>
@@ -160,12 +158,12 @@
   import { getMaterialByBarCode } from '@/api/api'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getMpListShort } from "@/utils/util"
-  import SelectMaterial from '@/views/bill/dialog/SelectMaterial'
+  import SelectProductSupplier from '@/views/bill/dialog/SelectProductSupplier'
   import Vue from 'vue'
   export default {
     name: "MaterialBomReadOnlyModal",
     components: {
-      SelectMaterial
+      SelectProductSupplier
     },
     mixins: [mixinDevice, JeecgListMixin],
     data () {
@@ -242,23 +240,16 @@
         this.$nextTick(() => {
         });
       },
-      selectMaterialFormOk(ids) {
-        let param = {
-          barCode: ids,
-          mpList: getMpListShort(Vue.ls.get('materialPropertyList'))
-        }
-        getMaterialByBarCode(param).then((res) => {
-          if (res && res.code === 200) {
-            let mList = res.data
-            let mInfo = mList[0]
-            console.log("mInfo: " + JSON.stringify(mInfo))
-            this.form.setFieldsValue({
-              'barCode': ids,
-              'name': mInfo.name,
-              'model': mInfo.model
-            })
-          }
+      selectProductSupplierFormOk(ids) {
+        this.form.setFieldsValue({
+          'department': ids
         })
+      },
+      handleSelectProductSupplier () {
+        console.log("handleSelectProductSupplier")
+        this.$refs.selectProductSupplierForm.add();
+        this.$refs.selectProductSupplierForm.title = "选择客商档案";
+        this.$refs.selectProductSupplierForm.disableSubmit = false;
       },
       close () {
         this.$emit('close');
@@ -402,6 +393,7 @@
             record.unit = res.data[0].unit;
             record.colorCode = res.data[0].colorCode;
             record.supplierModel = res.data[0].supplierModel;
+            record.supplierName = res.data[0].supplierName;
             record.otherField5 = res.data[0].otherField5;
             record.otherField7 = res.data[0].otherField7;
             record.otherField8 = res.data[0].otherField8;
@@ -419,8 +411,8 @@
       setValuesToForm(record) {
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(record, 'barCode', 'name', 'model', 'color', 'colorCode', 'supplierModel',
-            'otherField5', 'otherField7', 'otherField8', 'material', 'category', 'upper', 'unit', 'source', 'remark',
-            'project', 'processUsage'))
+            'supplierName', 'otherField5', 'otherField6', 'otherField7', 'otherField8', 'material', 'category',
+            'upper', 'unit', 'source', 'remark', 'project', 'processUsage', 'department'))
         })
       },
       getCurrSelectedTitle() {
@@ -500,6 +492,26 @@
             this.getAllKeys(node.children[a])
           }
         }
+      },
+      submitCurrForm() {
+        this.form.validateFields((err, values) => {
+          if (!err) {
+            if (!this.currSelected.id) {
+              this.$message.warning('请点击选择要修改BOM!')
+              return
+            }
+            let formData = Object.assign(this.currSelected, values)
+            console.log('Received values of form: ', formData)
+            httpAction(this.url.edit, formData, 'put').then((res) => {
+              if (res.code == 200) {
+                this.$message.success('保存成功!')
+                this.loadTree()
+              } else {
+                this.$message.warning('更新失败，检查BOM上级是否已有指定的物料！')
+              }
+            })
+          }
+        })
       },
       handleOk () {
       },

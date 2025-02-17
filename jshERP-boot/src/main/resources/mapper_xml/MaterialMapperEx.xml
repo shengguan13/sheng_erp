@@ -351,6 +351,9 @@
                 or m.model like #{bindKey} or m.color like #{bindKey} or ps.models_combined like #{bindKey}
                 or m.mat like #{bindKey} or m.other_field5 like #{bindKey} or b.projects_combined like #{bindKey})
         </if>
+        <if test="source != null and source !=''">
+            and m.other_field7 = #{source}
+        </if>
         <if test="idList.size()>0">
             and m.category_id in
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
@@ -383,6 +386,9 @@
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.model like #{bindKey} or m.color like #{bindKey} or ps.models_combined like #{bindKey}
             or m.mat like #{bindKey} or m.other_field5 like #{bindKey} or b.projects_combined like #{bindKey})
+        </if>
+        <if test="source != null and source !=''">
+            and m.other_field7 = #{source}
         </if>
         <if test="idList.size()>0">
             and m.category_id in

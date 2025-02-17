@@ -103,7 +103,7 @@
 </template>
 <script>
   import MaterialBomViewModal from './modules/MaterialBomViewModal'
-  import MaterialBomReadOnlyModal from './modules/MaterialBomViewModal'
+  import MaterialBomReadOnlyModal from './modules/MaterialBomReadOnlyModal'
   import MaterialBomModal from './modules/MaterialBomModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'

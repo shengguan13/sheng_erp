@@ -401,8 +401,7 @@ public class MaterialService {
         return idList;
     }
 
-    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String upper,
-                                                         Integer offset, Integer rows)throws Exception{
+    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String upper, String source, Integer offset, Integer rows) {
         List<MaterialVo4Unit> list =null;
         try{
             List<Long> idList = new ArrayList<>();
@@ -431,17 +430,17 @@ public class MaterialService {
                 q = q.trim();
             }
             if (StringUtil.isEmpty(upper)) {
-                list=  materialMapperEx.findBySelectWithBarCode(idList, q, offset, rows);
+                list=  materialMapperEx.findBySelectWithBarCode(idList, q, source, offset, rows);
             } else {
                 list=  materialMapperEx.findByUpper(idList, upper, offset, rows);
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findBySelectWithBarCodeCount(Long categoryId, String q, String upper)throws Exception{
+    public int findBySelectWithBarCodeCount(Long categoryId, String q, String upper, String source) {
         int result=0;
         try{
             List<Long> idList = new ArrayList<>();
@@ -469,7 +468,7 @@ public class MaterialService {
                 q = q.replace("'", "");
             }
             if (StringUtil.isEmpty(upper)) {
-                result = materialMapperEx.findBySelectWithBarCodeCount(idList, q);
+                result = materialMapperEx.findBySelectWithBarCodeCount(idList, q, source);
             } else {
                 result = materialMapperEx.findByUpperCount(idList, upper);
             }

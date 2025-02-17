@@ -9,7 +9,8 @@
         <result column="other_field6" jdbcType="VARCHAR" property="otherField6" />
         <result column="other_field7" jdbcType="VARCHAR" property="otherField7" />
         <result column="other_field8" jdbcType="VARCHAR" property="otherField8" />
-        <result column="models_combined" jdbcType="VARCHAR" property="supplierModel" />
+        <result column="supplier_model" jdbcType="VARCHAR" property="supplierModel" />
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="category" jdbcType="VARCHAR" property="category" />
         <result column="color" jdbcType="VARCHAR" property="color" />
@@ -63,11 +64,11 @@
     </resultMap>
 
     <select id="getNextMaterialBomTree" resultMap="NextTreeResultMap">
-        select mb.*, concat(ifnull(m.name, ''), '-', ifnull(m.model, ''), '-', ifnull(m.other_field5, '')) as title,
+        select mb.*, concat('[', ifnull(m.other_field7, ''), ']', ifnull(m.name, ''), '-', ifnull(m.model, '')) as title,
         m.name, m.color_code, m.model, m.color, mc.name category from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where mb.upper = #{bar_code}
         <if test="parent != null and parent != ''">
             and mb.parent = #{parent}
@@ -78,12 +79,12 @@
     </select>
 
     <select id="getMaterialBomTree" resultMap="BaseTreeResultMap">
-        select mb.*, concat(ifnull(m.name, ''), '-', ifnull(m.model, ''), '-', ifnull(m.other_field5, '')) as title,
+        select mb.*, concat('[', ifnull(m.other_field7, ''), ']', ifnull(m.name, ''), '-', ifnull(m.model, '')) as title,
         m.name, m.color_code, m.model, m.color, mc.name category, m.other_field5, m.other_field6, m.other_field7, m.other_field8,
         m.mat, m.unit mUnit from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where (mb.upper is null or mb.upper = '')
         <if test="parent != null and parent != ''">
             and mb.parent = #{parent}
@@ -95,12 +96,12 @@
     </select>
 
     <select id="getMaterialBomTreeWithUpper" resultMap="BaseTreeResultMap">
-        select mb.*, concat(ifnull(m.name, ''), '-', ifnull(m.model, ''), '-', ifnull(m.other_field5, '')) as title,
+        select mb.*, concat('[', ifnull(m.other_field7, ''), ']', ifnull(m.name, ''), '-', ifnull(m.model, '')) as title,
         m.name, m.color_code, m.model, m.color, mc.name category, m.other_field5, m.other_field6, m.other_field7, m.other_field8,
         m.mat, m.unit mUnit from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where mb.upper = #{upper}
         and mb.bar_code = #{barCode}
         <if test="parent != null and parent != ''">
@@ -113,12 +114,12 @@
 
     <select id="selectMaterialBomNullUpper"  resultMap="ResultAndInfoMap">
         select mb.*, m.name, m.color_code, m.model, m.other_field5, m.other_field6, m.other_field7, m.other_field8, m.color,
-        mc.name category, m.unit mUnit, ps.models_combined supplier_model from jsh_material_bom mb
+        mc.name category, m.unit mUnit, ps.model supplier_model, s.supplier supplier_name from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left join (select bar_code, delete_Flag, GROUP_CONCAT(distinct(model) SEPARATOR ';') as models_combined from
-        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on mb.department = ps.id and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_supplier s on ps.supplier_id = s.id and ifnull(s.delete_Flag,'0') !='1'
         where 1=1
         and (mb.upper is null or mb.upper = '')
         <if test="parent != null and parent != ''">
@@ -135,7 +136,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (mb.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or ps.models_combined like #{bindKey})
+            or ps.model like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -153,12 +154,12 @@
 
     <select id="selectMaterialBomWithUpper"  resultMap="ResultAndInfoMap">
         select mb.*, m.name, m.color_code, m.model, m.other_field5, m.other_field6, m.other_field7, m.other_field8, m.color,
-        m.mat, m.unit mUnit, mc.name category, ps.models_combined from jsh_material_bom mb
+        m.mat, m.unit mUnit, mc.name category, ps.model supplier_model, s.supplier supplier_name from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left join (select bar_code, delete_Flag, GROUP_CONCAT(distinct(model) SEPARATOR ';') as models_combined from
-        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on mb.department = ps.id and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_supplier s on ps.supplier_id = s.id and ifnull(s.delete_Flag,'0') !='1'
         where 1=1
         <if test="upper != null and upper != ''">
             and mb.upper = #{upper}
@@ -173,7 +174,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (mb.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or ps.models_combined like #{bindKey})
+            or ps.model like #{bindKey})
         </if>
         and ifnull(mb.delete_flag,'0') !='1'
         order by mb.id desc
@@ -184,7 +185,7 @@
         from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where
         me.bar_code in (
         <foreach collection="barCodeArray" item="barCode" separator=",">
@@ -200,7 +201,7 @@
         from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         <if test="upper != null and upper != ''">
             and mb.upper = #{upper}
@@ -218,13 +219,13 @@
 
     <select id="countMaterialBomNullUpper" resultType="java.lang.Long">
         SELECT count(1) from
-        (select mb.*, m.name, m.color_code, m.model, m.color, mc.name category, m.unit mUnit, ps.models_combined supplier_model
+        (select mb.*, m.name, m.color_code, m.model, m.color, mc.name category, m.unit mUnit, ps.model supplier_model
         from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        left join (select bar_code, delete_Flag, GROUP_CONCAT(distinct(model) SEPARATOR ';') as models_combined from
-        jsh_product_supplier where ifnull(delete_Flag,'0') !='1' GROUP BY bar_code) ps on me.bar_code = ps.bar_code and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on mb.department = ps.id and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_supplier s on ps.supplier_id = s.id and ifnull(s.delete_Flag,'0') !='1'
         where 1=1
         and (mb.upper is null or mb.upper = '')
         <if test="parent != null and parent != ''">
@@ -241,7 +242,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (mb.bar_code like #{bindKey} or m.name like #{bindKey} or m.color_code like #{bindKey}
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
-            or ps.models_combined like #{bindKey})
+            or ps.model like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
