@@ -30,7 +30,7 @@
               </a-col>
               <a-col :md="6" :sm="8">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料来源">
-                  <a-input ref="material" placeholder="包覆/采购/..." v-model="queryParam.source"></a-input>
+                  <a-input placeholder="包覆/采购/..." v-model="queryParam.source"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -107,7 +107,7 @@
     props: ['rows', 'multi', 'barCode'],
     data() {
       return {
-        modalWidth: 1550,
+        modalWidth: 1650,
         queryParam: {
           q: '',
           source: '',
@@ -140,6 +140,8 @@
           {dataIndex: 'project', title: '项目'},
           {dataIndex: 'unit', title: '单位'},
           {dataIndex: 'stock', title: '库存'},
+          {dataIndex: 'source', title: '物料来源'},
+          {dataIndex: 'bomStatus', title: '状态'},
           {dataIndex: 'expand', title: '扩展信息'}
         ],
         scrollTrigger: {},

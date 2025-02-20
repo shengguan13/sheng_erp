@@ -102,7 +102,7 @@ public class MaterialBomController {
             List<MaterialBomVo4Info> bomList = materialBomService.select(
                     StringUtil.toNull(categoryId), null, StringUtil.toNull(project), StringUtil.toNull(materialParam), 0, 300);
             logger.info("XXXXX bomList size " + bomList.size());
-            String[] names = {"总成编号", "级别", "编码", "名称", "型号", "规格", "颜色", "颜色代码", "材质", "用量", "单位", "类别"};
+            String[] names = {"总成编号", "级别", "客/供零件号", "物料编码", "型号", "名称", "规格", "颜色", "颜色代码", "材料", "材料标准", "状态", "用量", "单位", "类别", "标包", "客户/供应商"};
             String title = project + " BOM";
             List<String[]> objects = new ArrayList<>();
             if (null != bomList) {
@@ -127,16 +127,21 @@ public class MaterialBomController {
             String[] objs = new String[100];
             objs[0] = String.valueOf(parentCount);
             objs[1] = String.valueOf(level);
-            objs[2] = bom.getBarCode();
-            objs[3] = bom.getName() == null ? "" : bom.getName();
+            objs[2] = bom.getSupplierModel();
+            objs[3] = bom.getBarCode();
             objs[4] = bom.getModel() == null ? "" : bom.getModel();
-            objs[5] = bom.getOtherField5() == null ? "" : bom.getOtherField5();
-            objs[6] = bom.getColor() == null ? "" : bom.getColor();
-            objs[7] = bom.getColorCode() == null ? "" : bom.getColorCode();
-            objs[8] = bom.getMaterial() == null ? "" : bom.getMaterial();
-            objs[9] = bom.getProcessUsage() == null ? "" : bom.getProcessUsage().toString();
-            objs[10] = bom.getmUnit() == null ? "" : bom.getmUnit();
-            objs[11] = bom.getCategory() == null ? "" : bom.getCategory();
+            objs[5] = bom.getName() == null ? "" : bom.getName();
+            objs[6] = bom.getOtherField5() == null ? "" : bom.getOtherField5();
+            objs[7] = bom.getColor() == null ? "" : bom.getColor();
+            objs[8] = bom.getColorCode() == null ? "" : bom.getColorCode();
+            objs[9] = bom.getMaterial() == null ? "" : bom.getMaterial();
+            objs[10] = bom.getOtherField6() == null ? "" : bom.getOtherField6();
+            objs[11]= bom.getSource() == null ? "" : bom.getSource();
+            objs[12] = bom.getProcessUsage() == null ? "" : bom.getProcessUsage().toString();
+            objs[13] = bom.getmUnit() == null ? "" : bom.getmUnit();
+            objs[14] = bom.getCategory() == null ? "" : bom.getCategory();
+            objs[15] = "";
+            objs[16] = bom.getSupplierName() == null ? "" : bom.getSupplierName();
             objects.add(objs);
             if (bom.getChildren() != null && bom.getChildren().size() > 0) {
                 flattenTree(bom.getChildren(), objects, parentCount, level + 1);

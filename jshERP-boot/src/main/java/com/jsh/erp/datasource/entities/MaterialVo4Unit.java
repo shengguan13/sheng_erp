@@ -40,6 +40,8 @@ public class MaterialVo4Unit extends Material{
 
     private String sku;
 
+    private String bomStatus;
+
     private Long depotId;
 
     /**
@@ -197,6 +199,14 @@ public class MaterialVo4Unit extends Material{
 
     public void setDepotId(Long depotId) {
         this.depotId = depotId;
+    }
+
+    public String getBomStatus() {
+        return bomStatus;
+    }
+
+    public void setBomStatus(String bomStatus) {
+        this.bomStatus = bomStatus;
     }
 
     public String getBigUnitStock() {

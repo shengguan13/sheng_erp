@@ -79,7 +79,7 @@
                   <a-input :readOnly="true" placeholder="请选择物料编码" v-decorator="['barCode', validatorRules.barCode]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级物料编码">
-                  <a-input :readOnly="true" placeholder="请输入上级物料编码" v-decorator="['upper', validatorRules.upper]"/>
+                  <a-input :readOnly="true" placeholder="请输入上级物料编码" v-decorator="['upper']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
                   <a-input :readOnly="true" placeholder="名称" v-decorator="['name']"/>
@@ -95,6 +95,9 @@
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客/供型号">
                   <a-input :readOnly="true" placeholder="客/供型号" v-decorator="['supplierModel']"/>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="标包">
+                  <a-input :readOnly="true" placeholder="标包" v-decorator="['pack']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料来源">
                   <a-input :readOnly="true" placeholder="物料来源" v-decorator="['otherField7']"/>
@@ -124,10 +127,10 @@
                   <a-input :readOnly="true" placeholder="请输入项目" v-decorator="['project']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
-                  <a-input :readOnly="true" v-decorator="[ 'unit', validatorRules.unit ]"/>
+                  <a-input :readOnly="true" v-decorator="[ 'unit' ]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用量">
-                  <a-input :readOnly="true" placeholder="请输入用量" v-decorator="[ 'processUsage', validatorRules.processUsage ]" />
+                  <a-input :readOnly="true" placeholder="请输入用量" v-decorator="[ 'processUsage' ]" />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
                   <a-input :readOnly="true" v-decorator="[ 'source' ]"/>
@@ -137,7 +140,7 @@
                 </a-form-item>
               </a-form>
               <div class="anty-form-btn">
-                <a-button v-if="currSelected.id!=record.id" @click="submitCurrForm" type="primary" htmlType="button" icon="form">保存</a-button>
+                <a-button @click="submitCurrForm" type="primary" htmlType="button" icon="form">保存</a-button>
               </div>
             </a-card>
             <a-card v-else >
@@ -387,6 +390,7 @@
             record.processUsage = res.data[0].processUsage;
             record.source = res.data[0].source;
             record.barCode = res.data[0].barCode;
+            record.department = res.data[0].department;
             record.name = res.data[0].name;
             record.model = res.data[0].model;
             record.color = res.data[0].color;
@@ -394,7 +398,9 @@
             record.colorCode = res.data[0].colorCode;
             record.supplierModel = res.data[0].supplierModel;
             record.supplierName = res.data[0].supplierName;
+            record.pack = res.data[0].pack;
             record.otherField5 = res.data[0].otherField5;
+            record.otherField6 = res.data[0].otherField6;
             record.otherField7 = res.data[0].otherField7;
             record.otherField8 = res.data[0].otherField8;
             record.category = res.data[0].category;
@@ -412,7 +418,7 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(record, 'barCode', 'name', 'model', 'color', 'colorCode', 'supplierModel',
             'supplierName', 'otherField5', 'otherField6', 'otherField7', 'otherField8', 'material', 'category',
-            'upper', 'unit', 'source', 'remark', 'project', 'processUsage', 'department'))
+            'upper', 'unit', 'source', 'remark', 'project', 'processUsage', 'department', 'pack'))
         })
       },
       getCurrSelectedTitle() {

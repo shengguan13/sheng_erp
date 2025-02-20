@@ -31,7 +31,7 @@ public class MailUtil {
         //你自己的邮箱
         props.put("mail.user", "807060446@qq.com");
         //你开启pop3/smtp时的验证码
-        props.put("mail.password", "okjlohqmykonbgab");
+        props.put("mail.password", "smdixjsvjmypbgab");
         //此时将端口设置为465
         props.put("mail.smtp.port", "465");
         props.put("mail.smtp.starttls.enable", "true");

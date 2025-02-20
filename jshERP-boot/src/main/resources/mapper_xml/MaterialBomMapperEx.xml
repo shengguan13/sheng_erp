@@ -14,8 +14,8 @@
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="category" jdbcType="VARCHAR" property="category" />
         <result column="color" jdbcType="VARCHAR" property="color" />
-        <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="mat" jdbcType="VARCHAR" property="material" />
+        <result column="pack" jdbcType="VARCHAR" property="pack" />
         <result column="mUnit" jdbcType="VARCHAR" property="mUnit" />
         <result column="meId" jdbcType="BIGINT" property="meId" />
         <result column="materialId" jdbcType="BIGINT" property="materialId" />
@@ -25,16 +25,19 @@
         <result column="id" jdbcType="BIGINT" property="key" />
         <result column="id" jdbcType="BIGINT" property="value" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="other_field5" jdbcType="VARCHAR" property="otherField5" />
         <result column="other_field6" jdbcType="VARCHAR" property="otherField6" />
         <result column="other_field7" jdbcType="VARCHAR" property="otherField7" />
         <result column="other_field8" jdbcType="VARCHAR" property="otherField8" />
+        <result column="supplier_model" jdbcType="VARCHAR" property="supplierModel" />
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
         <result column="title" jdbcType="VARCHAR" property="title" />
-        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="category" jdbcType="VARCHAR" property="category" />
         <result column="color" jdbcType="VARCHAR" property="color" />
         <result column="mat" jdbcType="VARCHAR" property="material" />
+        <result column="pack" jdbcType="VARCHAR" property="pack" />
         <result column="mUnit" jdbcType="VARCHAR" property="mUnit" />
         <result column="meId" jdbcType="BIGINT" property="meId" />
         <result column="materialId" jdbcType="BIGINT" property="materialId" />
@@ -46,16 +49,19 @@
         <result column="id" jdbcType="BIGINT" property="key" />
         <result column="id" jdbcType="BIGINT" property="value" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="other_field5" jdbcType="VARCHAR" property="otherField5" />
         <result column="other_field6" jdbcType="VARCHAR" property="otherField6" />
         <result column="other_field7" jdbcType="VARCHAR" property="otherField7" />
         <result column="other_field8" jdbcType="VARCHAR" property="otherField8" />
+        <result column="supplier_model" jdbcType="VARCHAR" property="supplierModel" />
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
         <result column="title" jdbcType="VARCHAR" property="title" />
-        <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="category" jdbcType="VARCHAR" property="category" />
         <result column="color" jdbcType="VARCHAR" property="color" />
         <result column="mat" jdbcType="VARCHAR" property="material" />
+        <result column="pack" jdbcType="VARCHAR" property="pack" />
         <result column="mUnit" jdbcType="VARCHAR" property="mUnit" />
         <result column="meId" jdbcType="BIGINT" property="meId" />
         <result column="materialId" jdbcType="BIGINT" property="materialId" />
@@ -65,10 +71,13 @@
 
     <select id="getNextMaterialBomTree" resultMap="NextTreeResultMap">
         select mb.*, concat('[', ifnull(m.other_field7, ''), ']', ifnull(m.name, ''), '-', ifnull(m.model, '')) as title,
-        m.name, m.color_code, m.model, m.color, mc.name category from jsh_material_bom mb
+        m.name, m.color_code, m.model, m.color, mc.name category, m.other_field5, m.other_field6, m.other_field7, m.other_field8,
+        m.mat, m.unit mUnit, ps.model supplier_model, ps.pack, s.supplier supplier_name from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on mb.department = ps.id and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_supplier s on ps.supplier_id = s.id and ifnull(s.delete_Flag,'0') !='1'
         where mb.upper = #{bar_code}
         <if test="parent != null and parent != ''">
             and mb.parent = #{parent}
@@ -81,10 +90,12 @@
     <select id="getMaterialBomTree" resultMap="BaseTreeResultMap">
         select mb.*, concat('[', ifnull(m.other_field7, ''), ']', ifnull(m.name, ''), '-', ifnull(m.model, '')) as title,
         m.name, m.color_code, m.model, m.color, mc.name category, m.other_field5, m.other_field6, m.other_field7, m.other_field8,
-        m.mat, m.unit mUnit from jsh_material_bom mb
+        m.mat, m.unit mUnit, ps.model supplier_model, ps.pack, s.supplier supplier_name from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on mb.department = ps.id and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_supplier s on ps.supplier_id = s.id and ifnull(s.delete_Flag,'0') !='1'
         where (mb.upper is null or mb.upper = '')
         <if test="parent != null and parent != ''">
             and mb.parent = #{parent}
@@ -98,10 +109,12 @@
     <select id="getMaterialBomTreeWithUpper" resultMap="BaseTreeResultMap">
         select mb.*, concat('[', ifnull(m.other_field7, ''), ']', ifnull(m.name, ''), '-', ifnull(m.model, '')) as title,
         m.name, m.color_code, m.model, m.color, mc.name category, m.other_field5, m.other_field6, m.other_field7, m.other_field8,
-        m.mat, m.unit mUnit from jsh_material_bom mb
+        m.mat, m.unit mUnit, ps.model supplier_model, ps.pack, s.supplier supplier_name from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        left join jsh_product_supplier ps on mb.department = ps.id and ifnull(ps.delete_Flag,'0') !='1'
+        left join jsh_supplier s on ps.supplier_id = s.id and ifnull(s.delete_Flag,'0') !='1'
         where mb.upper = #{upper}
         and mb.bar_code = #{barCode}
         <if test="parent != null and parent != ''">
@@ -114,7 +127,7 @@
 
     <select id="selectMaterialBomNullUpper"  resultMap="ResultAndInfoMap">
         select mb.*, m.name, m.color_code, m.model, m.other_field5, m.other_field6, m.other_field7, m.other_field8, m.color,
-        mc.name category, m.unit mUnit, ps.model supplier_model, s.supplier supplier_name from jsh_material_bom mb
+        mc.name category, m.unit mUnit, ps.model supplier_model, ps.pack, s.supplier supplier_name from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
@@ -154,7 +167,7 @@
 
     <select id="selectMaterialBomWithUpper"  resultMap="ResultAndInfoMap">
         select mb.*, m.name, m.color_code, m.model, m.other_field5, m.other_field6, m.other_field7, m.other_field8, m.color,
-        m.mat, m.unit mUnit, mc.name category, ps.model supplier_model, s.supplier supplier_name from jsh_material_bom mb
+        m.mat, m.unit mUnit, mc.name category, ps.model supplier_model, ps.pack, s.supplier supplier_name from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
@@ -219,8 +232,8 @@
 
     <select id="countMaterialBomNullUpper" resultType="java.lang.Long">
         SELECT count(1) from
-        (select mb.*, m.name, m.color_code, m.model, m.color, mc.name category, m.unit mUnit, ps.model supplier_model
-        from jsh_material_bom mb
+        (select mb.*, m.name, m.color_code, m.model, m.color, mc.name category, m.unit mUnit,
+        ps.model supplier_model, ps.pack, s.supplier supplier_name from jsh_material_bom mb
         left join jsh_material_extend me on mb.bar_code=me.bar_code and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material m on m.id=me.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'

@@ -2,7 +2,6 @@ package com.jsh.erp.service.materialBom;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.MaterialBomMapper;
 import com.jsh.erp.datasource.mappers.MaterialBomMapperEx;
@@ -10,26 +9,19 @@ import com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.mail.MailUtil;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.productSupplier.ProductSupplierService;
 import com.jsh.erp.service.project.ProjectService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.StringUtil;
-import jxl.Sheet;
-import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -363,6 +355,15 @@ public class MaterialBomService {
                             .append("[" + materialBom.getProject() + "]")
                             .append("[" + materialBom.getUpper() + "]")
                             .append("[" + materialBom.getBarCode() + "]").toString(), request);
+            try {
+                if ((old.getSource() == null && materialBom.getSource() != null) ||
+                        (old.getSource() != null && materialBom.getSource() == null) ||
+                        (!old.getSource().equals(materialBom.getSource()))) {
+                    MailUtil.sendMail("jilinhongze@hornze.com", "BOM状态更改", "BOM状态更改");
+                }
+            } catch (Exception ignored) {
+
+            }
             return 1;
         } catch(Exception e){
             JshException.writeFail(logger, e);

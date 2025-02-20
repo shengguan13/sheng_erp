@@ -93,7 +93,7 @@
         visible: false,
         model: {},
         isReadOnly: false,
-        modalWidth: 1600,
+        modalWidth: 1650,
         queryParam: {
           q: '',
           source: '',
@@ -144,6 +144,8 @@
           {dataIndex: 'project', title: '项目'},
           {dataIndex: 'unit', title: '单位'},
           {dataIndex: 'stock', title: '库存'},
+          {dataIndex: 'source', title: '物料来源'},
+          {dataIndex: 'bomStatus', title: '状态'},
           {dataIndex: 'expand', title: '扩展信息'}
         ],
       }
