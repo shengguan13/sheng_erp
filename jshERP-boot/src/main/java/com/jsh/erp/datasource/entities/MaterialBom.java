@@ -32,6 +32,8 @@ public class MaterialBom {
 
     private String deleteFlag;
 
+    private String sendEmail;
+
     public Long getId() {
         return id;
     }
@@ -142,5 +144,13 @@ public class MaterialBom {
 
     public void setDeleteFlag(String deleteFlag) {
         this.deleteFlag = deleteFlag == null ? null : deleteFlag.trim();
+    }
+
+    public String getSendEmail() {
+        return sendEmail;
+    }
+
+    public void setSendEmail(String sendEmail) {
+        this.sendEmail = sendEmail;
     }
 }

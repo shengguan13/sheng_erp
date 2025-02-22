@@ -102,7 +102,7 @@ public class MaterialBomController {
             List<MaterialBomVo4Info> bomList = materialBomService.select(
                     StringUtil.toNull(categoryId), null, StringUtil.toNull(project), StringUtil.toNull(materialParam), 0, 300);
             logger.info("XXXXX bomList size " + bomList.size());
-            String[] names = {"总成编号", "级别", "客/供零件号", "物料编码", "型号", "名称", "规格", "颜色", "颜色代码", "材料", "材料标准", "状态", "用量", "单位", "类别", "标包", "客户/供应商"};
+            String[] names = {"总成编号", "级别", "客/供零件号", "物料编码", "型号", "名称", "规格", "颜色", "颜色代码", "材料", "材料标准", "物料来源", "状态", "用量", "单位", "类别", "标包", "客户/供应商"};
             String title = project + " BOM";
             List<String[]> objects = new ArrayList<>();
             if (null != bomList) {
@@ -136,12 +136,13 @@ public class MaterialBomController {
             objs[8] = bom.getColorCode() == null ? "" : bom.getColorCode();
             objs[9] = bom.getMaterial() == null ? "" : bom.getMaterial();
             objs[10] = bom.getOtherField6() == null ? "" : bom.getOtherField6();
-            objs[11]= bom.getSource() == null ? "" : bom.getSource();
-            objs[12] = bom.getProcessUsage() == null ? "" : bom.getProcessUsage().toString();
-            objs[13] = bom.getmUnit() == null ? "" : bom.getmUnit();
-            objs[14] = bom.getCategory() == null ? "" : bom.getCategory();
-            objs[15] = "";
-            objs[16] = bom.getSupplierName() == null ? "" : bom.getSupplierName();
+            objs[11] = bom.getOtherField7() == null ? "" : bom.getOtherField7();
+            objs[12]= bom.getSource() == null ? "" : bom.getSource();
+            objs[13] = bom.getProcessUsage() == null ? "" : bom.getProcessUsage().toString();
+            objs[14] = bom.getmUnit() == null ? "" : bom.getmUnit();
+            objs[15] = bom.getCategory() == null ? "" : bom.getCategory();
+            objs[16] = "";
+            objs[17] = bom.getSupplierName() == null ? "" : bom.getSupplierName();
             objects.add(objs);
             if (bom.getChildren() != null && bom.getChildren().size() > 0) {
                 flattenTree(bom.getChildren(), objects, parentCount, level + 1);

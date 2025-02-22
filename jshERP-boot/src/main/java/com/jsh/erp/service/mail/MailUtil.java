@@ -53,9 +53,9 @@ public class MailUtil {
         InternetAddress to = new InternetAddress(email);
         message.setRecipient(Message.RecipientType.TO, to);
         // 设置邮件标题
-        message.setSubject(emailMsg);
+        message.setSubject(subject);
         // 设置邮件的内容体
-        message.setContent(subject, "text/html;charset=UTF-8");
+        message.setContent(emailMsg, "text/plain;charset=UTF-8");
         // 发送邮件
         Transport.send(message);
     }

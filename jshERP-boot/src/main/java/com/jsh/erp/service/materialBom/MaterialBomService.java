@@ -355,14 +355,31 @@ public class MaterialBomService {
                             .append("[" + materialBom.getProject() + "]")
                             .append("[" + materialBom.getUpper() + "]")
                             .append("[" + materialBom.getBarCode() + "]").toString(), request);
-            try {
-                if ((old.getSource() == null && materialBom.getSource() != null) ||
-                        (old.getSource() != null && materialBom.getSource() == null) ||
-                        (!old.getSource().equals(materialBom.getSource()))) {
-                    MailUtil.sendMail("jilinhongze@hornze.com", "BOM状态更改", "BOM状态更改");
+            logger.info("XXXXX send email: " + materialBom.getSendEmail());
+            if (materialBom.getSendEmail() != null && "true".equals(materialBom.getSendEmail())) {
+                try {
+                    User currentUser = userService.getCurrentUser();
+//                    List<User> users = userService.getUserListByLoginNameList(
+//                            Arrays.asList("guansheng", "litiejia", "liuxuejiao", "yinjiaheng", "zhangxuejing",
+//                            "liuying", "zhuzhiwei", "xiesuyun", "jiwei", "zhuzhiyong", "zhuhaichao",
+//                            "yuguangyi", "yujianhai", "yuhuafeng", "xiangjinyun", "xiesuiping", "yanzhaojin"));
+                    List<User> users = userService.getUserListByLoginNameList(Arrays.asList("guansheng"));
+                    List<MaterialVo4Unit> oldMaterial = materialService.getMaterialByBarCode(old.getBarCode());
+                    String oldModel = oldMaterial == null || oldMaterial.isEmpty() ? "" : oldMaterial.get(0).getModel();
+                    List<MaterialVo4Unit> newMaterial = materialService.getMaterialByBarCode(old.getBarCode());
+                    String newModel = newMaterial == null || newMaterial.isEmpty() ? "" : newMaterial.get(0).getModel();
+                    String message = currentUser.getUsername() + " 修改了项目 " + old.getProject() + " 的零件状态：\r\n"
+                            + "旧：物料编码：" + old.getBarCode() + "；零件号：" + oldModel + "；上级物料：" + old.getUpper() + "；用量：" + old.getProcessUsage() + "；状态：" + old.getSource() + "\r\n"
+                            + "新：物料编码：" + materialBom.getBarCode() + "；零件号：" + newModel + "；上级物料：" + materialBom.getUpper() + "；用量：" + materialBom.getProcessUsage() + "；状态：" + materialBom.getSource();
+                    if (users != null) {
+                        for (User user : users) {
+                            if (user.getEmail() != null && !"".equals(user.getEmail())) {
+                                MailUtil.sendMail(user.getEmail(), "BOM状态更改", message);
+                            }
+                        }
+                    }
+                } catch (Exception ignored) {
                 }
-            } catch (Exception ignored) {
-
             }
             return 1;
         } catch(Exception e){

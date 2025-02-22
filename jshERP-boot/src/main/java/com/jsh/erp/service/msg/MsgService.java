@@ -3,14 +3,12 @@ package com.jsh.erp.service.msg;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.Msg;
-import com.jsh.erp.datasource.entities.MsgEx;
-import com.jsh.erp.datasource.entities.MsgExample;
-import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.MsgMapper;
 import com.jsh.erp.datasource.mappers.MsgMapperEx;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -125,15 +123,36 @@ public class MsgService {
             if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
                 msg.setCreateTime(new Date());
                 msg.setStatus("1");
-                result=msgMapper.insertSelective(msg);
-                logService.insertLog("消息",
-                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(msg.getMsgTitle()).toString(), request);
+                if (msg.getUserIdList() != null && !"".equals(msg.getUserIdList())) {
+                    String[] userIds = msg.getUserIdList().split(",");
+                    for (String id : userIds) {
+                        try {
+                            msg.setUserId(Long.parseLong(id));
+                            result = insertMsgWithObj(msg);
+                        } catch (Exception ignored) {}
+                    }
+                } else {
+                    result=msgMapper.insertSelective(msg);
+                    logService.insertLog("消息",
+                            new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(msg.getMsgTitle()).toString(), request);
+                }
             }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
             throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
                     ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int insertMsgWithObj(Msg msg)throws Exception {
+        int result =0;
+        try{
+            result = msgMapper.insertSelective(msg);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
         }
         return result;
     }

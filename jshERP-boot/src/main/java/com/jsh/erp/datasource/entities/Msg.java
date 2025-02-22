@@ -21,6 +21,8 @@ public class Msg {
 
     private String deleteFlag;
 
+    private String userIdList;
+
     public Long getId() {
         return id;
     }
@@ -91,5 +93,13 @@ public class Msg {
 
     public void setDeleteFlag(String deleteFlag) {
         this.deleteFlag = deleteFlag == null ? null : deleteFlag.trim();
+    }
+
+    public String getUserIdList() {
+        return userIdList;
+    }
+
+    public void setUserIdList(String userIdList) {
+        this.userIdList = userIdList;
     }
 }

@@ -651,7 +651,7 @@ public class UserService {
         //检查登录名
         if(!StringUtils.isEmpty(userEx.getLoginName())){
             String loginName=userEx.getLoginName();
-            list=this.getUserListByloginName(loginName);
+            list=this.getUserListByLoginName(loginName);
             if(list!=null&&list.size()>0){
                 if(list.size()>1){
                     //超过一条数据存在，该登录名已存在
@@ -675,12 +675,28 @@ public class UserService {
     /**
      * 通过登录名获取用户列表
      * */
-    public List<User> getUserListByloginName(String loginName){
+    public List<User> getUserListByLoginName(String loginName){
         List<User> list =null;
         try{
             list=userMapperEx.getUserListByUserNameOrLoginName(null,loginName);
         }catch(Exception e){
             JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public List<User> getUserListByLoginNameList(List<String> loginNames){
+        List<User> list = new ArrayList<>();
+        for (String name : loginNames) {
+            List<User> res = null;
+            try{
+                res=userMapperEx.getUserListByUserNameOrLoginName(null,name);
+            }catch(Exception e){
+                JshException.readFail(logger, e);
+            }
+            if (res != null) {
+                list.addAll(res);
+            }
         }
         return list;
     }

@@ -77,10 +77,10 @@
           </a-col>
           <a-col :md="12" :sm="24">
             <template>
-              <a-button @click="handleSelectMaterial"><a-icon type="setting"/>选择物料编码</a-button>
+              <a-button v-if="currSelected.id && currSelected.id!=record.id" @click="handleSelectMaterial"><a-icon type="setting"/>选择物料编码</a-button>
             </template>
             <template>
-              <a-button @click="handleSelectProductSupplier"><a-icon type="setting"/>选择客商档案</a-button>
+              <a-button v-if="currSelected.id" @click="handleSelectProductSupplier"><a-icon type="setting"/>选择客商档案</a-button>
             </template>
             <a-card :bordered="false" v-if="selectedKeys.length>0">
               <a-form :form="form">
@@ -88,7 +88,7 @@
                   <a-input :readOnly="true" placeholder="请选择物料编码" v-decorator="['barCode', validatorRules.barCode]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级物料编码">
-                  <a-input placeholder="请输入上级物料编码" v-decorator="['upper', validatorRules.upper]"/>
+                  <a-input :readOnly="currSelected.id==record.id" placeholder="请输入上级物料编码" v-decorator="['upper']"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
                   <a-input :readOnly="true" placeholder="名称" v-decorator="['name']"/>
@@ -139,7 +139,7 @@
                   <a-input :readOnly="true" v-decorator="[ 'unit', validatorRules.unit ]"/>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用量">
-                  <a-input placeholder="请输入用量" v-decorator="[ 'processUsage', validatorRules.processUsage ]" />
+                  <a-input placeholder="请输入用量" v-decorator="[ 'processUsage' ]" />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
                   <a-select placeholder="请选择状态" v-decorator="[ 'source', validatorRules.source ]" >
@@ -161,7 +161,8 @@
               </a-form>
               <div class="anty-form-btn">
                 <a-button v-if="btnEnableList.indexOf(1)>-1 && currSelected.id!=record.id" @click="emptyCurrForm" type="default" htmlType="button" icon="sync">重置</a-button>
-                <a-button v-if="btnEnableList.indexOf(1)>-1 && currSelected.id!=record.id" @click="submitCurrForm" type="primary" htmlType="button" icon="form">保存</a-button>
+                <a-button v-if="btnEnableList.indexOf(1)>-1" @click="submitCurrForm" type="primary" htmlType="button" icon="form">保存</a-button>
+                <a-button v-if="btnEnableList.indexOf(1)>-1" @click="submitCurrFormAndNotify" type="primary" htmlType="button" icon="form">保存并通知</a-button>
               </div>
             </a-card>
             <a-card v-else >
@@ -179,7 +180,7 @@
 <script>
   import pick from 'lodash.pick'
   import { mixinDevice } from '@/utils/mixin'
-  import { getAction, httpAction, deleteAction } from '@/api/manage'
+  import { getAction, httpAction, deleteAction, postAction } from '@/api/manage'
   import { getMaterialByBarCode } from '@/api/api'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getMpListShort } from "@/utils/util"
@@ -488,7 +489,6 @@
       receiptTriggerTypeChange(value) {
         this.currSelected.receiptTriggerType = value
       },
-
       emptyCurrForm() {
         this.form.resetFields()
       },
@@ -499,12 +499,47 @@
               this.$message.warning('请点击选择要修改BOM!')
               return
             }
+            console.log('Received values of form: ', values)
             let formData = Object.assign(this.currSelected, values)
-            console.log('Received values of form: ', formData)
+            console.log('Form to submit: ', formData)
             httpAction(this.url.edit, formData, 'put').then((res) => {
               if (res.code == 200) {
                 this.$message.success('保存成功!')
                 this.loadTree()
+              } else {
+                this.$message.warning('更新失败，检查BOM上级是否已有指定的物料！')
+              }
+            })
+          }
+        })
+      },
+      submitCurrFormAndNotify() {
+        this.form.validateFields((err, values) => {
+          if (!err) {
+            if (!this.currSelected.id) {
+              this.$message.warning('请点击选择要修改BOM!')
+              return
+            }
+            let oldStr = "旧：物料编码：" + this.currSelected.barCode + "；零件号：" + this.currSelected.model + "；上级物料："
+              + this.currSelected.upper + "；用量：" + this.currSelected.processUsage + "；状态：" + this.currSelected.source + "<br />";
+            console.log('Received values of form: ', values)
+            let formData = Object.assign(this.currSelected, values)
+            let newStr = "新：物料编码：" + this.currSelected.barCode + "；零件号：" + this.currSelected.model + "；上级物料："
+              + this.currSelected.upper + "；用量：" + this.currSelected.processUsage + "；状态：" + this.currSelected.source + "<br />";
+            console.log('Form to submit: ', formData)
+            httpAction(this.url.edit, formData, 'put').then((res) => {
+              if (res.code == 200) {
+                this.$message.success('保存成功!')
+                this.loadTree()
+                let msgParam = {
+                  'msgTitle': this.currSelected.project + ' BOM更改提醒',
+                  'msgContent': oldStr + newStr,
+                  'type': 'BOM更改提醒',
+                  'userIdList': "63,245,178,180,181,193,195,201,202,205,207,215,216,217,218,219,226,184,227"
+                }
+                postAction("/msg/add",msgParam).then(res=>{
+                  if(res && res.code === 200) {}
+                })
               } else {
                 this.$message.warning('更新失败，检查BOM上级是否已有指定的物料！')
               }

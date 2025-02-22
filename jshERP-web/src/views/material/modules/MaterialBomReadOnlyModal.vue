@@ -71,7 +71,7 @@
           </a-col>
           <a-col :md="12" :sm="24">
             <template>
-              <a-button @click="handleSelectProductSupplier"><a-icon type="setting"/>选择客商档案</a-button>
+              <a-button v-if="currSelected.id" @click="handleSelectProductSupplier"><a-icon type="setting"/>选择客商档案</a-button>
             </template>
             <a-card :bordered="false" v-if="selectedKeys.length>0">
               <a-form :form="form">
