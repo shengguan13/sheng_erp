@@ -117,9 +117,8 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String materialParam, String color, String materialOther,
-                                        String weight, String expiryNum, String enabled, String remark,
-                                        String categoryId, String mpList, int offset, int rows)
+    public List<MaterialVo4Unit> select(String materialParam, String color, String materialOther, String project,
+                                        String enabled, String remark, String categoryId, String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = new String[]{};
         if(StringUtil.isNotEmpty(mpList)){
@@ -133,7 +132,7 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             list= materialMapperEx.selectByConditionMaterial(materialParam, color,
-                    materialOther, weight, expiryNum, enabled, remark, idList, mpList, offset, rows);
+                    materialOther, project, enabled, remark, idList, mpList, offset, rows);
             if (null != list && list.size()>0) {
                 for (MaterialVo4Unit m : list) {
                     m.setMaterialOther(getMaterialOtherByParam(mpArr, m));
@@ -146,17 +145,15 @@ public class MaterialService {
         return resList;
     }
 
-    public Long countMaterial(String materialParam, String color, String materialOther,
-                              String weight, String expiryNum, String enabled, String remark,
-                              String categoryId,String mpList)throws Exception {
+    public Long countMaterial(String materialParam, String color, String materialOther, String project, String enabled,
+                              String remark, String categoryId,String mpList)throws Exception {
         Long result =null;
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            result= materialMapperEx.countsByMaterial(materialParam, color, materialOther,
-                    weight, expiryNum, enabled, remark, idList, mpList);
+            result= materialMapperEx.countsByMaterial(materialParam, color, materialOther, project, enabled, remark, idList, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -417,7 +414,7 @@ public class MaterialService {
                             idList.add(category.getId());
                         }
                     }
-                } else if ("zhangshanshan".equals(user.getLoginName())) {
+                } else if ("zhangshanshan".equals(user.getLoginName()) || "wangmeihong".equals(user.getLoginName())) {
                     for (MaterialCategory category : categories) {
                         if ("总成".equals(category.getName())) {
                             idList.add(category.getId());
@@ -456,7 +453,7 @@ public class MaterialService {
                             idList.add(category.getId());
                         }
                     }
-                } else if ("zhangshanshan".equals(user.getLoginName())) {
+                } else if ("zhangshanshan".equals(user.getLoginName()) || "wangmeihong".equals(user.getLoginName())) {
                     for (MaterialCategory category : categories) {
                         if ("总成".equals(category.getName())) {
                             idList.add(category.getId());

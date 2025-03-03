@@ -88,25 +88,101 @@ public class MaterialBomService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list = materialBomMapperEx.selectMaterialBomNullUpper(parent, project, materialParam, idList, offset, rows);
-            for (MaterialBomVo4Info bom : list) {
-                bom.setUnit(bom.getmUnit());
-                if (bom.getParent() != null && !"".equals(bom.getParent())) {
-                    try {
-                        List<ProductSupplierVo4Info> psList = productSupplierService.selectByIds(bom.getParent());
-                        StringBuilder sb = new StringBuilder();
-                        for (ProductSupplierVo4Info ps : psList) {
-                            sb.append(ps.getModel() + ";");
+            if (StringUtil.isNotEmpty(categoryId) && Long.parseLong(categoryId) == 48L) {
+                list = materialBomMapperEx.selectMaterialBomNullUpper(parent, project, materialParam, idList, offset, rows);
+                for (MaterialBomVo4Info bom : list) {
+                    bom.setUnit(bom.getmUnit());
+                    if (bom.getParent() != null && !"".equals(bom.getParent())) {
+                        try {
+                            List<ProductSupplierVo4Info> psList = productSupplierService.selectByIds(bom.getParent());
+                            StringBuilder sb = new StringBuilder();
+                            for (ProductSupplierVo4Info ps : psList) {
+                                sb.append(ps.getModel() + ";");
+                            }
+                            String parentStr = sb.toString();
+                            bom.setParentStr(parentStr.substring(0, parentStr.length() - 1));
+                        } catch (Exception ignored) {
                         }
-                        String parentStr = sb.toString();
-                        bom.setParentStr(parentStr.substring(0, parentStr.length() - 1));
-                    } catch(Exception e) {}
+                    }
                 }
+            } else {
+                list = selectChild(idList, parent, project, materialParam, offset, rows);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    public List<MaterialBomVo4Info> selectChild(
+            List<Long> idList, String parent, String project, String materialParam, int offset, int rows) throws Exception{
+        List<MaterialBomVo4Info> res = new ArrayList<>(), tmp, list;
+        Set<String> parentSet = new HashSet<>();
+        try{
+            list = materialBomMapperEx.selectMaterialBomWithUpper(parent, null, project, materialParam, idList);
+            for (MaterialBomVo4Info bom : list) {
+                tmp = materialBomMapperEx.selectMaterialBomNullUpper(bom.getParent(), bom.getProject(), null, new ArrayList<>(), 0, 200);
+                if (tmp == null || tmp.isEmpty()) {
+                    continue;
+                }
+                MaterialBomVo4Info parentBom = tmp.get(0);
+                parentBom.setUnit(parentBom.getmUnit());
+                if (parentBom.getParent() != null && !"".equals(parentBom.getParent())) {
+                    try {
+                        List<ProductSupplierVo4Info> psList = productSupplierService.selectByIds(parentBom.getParent());
+                        StringBuilder sb = new StringBuilder();
+                        for (ProductSupplierVo4Info ps : psList) {
+                            sb.append(ps.getModel() + ";");
+                        }
+                        String parentStr = sb.toString();
+                        parentBom.setParentStr(parentStr.substring(0, parentStr.length() - 1));
+                    } catch(Exception ignored) {}
+                }
+                String key = parentBom.getProject() + parentBom.getParent() + parentBom.getBarCode();
+                if (!parentSet.contains(key)) {
+                    res.add(parentBom);
+                }
+                parentSet.add(key);
+            }
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return res.subList(offset, Math.min(res.size(), offset + rows));
+    }
+
+    public long countChild(List<Long> idList, String parent, String project, String materialParam) throws Exception{
+        List<MaterialBomVo4Info> res = new ArrayList<>(), tmp, list;
+        Set<String> parentSet = new HashSet<>();
+        try{
+            list = materialBomMapperEx.selectMaterialBomWithUpper(parent, null, project, materialParam, idList);
+            for (MaterialBomVo4Info bom : list) {
+                tmp = materialBomMapperEx.selectMaterialBomNullUpper(bom.getParent(), bom.getProject(), null, new ArrayList<>(), 0, 200);
+                if (tmp == null || tmp.isEmpty()) {
+                    continue;
+                }
+                MaterialBomVo4Info parentBom = tmp.get(0);
+                parentBom.setUnit(parentBom.getmUnit());
+                if (parentBom.getParent() != null && !"".equals(parentBom.getParent())) {
+                    try {
+                        List<ProductSupplierVo4Info> psList = productSupplierService.selectByIds(parentBom.getParent());
+                        StringBuilder sb = new StringBuilder();
+                        for (ProductSupplierVo4Info ps : psList) {
+                            sb.append(ps.getModel() + ";");
+                        }
+                        String parentStr = sb.toString();
+                        parentBom.setParentStr(parentStr.substring(0, parentStr.length() - 1));
+                    } catch(Exception ignored) {}
+                }
+                String key = parentBom.getProject() + parentBom.getParent() + parentBom.getBarCode();
+                if (!parentSet.contains(key)) {
+                    res.add(parentBom);
+                }
+                parentSet.add(key);
+            }
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return res.size();
     }
 
     boolean isBomUser() throws Exception {
@@ -139,7 +215,7 @@ public class MaterialBomService {
             String parent, String upper, String project, String materialParam) throws Exception{
         List<MaterialBomVo4Info> list = new ArrayList<>();
         try{
-            list = materialBomMapperEx.selectMaterialBomWithUpper(parent, upper, project, materialParam);
+            list = materialBomMapperEx.selectMaterialBomWithUpper(parent, upper, project, materialParam, new ArrayList<>());
             for (MaterialBomVo4Info bom : list) {
                 bom.setUnit(bom.getmUnit());
             }
@@ -171,7 +247,11 @@ public class MaterialBomService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            result = materialBomMapperEx.countMaterialBomNullUpper(parent, project, materialParam, idList);
+            if (StringUtil.isNotEmpty(categoryId) && Long.parseLong(categoryId) == 48L) {
+                result = materialBomMapperEx.countMaterialBomNullUpper(parent, project, materialParam, idList);
+            } else {
+                result = countChild(idList, parent, project, materialParam);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -236,7 +316,7 @@ public class MaterialBomService {
         m.setDeleteFlag("0");
         try{
             List<MaterialVo4Unit> materials = materialService.select(
-                    "BOM新增物料", null, null, null, null, null, null, null, null, 0, 10);
+                    "BOM新增物料", null, null, null, null, null, null, null, 0, 10);
             m.setBarCode(materials.get(0).getmBarCode());
             Set<String> toCheck = new HashSet<>();
             toCheck.add(upper);

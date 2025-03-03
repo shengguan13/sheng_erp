@@ -235,7 +235,7 @@
         let aoa = [['编码', '名称', '型号', '客/供型号', '项目', '规格', '类别', '单位', '出库数量', '库存']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.mName, ds.colorCode, ds.model, ds.supplierModel, ds.project, ds.categoryName,
+          let item = [ds.barCode, ds.mName, ds.model, ds.supplierModel, ds.project, ds.categoryName,
             ds.materialUnit, ds.numSum, ds.stock]
           aoa.push(item)
         }

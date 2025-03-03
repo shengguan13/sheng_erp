@@ -180,8 +180,6 @@
           color:'',
           project:'',
           materialOther:'',
-          weight:'',
-          expiryNum:'',
           enabled: '',
           remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
@@ -211,6 +209,7 @@
           {title: '颜色', dataIndex: 'color', width: 40},
           {title: '颜色代码', dataIndex: 'colorCode', width: 50},
           {title: '类别', dataIndex: 'categoryName', width: 50, ellipsis:true},
+          {title: '项目', dataIndex: 'project', width: 50, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
           {title: '单位', dataIndex: 'unit', width: 40, ellipsis:true,
             customRender:function (t,r,index) {
@@ -220,7 +219,6 @@
               }
             }
           },
-          {title: '保质期/月', dataIndex: 'expiryNum', width: 60},
           {title: '备注', dataIndex: 'remark', width: 80}
         ],
         url: {

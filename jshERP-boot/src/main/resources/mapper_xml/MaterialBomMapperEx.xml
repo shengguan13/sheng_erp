@@ -189,6 +189,12 @@
             or m.other_field5 like #{bindKey} or m.color like #{bindKey} or m.model like #{bindKey}
             or ps.model like #{bindKey})
         </if>
+        <if test="idList.size()>0">
+            and m.category_id in
+            <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         and ifnull(mb.delete_flag,'0') !='1'
         order by mb.id desc
     </select>

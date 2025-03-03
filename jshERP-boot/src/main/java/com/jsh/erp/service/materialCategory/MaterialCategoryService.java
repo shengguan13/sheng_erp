@@ -260,7 +260,7 @@ public class MaterialCategoryService {
                         res.add(node);
                     }
                 }
-            } else if ("zhangshanshan".equals(user.getLoginName())) {
+            } else if ("zhangshanshan".equals(user.getLoginName()) || "wangmeihong".equals(user.getLoginName())) {
                 for (TreeNode node : list) {
                     if ("总成".equals(node.getTitle())) {
                         res.add(node);

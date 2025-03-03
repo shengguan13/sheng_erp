@@ -18,7 +18,8 @@ public interface MaterialBomMapperEx {
             @Param("parent") String parent,
             @Param("upper") String upper,
             @Param("project") String project,
-            @Param("materialParam") String materialParam);
+            @Param("materialParam") String materialParam,
+            @Param("idList") List<Long> idList);
 
     List<MaterialBomVo4Info> getMaterialBomTree(
             @Param("parent") String parent,

@@ -35,13 +35,12 @@ public class MaterialComponent implements ICommonQuery {
         String materialParam = StringUtil.getInfo(search, "materialParam");
         String color = StringUtil.getInfo(search, "color");
         String materialOther = StringUtil.getInfo(search, "materialOther");
-        String weight = StringUtil.getInfo(search, "weight");
-        String expiryNum = StringUtil.getInfo(search, "expiryNum");
+        String project = StringUtil.getInfo(search, "project");
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.select(materialParam, color, materialOther, weight, expiryNum,
-                enabled, remark, categoryId, mpList, QueryUtils.offset(map), QueryUtils.rows(map));
+        return materialService.select(materialParam, color, materialOther, project, enabled, remark, categoryId, mpList,
+                QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -51,13 +50,11 @@ public class MaterialComponent implements ICommonQuery {
         String materialParam = StringUtil.getInfo(search, "materialParam");
         String color = StringUtil.getInfo(search, "color");
         String materialOther = StringUtil.getInfo(search, "materialOther");
-        String weight = StringUtil.getInfo(search, "weight");
-        String expiryNum = StringUtil.getInfo(search, "expiryNum");
+        String project = StringUtil.getInfo(search, "project");
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.countMaterial(materialParam, color, materialOther,
-                weight, expiryNum, enabled, remark, categoryId, mpList);
+        return materialService.countMaterial(materialParam, color, materialOther, project, enabled, remark, categoryId, mpList);
     }
 
     @Override
