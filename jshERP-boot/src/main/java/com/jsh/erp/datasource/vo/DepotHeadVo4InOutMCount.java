@@ -15,6 +15,14 @@ public class DepotHeadVo4InOutMCount {
 
     private String supplierModel;
 
+    private String otherField5;
+
+    private String otherField6;
+
+    private String otherField7;
+
+    private String otherField8;
+
     private String project;
 
     private String colorCode;
@@ -69,6 +77,38 @@ public class DepotHeadVo4InOutMCount {
 
     public void setSupplierModel(String supplierModel) {
         this.supplierModel = supplierModel;
+    }
+
+    public String getOtherField5() {
+        return otherField5;
+    }
+
+    public void setOtherField5(String otherField5) {
+        this.otherField5 = otherField5;
+    }
+
+    public String getOtherField6() {
+        return otherField6;
+    }
+
+    public void setOtherField6(String otherField6) {
+        this.otherField6 = otherField6;
+    }
+
+    public String getOtherField7() {
+        return otherField7;
+    }
+
+    public void setOtherField7(String otherField7) {
+        this.otherField7 = otherField7;
+    }
+
+    public String getOtherField8() {
+        return otherField8;
+    }
+
+    public void setOtherField8(String otherField8) {
+        this.otherField8 = otherField8;
     }
 
     public String getProject() {

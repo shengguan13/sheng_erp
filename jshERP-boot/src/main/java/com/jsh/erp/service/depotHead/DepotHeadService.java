@@ -938,6 +938,40 @@ public class DepotHeadService {
         return depotHeadMapper.selectByExample(example);
     }
 
+    public List<DepotHeadVo4InDetail> getRelatedInOutBill(String number) throws Exception {
+        Set<String> resSet = new HashSet<>();
+        List<DepotHeadVo4InDetail> res = new ArrayList<>();
+        List<DepotHeadVo4List> headList = depotHeadMapperEx.getDetailByNumber(number);
+        if (headList == null || headList.isEmpty()) {
+            return res;
+        }
+        DepotHeadVo4List head = headList.get(0);
+        List<DepotItemVo4WithInfoEx> itemList = depotItemMapperEx.getDetailList(head.getId());
+        for (DepotItemVo4WithInfoEx item : itemList) {
+            List<DepotHeadVo4InDetail> relatedHeads = depotHeadMapperEx.findInOutDetail("2000-01-01",
+                    "2099-01-01",
+                    head.getType().equals("入库")? "出库" : "入库",
+                    null,
+                    null,
+                    item.getBarCode(),
+                    Collections.singletonList(item.getDepotId()),
+                    null,
+                    null,
+                    null,
+                    null,
+                    item.getBatchNumber(),
+                    0,
+                    100);
+            relatedHeads.forEach(h -> {
+                if (!resSet.contains(h.getNumber())) {
+                    res.add(h);
+                }
+                resSet.add(h.getNumber());
+            });
+        }
+        return res;
+    }
+
     /**
      * 根据原单号查询关联的单据列表(排除当前的单据编号)
      *

@@ -232,6 +232,15 @@
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="来源追溯">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number + ": " + item.model}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
                 {{model.remark}}
@@ -338,6 +347,15 @@
               :dataSource="dataSource">
             </a-table>
           </div>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="去向追溯">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number + ": " + item.model}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
+          </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -518,6 +536,15 @@
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="去向追溯">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number + ": " + item.model}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
                 {{model.remark}}
@@ -692,6 +719,15 @@
               :dataSource="dataSource">
             </a-table>
           </div>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="来源追溯">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number + ": " + item.model}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
+          </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -1260,6 +1296,7 @@
         fileList: [],
         purchaseBySaleFlag: false,
         linkNumberList: [],
+        relatedNumberList: [],
         financialBillNoList: [],
         btnEnableList: '',
         /* 原始反审核是否开启 */
@@ -1751,6 +1788,13 @@
           }
         })
       },
+      getRelatedInOutBill(number) {
+        getAction('/depotHead/getRelatedInOutBill', {number: number}).then(res => {
+          if(res && res.code === 200){
+            this.linkNumberList = res.data
+          }
+        })
+      },
       getFinancialBillNoByBillId(billId) {
         getAction('/accountHead/getFinancialBillNoByBillId', {billId: billId}).then(res => {
           if(res && res.code === 200){
@@ -1800,6 +1844,7 @@
             this.initActiveBtnStr()
             this.getSystemConfig()
             this.getBillListByLinkNumber(this.model.number)
+            this.getRelatedInOutBill(this.model.number)
             this.getFinancialBillNoByBillId(this.model.id)
           }
         })

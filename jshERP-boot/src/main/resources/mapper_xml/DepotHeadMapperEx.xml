@@ -42,6 +42,10 @@
         <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
         <result column="mName" jdbcType="VARCHAR" property="mName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
+        <result column="other_field5" jdbcType="VARCHAR" property="otherField5" />
+        <result column="other_field6" jdbcType="VARCHAR" property="otherField6" />
+        <result column="other_field7" jdbcType="VARCHAR" property="otherField7" />
+        <result column="other_field8" jdbcType="VARCHAR" property="otherField8" />
         <result column="supplier_model" jdbcType="VARCHAR" property="supplierModel" />
         <result column="color_code" jdbcType="VARCHAR" property="colorCode" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
@@ -462,7 +466,7 @@
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
         select di.material_id, me.bar_code, m.name mName,m.Model,m.color_code,mc.name categoryName,ps.models_combined supplier_model,
-        concat_ws('', m.unit, u.basic_unit) materialUnit, b.projects_combined project, m.id MaterialId,
+        concat_ws('', m.unit, u.basic_unit) materialUnit, b.projects_combined project, m.id MaterialId, m.other_field5, m.other_field6, m.other_field7, m.other_field8,
         sum(di.basic_number) numSum,
         sum(di.all_price) priceSum
         from jsh_depot_head dh
