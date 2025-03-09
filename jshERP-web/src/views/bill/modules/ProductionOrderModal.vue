@@ -320,8 +320,8 @@
         this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
-        this.$refs.saleOrderLinkList.show('其它', '销售订单', '客户', "1,3")
-        this.$refs.saleOrderLinkList.title = "选择客户计划（已审核的客户计划才能关联）"
+        this.$refs.saleOrderLinkList.show('其它', '销售订单', '客户', "0,1,3")
+        this.$refs.saleOrderLinkList.title = "选择客户计划"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         console.log("organId: " + organId)

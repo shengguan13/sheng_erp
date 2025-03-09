@@ -39,13 +39,16 @@
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="货位分类">
             <a-select placeholder="选择货位分类" v-decorator="[ 'type', validatorRules.type ]"
               :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+              <a-select-option value="成品">成品</a-select-option>
+              <a-select-option value="半成品">半成品</a-select-option>
               <a-select-option value="原材料">原材料</a-select-option>
               <a-select-option value="辅料">辅料</a-select-option>
               <a-select-option value="隔离">隔离</a-select-option>
+              <a-select-option value="返修中">返修中</a-select-option>
+              <a-select-option value="项目">项目</a-select-option>
               <a-select-option value="供应商">供应商</a-select-option>
               <a-select-option value="门卫室">门卫室</a-select-option>
               <a-select-option value="外检区">外检区</a-select-option>
-              <a-select-option value="项目">项目</a-select-option>
             </a-select>
           </a-form-item>
         </a-form>
