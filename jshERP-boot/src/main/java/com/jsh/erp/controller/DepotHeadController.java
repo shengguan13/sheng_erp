@@ -503,35 +503,13 @@ public class DepotHeadController {
     @PostMapping(value = "/importRepairInExcel")
     @ApiOperation(value = "excel表格导入出入库")
     public BaseResponseInfo importRepairInExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            res = depotHeadService.importRepairInExcel(file, request);
-        } catch (BusinessRunTimeException e) {
-            BaseResponseInfo info = new BaseResponseInfo();
-            info.code = e.getCode();
-            info.data = e.getMessage();
-            return info;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return res;
+        return new BaseResponseInfo();
     }
 
     @PostMapping(value = "/importRepairOutExcel")
     @ApiOperation(value = "excel表格导入出入库")
     public BaseResponseInfo importRepairOutExcel(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            res = depotHeadService.importRepairOutExcel(file, request);
-        } catch (BusinessRunTimeException e) {
-            BaseResponseInfo info = new BaseResponseInfo();
-            info.code = e.getCode();
-            info.data = e.getMessage();
-            return info;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return res;
+        return new BaseResponseInfo();
     }
 
     /**

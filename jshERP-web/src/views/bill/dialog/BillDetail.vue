@@ -1528,10 +1528,12 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
+          { title: '新货位', dataIndex: 'materialTypeStr'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单位', dataIndex: 'unit'},
           { title: '库存', dataIndex: 'stock'},
-          { title: '仓库名称', dataIndex: 'depotName'},
+          { title: '调出仓库', dataIndex: 'depotName'},
+          { title: '调入仓库', dataIndex: 'anotherDepotName'},
           { title: '备注', dataIndex: 'remark'}
         ],
         repairOutColumns: [
@@ -1543,10 +1545,12 @@
           { title: '颜色代码', dataIndex: 'colorCode'},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '货位', dataIndex: 'snListStr'},
+          { title: '新货位', dataIndex: 'materialTypeStr'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单位', dataIndex: 'unit'},
           { title: '库存', dataIndex: 'stock'},
-          { title: '仓库名称', dataIndex: 'depotName'},
+          { title: '调出仓库', dataIndex: 'depotName'},
+          { title: '调入仓库', dataIndex: 'anotherDepotName'},
           { title: '备注', dataIndex: 'remark'}
         ],
         isolateColumns: [

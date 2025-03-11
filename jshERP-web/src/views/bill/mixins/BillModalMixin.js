@@ -120,15 +120,15 @@ export const BillModalMixin = {
           if(type){
             if(key === 'batchNumber') {
               if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK'
-                  || this.prefixNo === 'DBCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK'
+                  || this.prefixNo === 'DBCK' || this.prefixNo === 'QTCK'
+                  || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK'
                   || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK' || this.prefixNo === 'CYRK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //输入
               }
             } else if(key === 'sku') {
-              if(this.prefixNo === 'CGDD' || this.prefixNo === 'CGSQ' || this.prefixNo === 'QTRK'
-                || this.prefixNo === 'FXRK' || this.prefixNo === 'SCRK') {
+              if(this.prefixNo === 'CGDD' || this.prefixNo === 'CGSQ' || this.prefixNo === 'QTRK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
@@ -140,8 +140,8 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.hidden //隐藏
               }
             } else if(key === 'snList') {
-              if (this.prefixNo === 'QTRK' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK' ||
-                this.prefixNo === 'XSTH' || this.prefixNo === 'FXRK' || this.prefixNo === 'TLRK') {
+              if (this.prefixNo === 'QTRK' || this.prefixNo === 'CGRK' || this.prefixNo === 'SCRK'
+                || this.prefixNo === 'XSTH' || this.prefixNo === 'TLRK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.hidden //隐藏
@@ -260,6 +260,62 @@ export const BillModalMixin = {
                 depotInfo.text = arr[i].depotName
                 depotInfo.title = arr[i].depotName
                 item.options.push(depotInfo)
+              }
+            }
+          }
+        }
+      })
+    },
+    initRepairOutDepot() {
+      let that = this;
+      getAction('/depot/findDepotByCurrentUser').then((res) => {
+        if(res.code === 200){
+          let arr = res.data
+          for(let item of that.materialTable.columns){
+            if(item.key == 'depotId') {
+              item.options = []
+              for(let i=0; i<arr.length; i++) {
+                if(arr[i].depotName == '隔离库') {
+                  let depotInfo = {};
+                  depotInfo.value = arr[i].id + '' //注意-此处value必须为字符串格式
+                  depotInfo.text = arr[i].depotName
+                  depotInfo.title = arr[i].depotName
+                  item.options.push(depotInfo)
+                }
+              }
+            }
+          }
+        }
+      })
+    },
+    initRepairInDepot() {
+      let that = this;
+      getAction('/depot/findDepotByCurrentUser').then((res) => {
+        if(res.code === 200){
+          let arr = res.data
+          for(let item of that.materialTable.columns){
+            if(item.key == 'depotId') {
+              item.options = []
+              for(let i=0; i<arr.length; i++) {
+                if(arr[i].depotName == '返修中') {
+                  let depotInfo = {};
+                  depotInfo.value = arr[i].id + '' //注意-此处value必须为字符串格式
+                  depotInfo.text = arr[i].depotName
+                  depotInfo.title = arr[i].depotName
+                  item.options.push(depotInfo)
+                }
+              }
+            }
+            if(item.key == 'anotherDepotId') {
+              item.options = []
+              for(let i=0; i<arr.length; i++) {
+                if(arr[i].depotName != '返修中') {
+                  let depotInfo = {};
+                  depotInfo.value = arr[i].id + '' //注意-此处value必须为字符串格式
+                  depotInfo.text = arr[i].depotName
+                  depotInfo.title = arr[i].depotName
+                  item.options.push(depotInfo)
+                }
               }
             }
           }
@@ -423,6 +479,12 @@ export const BillModalMixin = {
                   target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
                 }
               }
+            } else if(this.prefixNo == "FXRK") {
+              for (let i = 0; i < arr.length; i++) {
+                if(arr[i].depotName == "返修中"){
+                  target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+                }
+              }
             } else {
               let chengPin = false
               let chengPinId = ''
@@ -520,7 +582,7 @@ export const BillModalMixin = {
           param = {
             id: row.materialType,
           }
-          if (this.prefixNo === 'DBCK') {
+          if (this.prefixNo === 'DBCK' || this.prefixNo === 'GLCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK') {
             getDepotAllocation(param).then((res) => {
               if (res && res.code === 200) {
                 target.setValues([{rowKey: row.id, values: {materialTypeStr: res.data.allocation}}])
@@ -563,9 +625,9 @@ export const BillModalMixin = {
                 }
               }
             })
-          } else if (this.prefixNo === 'CGTH' || this.prefixNo === 'XSCK'
-                     || this.prefixNo === 'DBCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK'
-                     || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK') {
+          } else if (this.prefixNo === 'CGTH' || this.prefixNo === 'XSCK' || this.prefixNo === 'DBCK'
+              || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK'
+              || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK') {
             target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
             getBatchNumberList(param).then((res) => {
               if (res && res.code === 200) {

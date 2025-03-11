@@ -160,8 +160,8 @@
         queryParam: {
           number: "",
           materialParam: "",
-          type: "入库",
-          subType: "返修",
+          type: "出库",
+          subType: "返修入库",
           roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",

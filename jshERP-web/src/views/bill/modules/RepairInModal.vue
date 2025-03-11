@@ -151,13 +151,20 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '4%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.input },
-            { title: '客/供代码', key: 'sku', width: '6%', type: FormTypes.popupJsh, kind: 'supplier', multi: false },
+            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '货位', key: 'snList', width: '6%', type: FormTypes.hidden},
+            { title: '货位', key: 'snListStr', width: '8%', type: FormTypes.normal},
+            { title: '新货位', key: 'materialType', width: '8%', type: FormTypes.popupJsh, kind: 'allocation', multi: false,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '新货位', key: 'materialTypeStr', width: '8%', type: FormTypes.normal},
+            { title: '客/供代码', key: 'sku', width: '6%', type: FormTypes.hidden},
+            { title: '调入仓库', key: 'anotherDepotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '货位', key: 'snList', width: '6%', type: FormTypes.popupJsh, kind: 'allocation', multi: false },
-            { title: '货位', key: 'snListStr', width: '8%', type: FormTypes.normal},
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]
         },
@@ -188,8 +195,6 @@
       editAfter() {
         this.billStatus = '0'
         this.changeColumnHide()
-        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
-        this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
@@ -216,15 +221,15 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initDepot()
+        this.initRepairInDepot()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
         let totalPrice = 0
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '入库'
-        billMain.subType = '返修'
+        billMain.type = '出库'
+        billMain.subType = '返修入库'
         billMain.defaultNumber = billMain.number
         for(let item of detailArr){
           totalPrice += item.allPrice-0

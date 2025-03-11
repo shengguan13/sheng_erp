@@ -815,16 +815,25 @@ public class DepotItemService {
                 }
                 // 有仓库号的就设置仓库号
                 if (StringUtil.isExist(rowObj.get("depotId"))) {
-                    depotItem.setDepotId(rowObj.getLong("depotId"));
-                    // 隔离出库的仓库不能是隔离库
-                    if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                            && BusinessConstants.SUB_TYPE_ISOLATE.equals(depotHead.getSubType())) {
-                        Depot depot = depotService.getDepot(rowObj.getLong("depotId"));
-                        if (depot.getName().equals("隔离库")) {
+                    Depot depot = depotService.getDepot(rowObj.getLong("depotId"));
+                    if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
+                        // 隔离出库的仓库不能是隔离库
+                        if (depot.getName().equals("隔离库") && BusinessConstants.SUB_TYPE_ISOLATE.equals(depotHead.getSubType())) {
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_ISOLATE_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_ISOLATE_FAILED_MSG));
                         }
+                        // 返修出库的仓库必须是隔离库
+                        if (!depot.getName().equals("隔离库") && BusinessConstants.SUB_TYPE_REPAIR_OUT.equals(depotHead.getSubType())) {
+                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_CODE,
+                                    String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_MSG));
+                        }
+                        // 返修入库的仓库必须是返修中
+                        if (!depot.getName().equals("返修中") && BusinessConstants.SUB_TYPE_REPAIR_IN.equals(depotHead.getSubType())) {
+                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_FAILED_CODE,
+                                    String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_REPAIR_IN_FAILED_MSG));
+                        }
                     }
+                    depotItem.setDepotId(rowObj.getLong("depotId"));
                 } else {
                     // 只有[采购订单、采购申请、销售订单、生产单]可以没有仓库号
                     if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
@@ -835,7 +844,8 @@ public class DepotItemService {
                                 String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_MSG));
                     }
                 }
-                if(BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
+                if(BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())
+                        || BusinessConstants.SUB_TYPE_REPAIR_IN.equals(depotHead.getSubType())) {
                     if (StringUtil.isExist(rowObj.get("anotherDepotId"))) {
                         depotItem.setAnotherDepotId(rowObj.getLong("anotherDepotId"));
                     } else {
@@ -848,10 +858,16 @@ public class DepotItemService {
                         depotItem.setAnotherDepotId(rowObj.getLong("anotherDepotId"));
                     }
                 }
+                List<Depot> depots = depotService.getDepot();
                 if(BusinessConstants.SUB_TYPE_ISOLATE.equals(depotHead.getSubType())) {
-                    List<Depot> depots = depotService.getDepot();
                     for (Depot depot : depots) {
                         if ("隔离库".equals(depot.getName())) {
+                            depotItem.setAnotherDepotId(depot.getId());
+                        }
+                    }
+                } else if(BusinessConstants.SUB_TYPE_REPAIR_OUT.equals(depotHead.getSubType())) {
+                    for (Depot depot : depots) {
+                        if ("返修中".equals(depot.getName())) {
                             depotItem.setAnotherDepotId(depot.getId());
                         }
                     }

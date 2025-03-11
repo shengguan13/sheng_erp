@@ -161,7 +161,7 @@
           number: "",
           materialParam: "",
           type: "出库",
-          subType: "返修",
+          subType: "返修出库",
           roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",

@@ -235,7 +235,7 @@
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id=m.id and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
-        where dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离')
+        where dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离' or dh.sub_type='返修出库' or dh.sub_type='返修入库')
         <if test="depotIdArray != null">
             and di.another_depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
@@ -300,7 +300,7 @@
         --单独构造记录：调拨入库
         select dh.number from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        where dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离')
+        where dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离' or dh.sub_type='返修出库' or dh.sub_type='返修入库')
         <if test="depotIdArray != null">
             and di.another_depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
@@ -888,9 +888,9 @@
     <select id="getSkuStockByParamWithDepotList" resultMap="stockMap">
         select
         sum(case when dh.type='入库' <include refid="depotParam" /> then di.basic_number else 0 end) as inTotal,
-        sum(case when dh.type='出库' and dh.sub_type!='调拨' and dh.sub_type!='隔离' <include refid="depotParam" /> then di.basic_number else 0 end) as outTotal,
-        sum(case when (dh.sub_type='调拨' or dh.sub_type='隔离') <include refid="anotherDepotParam" /> then di.basic_number else 0 end) as transfInTotal,
-        sum(case when (dh.sub_type='调拨' or dh.sub_type='隔离') <include refid="depotParam" /> then di.basic_number else 0 end) as transfOutTotal,
+        sum(case when dh.type='出库' and dh.sub_type!='调拨' and dh.sub_type!='隔离' and dh.sub_type!='返修出库' and dh.sub_type!='返修入库' <include refid="depotParam" /> then di.basic_number else 0 end) as outTotal,
+        sum(case when (dh.sub_type='调拨' or dh.sub_type='隔离' or dh.sub_type='返修出库' or dh.sub_type='返修入库') <include refid="anotherDepotParam" /> then di.basic_number else 0 end) as transfInTotal,
+        sum(case when (dh.sub_type='调拨' or dh.sub_type='隔离' or dh.sub_type='返修出库' or dh.sub_type='返修入库') <include refid="depotParam" /> then di.basic_number else 0 end) as transfOutTotal,
         sum(case when dh.sub_type='组装单' and di.material_type='组合件' <include refid="depotParam" /> then di.basic_number else 0 end) as assemInTotal,
         sum(case when dh.sub_type='组装单' and di.material_type='普通子件' <include refid="depotParam" /> then di.basic_number else 0 end) as assemOutTotal,
         sum(case when dh.sub_type='拆卸单' and di.material_type='普通子件' <include refid="depotParam" /> then di.basic_number else 0 end) as disAssemInTotal,
@@ -913,9 +913,9 @@
     <select id="getStockByParamWithDepotList" resultMap="stockMap">
         select
         sum(case when dh.type='入库' <include refid="depotParam" /> then di.basic_number else 0 end) as inTotal,
-        sum(case when dh.type='出库' and dh.sub_type!='调拨' and dh.sub_type!='隔离' <include refid="depotParam" /> then di.basic_number else 0 end) as outTotal,
-        sum(case when (dh.sub_type='调拨' or dh.sub_type='隔离') <include refid="anotherDepotParam" /> then di.basic_number else 0 end) as transfInTotal,
-        sum(case when (dh.sub_type='调拨' or dh.sub_type='隔离') <include refid="depotParam" /> then di.basic_number else 0 end) as transfOutTotal,
+        sum(case when dh.type='出库' and dh.sub_type!='调拨' and dh.sub_type!='隔离' and dh.sub_type!='返修出库' and dh.sub_type!='返修入库' <include refid="depotParam" /> then di.basic_number else 0 end) as outTotal,
+        sum(case when (dh.sub_type='调拨' or dh.sub_type='隔离' or dh.sub_type='返修出库' or dh.sub_type='返修入库') <include refid="anotherDepotParam" /> then di.basic_number else 0 end) as transfInTotal,
+        sum(case when (dh.sub_type='调拨' or dh.sub_type='隔离' or dh.sub_type='返修出库' or dh.sub_type='返修入库') <include refid="depotParam" /> then di.basic_number else 0 end) as transfOutTotal,
         sum(case when dh.sub_type='组装单' and di.material_type='组合件' <include refid="depotParam" /> then di.basic_number else 0 end) as assemInTotal,
         sum(case when dh.sub_type='组装单' and di.material_type='普通子件' <include refid="depotParam" /> then di.basic_number else 0 end) as assemOutTotal,
         sum(case when dh.sub_type='拆卸单' and di.material_type='普通子件' <include refid="depotParam" /> then di.basic_number else 0 end) as disAssemInTotal,
@@ -1026,6 +1026,7 @@
         left join jsh_depot d on d.id=mis.depot_id and ifnull(u.delete_flag,'0') !='1'
         where 1=1
         and d.name!='隔离库'
+        and d.name!='返修中'
         and me.default_flag=1
         and ifnull(m.delete_flag,'0') !='1'
         and mis.depot_id=mcs.depot_id
@@ -1060,6 +1061,7 @@
         left join jsh_depot d on d.id=mis.depot_id and ifnull(u.delete_flag,'0') !='1'
         where 1=1
         and d.name!='隔离库'
+        and d.name!='返修中'
         and me.default_flag=1
         and ifnull(m.delete_flag,'0') !='1'
         and mis.depot_id=mcs.depot_id
@@ -1297,7 +1299,7 @@
             and dh.number!= #{number}
         </if>
         and di.delete_flag!=1
-        and (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离'))
+        and (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离' or dh.sub_type='返修出库' or dh.sub_type='返修入库'))
         ) tb
         group by batch_number, sku
         order by batch_number asc
@@ -1361,7 +1363,7 @@
             and dh.number!= #{number}
         </if>
         and di.delete_flag!=1
-        and (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离'))
+        and (dh.type='出库' and (dh.sub_type='调拨' or dh.sub_type='隔离' or dh.sub_type='返修出库' or dh.sub_type='返修入库'))
         ) tb
         group by batch_number, sku, sn_list
         order by batch_number asc
