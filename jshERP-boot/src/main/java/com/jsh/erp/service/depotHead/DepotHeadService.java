@@ -271,6 +271,7 @@ public class DepotHeadService {
         if (!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType)
                 && !SUB_TYPE_PURCHASE_APPLICATION.equals(subType)
                 && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)
+                && !SUB_TYPE_PRODUCTION_PLAN.equals(subType)
                 && !SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
             String depotIds = depotService.findDepotStrByCurrentUser();
             depotArray = StringUtil.isNotEmpty(depotIds) ? depotIds.split(",") : null;
@@ -1010,7 +1011,7 @@ public class DepotHeadService {
         }
         String subType = depotHead.getSubType();
         if (SUB_TYPE_PRODUCTION_ORDER.equals(subType)) {
-            // 生产单开工时间要>=今天
+            // 生产单完工时间要>=今天
             if (depotHead.getPlanStartTime().toInstant().plusSeconds(24 * 3600).truncatedTo(ChronoUnit.DAYS)
                     .compareTo(Instant.now().truncatedTo(ChronoUnit.DAYS)) < 0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PRODUCTION_START_TIME_FAILED_CODE,

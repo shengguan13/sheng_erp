@@ -835,10 +835,11 @@ public class DepotItemService {
                     }
                     depotItem.setDepotId(rowObj.getLong("depotId"));
                 } else {
-                    // 只有[采购订单、采购申请、销售订单、生产单]可以没有仓库号
+                    // 只有[采购订单、采购申请、销售订单、生产计划、生产单]可以没有仓库号
                     if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_PURCHASE_APPLICATION.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())
+                            && !BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_MSG));
@@ -1554,6 +1555,10 @@ public class DepotItemService {
             //销售出库转销售退货
             if(BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_SALES_RETURN;
+            }
+            // 生产计划转生产单
+            if(BusinessConstants.SUB_TYPE_PRODUCTION_PLAN.equals(depotHead.getSubType())) {
+                goToType = BusinessConstants.SUB_TYPE_PRODUCTION_ORDER;
             }
             // 生产单转生产入库（注意，生产单不要转到领料出库去了）
             if(BusinessConstants.SUB_TYPE_PRODUCTION_ORDER.equals(depotHead.getSubType())) {

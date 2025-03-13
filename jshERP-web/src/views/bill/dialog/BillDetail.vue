@@ -19,6 +19,7 @@
       <a-button v-if="billType === '销售订单'" v-print="'#saleOrderPrint'">普通打印</a-button>
       <a-button v-if="billType === '销售出库'" v-print="'#saleOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'">普通打印</a-button>
+      <a-button v-if="billType === '生产计划'" v-print="'#productionPlanPrint'">普通打印</a-button>
       <a-button v-if="billType === '生产单'" v-print="'#productionOrderPrint'">普通打印</a-button>
       <a-button v-if="billType === '备料'" v-print="'#materialPreparePrint'">普通打印</a-button>
       <a-button v-if="billType === '计划备料'" v-print="'#materialPreparePrint'">普通打印</a-button>
@@ -86,14 +87,73 @@
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="开工时间">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结束日期">
                 <a-input v-decorator="['id']" hidden/>
                 {{model.planStartTimeStr}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生产工时">
-                {{model.workHour}}
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制单人">
+                {{model.creatorName}}
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <div :style="tableWidth">
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="columns"
+              :dataSource="dataSource">
+            </a-table>
+          </div>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="24" :md="24" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                {{model.remark}}
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </section>
+      </template>
+      <!--生产计划-->
+      <template v-if="billType === '生产计划'">
+        <section ref="print" id="productionPlanPrint">
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+                <a-input v-decorator="['id']" hidden/>
+                {{model.organName}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                {{model.operTimeStr}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                {{model.number}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联预测">
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始日期">
+                <a-input v-decorator="['id']" hidden/>
+                {{model.planStartTimeStr}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成日期">
+                {{model.planFinishTimeStr}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
@@ -1331,6 +1391,20 @@
         retailOutColumns: [
 
         ],
+        productionPlanColumns: [
+          { title: '编码', dataIndex: 'barCode'},
+          { title: '零件号', dataIndex: 'model'},
+          { title: '客/供型号', dataIndex: 'supplierModel'},
+          { title: '名称', dataIndex: 'name'},
+          { title: '颜色', dataIndex: 'color'},
+          { title: '颜色代码', dataIndex: 'colorCode'},
+          { title: '数量', dataIndex: 'operNumber'},
+          { title: '已下产单', dataIndex: 'finishNumber'},
+          { title: '单位', dataIndex: 'unit'},
+          { title: '库存', dataIndex: 'stock'},
+          { title: '项目', dataIndex: 'project'},
+          { title: '备注', dataIndex: 'remark'}
+        ],
         productionOrderColumns: [
           { title: '编码', dataIndex: 'barCode'},
           { title: '零件号', dataIndex: 'model'},
@@ -1663,6 +1737,8 @@
           this.defColumns = this.retailBackColumns
         } else if (type === '生产单') {
           this.defColumns = this.productionOrderColumns
+        } else if (type === '生产计划') {
+          this.defColumns = this.productionPlanColumns
         } else if (type === '备料') {
           this.defColumns = this.materialPrepareColumns
         } else if (type === '计划备料') {
