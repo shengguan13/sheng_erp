@@ -120,7 +120,7 @@ export const BillModalMixin = {
           if(type){
             if(key === 'batchNumber') {
               if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK'
-                  || this.prefixNo === 'DBCK' || this.prefixNo === 'QTCK'
+                  || this.prefixNo === 'DBCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'BFCK'
                   || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK'
                   || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK' || this.prefixNo === 'CYRK') {
                 columns[i].type = FormTypes.popupJsh //显示
@@ -260,6 +260,28 @@ export const BillModalMixin = {
                 depotInfo.text = arr[i].depotName
                 depotInfo.title = arr[i].depotName
                 item.options.push(depotInfo)
+              }
+            }
+          }
+        }
+      })
+    },
+    initScrapDepot() {
+      let that = this;
+      getAction('/depot/findDepotByCurrentUser').then((res) => {
+        if(res.code === 200){
+          let arr = res.data
+          for(let item of that.materialTable.columns){
+            if(item.key == 'depotId') {
+              item.options = []
+              for(let i=0; i<arr.length; i++) {
+                if(arr[i].depotName == '返修中' || arr[i].depotName == '隔离库') {
+                  let depotInfo = {};
+                  depotInfo.value = arr[i].id + '' //注意-此处value必须为字符串格式
+                  depotInfo.text = arr[i].depotName
+                  depotInfo.title = arr[i].depotName
+                  item.options.push(depotInfo)
+                }
               }
             }
           }
@@ -479,7 +501,7 @@ export const BillModalMixin = {
                   target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
                 }
               }
-            } else if(this.prefixNo == "FXRK") {
+            } else if(this.prefixNo == "FXRK" || this.prefixNo == "BFCK") {
               for (let i = 0; i < arr.length; i++) {
                 if(arr[i].depotName == "返修中"){
                   target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
@@ -627,7 +649,7 @@ export const BillModalMixin = {
             })
           } else if (this.prefixNo === 'CGTH' || this.prefixNo === 'XSCK' || this.prefixNo === 'DBCK'
               || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK'
-              || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK') {
+              || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK' || this.prefixNo === 'BFCK') {
             target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
             getBatchNumberList(param).then((res) => {
               if (res && res.code === 200) {

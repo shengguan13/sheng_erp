@@ -1,4 +1,3 @@
-<!-- create jishenghua-->
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
@@ -51,6 +50,15 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择仓库" showSearch optionFilterProp="children" v-model="queryParam.depotId">
+                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                        {{ depot.depotName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="制单人" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择制单人" showSearch optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
@@ -60,12 +68,15 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="关联单据" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联单据" v-model="queryParam.linkNumber"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
-                      <a-select-option value="3">部分生产</a-select-option>
-                      <a-select-option value="2">完成生产</a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
@@ -91,6 +102,9 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="可以进行库存初始化，生产管理模块的领料出库。" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>
@@ -108,7 +122,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '生产计划', prefixNo, true)">查看</a>
+              <a @click="myHandleDetail(record, '其它出库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -118,36 +132,34 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <template slot="customRenderStatus" slot-scope="status, record">
+            <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
-              <a-tag v-if="status == '2'" color="cyan">已生产</a-tag>
-              <a-tag v-if="status == '3'" color="blue">部分生产</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
             </template>
           </a-table>
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <production-plan-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></production-plan-modal>
+        <scrap-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></scrap-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
   </a-row>
 </template>
+<!--power by j i s h e n g h u a-->
 <script>
-  import ProductionPlanModal from './modules/ProductionPlanModal'
+  import ScrapModal from './modules/ScrapModal'
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
-  import { getCurrentSystemConfig } from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "ProductionPlanList",
+    name: "ScrapList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
-      ProductionPlanModal,
+      ScrapModal,
       BillDetail,
       JDate
     },
@@ -157,16 +169,17 @@
         queryParam: {
           number: "",
           materialParam: "",
-          type: "其它",
-          subType: "生产计划",
+          type: "出库",
+          subType: "报废",
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",
+          linkNumber: "",
           status: "",
           remark: ""
         },
-        prefixNo: 'SCJH',
+        prefixNo: 'BFCK',
         labelCol: {
           span: 5
         },
@@ -182,20 +195,19 @@
             align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '客户', dataIndex: 'organName',width:100, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:120},
-          { title: '产品信息', dataIndex: 'materialsList',width:150, ellipsis:true,
+          { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
+          { title: '单据编号', dataIndex: 'number',width:160},
+          { title: '产品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:100},
-          { title: '计划完成日期', dataIndex: 'planFinishTimeStr',width:80},
-          { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
-          { title: '数量', dataIndex: 'materialCount',width:50},
-          { title: '状态', dataIndex: 'status', width: 70, align: "center",
+          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
+          { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
+          { title: '数量', dataIndex: 'materialCount',width:60},
+          { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
         ],
@@ -207,54 +219,15 @@
         }
       }
     },
+    computed: {
+    },
     created() {
       this.initSystemConfig()
       this.initCustomer()
+      this.getDepotData()
       this.initUser()
-      this.getSystemConfig()
-    },
-    computed: {
-      importExcelUrl: function () {
-        return `${window._CONFIG['domianURL']}${this.url.importExcelUrl}`;
-      }
     },
     methods: {
-      getSystemConfig() {
-        let statusIndex = 0
-        for(let i=0; i<this.columns.length; i++){
-          if(this.columns[i].dataIndex === 'purchaseStatus') {
-            statusIndex = i
-          }
-        }
-        getCurrentSystemConfig().then((res) => {
-          if(res.code === 200 && res.data){
-            let purchaseBySaleFlag = res.data.purchaseBySaleFlag
-            if(purchaseBySaleFlag === "0") {
-              if(statusIndex>0) {
-                //移除采购进度列
-                this.columns.splice(statusIndex, 1)
-              }
-            } else {
-              if(statusIndex===0) {
-                let purchaseStatusObj = { title: '采购进度', dataIndex: 'purchaseStatus', width: 70, align: "center",
-                  scopedSlots: { customRender: 'customRenderPurchaseStatus' }
-                }
-                //添加采购进度列
-                this.columns.splice(statusIndex-1, 0, purchaseStatusObj)
-              }
-            }
-          } else {
-            if(statusIndex>0) {
-              //移除采购进度列
-              this.columns.splice(statusIndex, 1)
-            }
-          }
-        })
-      },
-      searchQuery() {
-        this.loadData(1)
-        this.getSystemConfig()
-      },
     }
   }
 </script>

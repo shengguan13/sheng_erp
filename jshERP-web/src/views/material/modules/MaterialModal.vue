@@ -109,6 +109,7 @@
                     <a-select-option value="委外">委外</a-select-option>
                     <a-select-option value="注塑">注塑</a-select-option>
                     <a-select-option value="焊接">焊接</a-select-option>
+                    <a-select-option value="宏泽一厂">宏泽一厂</a-select-option>
                     <a-select-option value="V506">V506</a-select-option>
                   </a-select>
                 </a-form-item>

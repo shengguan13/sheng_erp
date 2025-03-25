@@ -6,11 +6,8 @@
     :confirmLoading="confirmLoading"
     :keyboard="false"
     :forceRender="true"
-    v-bind:prefixNo="prefixNo"
-    switchHelp
     switchFullscreen
     @cancel="handleCancel"
-    :id="prefixNo"
     style="top:20px;height: 95%;">
     <template slot="footer">
       <a-button @click="handleCancel">取消</a-button>
@@ -21,15 +18,7 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联客户预测" data-step="3" data-title="关联客户预测"
-              data-intro="生产计划可以关联客户预测，选择之后会自动加载预测的内容。">
-              <a-input-search placeholder="请选择客户预测" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户" data-step="1" data-title="客户"
-              data-intro="客户必须选择，如果发现需要选择的客户尚未录入，可以在下拉框中点击新增客户进行录入。
-                          特别注意，客户如果录入之后在下拉框中不显示，请检查是否给当前用户分配对应的客户权限">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
               <a-select placeholder="选择客户" v-decorator="[ 'organId' ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
@@ -50,23 +39,11 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="2" data-title="单据编号"
-              data-intro="单据编号自动生成、自动累加、开头是单据类型的首字母缩写，累加的规则是每次打开页面会自动占用一个新的编号">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="10" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划开始日期（含）">
-              <j-date v-decorator="['planStartTime']" :show-time="false" :date-format='YYYY-MM-DD'/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="10" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="计划完成日期（含）">
-              <j-date v-decorator="['planFinishTime', validatorRules.planFinishTime]" :show-time="false" :date-format='YYYY-MM-DD'/>
-            </a-form-item>
-          </a-col>
+          <a-col :lg="6" :md="12" :sm="24"></a-col>
         </a-row>
         <j-editable-table id="billModal"
           :ref="refKeys[0]"
@@ -83,20 +60,26 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" style="float:left;padding-bottom: 5px;" data-step="3" data-title="扫码录入" data-intro="此功能支持扫码枪扫描产品编码进行录入">
+            <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描产品编码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
-              <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 8px 0 12px">
+              <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
                 <a-input placeholder="请扫码产品编码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
-              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px 18px 0 0">
+              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
                 <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
-            <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
+            <a-row :gutter="24" style="float:left;">
               <a-col :md="24" :sm="24">
-                <a-button style="margin-left: 8px" @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
+                <a-dropdown>
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
+                    <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
+                  </a-menu>
+                  <a-button style="margin-left: 8px">仓库操作 <a-icon type="down" /></a-button>
+                </a-dropdown>
               </a-col>
             </a-row>
           </template>
@@ -110,47 +93,39 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="4" data-title="附件" data-intro="可以上传与单据相关的图片、文档，支持多个文件">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
           </a-col>
         </a-row>
       </a-form>
     </a-spin>
-    <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
-    <sale-order-link-list ref="saleOrderLinkList" @ok="linkBillListOk"></sale-order-link-list>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
-    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
-    <history-bill-list ref="historyBillListModalForm"></history-bill-list>
+    <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
+    <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
-  import ManyAccountModal from '../dialog/ManyAccountModal'
   import CustomerModal from '../../system/modules/CustomerModal'
-  import SaleOrderLinkList from '../dialog/SaleOrderLinkList'
-  import AccountModal from '../../system/modules/AccountModal'
-  import HistoryBillList from '../dialog/HistoryBillList'
+  import DepotModal from '../../system/modules/DepotModal'
+  import BatchSetDepot from '../dialog/BatchSetDepot'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort,handleIntroJs } from "@/utils/util"
-  import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
+  import { getMpListShort } from "@/utils/util"
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "ProductionPlanModal",
+    name: "ScrapModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
-      ManyAccountModal,
       CustomerModal,
-      AccountModal,
-      SaleOrderLinkList,
-      HistoryBillList,
+      DepotModal,
+      BatchSetDepot,
       JUpload,
       JDate,
-      JSelectMultiple,
       VNodes: {
         functional: true,
         render: (h, ctx) => ctx.props.vnodes,
@@ -165,10 +140,9 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
-        planStartTimeStr: '',
-        planFinishTimeStr: '',
-        prefixNo: 'SCJH',
+        prefixNo: 'BFCK',
         fileList:[],
+        defaultDepotId: '',
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -184,6 +158,9 @@
           loading: false,
           dataSource: [],
           columns: [
+            { title: '仓库名称', key: 'depotId', width: '6%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '编码', key: 'barCode', width: '6%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -193,14 +170,17 @@
             { title: '类别', key: 'categoryName', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '颜色代码', key: 'colorCode', width: '5%', type: FormTypes.normal },
-            { title: '项目', key: 'project', width: '5%', type: FormTypes.normal },
-            { title: '订单数量', key: 'preNumber', width: '5%', type: FormTypes.normal },
+            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '4%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '计划数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
+            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '货位', key: 'snList', width: '6%', type: FormTypes.hidden},
+            { title: '货位', key: 'snListStr', width: '8%', type: FormTypes.normal},
+            { title: '客/供代码', key: 'sku', width: '6%', type: FormTypes.hidden},
+            { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '备注', key: 'remark', width: '6%', type: FormTypes.input }
+            { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]
         },
         confirmLoading: false,
@@ -210,14 +190,9 @@
               { required: true, message: '请输入单据日期!' }
             ]
           },
-          planFinishTime:{
+          type:{
             rules: [
-              { required: true, message: '请输入计划完成日期!' }
-            ]
-          },
-          organId:{
-            rules: [
-              { required: true, message: '请选择客户!' }
+              { required: true, message: '请选择类型!' }
             ]
           }
         },
@@ -237,20 +212,13 @@
         this.changeColumnHide()
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
-          this.personList.value = ''
           this.fileList = []
-          this.$nextTick(() => {
-            handleIntroJs(this.prefixNo, 1)
-          })
         } else {
           this.model.operTime = this.model.operTimeStr
-          this.model.planStartTime = this.model.planStartTimeStr
-          this.model.planFinishTime = this.model.planFinishTimeStr
-          this.personList.value = ''
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId',
-              'operTime', 'planStartTime', 'planFinishTime', 'number', 'remark'))
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
+              'discountLastMoney','otherMoney','accountId','changeAmount'))
           });
           // 加载子表数据
           let params = {
@@ -269,19 +237,20 @@
         }
         this.initSystemConfig()
         this.initCustomer()
-        this.initAccount()
+        this.initScrapDepot()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
+        let totalPrice = 0
         let billMain = Object.assign(this.model, allValues.formValue)
         let detailArr = allValues.tablesValue[0].values
-        billMain.type = '其它'
-        billMain.subType = '生产计划'
+        billMain.type = '出库'
+        billMain.subType = '报废'
         billMain.defaultNumber = billMain.number
-        billMain.totalPrice = 0
-        billMain.accountId = ''
-        billMain.accountIdList = ""
-        billMain.accountMoneyList = ""
+        for(let item of detailArr){
+          totalPrice += item.allPrice-0
+        }
+        billMain.totalPrice = totalPrice
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {
@@ -294,38 +263,6 @@
         return {
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
-        }
-      },
-      handleHistoryBillList() {
-        let organId = this.form.getFieldValue('organId')
-        this.$refs.historyBillListModalForm.show('其它', '生产计划', '客户', organId);
-        this.$refs.historyBillListModalForm.disableSubmit = false;
-      },
-      onSearchLinkNumber() {
-        this.$refs.saleOrderLinkList.show('其它', '销售订单', '客户', "0,1,3")
-        this.$refs.saleOrderLinkList.title = "选择客户计划"
-      },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
-        console.log("organId: " + organId)
-        this.materialTable.columns[1].type = FormTypes.normal
-        this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
-        if(selectBillDetailRows && selectBillDetailRows.length>0) {
-          let listEx = []
-          for(let j=0; j<selectBillDetailRows.length; j++) {
-            let info = selectBillDetailRows[j];
-            info.operNumber = info.preNumber
-            info.linkId = info.id
-            listEx.push(info)
-            this.changeColumnShow(info)
-          }
-          this.materialTable.dataSource = listEx
-          this.$nextTick(() => {
-            this.form.setFieldsValue({
-              'organId': organId,
-              'linkNumber': linkNumber,
-              'remark': remark
-            })
-          })
         }
       },
     }
