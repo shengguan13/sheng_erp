@@ -153,4 +153,23 @@ public class MaterialBom {
     public void setSendEmail(String sendEmail) {
         this.sendEmail = sendEmail;
     }
+
+    public MaterialBom duplicate() {
+        MaterialBom newBom = new MaterialBom();
+        // Id 设置成null防止和原对象冲突
+        newBom.setId(null);
+        newBom.setBarCode(this.barCode);
+        newBom.setParent(this.parent);
+        newBom.setParentStr(this.parentStr);
+        newBom.setUpper(this.upper);
+        newBom.setProject(this.project);
+        newBom.setDepartment(this.department);
+        newBom.setSource(this.source);
+        newBom.setProcessUsage(this.processUsage);
+        newBom.setUnit(this.unit);
+        newBom.setRemark(this.remark);
+        newBom.setDeleteFlag(this.deleteFlag);
+        newBom.setSendEmail(this.sendEmail);
+        return newBom;
+    }
 }

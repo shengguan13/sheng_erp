@@ -1,13 +1,11 @@
 package com.jsh.erp.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.MaterialBomVo4Info;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.materialBom.MaterialBomService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ExcelUtils;
-import com.jsh.erp.utils.ExportExecUtil;
-import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -23,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 @RestController
 @RequestMapping(value = "/materialBom")
@@ -70,6 +70,20 @@ public class MaterialBomController {
             res.data = e.getMessage();
         }
         return res;
+    }
+
+    @PostMapping(value = "/duplicate")
+    @ApiOperation(value = "复制BOM条目")
+    public String duplicate(@RequestBody JSONObject jsonObject,
+                            HttpServletRequest request) throws Exception{
+        Map<String, Object> objectMap = new HashMap<>();
+        String idStr = jsonObject.getString("id");
+        int res = materialBomService.duplicateMaterialBom(Long.valueOf(idStr), request);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
     }
 
     @GetMapping(value = "/selectMaterialBomWithUpper")

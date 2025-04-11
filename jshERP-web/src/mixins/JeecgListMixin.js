@@ -308,6 +308,20 @@ export const JeecgListMixin = {
         }
       });
     },
+    handleDuplicate: function (id) {
+      if(!this.url.duplicate){
+        this.$message.error("请设置url.duplicate属性!")
+        return
+      }
+      var that = this;
+      postAction(that.url.duplicate, {id: id}).then((res) => {
+        if(res.code === 200){
+          that.loadData();
+        } else {
+          that.$message.warning(res.data.message);
+        }
+      });
+    },
     handleEdit: function (record) {
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title = "编辑";

@@ -6,6 +6,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.MaterialBomMapper;
 import com.jsh.erp.datasource.mappers.MaterialBomMapperEx;
 import com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx;
+import com.jsh.erp.datasource.mappers.ProductSupplierMapper;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
@@ -47,6 +48,9 @@ public class MaterialBomService {
 
     @Resource
     private ProductSupplierService productSupplierService;
+
+    @Resource
+    private ProductSupplierMapper productSupplierMapper;
 
     @Resource
     private UserService userService;
@@ -307,6 +311,47 @@ public class MaterialBomService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int duplicateMaterialBom(Long id, HttpServletRequest request)throws Exception {
+        try{
+            MaterialBom bom = materialBomMapper.selectByPrimaryKey(id);
+            List<MaterialBomVo4Info> tree = getMaterialBomTree(bom.getParent(), bom.getBarCode(), bom.getProject());
+            List<MaterialBomVo4Info> childListInclusive = new ArrayList<>();
+            flattenTree(tree, childListInclusive);
+            List<ProductSupplierVo4Info> psList = productSupplierService.selectByIds(bom.getParent());
+            ProductSupplier ps = psList.get(0);
+            ps.setId(null);
+            ps.setTenantId(null);
+            ps.setModel(ps.getModel() + "-BOM复制");
+            productSupplierMapper.insertSelective(ps);
+            ProductSupplierExample example = new ProductSupplierExample();
+            example.createCriteria().andSupplierIdEqualTo(ps.getSupplierId())
+                    .andBarCodeEqualTo(ps.getBarCode())
+                    .andModelEqualTo(ps.getModel());
+            List<ProductSupplier> res = productSupplierMapper.selectByExample(example);
+            String newParent = res.get(0).getId().toString();
+            for (MaterialBomVo4Info child : childListInclusive) {
+                MaterialBom temp = child.duplicate();
+                temp.setParent(newParent);
+                materialBomMapper.insertSelective(temp);
+            }
+            logService.insertLog("产品BOM",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DUPLICATE)
+                            .append("[" + bom.getParent() + "]")
+                            .append("[" + bom.getProject() + "]")
+                            .append("[" + bom.getUpper() + "]")
+                            .append("[" + bom.getBarCode() + "]").toString(), request);
+            return 1;
+        }
+        catch (BusinessRunTimeException ex) {
+            throw new BusinessRunTimeException(ex.getCode(), ex.getMessage());
+        }
+        catch(Exception e){
+            JshException.writeFail(logger, e);
+            return 0;
+        }
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addBomChild(String parent, String upper, String project, HttpServletRequest request)throws Exception {
         MaterialBom m = new MaterialBom();
         m.setParent(parent);
@@ -368,11 +413,11 @@ public class MaterialBomService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateMaterialBom(JSONObject obj, HttpServletRequest request) throws Exception{
+    public int updateMaterialBom(JSONObject obj, HttpServletRequest request) throws Exception {
         MaterialBom materialBom = JSONObject.parseObject(obj.toJSONString(), MaterialBom.class);
         MaterialBom old = materialBomMapper.selectByPrimaryKey(materialBom.getId());
         List<MaterialBomVo4Info> oldChildren = getMaterialBomTree(old.getParent(), old.getBarCode(), old.getProject());
-        try{
+        try {
             if(old.getUpper() != null && !"".equals(old.getUpper())) {
                 Set<String> toCheck = new HashSet<>();
                 toCheck.add(old.getUpper());
@@ -406,7 +451,6 @@ public class MaterialBomService {
                     }
                 }
             }
-            materialBomMapper.updateByPrimaryKeySelective(materialBom);
             String oldParent = old.getParent() == null ? "" : old.getParent();
             String newParent = materialBom.getParent() == null ? "" : materialBom.getParent();
             if (StringUtil.isEmpty(materialBom.getUpper()) && !oldParent.equals(newParent)) {
@@ -429,6 +473,29 @@ public class MaterialBomService {
                     materialBomMapper.updateByPrimaryKeySelective(child);
                 }
             }
+            String oldBarCode = old.getBarCode() == null ? "" : old.getBarCode();
+            String newBarCode = materialBom.getBarCode() == null ? "" : materialBom.getBarCode();
+            logger.info("XXXXX oldBarCode: " + oldBarCode + ", newBarCode: " + newBarCode);
+            if (!oldBarCode.equals(newBarCode)) {
+                List<MaterialBomVo4Info> firstLevel = new ArrayList<>();
+                if (StringUtil.isEmpty(materialBom.getUpper())) {
+                    flattenFirstLevelChild(oldChildren, firstLevel);
+                    logger.info("XXXXX null upper first level size " + firstLevel.size());
+                } else {
+                    List<MaterialBomVo4Info> childTree = materialBomMapperEx.getMaterialBomTreeWithUpper(
+                            old.getParent(), old.getUpper(), old.getBarCode(), old.getProject());
+                    logger.info("XXXXX query param: " + String.join(";", old.getParent(), old.getUpper(), old.getBarCode(), old.getProject()));
+                    flattenFirstLevelChild(childTree, firstLevel);
+                    logger.info("XXXXX with upper first level size " + firstLevel.size());
+                }
+                logger.info("XXXXX 即将更新" + firstLevel.size() + "个子节点的upper");
+                for (MaterialBomVo4Info child : firstLevel) {
+                    child.setUpper(materialBom.getBarCode());
+                    materialBomMapper.updateByPrimaryKeySelective(child);
+                }
+            }
+            // 更新完所有的child之后再更新自身，这样才能保证对应的变化都能传递过来
+            materialBomMapper.updateByPrimaryKeySelective(materialBom);
             logService.insertLog("产品BOM",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT)
                             .append("[" + materialBom.getParent() + "]")
@@ -471,8 +538,16 @@ public class MaterialBomService {
     public void flattenTree(List<MaterialBomVo4Info> tree, List<MaterialBomVo4Info> res) {
         for (MaterialBomVo4Info m : tree) {
             res.add(m);
-            if (m.getChildren() != null && m.getChildren().size() > 0) {
+            if (m.getChildren() != null && !m.getChildren().isEmpty()) {
                 flattenTree(m.getChildren(), res);
+            }
+        }
+    }
+
+    public void flattenFirstLevelChild(List<MaterialBomVo4Info> tree, List<MaterialBomVo4Info> res) {
+        for (MaterialBomVo4Info m : tree) {
+            if (m.getChildren() != null && !m.getChildren().isEmpty()) {
+                res.addAll(m.getChildren());
             }
         }
     }

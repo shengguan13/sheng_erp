@@ -180,6 +180,7 @@ public class BusinessConstants {
      * 新增、修改、删除、登录、导入
      * */
     public static final String LOG_OPERATION_TYPE_ADD = "新增";
+    public static final String LOG_OPERATION_TYPE_DUPLICATE = "复制";
     public static final String LOG_OPERATION_TYPE_BATCH_ADD = "批量新增";
     public static final String LOG_OPERATION_TYPE_EDIT = "修改";
     public static final String LOG_OPERATION_TYPE_DELETE = "删除";

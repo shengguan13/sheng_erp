@@ -88,6 +88,10 @@
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                 <a>删除</a>
               </a-popconfirm>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定复制吗?" @confirm="() => handleDuplicate(record.id)">
+                <a>复制</a>
+              </a-popconfirm>
             </span>
           </a-table>
         </div>
@@ -175,6 +179,7 @@
         url: {
           list: "/materialBom/list",
           delete: "/materialBom/delete",
+          duplicate: "/materialBom/duplicate",
           deleteBatch: "/materialBom/deleteBatch",
           exportXlsUrl: "/materialBom/exportExcel"
         }
