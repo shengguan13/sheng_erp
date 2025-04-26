@@ -205,11 +205,15 @@ public class DepotHeadService {
                     }
                     if (dh.getSubType().equals(SUB_TYPE_PURCHASE_ORDER) && dh.getLinkNumber() != null && !"".equals(dh.getLinkNumber())) {
                         DepotHead purchaseApplication = getDepotHead(dh.getLinkNumber());
-                        if (purchaseApplication != null && purchaseApplication.getSalesMan() != null)
-                        dh.setSalesManStr(personService.getPersonByMapAndIds(personMap, purchaseApplication.getSalesMan()));
+                        if (purchaseApplication != null && purchaseApplication.getSalesMan() != null) {
+                            dh.setSalesManStr(personService.getPersonByMapAndIds(personMap, purchaseApplication.getSalesMan()));
+                        }
                     }
                     if (dh.getOperTime() != null) {
-                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                        dh.setOperTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getOperTime()));
+                    }
+                    if (dh.getCreateTime() != null) {
+                        dh.setCreateTimeStr(getCenternTime(dh.getCreateTime()));
                     }
                     if (dh.getPlanStartTime() != null) {
                         dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
@@ -887,7 +891,10 @@ public class DepotHeadService {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap, dh.getSalesMan()));
                     }
                     if (dh.getOperTime() != null) {
-                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                        dh.setOperTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getOperTime()));
+                    }
+                    if (dh.getCreateTime() != null) {
+                        dh.setCreateTimeStr(getCenternTime(dh.getCreateTime()));
                     }
                     if (dh.getPlanStartTime() != null) {
                         dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
@@ -2142,7 +2149,10 @@ public class DepotHeadService {
                     dh.setFinishDebt(finishDebt);
                     dh.setDebt(needDebt.subtract(finishDebt));
                     if (dh.getOperTime() != null) {
-                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                        dh.setOperTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getOperTime()));
+                    }
+                    if (dh.getCreateTime() != null) {
+                        dh.setCreateTimeStr(getCenternTime(dh.getCreateTime()));
                     }
                     //产品信息简述
                     if (materialsListMap != null) {
@@ -2198,7 +2208,10 @@ public class DepotHeadService {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
                     }
                     if (dh.getOperTime() != null) {
-                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                        dh.setOperTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getOperTime()));
+                    }
+                    if (dh.getCreateTime() != null) {
+                        dh.setCreateTimeStr(getCenternTime(dh.getCreateTime()));
                     }
                     if (dh.getPlanStartTime() != null) {
                         dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));
@@ -2259,7 +2272,10 @@ public class DepotHeadService {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
                     }
                     if (dh.getOperTime() != null) {
-                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                        dh.setOperTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getOperTime()));
+                    }
+                    if (dh.getCreateTime() != null) {
+                        dh.setCreateTimeStr(getCenternTime(dh.getCreateTime()));
                     }
                     if (dh.getPlanStartTime() != null) {
                         dh.setPlanStartTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(dh.getPlanStartTime()));

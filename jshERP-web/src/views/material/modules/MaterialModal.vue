@@ -29,7 +29,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零件号" data-step="2" data-title="零件号" data-intro="零件号">
-                  <a-input placeholder="请输入零件号" v-decorator.trim="[ 'model', validatorRules.model ]" />
+                  <a-input placeholder="请输入零件号" v-decorator.trim="[ 'model' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -350,11 +350,6 @@
           categoryId:{
             rules: [
               { required: true, message: '请选择物料类别!' }
-            ]
-          },
-          model:{
-            rules: [
-              { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
             ]
           },
           unit:{

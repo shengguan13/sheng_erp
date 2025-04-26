@@ -561,7 +561,7 @@ public class MaterialService {
                 String other3 = ""; //模具重量
                 String other4 = ""; //浇口重量
                 String enabled = "1"; //状态
-                String remark = ""; //备注
+                String remark = ExcelUtils.getContent(src, i, 14); //备注
                 if(StringUtil.isEmpty(unit)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
@@ -612,7 +612,7 @@ public class MaterialService {
                 List<Material> materials = getMaterialListByBarCode(barCode);
                 if(materials.size() == 0) {
                     // TODO： 要导入的时候去掉注释
-                    // materialMapperEx.insertSelectiveEx(m);
+                    materialMapperEx.insertSelectiveEx(m);
                     mId = m.getId();
                     logger.info("XXXXX insert " + barCode);
                 } else {
@@ -621,43 +621,45 @@ public class MaterialService {
                     Material material = JSONObject.parseObject(materialJson, Material.class);
                     material.setId(mId);
                     // TODO： 要导入的时候去掉注释
-                    // materialMapper.updateByPrimaryKeySelective(material);
+                    materialMapper.updateByPrimaryKeySelective(material);
                     logger.info("XXXXX update " + barCode);
                 }
                 //给产品新增或更新编码等相关信息
                 JSONObject materialExObj = m.getMaterialExObj();
                 // TODO： 要导入的时候去掉注释
-                //insertOrUpdateMaterialExtend(materialExObj, "1", mId, user);
+                insertOrUpdateMaterialExtend(materialExObj, "1", mId, user);
                 if (mId == null) {
                     continue;
                 }
-                if (m.getCategoryId().longValue() == 48L) {
-                    // 总成 - 成品库
-                    MaterialCurrentStockExample example = new MaterialCurrentStockExample();
-                    example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(26L)
-                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                    List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
-                    if (list == null || list.size() == 0) {
-                        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-                        materialCurrentStock.setMaterialId(mId);
-                        materialCurrentStock.setDepotId(26L);
-                        materialCurrentStock.setCurrentNumber(BigDecimal.ZERO);
-                        insertCurrentStockMaterialList.add(materialCurrentStock);
-                    }
-                } else if (m.getCategoryId().longValue() == 49L) {
-                    // 半成品 - 半成品库
-                    MaterialCurrentStockExample example = new MaterialCurrentStockExample();
-                    example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(27L)
-                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                    List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
-                    if (list == null || list.size() == 0) {
-                        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-                        materialCurrentStock.setMaterialId(mId);
-                        materialCurrentStock.setDepotId(27L);
-                        materialCurrentStock.setCurrentNumber(BigDecimal.ZERO);
-                        insertCurrentStockMaterialList.add(materialCurrentStock);
-                    }
-                }
+                // TODO：这里给宏泽导入的时候去掉注释
+//                if (m.getCategoryId().longValue() == 48L) {
+//                    // 总成 - 成品库
+//                    MaterialCurrentStockExample example = new MaterialCurrentStockExample();
+//                    example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(26L)
+//                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+//                    List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
+//                    if (list == null || list.size() == 0) {
+//                        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+//                        materialCurrentStock.setMaterialId(mId);
+//                        materialCurrentStock.setDepotId(26L);
+//                        materialCurrentStock.setCurrentNumber(BigDecimal.ZERO);
+//                        insertCurrentStockMaterialList.add(materialCurrentStock);
+//                    }
+//                } else if (m.getCategoryId().longValue() == 49L) {
+//                    // 半成品 - 半成品库
+//                    MaterialCurrentStockExample example = new MaterialCurrentStockExample();
+//                    example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(27L)
+//                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+//                    List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
+//                    if (list == null || list.size() == 0) {
+//                        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+//                        materialCurrentStock.setMaterialId(mId);
+//                        materialCurrentStock.setDepotId(27L);
+//                        materialCurrentStock.setCurrentNumber(BigDecimal.ZERO);
+//                        insertCurrentStockMaterialList.add(materialCurrentStock);
+//                    }
+//                }
+                // TODO: 这里保持注释
 //                //给产品更新库存
 //                Map<Long, BigDecimal> stockMap = m.getStockMap();
 //                for(Depot depot: depotList){

@@ -184,7 +184,7 @@
             align:"center", width: 120,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '单据编号', dataIndex: 'number',width:120,
+          { title: '单据编号', dataIndex: 'number',width:100,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[转]":text
               return text
@@ -197,10 +197,11 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:100},
-          { title: '申请人', dataIndex: 'salesManStr',width:60, ellipsis:true},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:80},
+          { title: '创建日期', dataIndex: 'createTimeStr',width:100},
+          { title: '申请人', dataIndex: 'salesManStr', width:50, ellipsis:true},
           { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
-          { title: '数量', dataIndex: 'materialCount',width:60},
+          { title: '数量', dataIndex: 'materialCount',width:50},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

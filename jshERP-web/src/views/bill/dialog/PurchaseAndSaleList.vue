@@ -125,7 +125,8 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:130},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:80},
+          { title: '创建日期', dataIndex: 'createTimeStr',width:100},
           { title: '制单人', dataIndex: 'userName',width:70, ellipsis:true}
         ],
         url: {

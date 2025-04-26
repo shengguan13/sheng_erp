@@ -130,7 +130,8 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:130},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:80},
+          { title: '创建日期', dataIndex: 'createTimeStr',width:100},
           { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
           { title: '本单欠款', dataIndex: 'needDebt',width:70},
           { title: '已收欠款', dataIndex: 'finishDebt',width:70},

@@ -23,6 +23,8 @@ public class DepotHeadVo4List extends DepotHead{
 
     private String operTimeStr;
 
+    private String createTimeStr;
+
     private String planStartTimeStr;
 
     private String planFinishTimeStr;
@@ -125,6 +127,14 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setOperTimeStr(String operTimeStr) {
         this.operTimeStr = operTimeStr;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
     }
 
     public String getPlanStartTimeStr() {

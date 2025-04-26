@@ -110,14 +110,6 @@
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
               <a @click="myHandleDetail(record, '隔离出库', prefixNo)">查看</a>
-              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
-              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleCopyAdd(record)">复制</a>
-              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => myHandleDelete(record)">
-                <a>删除</a>
-              </a-popconfirm>
             </span>
             <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
@@ -143,7 +135,7 @@
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
-    name: "IsolateList",
+    name: "IsolateDupList",
     mixins:[JeecgListMixin,BillListMixin],
     components: {
       IsolateModal,

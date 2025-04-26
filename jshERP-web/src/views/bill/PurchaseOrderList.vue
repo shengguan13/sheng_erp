@@ -197,7 +197,7 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:120 },
+          { title: '单据编号', dataIndex: 'number',width:100},
           { title: '产品信息', dataIndex: 'materialsList',width:150, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -205,8 +205,9 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:100},
-          { title: '制单人', dataIndex: 'userName',width:60, ellipsis:true},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:80},
+          { title: '创建日期', dataIndex: 'createTimeStr',width:100},
+          { title: '制单人', dataIndex: 'userName', width:50, ellipsis:true},
           { title: '申请人', dataIndex: 'salesManStr',width:50, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:50},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",

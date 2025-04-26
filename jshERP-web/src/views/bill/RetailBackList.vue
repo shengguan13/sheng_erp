@@ -206,7 +206,7 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '会员', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:160,
+          { title: '单据编号', dataIndex: 'number',width:100,
             customRender:function (text,record,index) {
               text = record.linkNumber?text+"[转]":text
               return text
@@ -219,9 +219,10 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
-          { title: '数量', dataIndex: 'materialCount',width:60},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:80},
+          { title: '创建日期', dataIndex: 'createTimeStr',width:100},
+          { title: '制单人', dataIndex: 'userName', width:50, ellipsis:true},
+          { title: '数量', dataIndex: 'materialCount',width:50},
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
           { title: '付款金额', dataIndex: 'getAmount',width:80,
             customRender:function (text,record,index) {

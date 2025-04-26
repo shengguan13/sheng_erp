@@ -207,7 +207,7 @@
           { title: '销售订单', dataIndex: 'xsdd',width:70,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          { title: '制单人', dataIndex: 'userName',width:80, ellipsis:true},
+          { title: '制单人', dataIndex: 'userName', width:50, ellipsis:true},
           { title: '申请金额', dataIndex: 'totalPrice',width:80},
           { title: '实际金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
