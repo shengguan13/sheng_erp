@@ -1527,6 +1527,7 @@
           { title: '库存', dataIndex: 'stock'},
           { title: '收货地', dataIndex: 'anotherDepotName'},
           { title: '到货日期', dataIndex: 'expirationDate'},
+          { title: '时效', dataIndex: 'onTime'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseInColumns: [

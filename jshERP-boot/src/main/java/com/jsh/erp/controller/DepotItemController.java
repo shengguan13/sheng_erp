@@ -30,6 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -389,6 +393,7 @@ public class DepotItemController {
             if(headerId != 0) {
                 dataList = depotItemService.getDetailList(headerId);
             }
+            DepotHead depotHead = depotHeadService.getDepotHead(headerId);
             String[] mpArr = mpList.split(",");
             JSONObject outer = new JSONObject();
             outer.put("total", dataList.size());
@@ -405,6 +410,7 @@ public class DepotItemController {
                 BigDecimal totalTaxMoney = BigDecimal.ZERO;
                 BigDecimal totalTaxLastMoney = BigDecimal.ZERO;
                 BigDecimal totalWeight = BigDecimal.ZERO;
+                int onTime = 0, total = 0;
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", diEx.getId());
@@ -419,7 +425,8 @@ public class DepotItemController {
                         try {
                             Supplier supplier = supplierService.getSupplier(diEx.getSupplierId());
                             item.put("applicationSupplier", supplier.getSupplier());
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                     }
                     item.put("color", diEx.getMColor());
                     item.put("project", diEx.getMProject());
@@ -427,7 +434,7 @@ public class DepotItemController {
                     BigDecimal stock;
                     Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
                     String materialUnit = diEx.getMaterialUnit();
-                    stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
+                    stock = depotItemService.getStockByParam(diEx.getDepotId(), diEx.getMaterialId(), null, null);
                     if (StringUtil.isNotEmpty(unitInfo.getName())) {
                         stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
                     }
@@ -447,7 +454,8 @@ public class DepotItemController {
                                 }
                             }
                             item.put("snListStr", sb.toString());
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                     }
                     if (diEx.getMaterialType() != null && !"".equals(diEx.getMaterialType())) {
                         try {
@@ -461,12 +469,13 @@ public class DepotItemController {
                                 }
                             }
                             item.put("materialTypeStr", sb.toString());
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                     }
                     item.put("batchNumber", diEx.getBatchNumber());
                     if (diEx.getBatchNumber() != null && !"".equals(diEx.getBatchNumber())) {
                         String organIdGroup = depotItemService.getSupplierIdGroup(diEx.getBatchNumber(), diEx.getBarCode());
-                        if(organIdGroup!=null && !"".equals(organIdGroup)) {
+                        if (organIdGroup != null && !"".equals(organIdGroup)) {
                             String[] organs = organIdGroup.split(",");
                             Set<String> organSet = new HashSet<>();
                             for (String organ : organs) {
@@ -478,7 +487,8 @@ public class DepotItemController {
                                 try {
                                     Supplier supplier = supplierService.getSupplier(Long.parseLong(new ArrayList<>(organSet).get(0)));
                                     item.put("supplier", supplier.getSupplier());
-                                } catch (Exception e) {}
+                                } catch (Exception e) {
+                                }
                             }
                         }
                     }
@@ -487,8 +497,44 @@ public class DepotItemController {
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
-                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(),
-                            diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
+                    BigDecimal finishNumber = depotItemService.getFinishNumber(diEx.getMaterialExtendId(),
+                            diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType);
+                    item.put("finishNumber", finishNumber); //已入库|已出库
+                    if ("采购订单".equals(depotHead.getSubType())) {
+                        if (diEx.getExpirationDate() != null) {
+                            long required = getEndOfDay(diEx.getExpirationDate()).getTime();
+                            if (finishNumber.compareTo(diEx.getOperNumber()) >= 0) {
+                                List<DepotHead> linkHeads = depotHeadService.getBillListByLinkNumber(depotHead.getNumber());
+                                long latestArrival = 0;
+                                for (DepotHead linkHead : linkHeads) {
+                                    List<DepotItemVo4WithInfoEx> linkItems = depotItemService.getDetailList(linkHead.getId());
+                                    for (DepotItemVo4WithInfoEx linkItem : linkItems) {
+                                        if (linkItem.getLinkId() != null && linkItem.getLinkId().longValue() == diEx.getId().longValue()) {
+                                            if (linkHead.getOperTime().getTime() > latestArrival) {
+                                                latestArrival = linkHead.getOperTime().getTime();
+                                            }
+                                        }
+                                    }
+                                }
+                                if (latestArrival > required) {
+                                    item.put("onTime", "超时");
+                                } else {
+                                    item.put("onTime", "准时");
+                                    onTime += 1;
+                                }
+                            } else {
+                                if (new Date().getTime() > required) {
+                                    item.put("onTime", "超时");
+                                } else {
+                                    item.put("onTime", "未到");
+                                    onTime += 1;
+                                }
+                            }
+                        } else {
+                            onTime += 1;
+                        }
+                    }
+                    total += 1;
                     item.put("purchaseDecimal", diEx.getPurchaseDecimal());  //采购价
                     if("basic".equals(linkType)) {
                         //正常情况显示金额，而以销定购的情况不能显示金额
@@ -523,6 +569,9 @@ public class DepotItemController {
                     footItem.put("taxMoney", totalTaxMoney);
                     footItem.put("taxLastMoney", totalTaxLastMoney);
                     footItem.put("weight", totalWeight);
+                    if ("采购订单".equals(depotHead.getSubType()) && total > 0) {
+                        footItem.put("onTime", String.format("%.2f%%", (float)onTime / (float)total * 100.0));
+                    }
                     dataArray.add(footItem);
                 }
             }
@@ -535,6 +584,18 @@ public class DepotItemController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    public Date getEndOfDay(Date date) {
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+        return Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public Date getStartOfDay(Date date) {
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+        LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+        return Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     @GetMapping(value = "/getNextLevelDetailListByBom")

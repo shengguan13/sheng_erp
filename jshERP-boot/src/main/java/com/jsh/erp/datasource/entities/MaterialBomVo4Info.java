@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class MaterialBomVo4Info extends MaterialBom {
@@ -47,6 +48,8 @@ public class MaterialBomVo4Info extends MaterialBom {
     private Long meId;
 
     private Long materialId;
+
+    private BigDecimal stock;
 
     public Long getKey() {
         return key;
@@ -206,5 +209,13 @@ public class MaterialBomVo4Info extends MaterialBom {
 
     public void setMaterialId(Long materialId) {
         this.materialId = materialId;
+    }
+
+    public void setStock(BigDecimal stock) {
+        this.stock = stock;
+    }
+
+    public BigDecimal getStock() {
+        return stock;
     }
 }

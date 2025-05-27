@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx;
 import com.jsh.erp.datasource.mappers.ProductSupplierMapper;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.mail.MailUtil;
 import com.jsh.erp.service.material.MaterialService;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -54,6 +56,9 @@ public class MaterialBomService {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private DepotItemService depotItemService;
 
     public MaterialBom getMaterialBom(long id)throws Exception {
         MaterialBom result=null;
@@ -222,6 +227,9 @@ public class MaterialBomService {
             list = materialBomMapperEx.selectMaterialBomWithUpper(parent, upper, project, materialParam, new ArrayList<>());
             for (MaterialBomVo4Info bom : list) {
                 bom.setUnit(bom.getmUnit());
+                BigDecimal stock;
+                stock = depotItemService.getStockByParam(null, bom.getMaterialId(), null, null);
+                bom.setStock(stock);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
