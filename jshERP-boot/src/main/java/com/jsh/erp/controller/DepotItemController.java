@@ -109,6 +109,7 @@ public class DepotItemController {
                 item.put("number", d.getNumber()); //编号
                 item.put("barCode", d.getBarCode()); //编码
                 item.put("materialName", d.getMaterialName()); //名称
+                item.put("batchNumber", d.getBatchNumber()); //批号
                 String type = d.getType();
                 String subType = d.getSubType();
                 if(("其它").equals(type)) {

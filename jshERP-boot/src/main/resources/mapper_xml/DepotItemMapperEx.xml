@@ -9,6 +9,7 @@
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="sub_type" jdbcType="VARCHAR" property="subType" />
         <result column="b_num" jdbcType="BIGINT" property="bnum" />
+        <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
         <result column="depotName" jdbcType="VARCHAR" property="depotName" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
@@ -180,7 +181,7 @@
 
     <select id="findDetailByDepotIdsAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
         select tb.* from
-        (select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
+        (select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,di.batch_number,
         case
             when type='入库' then ifnull(di.basic_number,0)
             when type='出库' then 0-di.basic_number
@@ -227,7 +228,7 @@
         and ifnull(dh.delete_flag,'0') !='1'
         union all
         --单独构造记录：调拨入库
-        select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
+        select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,di.batch_number,
         ifnull(di.basic_number,0) as b_num,
         (select concat(name,'[调入]') from jsh_depot d where d.id=di.another_depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime

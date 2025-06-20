@@ -15,6 +15,8 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     private String subType;
 
+    private String batchNumber;
+
     private BigDecimal bnum;
 
     private String depotName;
@@ -43,6 +45,14 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
+    }
+
+    public String getBatchNumber() {
+        return batchNumber;
+    }
+
+    public void setBatchNumber(String batchNumber) {
+        this.batchNumber = batchNumber;
     }
 
     public String getType() {

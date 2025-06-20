@@ -116,9 +116,10 @@
             title: '单据编号', dataIndex: 'number', width: 100,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          { title: '类型', dataIndex: 'type', width: 100},
+          { title: '类型', dataIndex: 'type', width: 80},
           { title: '编码', dataIndex: 'barCode', width: 100},
-          { title: '名称', dataIndex: 'materialName', width: 200},
+          { title: '名称', dataIndex: 'materialName', width: 120},
+          { title: '批号', dataIndex: 'batchNumber', width: 80},
           { title: '仓库名称', dataIndex: 'depotName', width: 80},
           { title: '数量', dataIndex: 'basicNumber', width: 70},
           { title: '日期', dataIndex: 'operTime', width: 110}

@@ -30,7 +30,18 @@
               </a-col>
               <a-col :md="6" :sm="8">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="物料来源">
-                  <a-input placeholder="包覆/采购/..." v-model="queryParam.source"></a-input>
+                  <a-select placeholder="选择来源" v-model="queryParam.source"
+                    :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
+                    <a-select-option value="包装">包装</a-select-option>
+                    <a-select-option value="包覆">包覆</a-select-option>
+                    <a-select-option value="装配">装配</a-select-option>
+                    <a-select-option value="采购">采购</a-select-option>
+                    <a-select-option value="委外">委外</a-select-option>
+                    <a-select-option value="注塑">注塑</a-select-option>
+                    <a-select-option value="焊接">焊接</a-select-option>
+                    <a-select-option value="宏泽一厂">宏泽一厂</a-select-option>
+                    <a-select-option value="V506">V506</a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
