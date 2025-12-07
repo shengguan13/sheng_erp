@@ -76,7 +76,7 @@
                     (
                     SELECT GROUP_CONCAT(ps2.model SEPARATOR ';')
                     FROM jsh_product_supplier ps2
-                    WHERE ps2.bar_code = me.bar_code
+                    WHERE ps2.bar_code = me.bar_code and ifnull(ps2.delete_Flag,'0') !='1'
                     )
                 END AS supplierModel
             from jsh_depot_item di
@@ -196,7 +196,7 @@
                     (
                     SELECT GROUP_CONCAT(ps2.model SEPARATOR ';')
                     FROM jsh_product_supplier ps2
-                    WHERE ps2.bar_code = me.bar_code
+                    WHERE ps2.bar_code = me.bar_code and ifnull(ps2.delete_Flag,'0') !='1'
                     )
                 END AS supplierModel
             from jsh_depot_item di

@@ -163,7 +163,7 @@
         },
         ipagination:{
           pageSize: 11,
-          pageSizeOptions: ['11', '51', '101', '201']
+          pageSizeOptions: ['11', '51', '201', '501']
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
