@@ -68,8 +68,10 @@
         (select di.batch_number id, me.bar_code, m.name, m.color_code, m.model, m.unit_id,
         me.commodity_unit, di.batch_number,di.expiration_date, dh.oper_time, di.sn_list,
         di.basic_number*(case
-        <!-- 入库肯定是+1，或者出库、调拨且anotherDepotId符合时为+1，其余出库为-1 -->
-        when ((dh.type='入库' and di.sn_list = #{allocationId}) or (dh.type='出库' and di.material_type = #{allocationId})) then 1
+        <!-- 入库肯定是+1，调拨出库的调入方（调入方!=调出方）为+1，其余出库为-1 -->
+        when ((dh.type='入库' and di.sn_list = #{allocationId})
+            or (dh.type='出库' and di.material_type = #{allocationId} and di.sn_list != #{allocationId})) then 1
+        when (dh.type='出库' and di.sn_list = #{allocationId} and di.material_type = #{allocationId}) then 0
         when (dh.type='出库' and di.sn_list = #{allocationId}) then -1
         end) as basic_number
         from jsh_depot_head dh

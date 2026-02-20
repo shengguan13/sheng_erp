@@ -604,7 +604,39 @@ export const BillModalMixin = {
           param = {
             id: row.materialType,
           }
-          if (this.prefixNo === 'DBCK' || this.prefixNo === 'GLCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK') {
+          if (this.prefixNo === 'DBCK') {
+            let allocationArr = row.materialType.split(",")
+            //多个货位
+            this.$refs.materialDataTable.getValues((error, values) => {
+              let toRemove = {}
+              let j = 0
+              for (; j < values.length; j++) {
+                if (values[j].id == row.id) {
+                  toRemove = values[j]
+                }
+              }
+              values = values.filter(item => item.id != row.id)
+              let mArr = values
+              for (let i = 0; i < allocationArr.length; i++) {
+                let allocationId = allocationArr[i]
+                console.log("allocationId: " + allocationId)
+                param = {
+                  id: allocationId,
+                }
+                getDepotAllocation(param).then((res) => {
+                  if (res && res.code === 200) {
+                    let mObj = JSON.parse(JSON.stringify(toRemove))
+                    mObj.materialTypeStr = res.data.allocation
+                    mObj.materialType = allocationId
+                    delete mObj.id
+                    console.log("row: " + JSON.stringify(mObj))
+                    mArr.push(mObj)
+                  }
+                })
+              }
+              this.materialTable.dataSource = mArr
+            })
+          } else if (this.prefixNo === 'GLCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK') {
             getDepotAllocation(param).then((res) => {
               if (res && res.code === 200) {
                 target.setValues([{rowKey: row.id, values: {materialTypeStr: res.data.allocation}}])

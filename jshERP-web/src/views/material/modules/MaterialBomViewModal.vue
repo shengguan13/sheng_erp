@@ -49,7 +49,7 @@
                         :selectedKeys="selectedKeys"
                         :checkedKeys="checkedKeys"
                         :treeData="categoryTree"
-                        :checkStrictly="checkStrictly"
+                        :checkStrictly="true"
                         :expandedKeys="iExpandedKeys"
                         :autoExpandParent="true"
                         @expand="onExpand"/>
@@ -221,7 +221,6 @@
         autoIncr: 1,
         currSelected: {},
         allTreeKeys:[],
-        checkStrictly: true,
         form: this.$form.createForm(this),
         labelCol: {
           xs: {span: 24},
@@ -414,14 +413,7 @@
       onCheck(checkedKeys, info) {
         console.log('onCheck', checkedKeys, info)
         this.hiding = false
-        //this.checkedKeys = checkedKeys.checked
-        // <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
-        if(this.checkStrictly){
-          this.checkedKeys = checkedKeys.checked;
-        }else{
-          this.checkedKeys = checkedKeys
-        }
-        // <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
+        this.checkedKeys = checkedKeys.checked;
       },
       onSelect(selectedKeys, e) {
         console.log('selected', selectedKeys, e)
@@ -608,7 +600,6 @@
         this.iExpandedKeys = []
       },
       checkALL () {
-        this.checkStrictly = false
         this.checkedKeys = this.allTreeKeys
       },
       cancelCheckALL () {

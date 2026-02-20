@@ -628,9 +628,16 @@ public class DepotHeadService {
                     throw new BusinessRunTimeException(ExceptionConstants.APPLICATION_SECOND_LEVEL_AUDIT_FAILED_CODE,
                             String.format(ExceptionConstants.APPLICATION_SECOND_LEVEL_AUDIT_FAILED_MSG));
                 }
+            } else if ("2".equals(status)) {
+                if ("3".equals(depotHead.getStatus())) {
+                    dhIds.add(id);
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.PURCHASE_ORDER_FORCE_COMPLETE_CODE,
+                            String.format(ExceptionConstants.PURCHASE_ORDER_FORCE_COMPLETE_MSG));
+                }
             }
         }
-        if (dhIds.size() > 0) {
+        if (!dhIds.isEmpty()) {
             DepotHead depotHead = new DepotHead();
             depotHead.setStatus(status);
             DepotHeadExample example = new DepotHeadExample();

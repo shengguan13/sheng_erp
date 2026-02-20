@@ -90,7 +90,8 @@
             { text: '作废', value: '6' },
             { text: '部门审核', value: 'a' },
             { text: '商务审核', value: 'b' },
-            { text: '最终审核', value: 'c' }
+            { text: '最终审核', value: 'c' },
+            { text: '强制完成', value: 'd' }
           ],
           value: ''
         },

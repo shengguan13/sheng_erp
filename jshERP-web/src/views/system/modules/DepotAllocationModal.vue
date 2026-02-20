@@ -39,7 +39,7 @@
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="货位分类">
             <a-select placeholder="选择货位分类" v-decorator="[ 'type', validatorRules.type ]"
               :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-              <a-select-option value="成品">成品</a-select-option>
+              <a-select-option value="总成">总成</a-select-option>
               <a-select-option value="半成品">半成品</a-select-option>
               <a-select-option value="原材料">原材料</a-select-option>
               <a-select-option value="辅料">辅料</a-select-option>

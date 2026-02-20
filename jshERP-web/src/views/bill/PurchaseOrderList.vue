@@ -87,6 +87,7 @@
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="checkFlag && btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
               <a-menu-item key="3" v-if="checkFlag && btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
+              <a-menu-item key="4" v-if="checkFlag && btnEnableList.indexOf('d')>-1" @click="batchSetStatus(2)"><a-icon type="check"/>强制完成</a-menu-item>
             </a-menu>
             <a-button>
               批量操作 <a-icon type="down" />
