@@ -206,7 +206,7 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '4%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: true },
             { title: '货位', key: 'snList', width: '6%', type: FormTypes.hidden},
             { title: '货位', key: 'snListStr', width: '8%', type: FormTypes.normal},
             { title: '客/供代码', key: 'sku', width: '6%', type: FormTypes.hidden},

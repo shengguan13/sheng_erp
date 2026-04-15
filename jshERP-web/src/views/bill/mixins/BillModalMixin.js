@@ -656,8 +656,8 @@ export const BillModalMixin = {
           if(row.id.length<=19) {
             param.depotItemId = row.id-0
           }
-          var batchArr = value.split('饕')
           if (this.prefixNo === 'CYRK') {
+            var batchArr = value.split('饕')
             target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
             getBatchNumberListZero(param).then((res) => {
               if (res && res.code === 200) {
@@ -682,28 +682,76 @@ export const BillModalMixin = {
           } else if (this.prefixNo === 'CGTH' || this.prefixNo === 'XSCK' || this.prefixNo === 'DBCK'
               || this.prefixNo === 'QTCK' || this.prefixNo === 'FXCK' || this.prefixNo === 'FXRK'
               || this.prefixNo === 'LLCK' || this.prefixNo === 'GLCK' || this.prefixNo === 'BFCK') {
-            target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
-            getBatchNumberList(param).then((res) => {
-              if (res && res.code === 200) {
-                console.log("getBatchNumberList")
-                console.log("value: " + value)
-                let batchList = res.data.rows
-                for (let i = 0; i < batchList.length; i++) {
-                  let batchInfo = batchList[i]
-                  console.log("batchInfo: " + batchInfo.batchNumber)
-                  if (batchInfo.batchNumber === batchArr[0]) {
-                    target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
-                    if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
-                      target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
-                      if (batchInfo.sku != null && batchArr.length > 2 && batchInfo.sku === batchArr[2]) {
-                        target.setValues([{rowKey: row.id, values: {sku: batchInfo.sku}}])
-                      }
-                    }
-                    target.recalcAllStatisticsColumns()
+            if (value.indexOf(',') > -1) {
+              let batchStrArr = value.split(",")
+              //多个批次
+              this.$refs.materialDataTable.getValues((error, values) => {
+                let toRemove = {}
+                let j = 0
+                for (; j < values.length; j++) {
+                  if (values[j].id == row.id) {
+                    toRemove = values[j]
                   }
                 }
-              }
-            })
+                values = values.filter(item => item.id != row.id)
+                let mArr = values
+                for (let k = 0; k < batchStrArr.length; k++) {
+                  let batchStr = batchStrArr[k]
+                  console.log("batchStr: " + batchStr)
+                  let splitBatch = batchStr.split('饕')
+                  getBatchNumberList(param).then((res) => {
+                    if (res && res.code === 200) {
+                      console.log("getBatchNumberList")
+                      console.log("batchStr: " + batchStr)
+                      let batchList = res.data.rows
+                      let mObj = JSON.parse(JSON.stringify(toRemove))
+                      for (let i = 0; i < batchList.length; i++) {
+                        let batchInfo = batchList[i]
+                        console.log("batchInfo: " + batchInfo.batchNumber)
+                        if (batchInfo.batchNumber === splitBatch[0]) {
+                          mObj.batchNumber = batchInfo.batchNumber
+                          if (batchInfo.snList != null && splitBatch.length > 1 && batchInfo.snList === splitBatch[1]) {
+                            mObj.snList = batchInfo.snList
+                            mObj.snListStr = batchInfo.snListStr
+                            if (batchInfo.sku != null && splitBatch.length > 2 && batchInfo.sku === splitBatch[2]) {
+                              mObj.sku = batchInfo.sku
+                            }
+                          }
+                        }
+                      }
+                      delete mObj.id
+                      console.log("row: " + JSON.stringify(mObj))
+                      mArr.push(mObj)
+                    }
+                  })
+                }
+                this.materialTable.dataSource = mArr
+              })
+            } else {
+              var batchArr = value.split('饕')
+              target.setValues([{rowKey: row.id, values: {snList: "", snListStr: ""}}])
+              getBatchNumberList(param).then((res) => {
+                if (res && res.code === 200) {
+                  console.log("getBatchNumberList")
+                  console.log("value: " + value)
+                  let batchList = res.data.rows
+                  for (let i = 0; i < batchList.length; i++) {
+                    let batchInfo = batchList[i]
+                    console.log("batchInfo: " + batchInfo.batchNumber)
+                    if (batchInfo.batchNumber === batchArr[0]) {
+                      target.setValues([{rowKey: row.id, values: {batchNumber: batchInfo.batchNumber}}])
+                      if (batchInfo.snList != null && batchArr.length > 1 && batchInfo.snList === batchArr[1]) {
+                        target.setValues([{rowKey: row.id, values: {snList: batchInfo.snList, snListStr: batchInfo.snListStr}}])
+                        if (batchInfo.sku != null && batchArr.length > 2 && batchInfo.sku === batchArr[2]) {
+                          target.setValues([{rowKey: row.id, values: {sku: batchInfo.sku}}])
+                        }
+                      }
+                      target.recalcAllStatisticsColumns()
+                    }
+                  }
+                }
+              })
+            }
           }
           break;
         case "barCode":

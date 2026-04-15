@@ -256,11 +256,15 @@ public class MaterialCategoryService {
             res = new ArrayList<>();
             if ("lihongjun".equals(user.getLoginName())) {
                 for (TreeNode node : list) {
-                    if ("半成品".equals(node.getTitle()) || "总成".equals(node.getTitle()) || "项目".equals(node.getTitle())) {
+                    if ("半成品".equals(node.getTitle())
+                            || "总成".equals(node.getTitle())
+                            || "项目".equals(node.getTitle())) {
                         res.add(node);
                     }
                 }
-            } else if ("zhangshanshan".equals(user.getLoginName()) || "wangmeihong".equals(user.getLoginName())) {
+            } else if ("zhangshanshan".equals(user.getLoginName())
+                    || "wangmeihong".equals(user.getLoginName())
+                    || "haozixi".equals(user.getLoginName())) {
                 for (TreeNode node : list) {
                     if ("总成".equals(node.getTitle())) {
                         res.add(node);

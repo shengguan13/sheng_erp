@@ -190,7 +190,7 @@
             { title: '已入库', key: 'preNumber', width: '5%', type: FormTypes.normal },
             { title: '已退货', key: 'finishNumber', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '批号', key: 'batchNumber', width: '10%', type: FormTypes.popupJsh, kind: 'batch', multi: true },
             { title: '货位', key: 'snList', width: '6%', type: FormTypes.hidden},
             { title: '货位', key: 'snListStr', width: '8%', type: FormTypes.normal},
             { title: '客/供代码', key: 'sku', width: '6%', type: FormTypes.hidden},
