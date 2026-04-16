@@ -394,6 +394,7 @@
             this.depositStatus = true
             changeAmount = (discountLastMoney - deposit).toFixed(2)-0
           }
+          //
           this.$nextTick(() => {
             this.form.setFieldsValue({
               'organId': organId,
