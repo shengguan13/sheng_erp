@@ -23,6 +23,7 @@ import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.StringUtil;
 import jxl.Sheet;
 import jxl.Workbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -736,6 +740,235 @@ public class MaterialService {
             info.data = "导入失败";
         }
         return info;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BaseResponseInfo importImage(MultipartFile file, HttpServletRequest request) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        try {
+            Long beginTime = System.currentTimeMillis();
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                }
+            }
+
+            // 用于记录哪些行已经处理过图片（避免重复处理）
+            Set<Integer> processedRows = new HashSet<>();
+
+            try (HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream())) {
+                HSSFSheet sheet = workbook.getSheetAt(0); // 假设处理第一个工作表
+
+                // 第一步：读取第二列的所有名称（建立行号到名称的映射）
+                Map<Integer, String> rowNameMap = new HashMap<>();
+                for (int rowNum = 0; rowNum <= sheet.getLastRowNum(); rowNum++) {
+                    HSSFRow row = sheet.getRow(rowNum);
+                    if (row != null) {
+                        HSSFCell nameCell = row.getCell(1); // 第二列（B列），索引为1
+                        if (nameCell != null) {
+                            String name = getCellValueAsString(nameCell);
+                            if (name != null && !name.trim().isEmpty()) {
+                                rowNameMap.put(rowNum, name.trim());
+                            }
+                        }
+                    }
+                }
+
+                // 第二步：获取所有图片并匹配到对应的行
+                HSSFPatriarch drawing = sheet.getDrawingPatriarch();
+                if (drawing != null) {
+                    List<HSSFShape> shapes = drawing.getChildren();
+                    int successCount = 0;
+                    int failCount = 0;
+
+                    for (HSSFShape shape : shapes) {
+                        if (shape instanceof HSSFPicture) {
+                            HSSFPicture picture = (HSSFPicture) shape;
+                            HSSFClientAnchor anchor = picture.getClientAnchor();
+
+                            // 获取图片左上角所在的行（图片所属的行）
+                            int pictureRow = anchor.getRow1();
+
+                            // 检查这一行是否有对应的名称
+                            if (rowNameMap.containsKey(pictureRow)) {
+                                String barCode = rowNameMap.get(pictureRow);
+
+                                // 获取图片数据
+                                HSSFPictureData pictureData = picture.getPictureData();
+                                if (pictureData != null) {
+                                    // 保存图片
+                                    String imageName = barCode + "-" + UUID.randomUUID();
+                                    String outputDir = "/opt/jshERP/upload/material/63/";
+                                    boolean saved = saveImage(pictureData, outputDir, imageName);
+                                    if (saved) {
+                                        successCount++;
+                                        processedRows.add(pictureRow);
+
+                                        List<Material> materials = getMaterialListByBarCode(barCode);
+                                        if (!materials.isEmpty()) {
+                                            Long mId = materials.get(0).getId();
+                                            Material newMaterial = new Material();
+                                            newMaterial.setId(mId);
+                                            newMaterial.setImgName("material/63/" + imageName + "." + getImageExtension(pictureData.getData()));
+                                            materialMapper.updateByPrimaryKeySelective(newMaterial);
+                                        }
+                                        logger.info("✓ 成功保存图片: " + imageName + " (行号: " + (pictureRow + 1) + ")");
+                                    } else {
+                                        failCount++;
+                                        logger.info("✗ 保存失败: " + imageName + " (行号: " + (pictureRow + 1) + ")");
+                                    }
+                                }
+                            } else {
+                                // 图片所在行没有对应的名称，给出警告
+                                logger.info("⚠ 警告: 第" + (pictureRow + 1) + "行有图片，但第二列没有找到对应的名称");
+                            }
+                        }
+                    }
+
+                    // 检查哪些有名称的行没有找到图片
+                    for (Map.Entry<Integer, String> entry : rowNameMap.entrySet()) {
+                        if (!processedRows.contains(entry.getKey())) {
+                            logger.info("⚠ 警告: 第" + (entry.getKey() + 1) + "行有名称 '" + entry.getValue() + "'，但没有找到对应的图片");
+                        }
+                    }
+
+                    logger.info("\n========== 处理完成 ==========");
+                    logger.info("成功保存: " + successCount + " 张图片");
+                    logger.info("保存失败: " + failCount + " 张图片");
+                } else {
+                    logger.info("警告: 工作表中没有找到任何图片");
+                }
+            }
+            // 关闭 workbook 会同时关闭它内部持有的 InputStream 引用
+            // 但注意：这不会关闭你传入的原始 InputStream
+
+            Long endTime = System.currentTimeMillis();
+            logger.info("导入耗时：{}", endTime-beginTime);
+            info.code = 200;
+            info.data = "导入成功";
+        } catch (BusinessRunTimeException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("导入失败：{}", e.getMessage());
+            logger.error(e.getMessage(), e);
+            info.code = 500;
+            info.data = "导入失败";
+        }
+        return info;
+    }
+
+    /**
+     * 保存图片到文件
+     * @param pictureData 图片数据
+     * @param outputDir 输出目录
+     * @param imageName 图片名称（不含扩展名）
+     * @return 是否保存成功
+     */
+    private static boolean saveImage(HSSFPictureData pictureData, String outputDir, String imageName) {
+        try {
+            byte[] data = pictureData.getData();
+            String extension = getImageExtension(data);
+
+            // 构建完整的文件名
+            String fileName = sanitizeFileName(imageName) + "." + extension;
+            File outputFile = new File(outputDir, fileName);
+
+            // 如果文件已存在，添加序号避免覆盖
+            int counter = 1;
+            while (outputFile.exists()) {
+                fileName = sanitizeFileName(imageName) + "_" + counter + "." + extension;
+                outputFile = new File(outputDir, fileName);
+                counter++;
+            }
+
+            // 保存图片
+            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                fos.write(data);
+            }
+
+            return true;
+        } catch (IOException e) {
+            System.err.println("保存图片失败: " + imageName + ", 错误: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 根据图片二进制数据判断图片格式
+     * @param data 图片二进制数据
+     * @return 文件扩展名
+     */
+    private static String getImageExtension(byte[] data) {
+        if (data.length >= 2) {
+            // PNG: 89 50 4E 47
+            if (data[0] == (byte) 0x89 && data[1] == (byte) 0x50) {
+                return "png";
+            }
+            // JPEG: FF D8
+            else if (data[0] == (byte) 0xFF && data[1] == (byte) 0xD8) {
+                return "jpg";
+            }
+            // GIF: 47 49 46
+            else if (data[0] == (byte) 0x47 && data[1] == (byte) 0x49) {
+                return "gif";
+            }
+            // BMP: 42 4D
+            else if (data[0] == (byte) 0x42 && data[1] == (byte) 0x4D) {
+                return "bmp";
+            }
+        }
+        return "png"; // 默认使用png
+    }
+
+    /**
+     * 从单元格中获取字符串值
+     * @param cell Excel单元格
+     * @return 字符串值
+     */
+    private static String getCellValueAsString(HSSFCell cell) {
+        if (cell == null) return null;
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                // 如果是数字，转换为字符串
+                double numValue = cell.getNumericCellValue();
+                if (numValue == (long) numValue) {
+                    return String.valueOf((long) numValue);
+                } else {
+                    return String.valueOf(numValue);
+                }
+            case FORMULA:
+                try {
+                    return cell.getStringCellValue();
+                } catch (IllegalStateException e) {
+                    return String.valueOf(cell.getNumericCellValue());
+                }
+            case BLANK:
+                return null;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * 清理文件名，移除非法字符
+     * @param fileName 原始文件名
+     * @return 清理后的文件名
+     */
+    private static String sanitizeFileName(String fileName) {
+        if (fileName == null) return "unnamed";
+
+        // Windows文件名中不能包含的字符: \ / : * ? " < > |
+        return fileName.replaceAll("[\\\\/:*?\"<>|]", "_")
+                .replaceAll("\\s+", "_")  // 空格替换为下划线
+                .trim();
     }
 
     private boolean isValid(String str) {

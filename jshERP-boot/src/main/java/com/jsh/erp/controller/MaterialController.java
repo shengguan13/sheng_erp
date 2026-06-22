@@ -399,7 +399,7 @@ public class MaterialController {
                             HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            res = materialService.importExcel(file, request);
+            res = materialService.importImage(file, request);
         } catch (BusinessRunTimeException e) {
             BaseResponseInfo info = new BaseResponseInfo();
             info.code = e.getCode();
